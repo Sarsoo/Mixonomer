@@ -1,0 +1,11 @@
+runtime: python37
+service: spotify
+
+handlers:
+- url: /static
+  static_dir: build
+
+- url: /.*
+  script: auto
+  secure: always
+

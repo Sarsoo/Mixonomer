@@ -1,0 +1,257 @@
+$font-stack: 'Lato', arial; 
+$background-colour: #202124;
+$ui-colour: #131313;
+$text-colour: white;
+
+$pad-px: 20px;
+
+* {
+	box-sizing: border-box;
+}
+
+html {
+	font-family: $font-stack;
+}
+
+body {
+	background-color: $background-colour;
+}
+
+a {
+	color: $text-colour;
+	font-size: 20px;
+	/*text-shadow: 1px 1px 1px #aaa;*/
+}
+
+p {
+    color: $text-colour;
+    font-size: 20px;
+	padding: 10px;
+}
+
+.center-text {
+    text-align: center;
+}
+
+.full-width {
+    width: 100%;
+}
+
+.button {
+	background-color: #505050;
+	color: black;
+	border-radius: 10px;
+	display: inline-block;
+	margin: 4px auto;
+	cursor: pointer;
+	padding: 15px;
+	box-shadow: 2px 2px 4px  black;
+	/*-webkit-transition-duration: 0.4s;
+  	transition-duration: 0.4s;*/
+	
+	text: {
+		align: center;
+		decoration: none;
+	}
+	
+	&:hover {
+		box-shadow: 0 12px 16px 0 rgba(0,0,0,0.24),0 17px 50px 0 rgba(0,0,0,0.19);
+	}
+}
+
+.row {
+	margin: 30px;
+}
+
+.gallerystrip{
+
+	width: 100%;
+	margin: auto;
+	margin-top: 15px;
+
+
+	img {
+		height: auto;
+		border: 10px solid #313439;
+		margin: $pad-px / 2;
+		box-shadow: 4px 4px 7px #070707;
+	}
+}
+
+.profile {
+	background-color: $ui-colour;
+	height: auto;
+	margin-top: 10px;
+	/*border: 8px solid #313439;*/
+	border-radius: 0px;
+	box-shadow: 7px 7px 8px black;
+
+
+	img {
+		border-radius: 50%;
+		display: block;
+		margin-top: 10px;
+		margin-left: auto;
+		margin-right: auto;
+		margin-bottom: 10px;
+		border: 8px solid #212121;
+		box-shadow: 4px 4px 3px #0c0c0c;
+	}
+}
+
+h1.title {
+	color: black;
+	font-size: 6em;
+	font-family: 'Pirata One', arial;
+	text-shadow: 3px 3px 3px #aaa;
+
+	font-weight: bold;
+	display: block;
+	text-decoration: none;
+	background-color: white;
+	padding: 0px;
+	/*font-size: 16em;*/
+	width: 2.5em;
+	height: 1.3em;
+	text-align: center;
+	margin: auto;
+	box-shadow: 5px 5px 8px #000000;
+
+}
+
+.card {
+	/*background-color: grey;*/
+	background-color: $ui-colour;
+	box-shadow: 4px 4px 8px black;
+	padding: 10px;
+	margin: $pad-px / 2;
+	/*border-radius: 3px;*/
+
+	h1 {
+		text-align: center;
+		color: white;
+		text-shadow: 1px 1px 2px #4f4f4f;
+	}
+
+	img {
+		width: 100%;
+		border-radius: 3px;
+		margin-bottom: 8px;	
+		box-shadow: 2px 2px 2px black;
+		margin-left: auto;
+    		margin-right: auto;
+	}
+
+	p {
+		margin-top: 20px;
+	}
+}
+
+h1.sectiontitle {
+	text-align:center;
+	color: white;
+	font-family: 'Megrim', sans-serif;
+}
+
+ul.navbar {
+	list-style-type: none;
+	border-radius: 5px 5px;
+	/*box-shadow: 3px 3px 1px grey;*/
+	margin: 10px;
+	padding: 0;
+	overflow: hidden;
+	background-color: $ui-colour;
+
+
+	li {
+		float: left;
+		position: -webkit-sticky;
+		position: sticky;
+		top: 0;
+		
+
+		a {
+			display: block;
+			color: white;
+			text-align: center;
+			padding: 14px 16px;
+			text-decoration: none;
+			text-shadow: 1px 1px 2px black;
+			-webkit-transition: background-color 0.4s;
+  			transition: background-color 0.4s;
+		
+
+			&:hover {
+				background-color: #080808;
+			}
+		}
+	}
+	
+	li.right {float: right;}
+}
+
+footer {
+	p {
+		text-align: right;
+		font-size: 12px;
+	}
+
+	a {
+		margin-top: 10px;
+		margin-bottom: 10px;
+		text-align: right;
+		display: block;
+		color: grey;
+		font-size: 12px;
+	}
+}
+
+@media only screen and (max-width: 600px) {
+  ul.navbar li.right,
+  ul.navbar li {float: none;}
+}
+
+[class*="col-"] {
+  	float: left;
+	width: 100%;
+}
+
+[class*="pad-"] {
+  	float: left;
+	width: calc(100% - #{$pad-px});
+}
+
+@media only screen and (min-width: 768px) {
+  /* For desktop: */
+  .col-1 {width: 8.33%;}
+  .col-2 {width: 16.66%;}
+  .col-3 {width: 25%;}
+  .col-4 {width: 33.33%;}
+  .col-5 {width: 41.66%;}
+  .col-6 {width: 50%;}
+  .col-7 {width: 58.33%;}
+  .col-8 {width: 66.66%;}
+  .col-9 {width: 75%;}
+  .col-10 {width: 83.33%;}
+  .col-11 {width: 91.66%;}
+  .col-12 {width: 100%;}
+
+  /* For desktop: */
+  .pad-2 {width: calc(16.66% - #{$pad-px});}
+  .pad-3 {width: calc(25% - #{$pad-px});}
+  .pad-4 {width: calc(33.33% - #{$pad-px});}
+  .pad-5 {width: calc(41.66% - #{$pad-px});}
+  .pad-6 {width: calc(50% - #{$pad-px});}
+  .pad-7 {width: calc(58.33% - #{$pad-px});}
+  .pad-8 {width: calc(66.66% - #{$pad-px});}
+  .pad-9 {width: calc(75% - #{$pad-px});}
+  .pad-10 {width: calc(83.33% - #{$pad-px});}
+  .pad-11 {width: calc(91.66% - #{$pad-px});}
+  .pad-12 {width: calc(100% - #{$pad-px});}
+}
+
+.row::after {
+  content: "";
+  clear: both;
+  display: table;
+}
