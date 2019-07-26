@@ -1,8 +1,31 @@
-{% extends 'base.html' %}
+<!doctype html>
+<html>
+<head>
+	<title>sarsoo/spotify</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<link type="text/css" rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+	<link href="https://fonts.googleapis.com/css?family=Pirata+One|Lato" rel="stylesheet">
 
-{% block title %}spotify{% endblock %}
+	<link rel="apple-touch-icon" sizes="180x180" href="https://storage.googleapis.com/sarsooxyzstatic/apple-touch-icon.png">
+	<link rel="icon" type="image/png" sizes="32x32" href="https://storage.googleapis.com/sarsooxyzstatic/favicon-32x32.png">
+	<link rel="icon" type="image/png" sizes="16x16" href="https://storage.googleapis.com/sarsooxyzstatic/favicon-16x16.png">
+	<link rel="manifest" href="https://storage.googleapis.com/sarsooxyzstatic/site.webmanifest">
+	<link rel="mask-icon" href="https://storage.googleapis.com/sarsooxyzstatic/safari-pinned-tab.svg" color="#5bbad5">
+	<link rel="shortcut icon" href="https://storage.googleapis.com/sarsooxyzstatic/favicon.ico">
 
-{% block content %}
+</head>
+<body>
+	<div>
+		<h1 class="title">andy</h1>
+	</div>
 
-	<div class="row"></div>
-{% endblock %}
+	<br><br>
+
+	<div id="react"></div>
+	<script src="{{ url_for('static', filename='js/app.bundle.js') }}"></script>
+
+	<footer>
+			<a href="https://github.com/Sarsoo/sarsoo.xyz">view source code</a>
+	</footer>
+</body>
+</html>
