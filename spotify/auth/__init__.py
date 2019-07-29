@@ -1,0 +1,1 @@
+from .auth import blueprint as auth_blueprint
