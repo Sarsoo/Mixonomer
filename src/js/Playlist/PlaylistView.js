@@ -6,8 +6,9 @@ class PlaylistView extends Component{
 
     constructor(props){
         super(props);
+        console.log(this.props);
         this.state = {
-            name: props.name
+            name: this.props.match.name
         }
     }
 

@@ -7,6 +7,7 @@ node_modules/
 *$py.class
 
 .idea
+.vscode
 
 # C extensions
 *.so

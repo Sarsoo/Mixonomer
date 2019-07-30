@@ -21,7 +21,11 @@ def login():
 
         users = [i for i in users]
 
-        if len(users) != 1:
+        if len(users) == 0:
+            flash('user not found')
+            return redirect(url_for('index'))
+
+        if len(users) > 1:
             flash('multiple users found')
             return redirect(url_for('index'))
 

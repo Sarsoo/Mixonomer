@@ -1,6 +1,7 @@
 $font-stack: 'Lato', arial; 
 $background-colour: #202124;
 $ui-colour: #131313;
+$light-ui: #575757;
 $text-colour: white;
 
 $pad-px: 20px;
@@ -30,6 +31,10 @@ p {
 	padding: 10px;
 }
 
+.ui-text {
+	color: $text-colour;
+}
+
 .center-text {
     text-align: center;
 }
@@ -40,34 +45,17 @@ p {
 
 .button {
 	background-color: #505050;
-	color: white;
-	border-radius: 10px;
-	display: inline-block;
-	margin: 4px auto;
-	cursor: pointer;
-	padding: 15px;
-	box-shadow: 2px 2px 4px  black;
-	/*-webkit-transition-duration: 0.4s;
-  	transition-duration: 0.4s;*/
-	
-	text: {
-		align: center;
-		decoration: none;
-	}
-	
-	&:hover {
-		box-shadow: 0 12px 16px 0 rgba(0,0,0,0.24),0 17px 50px 0 rgba(0,0,0,0.19);
-	}
-}
+	color: $text-colour;
 
-button {
-	background-color: #505050;
-	color: white;
-	border-radius: 10px;
 	display: inline-block;
+	
+	border-radius: 10px;
+	border: none;
 	margin: 4px auto;
-	cursor: pointer;
 	padding: 15px;
+
+	cursor: pointer;
+	
 	box-shadow: 2px 2px 4px  black;
 	/*-webkit-transition-duration: 0.4s;
   	transition-duration: 0.4s;*/
@@ -127,6 +115,12 @@ h1.title {
 	font-size: 6em;
 	font-family: 'Pirata One', arial;
 	text-shadow: 3px 3px 3px #aaa;
+	
+	cursor: default;
+	user-select: none;
+	-webkit-user-select: none;
+	-moz-user-select: none;
+	-ms-user-select: none;
 
 	font-weight: bold;
 	display: block;
@@ -152,7 +146,7 @@ h1.title {
 
 	h1 {
 		text-align: center;
-		color: white;
+		color: $text-colour;
 		text-shadow: 1px 1px 2px #4f4f4f;
 	}
 
@@ -162,7 +156,7 @@ h1.title {
 		margin-bottom: 8px;	
 		box-shadow: 2px 2px 2px black;
 		margin-left: auto;
-    		margin-right: auto;
+    	margin-right: auto;
 	}
 
 	p {
@@ -172,7 +166,7 @@ h1.title {
 
 h1.sectiontitle {
 	text-align:center;
-	color: white;
+	color: $text-colour;
 	font-family: 'Megrim', sans-serif;
 }
 
@@ -183,8 +177,7 @@ ul.navbar {
 	margin: 10px;
 	padding: 0;
 	overflow: hidden;
-	background-color: $ui-colour;
-
+	background-color: $light-ui;
 
 	li {
 		float: left;
@@ -195,9 +188,10 @@ ul.navbar {
 
 		a {
 			display: block;
-			color: white;
+			color: $text-colour;
 			text-align: center;
 			padding: 14px 16px;
+
 			text-decoration: none;
 			text-shadow: 1px 1px 2px black;
 			-webkit-transition: background-color 0.4s;
@@ -214,31 +208,77 @@ ul.navbar {
 }
 
 .sidebar {
-	li {
-		// float: left;
-		position: -webkit-sticky;
-		position: sticky;
-		top: 0;
-		height: 50px;
-		
+	
+	background-color: $light-ui;
+	list-style-type: none;
+	margin-left: 10px;
+	margin-right: 10px;
+	border-radius: 5px;
+	padding-top: 10px;
+	padding-bottom: 10px;
 
-		a {
-			// display: block;
-			color: white;
-			text-align: center;
-			padding: 14px 16px;
+	tr {
+		// float: left;
+		// position: -webkit-sticky;
+		// position: sticky;
+		top: 0;
+		cursor: pointer;
+		// padding: 10px;	
+
+		td {
 			
-			text-decoration: none;
-			text-shadow: 1px 1px 2px black;
-			-webkit-transition: background-color 0.4s;
-  			transition: background-color 0.4s;
-		
+			height: 50px;
+			text-align: center;
+			vertical-align: center;
+
+			border-radius: 5px;
+
+			// margin-top: 10px;
+			// margin-bottom: 10px;
+			// margin: auto;
+
+			a {
+				// display: block;
+				color: $text-colour;
+				// text-align: center;
+				// vertical-align: center;
+				// margin: 25px;
+				// padding: 14px 16px;
+				// border-radius: 5px;
+				height: 100%;
+				width: 100%;
+				display: inline-block;
+				vertical-align: center;
+				padding: 10px;
+				
+				text-decoration: none;
+				text-shadow: 1px 1px 2px black;
+				-webkit-transition: background-color 0.4s;
+				transition: background-color 0.4s;	
+			}	
 
 			&:hover {
-				background-color: #080808;
+				background-color: black;
 			}
 		}
 	}
+
+}
+
+.sidebar-selected {
+	background-color: black; 
+}
+
+.app-table {
+	width: 100%;
+	margin: auto;
+	td {
+		padding: $pad-px;
+	}
+}
+
+.max-width {
+	max-width: 800px;
 }
 
 footer {
@@ -257,7 +297,7 @@ footer {
 	}
 }
 
-@media only screen and (max-width: 600px) {
+@media only screen and (max-width: 768px) {
   ul.navbar li.right,
   ul.navbar li {float: none;}
 }

@@ -2,58 +2,21 @@ import React, { Component } from "react";
 import { BrowserRouter as Router, Route, Link } from "react-router-dom";
 const axios = require('axios');
 
+import PlaylistsView from "./PlaylistsView.js"
+
 class Playlists extends Component {
+    render(){
+        return (
+            <div>
+                <ul className="navbar" style={{width: "100%"}}>
+                    <li><Link to={`${this.props.match.url}/add`}>add</Link></li>
+                </ul>
+                
+                <Route path={`${this.props.match.url}/`} component={PlaylistsView} />
 
-    constructor(props){
-        super(props);
-        this.state = {
-            isLoading: true
-        }
-        this.getPlaylists();
+            </div>
+        );
     }
-
-    getPlaylists(){
-        var self = this;
-        axios.get('/api/playlists')
-        .then((response) => {
-            self.setState({
-                playlists: response.data.playlists,
-                isLoading: false
-            });
-        });
-    }
-
-    render() {
-        
-        const table = <div><Table playlists={this.state.playlists}/></div>;
-        const loadingMessage = <p className="center-text">loading...</p>;
-
-        return this.state.isLoading ? loadingMessage : table;
-    }
-}
-
-function Table(props){
-    return (
-        <div>
-            { props.playlists.map((playlist) => <Row playlist={ playlist } key={ playlist.name }/>) }
-        </div>
-    );
-}
-
-function Row(props){
-    return (
-        <PlaylistLink playlist={props.playlist}/>
-    );
-}
-
-function PlaylistLink(props){
-    return (
-        <Link to={ getPlaylistLink(props.playlist.name) }>{ props.playlist.name }</Link>
-    );
-}
-
-function getPlaylistLink(playlistName){
-    return '/app/playlist/' + playlistName;
 }
 
 export default Playlists;

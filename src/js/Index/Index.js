@@ -5,10 +5,8 @@ class Index extends Component{
 
     constructor(props){
         super(props);
-        this.state = {
-
-        }
-        this.pingPlaylists();
+        this.state = {}
+        // this.pingPlaylists();
     }
 
     pingPlaylists(){

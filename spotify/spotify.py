@@ -69,9 +69,9 @@ def token():
     return redirect('/app')
 
 
-@app.route('/app')
-@app.route('/app/<path>')
-def app_route(path = None):
+@app.route('/app', defaults={'path': ''})
+@app.route('/app/<path:path>')
+def app_route(path):
 
     if 'username' not in session:
         flash('please log in')
