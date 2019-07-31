@@ -15,7 +15,7 @@ class Settings extends Component {
                 </ul>
                 
                 <Route path={`${this.props.match.url}/password`} component={ChangePassword} />
-                <Route path={`${this.props.match.url}/spotify`} render={(props) => <SpotifyLink {...props} spotify_linked={this.props.spotify_linked}/>} />
+                <Route path={`${this.props.match.url}/spotify`} component={SpotifyLink} />
 
             </div>
         );

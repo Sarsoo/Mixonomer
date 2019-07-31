@@ -27,15 +27,15 @@ def get_playlists():
         return jsonify({'error': 'not logged in'}), 401
 
 
-@blueprint.route('/playlist', methods=['GET', 'POST', 'PUT'])
-def get_playlist():
+@blueprint.route('/playlist', methods=['GET', 'POST', 'PUT', 'DELETE'])
+def playlist():
 
     if 'username' in session:
 
         user_ref = database.get_user_doc_ref(session['username'])
         playlists = database.get_user_playlists_collection(user_ref.id)
 
-        if request.method == 'GET':
+        if request.method == 'GET' or request.method == 'DELETE':
             playlist_name = request.args.get('name', None)
 
             if playlist_name:
@@ -47,7 +47,15 @@ def get_playlist():
                 elif len(queried_playlist) > 1:
                     return jsonify({'error': 'multiple playlists found'}), 500
 
-                return jsonify(queried_playlist[0].to_dict()), 200
+                if request.method == "GET":
+
+                    return jsonify(queried_playlist[0].to_dict()), 200
+
+                elif request.method == 'DELETE':
+
+                    playlists.document(queried_playlist[0].id).delete()
+
+                    return jsonify({"message": 'playlist deleted', "status": "success"}), 200
 
             else:
                 return jsonify({"error": 'no name requested'}), 400
@@ -62,6 +70,7 @@ def get_playlist():
             playlist_name = request_json['name']
             playlist_parts = request_json.get('parts', None)
             playlist_id = request_json.get('id', None)
+            playlist_shuffle = request_json.get('shuffle', None)
 
             queried_playlist = [i for i in playlists.where(u'name', u'==', playlist_name).stream()]
 
@@ -70,18 +79,19 @@ def get_playlist():
                 if len(queried_playlist) != 0:
                     return jsonify({'error': 'playlist already exists'}), 400
 
-                if playlist_parts is None or playlist_id is None:
-                    return jsonify({'error': 'parts and id required'}), 400
+                # if playlist_id is None or playlist_shuffle is None:
+                #     return jsonify({'error': 'parts and id required'}), 400
 
                 playlists.add({
                     'name': playlist_name,
                     'parts': playlist_parts,
-                    'playlist_id': playlist_id
+                    'playlist_id': playlist_id,
+                    'shuffle': playlist_shuffle
                 })
 
                 return jsonify({"message": 'playlist added', "status": "success"}), 200
 
-            else:
+            elif request.method == 'POST':
 
                 if len(queried_playlist) == 0:
                     return jsonify({'error': "playlist doesn't exist"}), 400
@@ -89,7 +99,7 @@ def get_playlist():
                 if len(queried_playlist) > 1:
                     return jsonify({'error': "multiple playlists exist"}), 500
 
-                if playlist_parts is None and playlist_id is None:
+                if playlist_parts is None and playlist_id is None and playlist_shuffle is None:
                     return jsonify({'error': "no chnages to make"}), 400
 
                 playlist_doc = playlists.document(queried_playlist[0].id)
@@ -102,9 +112,14 @@ def get_playlist():
                 if playlist_id:
                     dic['playlist_id'] = playlist_id
 
+                if playlist_shuffle is not None:
+                    dic['shuffle'] = playlist_shuffle
+
                 playlist_doc.update(dic)
 
                 return jsonify({"message": 'playlist updated', "status": "success"}), 200
+
+
 
     else:
         return jsonify({'error': 'not logged in'}), 401

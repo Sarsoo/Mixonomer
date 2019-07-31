@@ -84,12 +84,12 @@ class ChangePassword extends Component {
                     <table className="app-table max-width">
                         <thead>
                             <tr>
-                                <th colSpan="2"><h1>change password</h1></th>
+                                <th colSpan="2"><h1 className="text-no-select">change password</h1></th>
                             </tr>
                         </thead>
                         <tbody>
                             <tr>
-                                <td className="ui-text center-text">current:</td>
+                                <td className="ui-text center-text text-no-select">current:</td>
                                 <td><input 
                                         type="password" 
                                         name="current" 
@@ -98,7 +98,7 @@ class ChangePassword extends Component {
                                         className="full-width" /></td>
                             </tr>
                             <tr>
-                                <td className="ui-text center-text">new:</td>
+                                <td className="ui-text center-text text-no-select">new:</td>
                                 <td><input 
                                         type="password" 
                                         name="new1" 
@@ -107,7 +107,7 @@ class ChangePassword extends Component {
                                         className="full-width" /></td>
                             </tr>
                             <tr>
-                                <td className="ui-text center-text">new again:</td>
+                                <td className="ui-text center-text text-no-select">new again:</td>
                                 <td><input 
                                         type="password" 
                                         name="new2" 

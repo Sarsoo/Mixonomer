@@ -62,15 +62,17 @@ class PlaylistManager extends Component {
                     <div className="pad-9">
                         <Switch>
                             <Route path="/app" exact component={Index} />
-                            <Route path="/app/playlists" exact component={Playlists} />
-                            <Route path="/app/settings" render={(props) => <Settings {...props} spotify_linked={this.state.spotify_linked}/>} />
+                            <Route path="/app/playlists" component={Playlists} />
+                            <Route path="/app/settings" component={Settings} />
                             { this.state.type == 'admin' && <Route path="/app/admin" component={Admin} /> }
                             <Route path='/app/playlist/:name' component={PlaylistView} />
                             <Route component={NotFound} />
                         </Switch>
                     </div>
                 </div>
-                
+                <footer>
+                    <a href="https://github.com/Sarsoo/spotify-web">view source code</a>
+                </footer>
             </Router>
         );
     }

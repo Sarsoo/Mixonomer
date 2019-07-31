@@ -22,7 +22,7 @@ class Index extends Component{
     }
 
     render(){
-        return <h1 className="center-text">welcome to playlist manager!</h1>;
+        return <h1 className="center-text text-no-select">welcome to playlist manager!</h1>;
     }
 }
 

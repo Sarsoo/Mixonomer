@@ -78,7 +78,7 @@ def auth():
 
         return redirect(urllib.parse.urlunparse(['https', 'accounts.spotify.com', 'authorize', '', params, '']))
 
-    return redirect('/')
+    return redirect(url_for('index'))
 
 
 @blueprint.route('/spotify/token')
@@ -116,7 +116,7 @@ def token():
 
         return redirect('/app/settings/spotify')
 
-    return redirect('/')
+    return redirect(url_for('index'))
 
 
 @blueprint.route('/spotify/deauth')
@@ -134,4 +134,4 @@ def deauth():
 
         return redirect('/app/settings/spotify')
 
-    return redirect('/')
+    return redirect(url_for('index'))

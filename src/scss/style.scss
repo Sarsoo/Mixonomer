@@ -70,6 +70,14 @@ p {
 	}
 }
 
+input[type=text], input[type=password], select {
+	padding: 10px;
+	background-color: #505050;
+	border: black;
+	border-radius: 4px;
+	color: white;
+}
+
 .row {
 	margin: 30px;
 }
@@ -273,12 +281,20 @@ ul.navbar {
 	width: 100%;
 	margin: auto;
 	td {
-		padding: $pad-px;
+		padding: 5px;
 	}
 }
 
 .max-width {
 	max-width: 800px;
+}
+
+.text-no-select {
+	cursor: default;
+	user-select: none;
+	-webkit-user-select: none;
+	-moz-user-select: none;
+	-ms-user-select: none;
 }
 
 footer {
