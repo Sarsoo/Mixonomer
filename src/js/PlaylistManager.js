@@ -16,7 +16,8 @@ class PlaylistManager extends Component {
     constructor(props){
         super(props);
         this.state = {
-            type: null
+            type: null,
+            spotify_linked: null
         }
     }
 
@@ -37,7 +38,8 @@ class PlaylistManager extends Component {
         })
         .then((response) => {
             self.setState({
-                type: response.data.type
+                type: response.data.type,
+                spotify_linked: response.data.spotify_linked
             })
         });
     }
@@ -61,7 +63,7 @@ class PlaylistManager extends Component {
                         <Switch>
                             <Route path="/app" exact component={Index} />
                             <Route path="/app/playlists" exact component={Playlists} />
-                            <Route path="/app/settings" component={Settings} />
+                            <Route path="/app/settings" render={(props) => <Settings {...props} spotify_linked={this.state.spotify_linked}/>} />
                             { this.state.type == 'admin' && <Route path="/app/admin" component={Admin} /> }
                             <Route path='/app/playlist/:name' component={PlaylistView} />
                             <Route component={NotFound} />

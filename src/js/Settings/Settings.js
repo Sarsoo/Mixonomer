@@ -1,7 +1,8 @@
 import React, { Component } from "react";
 import { BrowserRouter as Router, Route, Link, Switch, Redirect} from "react-router-dom";
 
-import ChangePassword from "./ChangePassword.js"
+import ChangePassword from "./ChangePassword.js";
+import SpotifyLink from "./SpotifyLink.js";
 
 class Settings extends Component {
 
@@ -10,9 +11,11 @@ class Settings extends Component {
             <div>
                 <ul className="navbar" style={{width: "100%"}}>
                     <li><Link to={`${this.props.match.url}/password`}>password</Link></li>
+                    <li><Link to={`${this.props.match.url}/spotify`}>spotify</Link></li>
                 </ul>
                 
                 <Route path={`${this.props.match.url}/password`} component={ChangePassword} />
+                <Route path={`${this.props.match.url}/spotify`} render={(props) => <SpotifyLink {...props} spotify_linked={this.props.spotify_linked}/>} />
 
             </div>
         );

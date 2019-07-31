@@ -22,7 +22,7 @@ class Index extends Component{
     }
 
     render(){
-        return <p>index</p>;
+        return <h1 className="center-text">welcome to playlist manager!</h1>;
     }
 }
 

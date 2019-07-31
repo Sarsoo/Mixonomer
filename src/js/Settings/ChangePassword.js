@@ -79,10 +79,14 @@ class ChangePassword extends Component {
 
     render(){
         return (
-            <div>
-                <h1>change password</h1>
+            <div> 
                 <form onSubmit={this.handleSubmit}>
                     <table className="app-table max-width">
+                        <thead>
+                            <tr>
+                                <th colSpan="2"><h1>change password</h1></th>
+                            </tr>
+                        </thead>
                         <tbody>
                             <tr>
                                 <td className="ui-text center-text">current:</td>
@@ -117,7 +121,7 @@ class ChangePassword extends Component {
                         </tbody>
                     </table>
                 </form>
-                { this.state.error && <p style={{color: "red"}}>{this.state.errorValue}</p>}
+                { this.state.error && <p style={{color: "red"}} className="center-text">{this.state.errorValue}</p>}
             </div>
         );
     }
