@@ -1,11 +1,15 @@
 from flask import Blueprint, session, request, jsonify
 from google.cloud import firestore
+from google.cloud import pubsub_v1
 from werkzeug.security import check_password_hash, generate_password_hash
 
 import spotify.api.database as database
 
 blueprint = Blueprint('api', __name__)
 db = firestore.Client()
+publisher = pubsub_v1.PublisherClient()
+
+run_playlist_topic_path = publisher.topic_path('sarsooxyz', 'run_user_playlist')
 
 
 @blueprint.route('/playlists', methods=['GET'])
@@ -82,10 +86,14 @@ def playlist():
                 # if playlist_id is None or playlist_shuffle is None:
                 #     return jsonify({'error': 'parts and id required'}), 400
 
+                from spotify.api.spotify import create_playlist as create_playlist
+
+                new_playlist_id = create_playlist(session['username'], playlist_name)
+
                 playlists.add({
                     'name': playlist_name,
                     'parts': playlist_parts,
-                    'playlist_id': playlist_id,
+                    'playlist_id': new_playlist_id,
                     'shuffle': playlist_shuffle
                 })
 
@@ -118,8 +126,6 @@ def playlist():
                 playlist_doc.update(dic)
 
                 return jsonify({"message": 'playlist updated', "status": "success"}), 200
-
-
 
     else:
         return jsonify({'error': 'not logged in'}), 401
@@ -174,6 +180,29 @@ def change_password():
 
         else:
             return jsonify({'error': 'malformed request, no old_password/new_password'}), 400
+
+    else:
+        return jsonify({'error': 'not logged in'}), 401
+
+
+@blueprint.route('/playlist/run', methods=['GET'])
+def run_playlist():
+
+    if 'username' in session:
+
+        playlist_name = request.args.get('name', None)
+
+        if playlist_name:
+
+            data = u'{}'.format(playlist_name)
+            data = data.encode('utf-8')
+
+            publisher.publish(run_playlist_topic_path, data=data, username=session['username'])
+
+            return jsonify({'message': 'execution requested', 'status': 'success'}), 200
+
+        else:
+            return jsonify({"error": 'no name requested'}), 400
 
     else:
         return jsonify({'error': 'not logged in'}), 401

@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import { BrowserRouter as Redirect } from "react-router-dom";
 const axios = require('axios');
 
 class NewPlaylist extends Component {
@@ -33,7 +34,9 @@ class NewPlaylist extends Component {
                     type: this.state.type,
                 }).catch((error) => {
                     console.log(error);
-                })
+                }).finally(() => {
+                    window.location.href = "/app/playlists";
+                });
             }else{
                 this.setState({
                     error: true,
@@ -74,7 +77,7 @@ class NewPlaylist extends Component {
                     </tr>
                     <tr>
                         <td colSpan="2">
-                            <button className="button full-width" onClick={this.handleSubmit}>create</button>
+                            <input type="submit" className="button full-width" onClick={this.handleSubmit} value="create" />
                         </td>
                     </tr>
                     { this.state.error && 
