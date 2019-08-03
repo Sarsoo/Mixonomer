@@ -43,6 +43,10 @@ p {
     width: 100%;
 }
 
+.half-width {
+    width: 50%;
+}
+
 .button {
 	background-color: #505050;
 	color: $text-colour;
@@ -53,6 +57,8 @@ p {
 	border: none;
 	margin: 4px auto;
 	padding: 15px;
+
+	font-size: 15px;
 
 	cursor: pointer;
 	
@@ -75,7 +81,7 @@ p {
 	}
 }
 
-input[type=text], input[type=password], select {
+input[type=text], input[type=password], input[type=number], select {
 	padding: 10px;
 	background-color: #505050;
 	border: black;

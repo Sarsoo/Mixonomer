@@ -5,7 +5,8 @@ const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 module.exports = {
 	entry: {
       app: './src/js/app.js',
-      login: './src/js/login.js'
+      login: './src/js/login.js',
+      register: './src/js/register.js'
 	    },
 	module: {
     rules: [

@@ -27,9 +27,7 @@ class PlaylistsView extends Component {
 
     handleRunPlaylist(name, event){
         axios.get('/api/playlist/run', {params: {name: name}})
-        .then((response) => {
-            console.log(response);
-        }).catch((error) => {
+        .catch((error) => {
             console.log(error);
         });
     }

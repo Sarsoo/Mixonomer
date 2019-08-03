@@ -17,7 +17,13 @@ app.register_blueprint(api_blueprint, url_prefix='/api')
 
 @app.route('/')
 def index():
-    return render_template('index.html')
+
+    if 'username' in session:
+        logged_in = True
+    else:
+        logged_in = False
+
+    return render_template('login.html', logged_in=logged_in)
 
 
 @app.route('/app', defaults={'path': ''})

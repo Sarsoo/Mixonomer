@@ -90,20 +90,22 @@ def playlist():
 
                 from spotify.api.spotify import create_playlist as create_playlist
 
-                new_playlist_id = create_playlist(session['username'], playlist_name)
-
                 to_add = {
                     'name': playlist_name,
                     'parts': playlist_parts,
-                    'playlist_id': new_playlist_id,
+                    'playlist_id': None,
                     'shuffle': playlist_shuffle,
                     'type': playlist_type
                 }
 
+                if user_ref.get().to_dict()['spotify_linked']:
+                    new_playlist_id = create_playlist(session['username'], playlist_name)
+                    to_add['playlist_id'] = new_playlist_id
+
                 if playlist_type == 'recents':
                     to_add['day_boundary'] = playlist_day_boundary if playlist_day_boundary is not None else 21
 
-                playlists.add(to_add)
+                playlists.document().set(to_add)
 
                 return jsonify({"message": 'playlist added', "status": "success"}), 200
 
@@ -148,21 +150,75 @@ def playlist():
         return jsonify({'error': 'not logged in'}), 401
 
 
-@blueprint.route('/user', methods=['GET'])
+@blueprint.route('/user', methods=['GET', 'POST'])
 def user():
 
     if 'username' in session:
 
-        pulled_user = database.get_user_doc_ref(session['username']).get().to_dict()
+        if request.method == 'GET':
 
-        response = {
-            'username': pulled_user['username'],
-            'type': pulled_user['type'],
-            'spotify_linked': pulled_user['spotify_linked'],
-            'validated': pulled_user['validated']
+            pulled_user = database.get_user_doc_ref(session['username']).get().to_dict()
+
+            response = {
+                'username': pulled_user['username'],
+                'type': pulled_user['type'],
+                'spotify_linked': pulled_user['spotify_linked'],
+                'validated': pulled_user['validated']
+            }
+
+            return jsonify(response), 200
+
+        else:
+
+            if database.get_user_doc_ref(session['username']).get().to_dict()['type'] != 'admin':
+                return jsonify({'status': 'error', 'message': 'unauthorized'}), 401
+
+            request_json = request.get_json()
+
+            if 'username' not in request_json:
+                return jsonify({'status': 'error', 'message': 'no username provided'}), 400
+
+            actionable_user = database.get_user_doc_ref(request_json['username'])
+
+            dic = {}
+
+            if 'locked' in request_json:
+                dic['locked'] = request_json['locked']
+
+            if len(dic) > 0:
+                actionable_user.update(dic)
+
+            return jsonify({'message': 'account locked', 'status': 'succeeded'}), 200
+
+    else:
+        return jsonify({'error': 'not logged in'}), 401
+
+
+@blueprint.route('/users', methods=['GET'])
+def users():
+
+    if 'username' in session:
+
+        if database.get_user_doc_ref(session['username']).get().to_dict()['type'] != 'admin':
+            return jsonify({'status': 'unauthorised'}), 401
+
+        dic = {
+            'accounts': []
         }
 
-        return jsonify(response), 200
+        for account in [i.to_dict() for i in db.collection(u'spotify_users').stream()]:
+
+            user_dic = {
+                'username': account['username'],
+                'type': account['type'],
+                'spotify_linked': account['spotify_linked'],
+                'locked': account['locked'],
+                'last_login': account['last_login']
+            }
+
+            dic['accounts'].append(user_dic)
+
+        return jsonify(dic)
 
     else:
         return jsonify({'error': 'not logged in'}), 401

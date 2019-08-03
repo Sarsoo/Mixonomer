@@ -21,6 +21,8 @@ class PlaylistView extends Component{
         this.handleInputChange = this.handleInputChange.bind(this);
         this.handleRemoveRow = this.handleRemoveRow.bind(this);
 
+        this.handleRun = this.handleRun.bind(this);
+
         this.handleShuffleChange = this.handleShuffleChange.bind(this);
     }
 
@@ -53,7 +55,7 @@ class PlaylistView extends Component{
     handleDayBoundaryChange(boundary) {
         axios.post('/api/playlist', {
             name: this.state.name,
-            day_boundary: boundary
+            day_boundary: parseInt(boundary)
         }).catch((error) => {
             console.log(error);
         });
@@ -105,6 +107,13 @@ class PlaylistView extends Component{
         });
     }
 
+    handleRun(event){
+        axios.get('/api/playlist/run', {params: {name: this.state.name}})
+        .catch((error) => {
+            console.log(error);
+        });
+    }
+
     render(){
 
         const table = (
@@ -145,7 +154,7 @@ class PlaylistView extends Component{
                             day boundary
                         </td>
                         <td>
-                            <input type="text" 
+                            <input type="number" 
                                 name="day_boundary"
                                 className="full-width"
                                 value={this.state.day_boundary}
@@ -153,6 +162,11 @@ class PlaylistView extends Component{
                         </td>
                     </tr>  
                     }
+                    <tr>
+                        <td colspan="2">
+                            <button className="button full-width" onClick={this.handleRun}>run</button>
+                        </td>
+                    </tr>
                 </tbody>
             </table>
         );

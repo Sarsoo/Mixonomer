@@ -44,7 +44,6 @@ class NewPlaylist extends Component {
                 });
             }
         });
-        console.log(this.state);
     }
 
     render(){

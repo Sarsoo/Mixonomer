@@ -1,6 +1,6 @@
-from flask import Blueprint, session, flash, request, redirect, url_for
+from flask import Blueprint, session, flash, request, redirect, url_for, render_template
 from google.cloud import firestore
-from werkzeug.security import check_password_hash
+from werkzeug.security import check_password_hash, generate_password_hash
 
 import urllib
 import datetime
@@ -41,6 +41,10 @@ def login():
 
         if check_password_hash(doc['password'], password):
 
+            if doc['locked']:
+                flash('account locked')
+                return redirect(url_for('index'))
+
             user_reference = db.collection(u'spotify_users').document(u'{}'.format(users[0].id))
             user_reference.update({'last_login': datetime.datetime.utcnow()})
 
@@ -59,6 +63,46 @@ def logout():
     session.pop('username', None)
     flash('logged out')
     return redirect(url_for('index'))
+
+
+@blueprint.route('/register', methods=['GET', 'POST'])
+def register():
+
+    if 'username' in session:
+        return redirect(url_for('index'))
+
+    if request.method == 'GET':
+        return render_template('register.html')
+    else:
+
+        username = request.form['username'].lower()
+        password = request.form['password']
+        password_again = request.form['password_again']
+
+        if username in [i.to_dict()['username'] for i in
+                        db.collection(u'spotify_users').where(u'username', u'==', username).stream()]:
+            flash('username already registered')
+            return redirect('authapi.register')
+
+        if password != password_again:
+            flash('password mismatch')
+            return redirect('authapi.register')
+
+        db.collection(u'spotify_users').add({
+            'access_token': None,
+            'email': None,
+            'last_login': datetime.datetime.utcnow(),
+            'locked': False,
+            'password': generate_password_hash(password),
+            'refresh_token': None,
+            'spotify_linked': False,
+            'type': 'user',
+            'username': username,
+            'validated': True
+        })
+
+        session['username'] = username
+        return redirect(url_for('authapi.auth'))
 
 
 @blueprint.route('/spotify')
@@ -89,7 +133,6 @@ def token():
         code = request.args.get('code', None)
         if code is None:
             error = request.args.get('error', None)
-            print('error')
         else:
             app_credentials = db.document('key/spotify').get().to_dict()
 
