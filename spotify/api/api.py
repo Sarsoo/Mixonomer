@@ -75,6 +75,8 @@ def playlist():
             playlist_parts = request_json.get('parts', None)
             playlist_id = request_json.get('id', None)
             playlist_shuffle = request_json.get('shuffle', None)
+            playlist_type = request_json.get('type', None)
+            playlist_day_boundary = request_json.get('day_boundary', None)
 
             queried_playlist = [i for i in playlists.where(u'name', u'==', playlist_name).stream()]
 
@@ -90,12 +92,18 @@ def playlist():
 
                 new_playlist_id = create_playlist(session['username'], playlist_name)
 
-                playlists.add({
+                to_add = {
                     'name': playlist_name,
                     'parts': playlist_parts,
                     'playlist_id': new_playlist_id,
-                    'shuffle': playlist_shuffle
-                })
+                    'shuffle': playlist_shuffle,
+                    'type': playlist_type
+                }
+
+                if playlist_type == 'recents':
+                    to_add['day_boundary'] = playlist_day_boundary if playlist_day_boundary is not None else 21
+
+                playlists.add(to_add)
 
                 return jsonify({"message": 'playlist added', "status": "success"}), 200
 
@@ -107,21 +115,30 @@ def playlist():
                 if len(queried_playlist) > 1:
                     return jsonify({'error': "multiple playlists exist"}), 500
 
-                if playlist_parts is None and playlist_id is None and playlist_shuffle is None:
+                if playlist_parts is None and \
+                        playlist_id is None and \
+                        playlist_shuffle is None and \
+                        playlist_day_boundary is None:
                     return jsonify({'error': "no chnages to make"}), 400
 
                 playlist_doc = playlists.document(queried_playlist[0].id)
 
                 dic = {}
 
-                if playlist_parts:
-                    dic['parts'] = playlist_parts
+                if playlist_parts is not None:
+                    if playlist_parts == -1:
+                        dic['parts'] = []
+                    else:
+                        dic['parts'] = playlist_parts
 
                 if playlist_id:
                     dic['playlist_id'] = playlist_id
 
                 if playlist_shuffle is not None:
                     dic['shuffle'] = playlist_shuffle
+
+                if playlist_day_boundary is not None:
+                    dic['day_boundary'] = playlist_day_boundary
 
                 playlist_doc.update(dic)
 

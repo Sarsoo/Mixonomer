@@ -61,7 +61,7 @@ class NewPlaylist extends Component {
                     <tr>
                         <td>
                             <select className="full-width" name="type" onChange={this.handleInputChange}>
-                                <option value="normal">normal</option>
+                                <option value="default">normal</option>
                                 <option value="recents">recents</option>
                             </select>
                         </td>

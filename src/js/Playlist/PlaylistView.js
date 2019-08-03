@@ -8,13 +8,17 @@ class PlaylistView extends Component{
         this.state = {
             name: this.props.match.params.name,
             parts: [],
+            type: null,
             error: false,
             error_text: null,
+
+            day_boundary: '',
             newPlaylistName: '',
+
             shuffle: false
         }
         this.handleAddPart = this.handleAddPart.bind(this);
-        this.handleAddPartChange = this.handleAddPartChange.bind(this);
+        this.handleInputChange = this.handleInputChange.bind(this);
         this.handleRemoveRow = this.handleRemoveRow.bind(this);
 
         this.handleShuffleChange = this.handleShuffleChange.bind(this);
@@ -36,9 +40,22 @@ class PlaylistView extends Component{
             });
     }
 
-    handleAddPartChange(event){
+    handleInputChange(event){
         this.setState({
-            newPlaylistName: event.target.value
+            [event.target.name]: event.target.value
+        });
+
+        if(event.target.name == 'day_boundary'){
+            this.handleDayBoundaryChange(event.target.value);
+        }
+    }
+
+    handleDayBoundaryChange(boundary) {
+        axios.post('/api/playlist', {
+            name: this.state.name,
+            day_boundary: boundary
+        }).catch((error) => {
+            console.log(error);
         });
     }
 
@@ -75,6 +92,11 @@ class PlaylistView extends Component{
         this.setState({
             parts: parts
         });
+
+        if(parts.length == 0) {
+            parts = -1;
+        }
+
         axios.post('/api/playlist', {
             name: this.state.name,
             parts: parts
@@ -96,10 +118,11 @@ class PlaylistView extends Component{
                     { this.state.parts.map((part) => <Row part={ part } key={ part } handler={this.handleRemoveRow}/>) }
                     <tr>
                         <td>
-                            <input type="text" 
+                            <input type="text"
+                                name="newPlaylistName" 
                                 className="full-width" 
                                 value={this.state.newPlaylistName} 
-                                onChange={this.handleAddPartChange}
+                                onChange={this.handleInputChange}
                                 placeholder="new playlist"></input>
                         </td>
                         <td>
@@ -116,6 +139,20 @@ class PlaylistView extends Component{
                                 onChange={this.handleShuffleChange}></input>
                         </td>
                     </tr>
+                    { this.state.type == 'recents' &&
+                     <tr>
+                        <td className="center-text ui-text text-no-select">
+                            day boundary
+                        </td>
+                        <td>
+                            <input type="text" 
+                                name="day_boundary"
+                                className="full-width"
+                                value={this.state.day_boundary}
+                                onChange={this.handleInputChange}></input>
+                        </td>
+                    </tr>  
+                    }
                 </tbody>
             </table>
         );

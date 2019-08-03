@@ -49,14 +49,14 @@ p {
 
 	display: inline-block;
 	
-	border-radius: 10px;
+	border-radius: 5px;
 	border: none;
 	margin: 4px auto;
 	padding: 15px;
 
 	cursor: pointer;
 	
-	box-shadow: 2px 2px 4px  black;
+	box-shadow: 0 9px #383838;
 	/*-webkit-transition-duration: 0.4s;
   	transition-duration: 0.4s;*/
 	
@@ -65,8 +65,13 @@ p {
 		decoration: none;
 	}
 	
-	&:hover {
-		box-shadow: 0 12px 16px 0 rgba(0,0,0,0.24),0 17px 50px 0 rgba(0,0,0,0.19);
+	// &:hover {
+	// 	box-shadow: 0 12px 16px 0 rgba(0,0,0,0.24),0 17px 50px 0 rgba(0,0,0,0.19);
+	// }
+
+	&:active {
+		box-shadow: 0 5px #383838;
+		transform: translateY(4px);
 	}
 }
 
