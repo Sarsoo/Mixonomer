@@ -22,7 +22,6 @@ class Lock extends Component {
                 accounts: response.data.accounts,
                 isLoading: false
             })
-            console.log(response)
         });
     }
 
@@ -47,7 +46,7 @@ class Lock extends Component {
                     <thead>
                         <tr>
                             <th colSpan='3'>
-                                <h1 className="text no-select">
+                                <h1 className="text-no-select">
                                     account locks
                                 </h1>
                             </th>

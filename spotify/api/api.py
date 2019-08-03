@@ -267,10 +267,7 @@ def run_playlist():
 
         if playlist_name:
 
-            data = u'{}'.format(playlist_name)
-            data = data.encode('utf-8')
-
-            publisher.publish(run_playlist_topic_path, data=data, username=session['username'])
+            execute_playlist(session['username'], playlist_name)
 
             return jsonify({'message': 'execution requested', 'status': 'success'}), 200
 
@@ -279,3 +276,74 @@ def run_playlist():
 
     else:
         return jsonify({'error': 'not logged in'}), 401
+
+
+@blueprint.route('/playlist/run/user', methods=['GET'])
+def run_user():
+
+    if 'username' in session:
+
+        if database.get_user_doc_ref(session['username']).get().to_dict()['type'] == 'admin':
+            user_name = request.args.get('username', session['username'])
+        else:
+            user_name = session['username']
+
+        execute_user(user_name)
+
+        return jsonify({'message': 'executed user', 'status': 'success'}), 200
+
+    else:
+        return jsonify({'error': 'not logged in'}), 401
+
+
+@blueprint.route('/playlist/run/users', methods=['GET'])
+def run_users():
+
+    if 'username' in session:
+
+        if database.get_user_doc_ref(session['username']).get().to_dict()['type'] != 'admin':
+            return jsonify({'status': 'error', 'message': 'unauthorized'}), 401
+
+        execute_all_users()
+
+        return jsonify({'message': 'executed all users', 'status': 'success'}), 200
+
+    else:
+        return jsonify({'error': 'not logged in'}), 401
+
+
+@blueprint.route('/playlist/run/users/cron', methods=['GET'])
+def run_users_cron():
+
+    if request.headers.get('X-Appengine-Cron'):
+        execute_all_users()
+        return jsonify({'status': 'success'}), 200
+    else:
+        return jsonify({'status': 'error', 'message': 'unauthorised'}), 401
+
+
+def execute_all_users():
+    all_users = [i.to_dict() for i in db.collection(u'spotify_users').stream()]
+
+    for iter_user in all_users:
+        if iter_user['spotify_linked'] and not iter_user['locked']:
+            execute_user(iter_user['username'])
+
+
+def execute_user(username):
+
+    playlists = [i.to_dict() for i in
+                 database.get_user_playlists_collection(database.get_user_query_stream(username)[0].id).stream()]
+
+    for iterate_playlist in playlists:
+        if len(iterate_playlist['parts']) > 0:
+            if iterate_playlist.get('playlist_id'):
+                execute_playlist(username, iterate_playlist['name'])
+
+
+def execute_playlist(username, name):
+
+    data = u'{}'.format(name)
+    data = data.encode('utf-8')
+
+    publisher.publish(run_playlist_topic_path, data=data, username=username)

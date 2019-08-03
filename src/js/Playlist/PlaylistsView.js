@@ -12,6 +12,7 @@ class PlaylistsView extends Component {
         this.getPlaylists();
         this.handleRunPlaylist = this.handleRunPlaylist.bind(this);
         this.handleDeletePlaylist = this.handleDeletePlaylist.bind(this);
+        this.handleRunAll = this.handleRunAll.bind(this);
     }
 
     getPlaylists(){
@@ -27,7 +28,7 @@ class PlaylistsView extends Component {
 
     handleRunPlaylist(name, event){
         axios.get('/api/playlist/run', {params: {name: name}})
-        .catch((error) => {
+        .catch((error) => {this
             console.log(error);
         });
     }
@@ -41,12 +42,20 @@ class PlaylistsView extends Component {
         });
     }
 
+    handleRunAll(event){
+        axios.get('/api/playlist/run/user')
+        .catch((error)  => {
+            console.log(error);
+        });
+    }
+
     render() {
         
         const table =   <div>
                             <Table playlists={this.state.playlists} 
                                 handleRunPlaylist={this.handleRunPlaylist} 
-                                handleDeletePlaylist={this.handleDeletePlaylist}/>
+                                handleDeletePlaylist={this.handleDeletePlaylist}
+                                handleRunAll={this.handleRunAll}/>
                         </div>;
 
         const loadingMessage = <p className="center-text">loading...</p>;
@@ -63,6 +72,10 @@ function Table(props){
                                                         handleRunPlaylist={props.handleRunPlaylist} 
                                                         handleDeletePlaylist={props.handleDeletePlaylist}
                                                         key={ playlist.name }/>) }
+                { props.playlists.length > 0 && 
+                <tr>
+                    <td colSpan="3"><button className="full-width button" onClick={props.handleRunAll}>run all</button></td>
+                </tr> }
             </tbody>
         </table>
     );
