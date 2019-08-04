@@ -30,6 +30,7 @@ class NewPlaylist extends Component {
                 axios.put('/api/playlist', {
                     name: this.state.name,
                     parts: [],
+                    playlist_references: [],
                     shuffle: false,
                     type: this.state.type,
                 }).catch((error) => {

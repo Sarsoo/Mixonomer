@@ -73,6 +73,7 @@ def playlist():
 
             playlist_name = request_json['name']
             playlist_parts = request_json.get('parts', None)
+            playlist_references = request_json.get('playlist_references', None)
             playlist_id = request_json.get('id', None)
             playlist_shuffle = request_json.get('shuffle', None)
             playlist_type = request_json.get('type', None)
@@ -92,7 +93,8 @@ def playlist():
 
                 to_add = {
                     'name': playlist_name,
-                    'parts': playlist_parts,
+                    'parts': playlist_parts if not None else [],
+                    'playlist_references': playlist_references if not None else [],
                     'playlist_id': None,
                     'shuffle': playlist_shuffle,
                     'type': playlist_type
@@ -118,6 +120,7 @@ def playlist():
                     return jsonify({'error': "multiple playlists exist"}), 500
 
                 if playlist_parts is None and \
+                        playlist_references is None and \
                         playlist_id is None and \
                         playlist_shuffle is None and \
                         playlist_day_boundary is None:
@@ -132,6 +135,12 @@ def playlist():
                         dic['parts'] = []
                     else:
                         dic['parts'] = playlist_parts
+
+                if playlist_references is not None:
+                    if playlist_references == -1:
+                        dic['playlist_references'] = []
+                    else:
+                        dic['playlist_references'] = playlist_references
 
                 if playlist_id:
                     dic['playlist_id'] = playlist_id
@@ -336,7 +345,7 @@ def execute_user(username):
                  database.get_user_playlists_collection(database.get_user_query_stream(username)[0].id).stream()]
 
     for iterate_playlist in playlists:
-        if len(iterate_playlist['parts']) > 0:
+        if len(iterate_playlist['parts']) > 0 or len(iterate_playlist['playlist_references']) > 0:
             if iterate_playlist.get('playlist_id'):
                 execute_playlist(username, iterate_playlist['name'])
 

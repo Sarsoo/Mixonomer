@@ -19,8 +19,17 @@ class PlaylistsView extends Component {
         var self = this;
         axios.get('/api/playlists')
         .then((response) => {
+
+            var playlists = response.data.playlists.slice();
+            
+            playlists.sort(function(a, b){
+                if(a.name < b.name) { return -1; }
+                if(a.name > b.name) { return 1; }
+                return 0;
+            });
+
             self.setState({
-                playlists: response.data.playlists,
+                playlists: playlists,
                 isLoading: false
             });
         });

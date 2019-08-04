@@ -8,18 +8,22 @@ class PlaylistView extends Component{
         this.state = {
             name: this.props.match.params.name,
             parts: [],
+            playlist_references: [],
             type: null,
             error: false,
             error_text: null,
 
             day_boundary: '',
             newPlaylistName: '',
+            newPlaylistReference: '',
 
             shuffle: false
         }
         this.handleAddPart = this.handleAddPart.bind(this);
+        this.handleAddReference = this.handleAddReference.bind(this);
         this.handleInputChange = this.handleInputChange.bind(this);
         this.handleRemoveRow = this.handleRemoveRow.bind(this);
+        this.handleRemoveRefRow = this.handleRemoveRefRow.bind(this);
 
         this.handleRun = this.handleRun.bind(this);
 
@@ -74,18 +78,61 @@ class PlaylistView extends Component{
     }
 
     handleAddPart(event){
-        var parts = this.state.parts;
-        parts.push(this.state.newPlaylistName);
-        this.setState({
-            parts: parts,
-            add_part_value: ''
+
+        var check = this.state.parts.filter((e) => {
+            return e == event.target.value;
         });
-        axios.post('/api/playlist', {
-            name: this.state.name,
-            parts: parts
-        }).catch((error) => {
-            console.log(error);
+
+        if(check.length == 0) {
+            var parts = this.state.parts.slice();
+            parts.push(this.state.newPlaylistName);
+
+            parts.sort(function(a, b){
+                if(a < b) { return -1; }
+                if(a > b) { return 1; }
+                return 0;
+            });
+
+            this.setState({
+                parts: parts,
+                newPlaylistName: ''
+            });
+            axios.post('/api/playlist', {
+                name: this.state.name,
+                parts: parts
+            }).catch((error) => {
+                console.log(error);
+            });
+        }
+    }
+
+    handleAddReference(event){
+        
+        var check = this.state.playlist_references.filter((e) => {
+            return e == event.target.value;
         });
+
+        if(check.length == 0) {
+            var playlist_references = this.state.playlist_references.slice();
+            playlist_references.push(this.state.newPlaylistReference);
+            
+            playlist_references.sort(function(a, b){
+                if(a < b) { return -1; }
+                if(a > b) { return 1; }
+                return 0;
+            });
+            
+            this.setState({
+                playlist_references: playlist_references,
+                newPlaylistReference: ''
+            });
+            axios.post('/api/playlist', {
+                name: this.state.name,
+                playlist_references: playlist_references
+            }).catch((error) => {
+                console.log(error);
+            });
+        }
     }
 
     handleRemoveRow(id, event){
@@ -107,6 +154,25 @@ class PlaylistView extends Component{
         });
     }
 
+    handleRemoveRefRow(id, event){
+        var playlist_references = this.state.playlist_references;
+        playlist_references = playlist_references.filter(e => e !== id);
+        this.setState({
+            playlist_references: playlist_references
+        });
+
+        if(playlist_references.length == 0) {
+            playlist_references = -1;
+        }
+
+        axios.post('/api/playlist', {
+            name: this.state.name,
+            playlist_references: playlist_references
+        }).catch((error) => {
+            console.log(error);
+        });
+    }
+
     handleRun(event){
         axios.get('/api/playlist/run', {params: {name: this.state.name}})
         .catch((error) => {
@@ -123,8 +189,9 @@ class PlaylistView extends Component{
                         <th colSpan="2"><h1 className="text-no-select">{ this.state.name }</h1></th>
                     </tr>
                 </thead>
+                { this.state.playlist_references.length > 0 && <ListBlock name="managed" handler={this.handleRemoveRefRow} list={this.state.playlist_references}/> }
+                { this.state.parts.length > 0 && <ListBlock name="spotify" handler={this.handleRemoveRow} list={this.state.parts}/> }
                 <tbody>
-                    { this.state.parts.map((part) => <Row part={ part } key={ part } handler={this.handleRemoveRow}/>) }
                     <tr>
                         <td>
                             <input type="text"
@@ -132,10 +199,23 @@ class PlaylistView extends Component{
                                 className="full-width" 
                                 value={this.state.newPlaylistName} 
                                 onChange={this.handleInputChange}
-                                placeholder="new playlist"></input>
+                                placeholder="spotify playlist"></input>
                         </td>
                         <td>
                             <button className="button full-width" onClick={this.handleAddPart}>add</button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <input type="text"
+                                name="newPlaylistReference" 
+                                className="full-width" 
+                                value={this.state.newPlaylistReference} 
+                                onChange={this.handleInputChange}
+                                placeholder="managed playlist"></input>
+                        </td>
+                        <td>
+                            <button className="button full-width" onClick={this.handleAddReference}>add</button>
                         </td>
                     </tr>
                     <tr>
@@ -163,7 +243,7 @@ class PlaylistView extends Component{
                     </tr>  
                     }
                     <tr>
-                        <td colspan="2">
+                        <td colSpan="2">
                             <button className="button full-width" onClick={this.handleRun}>run</button>
                         </td>
                     </tr>
@@ -176,6 +256,15 @@ class PlaylistView extends Component{
         return this.state.error ? error : table;
     }
 
+}
+
+function ListBlock(props) {
+    return (
+        <tbody>
+            <tr><td colSpan="2" className="ui-text center-text text-no-select" style={{fontStyle: 'italic'}}>{props.name}</td></tr>
+            { props.list.map((part) => <Row part={ part } key={ part } handler={props.handler}/>) }
+        </tbody>
+    );
 }
 
 function Row (props) {
