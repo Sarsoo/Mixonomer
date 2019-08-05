@@ -72,11 +72,14 @@ def playlist():
                 return jsonify({'error': "no name provided"}), 400
 
             playlist_name = request_json['name']
+
             playlist_parts = request_json.get('parts', None)
             playlist_references = request_json.get('playlist_references', None)
+
             playlist_id = request_json.get('id', None)
             playlist_shuffle = request_json.get('shuffle', None)
             playlist_type = request_json.get('type', None)
+
             playlist_day_boundary = request_json.get('day_boundary', None)
 
             playlist_recommendation = request_json.get('include_recommendations', None)
@@ -101,8 +104,8 @@ def playlist():
                     'include_recommendations': playlist_recommendation if playlist_recommendation is not None else False,
                     'recommendation_sample': playlist_recommendation_sample if playlist_recommendation_sample is not None else 10,
                     'playlist_id': None,
-                    'shuffle': playlist_shuffle,
-                    'type': playlist_type
+                    'shuffle': playlist_shuffle if playlist_shuffle is not None else False,
+                    'type': playlist_type if playlist_type is not None else 'default'
                 }
 
                 if user_ref.get().to_dict()['spotify_linked']:
@@ -114,7 +117,7 @@ def playlist():
 
                 playlists.document().set(to_add)
 
-                return jsonify({"message": 'playlist added', "status": "success"}), 200
+                return jsonify({"message": 'playlist added', "status": "success"}), 201
 
             elif request.method == 'POST':
 
@@ -123,15 +126,6 @@ def playlist():
 
                 if len(queried_playlist) > 1:
                     return jsonify({'error': "multiple playlists exist"}), 500
-
-                if playlist_parts is None and \
-                        playlist_references is None and \
-                        playlist_id is None and \
-                        playlist_shuffle is None and \
-                        playlist_day_boundary is None and \
-                        playlist_recommendation is None and \
-                        playlist_recommendation_sample is None:
-                    return jsonify({'error': "no chnages to make"}), 400
 
                 playlist_doc = playlists.document(queried_playlist[0].id)
 
@@ -149,7 +143,7 @@ def playlist():
                     else:
                         dic['playlist_references'] = playlist_references
 
-                if playlist_id:
+                if playlist_id is not None:
                     dic['playlist_id'] = playlist_id
 
                 if playlist_shuffle is not None:
@@ -163,6 +157,9 @@ def playlist():
 
                 if playlist_recommendation_sample is not None:
                     dic['recommendation_sample'] = playlist_recommendation_sample
+
+                if len(dic) == 0:
+                    return jsonify({"message": 'no changes to make', "status": "error"}), 400
 
                 playlist_doc.update(dic)
 
@@ -202,15 +199,28 @@ def user():
 
             actionable_user = database.get_user_doc_ref(request_json['username'])
 
+            if actionable_user.get().exists is False:
+                return jsonify({"message": 'non-existent user', "status": "error"}), 400
+
             dic = {}
 
             if 'locked' in request_json:
                 dic['locked'] = request_json['locked']
 
-            if len(dic) > 0:
-                actionable_user.update(dic)
+            if 'spotify_linked' in request_json:
+                if request_json['spotify_linked'] is False:
+                    dic.update({
+                        'access_token': None,
+                        'refresh_token': None,
+                        'spotify_linked': False
+                    })
 
-            return jsonify({'message': 'account locked', 'status': 'succeeded'}), 200
+            if len(dic) == 0:
+                return jsonify({"message": 'no changes to make', "status": "error"}), 400
+
+            actionable_user.update(dic)
+
+            return jsonify({'message': 'account updated', 'status': 'succeeded'}), 200
 
     else:
         return jsonify({'error': 'not logged in'}), 401
@@ -240,7 +250,7 @@ def users():
 
             dic['accounts'].append(user_dic)
 
-        return jsonify(dic)
+        return jsonify(dic), 200
 
     else:
         return jsonify({'error': 'not logged in'}), 401
@@ -267,11 +277,10 @@ def change_password():
 
                 current_user.update({'password': generate_password_hash(request_json['new_password'])})
 
-                response = {"message": 'password changed', "status": "success"}
-                return jsonify(response), 200
+                return jsonify({"message": 'password changed', "status": "success"}), 200
 
             else:
-                return jsonify({'error': 'wrong password provided'}), 403
+                return jsonify({'error': 'wrong password provided'}), 401
 
         else:
             return jsonify({'error': 'malformed request, no old_password/new_password'}), 400
@@ -337,7 +346,7 @@ def run_users():
 @blueprint.route('/playlist/run/users/cron', methods=['GET'])
 def run_users_cron():
 
-    if request.headers.get('X-Appengine-Cron'):
+    if request.headers.get('X-Appengine-Cron', None):
         execute_all_users()
         return jsonify({'status': 'success'}), 200
     else:
@@ -345,9 +354,9 @@ def run_users_cron():
 
 
 def execute_all_users():
-    all_users = [i.to_dict() for i in db.collection(u'spotify_users').stream()]
 
-    for iter_user in all_users:
+    for iter_user in [i.to_dict() for i in db.collection(u'spotify_users').stream()]:
+
         if iter_user['spotify_linked'] and not iter_user['locked']:
             execute_user(iter_user['username'])
 
@@ -359,7 +368,7 @@ def execute_user(username):
 
     for iterate_playlist in playlists:
         if len(iterate_playlist['parts']) > 0 or len(iterate_playlist['playlist_references']) > 0:
-            if iterate_playlist.get('playlist_id'):
+            if iterate_playlist.get('playlist_id', None):
                 execute_playlist(username, iterate_playlist['name'])
 
 

@@ -20,6 +20,7 @@ def index():
 
     if 'username' in session:
         logged_in = True
+        return redirect(url_for('app_route'))
     else:
         logged_in = False
 

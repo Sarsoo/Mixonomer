@@ -21,8 +21,14 @@ def login():
 
         session.pop('username', None)
 
-        username = request.form['username'].lower()
-        password = request.form['password']
+        username = request.form.get('username', None)
+        password = request.form.get('password', None)
+
+        if username is None or password is None:
+            flash('malformed request')
+            return redirect(url_for('index'))
+
+        username = username.lower()
 
         users = database.get_user_query_stream(username)
 
@@ -75,17 +81,23 @@ def register():
         return render_template('register.html')
     else:
 
-        username = request.form['username'].lower()
-        password = request.form['password']
-        password_again = request.form['password_again']
+        username = request.form.get('username', None)
+        password = request.form.get('password', None)
+        password_again = request.form.get('password_again', None)
+
+        if username is None or password is None or password_again is None:
+            flash('malformed request')
+            return redirect('authapi.register')
+
+        username = username.lower()
+
+        if password != password_again:
+            flash('password mismatch')
+            return redirect('authapi.register')
 
         if username in [i.to_dict()['username'] for i in
                         db.collection(u'spotify_users').where(u'username', u'==', username).stream()]:
             flash('username already registered')
-            return redirect('authapi.register')
-
-        if password != password_again:
-            flash('password mismatch')
             return redirect('authapi.register')
 
         db.collection(u'spotify_users').add({
@@ -132,7 +144,8 @@ def token():
 
         code = request.args.get('code', None)
         if code is None:
-            error = request.args.get('error', None)
+            flash('authorization failed')
+            return redirect('app_route')
         else:
             app_credentials = db.document('key/spotify').get().to_dict()
 
@@ -147,15 +160,21 @@ def token():
 
             req = requests.post('https://accounts.spotify.com/api/token', data=data, headers=headers)
 
-            resp = req.json()
+            if 200 <= req.status_code < 300:
 
-            user_reference = database.get_user_doc_ref(session['username'])
+                resp = req.json()
 
-            user_reference.update({
-                'access_token': resp['access_token'],
-                'refresh_token': resp['refresh_token'],
-                'spotify_linked': True
-            })
+                user_reference = database.get_user_doc_ref(session['username'])
+
+                user_reference.update({
+                    'access_token': resp['access_token'],
+                    'refresh_token': resp['refresh_token'],
+                    'spotify_linked': True
+                })
+
+            else:
+                flash('http error on token request')
+                return redirect('app_route')
 
         return redirect('/app/settings/spotify')
 

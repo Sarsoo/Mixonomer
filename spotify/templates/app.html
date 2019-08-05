@@ -19,6 +19,16 @@
 		<h1 class="title">sarsoo</h1>
 	</div>
 
+	{% with messages = get_flashed_messages() %}
+		{% if messages %}
+			{% for message in messages %}
+				<div class="row card pad-12">
+					<p class="center-text" style="color: red">{{ message }}</p>
+				</div>
+			{% endfor %}
+		{% endif %}
+	{% endwith %}
+
 	<br><br>
 
 	<div id="react"></div>
