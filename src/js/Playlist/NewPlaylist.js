@@ -2,15 +2,15 @@ import React, { Component } from "react";
 import { BrowserRouter as Redirect } from "react-router-dom";
 const axios = require('axios');
 
+import showMessage from "../Toast.js"
+
 class NewPlaylist extends Component {
 
     constructor(props) {
         super(props);
         this.state = {
             name: '',
-            type: 'normal',
-            error: false,
-            errorText: null
+            type: 'normal'
         }
         this.handleInputChange = this.handleInputChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
@@ -25,25 +25,25 @@ class NewPlaylist extends Component {
     handleSubmit(event){
         axios.get('/api/playlists')
         .then((response) => {
-            var sameName = response.data.playlists.filter((i) => {i.name == this.state.name ? true : false});
-            if(sameName.length == 0){
+            var sameName = response.data.playlists.includes(this.state.name);
+            if(sameName.length == false){
                 axios.put('/api/playlist', {
                     name: this.state.name,
                     parts: [],
                     playlist_references: [],
                     shuffle: false,
                     type: this.state.type,
+                }).then((response) => {
+                    showMessage(`${this.state.name} created`);
                 }).catch((error) => {
-                    console.log(error);
-                }).finally(() => {
-                    window.location.href = "/app/playlists";
+                    showMessage(`error creating playlist (${error.response.status})`);
                 });
             }else{
-                this.setState({
-                    error: true,
-                    errorText: 'name already exists'
-                });
+                showMessage('named playlist already exists');
             }
+        })
+        .catch((error) => {
+            showMessage(`error getting playlists (${error.response.status})`);
         });
     }
 
@@ -80,12 +80,6 @@ class NewPlaylist extends Component {
                             <input type="submit" className="button full-width" onClick={this.handleSubmit} value="create" />
                         </td>
                     </tr>
-                    { this.state.error && 
-                    <tr>
-                        <td colSpan="2">
-                            <p className="full-width" style={{color: 'red'}}>{this.state.errorText}</p>
-                        </td>
-                    </tr>}
                 </tbody>
             </table>
         );

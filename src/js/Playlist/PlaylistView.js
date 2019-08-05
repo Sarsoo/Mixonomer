@@ -1,6 +1,8 @@
 import React, { Component } from "react";
 const axios = require('axios');
 
+import showMessage from "../Toast.js"
+
 class PlaylistView extends Component{
 
     constructor(props){
@@ -11,8 +13,6 @@ class PlaylistView extends Component{
             playlists: [],
             playlist_references: [],
             type: null,
-            error: false,
-            error_text: null,
 
             day_boundary: '',
             recommendation_sample: '',
@@ -37,14 +37,24 @@ class PlaylistView extends Component{
     componentDidMount(){
         axios.all([this.getPlaylistInfo(), this.getPlaylists()])
         .then(axios.spread((info, playlists) => {
+            
+            info.data.parts.sort(function(a, b){
+                if(a < b) { return -1; }
+                if(a > b) { return 1; }
+                return 0;
+            });
+
+            info.data.playlist_references.sort(function(a, b){
+                if(a < b) { return -1; }
+                if(a > b) { return 1; }
+                return 0;
+            });
+
             this.setState(info.data);
             this.setState({playlists: playlists.data.playlists});
         }))
         .catch((error) => {
-            this.setState({
-                error: true,
-                error_text: "error pulling playlist info"
-            });
+            showMessage(`error getting playlist info (${error.response.status})`);
         });
     }
 
@@ -57,7 +67,6 @@ class PlaylistView extends Component{
     }
 
     handleInputChange(event){
-        console.log(event.target.name + event.target.value);
         this.setState({
             [event.target.name]: event.target.value
         });
@@ -75,7 +84,7 @@ class PlaylistView extends Component{
             name: this.state.name,
             day_boundary: parseInt(boundary)
         }).catch((error) => {
-            console.log(error);
+            showMessage(`error updating boundary value (${error.response.status})`);
         });
     }
 
@@ -84,7 +93,7 @@ class PlaylistView extends Component{
             name: this.state.name,
             recommendation_sample: parseInt(sample)
         }).catch((error) => {
-            console.log(error);
+            showMessage(`error updating rec. sample value (${error.response.status})`);
         });
     }
 
@@ -96,7 +105,7 @@ class PlaylistView extends Component{
             name: this.state.name,
             shuffle: event.target.checked
         }).catch((error) => {
-            console.log(error);
+            showMessage(`error updating shuffle value (${error.response.status})`);
         });
     }
 
@@ -108,7 +117,7 @@ class PlaylistView extends Component{
             name: this.state.name,
             include_recommendations: event.target.checked
         }).catch((error) => {
-            console.log(error);
+            showMessage(`error updating rec. value (${error.response.status})`);
         });
     }
 
@@ -136,7 +145,7 @@ class PlaylistView extends Component{
                 name: this.state.name,
                 parts: parts
             }).catch((error) => {
-                console.log(error);
+                showMessage(`error adding part (${error.response.status})`);
             });
         }
     }
@@ -165,7 +174,7 @@ class PlaylistView extends Component{
                 name: this.state.name,
                 playlist_references: playlist_references
             }).catch((error) => {
-                console.log(error);
+                showMessage(`error adding reference (${error.response.status})`);
             });
         }
     }
@@ -185,7 +194,7 @@ class PlaylistView extends Component{
             name: this.state.name,
             parts: parts
         }).catch((error) => {
-            console.log(error);
+            showMessage(`error removing part (${error.response.status})`);
         });
     }
 
@@ -204,14 +213,17 @@ class PlaylistView extends Component{
             name: this.state.name,
             playlist_references: playlist_references
         }).catch((error) => {
-            console.log(error);
+            showMessage(`error removing reference (${error.response.status})`);
         });
     }
 
     handleRun(event){
         axios.get('/api/playlist/run', {params: {name: this.state.name}})
+        .then((reponse) => {
+            showMessage(`${this.state.name} ran`);
+        })
         .catch((error) => {
-            console.log(error);
+            showMessage(`error running ${this.state.name} (${error.response.status})`);
         });
     }
 

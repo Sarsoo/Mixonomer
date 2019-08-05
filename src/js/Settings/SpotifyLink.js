@@ -1,6 +1,8 @@
 import React, { Component } from "react";
 const axios = require('axios');
 
+import showMessage from "../Toast.js"
+
 class SpotifyLink extends Component {
 
     constructor(props){
@@ -19,6 +21,9 @@ class SpotifyLink extends Component {
                 spotify_linked: response.data.spotify_linked,
                 isLoading: false
             })
+        })
+        .catch((error) => {
+            showMessage(`error getting user info (${error.response.status})`);
         });
     }
 

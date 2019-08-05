@@ -2,6 +2,8 @@ import React, { Component } from "react";
 import { BrowserRouter as Router, Route, Link } from "react-router-dom";
 const axios = require('axios');
 
+import showMessage from "../Toast.js"
+
 class PlaylistsView extends Component {
 
     constructor(props){
@@ -32,29 +34,39 @@ class PlaylistsView extends Component {
                 playlists: playlists,
                 isLoading: false
             });
+        })
+        .catch((error) => {
+            showMessage(`error getting playlists (${error.response.status})`);
         });
     }
 
     handleRunPlaylist(name, event){
         axios.get('/api/playlist/run', {params: {name: name}})
-        .catch((error) => {this
-            console.log(error);
+        .then((response) => {
+            showMessage(`${name} ran`);
+        })
+        .catch((error) => {
+            showMessage(`error running ${name} (${error.response.status})`);
         });
     }
 
     handleDeletePlaylist(name, event){
         axios.delete('/api/playlist', { params: { name: name } })
         .then((response) => {
+            showMessage(`${name} deleted`);
             this.getPlaylists();
         }).catch((error) => {
-            console.log(error);
+            showMessage(`error deleting ${name} (${error.response.status})`);
         });
     }
 
     handleRunAll(event){
         axios.get('/api/playlist/run/user')
+        .then((response) => {
+            showMessage("all playlists ran");
+        })
         .catch((error)  => {
-            console.log(error);
+            showMessage(`error running all (${error.response.status})`);
         });
     }
 

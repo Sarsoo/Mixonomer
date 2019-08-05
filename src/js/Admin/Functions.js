@@ -1,6 +1,8 @@
 import React, { Component } from "react";
 const axios = require('axios');
 
+import showMessage from "../Toast.js"
+
 class Functions extends Component {
 
     constructor(props){
@@ -12,7 +14,7 @@ class Functions extends Component {
     runAllUsers(event){
         axios.get('/api/playlist/run/users')
         .catch((error) => {
-            console.log(error);
+            showMessage(`error running all users (${error.response.status})`);
         });
     }
 

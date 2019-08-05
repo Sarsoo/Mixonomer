@@ -9,6 +9,8 @@ import Admin from "./Admin/Admin.js";
 
 import NotFound from "./Error/NotFound.js";
 
+import showMessage from "./Toast.js"
+
 const axios = require('axios');
 
 class PlaylistManager extends Component {
@@ -41,6 +43,9 @@ class PlaylistManager extends Component {
                 type: response.data.type,
                 spotify_linked: response.data.spotify_linked
             })
+        })
+        .catch((error) => {
+            showMessage(`error getting user info (${error.response.status})`);
         });
     }
 

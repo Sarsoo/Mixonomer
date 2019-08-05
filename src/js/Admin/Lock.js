@@ -1,6 +1,8 @@
 import React, { Component } from "react";
 const axios = require('axios');
 
+import showMessage from "../Toast.js"
+
 class Lock extends Component {
 
     constructor(props){
@@ -22,6 +24,9 @@ class Lock extends Component {
                 accounts: response.data.accounts,
                 isLoading: false
             })
+        })
+        .catch((error) => {
+            showMessage(`error getting users info (${error.response.status})`);
         });
     }
 
@@ -30,7 +35,8 @@ class Lock extends Component {
             username: username,
             locked: to_state
         }).catch((error) => {
-            console.log(error);
+            var lockMessage = to_state ? 'locking' : 'unlocking';
+            showMessage(`error ${lockMessage} ${username} (${error.response.status})`);
         }).finally(() => {
             this.getUserInfo();
         });
