@@ -79,6 +79,9 @@ def playlist():
             playlist_type = request_json.get('type', None)
             playlist_day_boundary = request_json.get('day_boundary', None)
 
+            playlist_recommendation = request_json.get('include_recommendations', None)
+            playlist_recommendation_sample = request_json.get('recommendation_sample', None)
+
             queried_playlist = [i for i in playlists.where(u'name', u'==', playlist_name).stream()]
 
             if request.method == 'PUT':
@@ -93,8 +96,10 @@ def playlist():
 
                 to_add = {
                     'name': playlist_name,
-                    'parts': playlist_parts if not None else [],
-                    'playlist_references': playlist_references if not None else [],
+                    'parts': playlist_parts if playlist_parts is not None else [],
+                    'playlist_references': playlist_references if playlist_references is not None else [],
+                    'include_recommendations': playlist_recommendation if playlist_recommendation is not None else False,
+                    'recommendation_sample': playlist_recommendation_sample if playlist_recommendation_sample is not None else 10,
                     'playlist_id': None,
                     'shuffle': playlist_shuffle,
                     'type': playlist_type
@@ -123,7 +128,9 @@ def playlist():
                         playlist_references is None and \
                         playlist_id is None and \
                         playlist_shuffle is None and \
-                        playlist_day_boundary is None:
+                        playlist_day_boundary is None and \
+                        playlist_recommendation is None and \
+                        playlist_recommendation_sample is None:
                     return jsonify({'error': "no chnages to make"}), 400
 
                 playlist_doc = playlists.document(queried_playlist[0].id)
@@ -150,6 +157,12 @@ def playlist():
 
                 if playlist_day_boundary is not None:
                     dic['day_boundary'] = playlist_day_boundary
+
+                if playlist_recommendation is not None:
+                    dic['include_recommendations'] = playlist_recommendation
+
+                if playlist_recommendation_sample is not None:
+                    dic['recommendation_sample'] = playlist_recommendation_sample
 
                 playlist_doc.update(dic)
 

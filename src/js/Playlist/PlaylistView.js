@@ -8,16 +8,19 @@ class PlaylistView extends Component{
         this.state = {
             name: this.props.match.params.name,
             parts: [],
+            playlists: [],
             playlist_references: [],
             type: null,
             error: false,
             error_text: null,
 
             day_boundary: '',
+            recommendation_sample: '',
             newPlaylistName: '',
             newPlaylistReference: '',
 
-            shuffle: false
+            shuffle: false,
+            include_recommendations: false
         }
         this.handleAddPart = this.handleAddPart.bind(this);
         this.handleAddReference = this.handleAddReference.bind(this);
@@ -28,31 +31,42 @@ class PlaylistView extends Component{
         this.handleRun = this.handleRun.bind(this);
 
         this.handleShuffleChange = this.handleShuffleChange.bind(this);
+        this.handleRecChange = this.handleRecChange.bind(this);
     }
 
     componentDidMount(){
-        this.getPlaylistInfo();
+        axios.all([this.getPlaylistInfo(), this.getPlaylists()])
+        .then(axios.spread((info, playlists) => {
+            this.setState(info.data);
+            this.setState({playlists: playlists.data.playlists});
+        }))
+        .catch((error) => {
+            this.setState({
+                error: true,
+                error_text: "error pulling playlist info"
+            });
+        });
     }
 
     getPlaylistInfo(){
-        axios.get(`/api/playlist?name=${ this.state.name }`)
-            .then((response) => {
-                this.setState(response.data);
-            }).catch((error) => {
-                this.setState({
-                    error: true,
-                    error_text: "error pulling playlist info"
-                });
-            });
+        return axios.get(`/api/playlist?name=${ this.state.name }`);
+    }
+
+    getPlaylists(){
+        return axios.get(`/api/playlists`);
     }
 
     handleInputChange(event){
+        console.log(event.target.name + event.target.value);
         this.setState({
             [event.target.name]: event.target.value
         });
 
         if(event.target.name == 'day_boundary'){
             this.handleDayBoundaryChange(event.target.value);
+        }
+        if(event.target.name == 'recommendation_sample'){
+            this.handleRecSampleChange(event.target.value);
         }
     }
 
@@ -65,6 +79,15 @@ class PlaylistView extends Component{
         });
     }
 
+    handleRecSampleChange(sample){
+        axios.post('/api/playlist', {
+            name: this.state.name,
+            recommendation_sample: parseInt(sample)
+        }).catch((error) => {
+            console.log(error);
+        });
+    }
+
     handleShuffleChange(event) {
         this.setState({
             shuffle: event.target.checked
@@ -72,6 +95,18 @@ class PlaylistView extends Component{
         axios.post('/api/playlist', {
             name: this.state.name,
             shuffle: event.target.checked
+        }).catch((error) => {
+            console.log(error);
+        });
+    }
+
+    handleRecChange(event) {
+        this.setState({
+            include_recommendations: event.target.checked
+        });
+        axios.post('/api/playlist', {
+            name: this.state.name,
+            include_recommendations: event.target.checked
         }).catch((error) => {
             console.log(error);
         });
@@ -207,12 +242,12 @@ class PlaylistView extends Component{
                     </tr>
                     <tr>
                         <td>
-                            <input type="text"
-                                name="newPlaylistReference" 
-                                className="full-width" 
-                                value={this.state.newPlaylistReference} 
-                                onChange={this.handleInputChange}
-                                placeholder="managed playlist"></input>
+                            <select name="newPlaylistReference" 
+                                    className="full-width"
+                                    value={this.state.newPlaylistReference}
+                                    onChange={this.handleInputChange}>
+                                { this.state.playlists.map((entry) => <ReferenceEntry name={entry.name} key={entry.name} />) }
+                            </select>
                         </td>
                         <td>
                             <button className="button full-width" onClick={this.handleAddReference}>add</button>
@@ -228,10 +263,32 @@ class PlaylistView extends Component{
                                 onChange={this.handleShuffleChange}></input>
                         </td>
                     </tr>
+                    <tr>
+                        <td className="center-text ui-text text-no-select">
+                            include recommendations?
+                        </td>
+                        <td>
+                            <input type="checkbox" 
+                                checked={this.state.include_recommendations}
+                                onChange={this.handleRecChange}></input>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td className="center-text ui-text text-no-select">
+                            recommendations sample size
+                        </td>
+                        <td>
+                        <input type="number" 
+                                name="recommendation_sample"
+                                className="full-width"
+                                value={this.state.recommendation_sample}
+                                onChange={this.handleInputChange}></input>
+                        </td>
+                    </tr>
                     { this.state.type == 'recents' &&
                      <tr>
                         <td className="center-text ui-text text-no-select">
-                            day boundary
+                            added since (days)
                         </td>
                         <td>
                             <input type="number" 
@@ -256,6 +313,12 @@ class PlaylistView extends Component{
         return this.state.error ? error : table;
     }
 
+}
+
+function ReferenceEntry(props) {
+    return (
+        <option value={props.name}>{props.name}</option>
+    );
 }
 
 function ListBlock(props) {
