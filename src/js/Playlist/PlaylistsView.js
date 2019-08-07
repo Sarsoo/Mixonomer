@@ -41,12 +41,21 @@ class PlaylistsView extends Component {
     }
 
     handleRunPlaylist(name, event){
-        axios.get('/api/playlist/run', {params: {name: name}})
+        axios.get('/api/user')
         .then((response) => {
-            showMessage(`${name} ran`);
-        })
-        .catch((error) => {
-            showMessage(`error running ${name} (${error.response.status})`);
+            if(response.data.spotify_linked == true){
+                axios.get('/api/playlist/run', {params: {name: name}})
+                .then((response) => {
+                    showMessage(`${name} ran`);
+                })
+                .catch((error) => {
+                    showMessage(`error running ${name} (${error.response.status})`);
+                });
+            }else{
+                showMessage(`link spotify before running`);
+            }
+        }).catch((error) => {
+            showMessage(`error running ${this.state.name} (${error.response.status})`);
         });
     }
 
@@ -61,12 +70,21 @@ class PlaylistsView extends Component {
     }
 
     handleRunAll(event){
-        axios.get('/api/playlist/run/user')
+        axios.get('/api/user')
         .then((response) => {
-            showMessage("all playlists ran");
-        })
-        .catch((error)  => {
-            showMessage(`error running all (${error.response.status})`);
+            if(response.data.spotify_linked == true){
+                axios.get('/api/playlist/run/user')
+                .then((response) => {
+                    showMessage("all playlists ran");
+                })
+                .catch((error)  => {
+                    showMessage(`error running all (${error.response.status})`);
+                });
+            }else{
+                showMessage(`link spotify before running`);
+            }
+        }).catch((error) => {
+            showMessage(`error running ${this.state.name} (${error.response.status})`);
         });
     }
 
@@ -88,16 +106,25 @@ class PlaylistsView extends Component {
 function Table(props){
     return (
         <table className="app-table max-width">
+            { props.playlists.length == 0 ? (
+                <tbody>
+                    <tr>
+                        <td className="ui-text text-no-select center-text">
+                            no playlists
+                        </td>
+                    </tr>
+                </tbody>
+            ) : (
             <tbody>
                 { props.playlists.map((playlist) => <Row playlist={ playlist } 
                                                         handleRunPlaylist={props.handleRunPlaylist} 
                                                         handleDeletePlaylist={props.handleDeletePlaylist}
                                                         key={ playlist.name }/>) }
-                { props.playlists.length > 0 && 
                 <tr>
                     <td colSpan="3"><button className="full-width button" onClick={props.handleRunAll}>run all</button></td>
-                </tr> }
+                </tr>
             </tbody>
+            )}
         </table>
     );
 }

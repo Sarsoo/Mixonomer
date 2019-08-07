@@ -11,6 +11,7 @@ class PlaylistView extends Component{
             name: this.props.match.params.name,
             parts: [],
             playlists: [],
+            filteredPlaylists: [],
             playlist_references: [],
             type: null,
 
@@ -50,8 +51,13 @@ class PlaylistView extends Component{
                 return 0;
             });
 
+            var filteredPlaylists = playlists.data.playlists.filter((entry) => entry.name != this.state.name);
+
             this.setState(info.data);
-            this.setState({playlists: playlists.data.playlists});
+            this.setState({
+                playlists: playlists.data.playlists,
+                newPlaylistReference: filteredPlaylists.length > 0 ? filteredPlaylists[0].name : ''
+            });
         }))
         .catch((error) => {
             showMessage(`error getting playlist info (${error.response.status})`);
@@ -67,6 +73,7 @@ class PlaylistView extends Component{
     }
 
     handleInputChange(event){
+        
         this.setState({
             [event.target.name]: event.target.value
         });
@@ -122,60 +129,75 @@ class PlaylistView extends Component{
     }
 
     handleAddPart(event){
+        
+        if(this.state.newPlaylistName.length != 0){
 
-        var check = this.state.parts.filter((e) => {
-            return e == event.target.value;
-        });
+            var check = this.state.parts.includes(this.state.newPlaylistName);
 
-        if(check.length == 0) {
-            var parts = this.state.parts.slice();
-            parts.push(this.state.newPlaylistName);
+            if(check == false) {
+                var parts = this.state.parts.slice();
+                parts.push(this.state.newPlaylistName);
 
-            parts.sort(function(a, b){
-                if(a < b) { return -1; }
-                if(a > b) { return 1; }
-                return 0;
-            });
+                parts.sort(function(a, b){
+                    if(a < b) { return -1; }
+                    if(a > b) { return 1; }
+                    return 0;
+                });
 
-            this.setState({
-                parts: parts,
-                newPlaylistName: ''
-            });
-            axios.post('/api/playlist', {
-                name: this.state.name,
-                parts: parts
-            }).catch((error) => {
-                showMessage(`error adding part (${error.response.status})`);
-            });
+                this.setState({
+                    parts: parts,
+                    newPlaylistName: ''
+                });
+                axios.post('/api/playlist', {
+                    name: this.state.name,
+                    parts: parts
+                }).catch((error) => {
+                    showMessage(`error adding part (${error.response.status})`);
+                });
+            }else{
+                showMessage('playlist already added');  
+            }
+
+        }else{
+            showMessage('enter playlist name');
         }
     }
 
     handleAddReference(event){
-        
-        var check = this.state.playlist_references.filter((e) => {
-            return e == event.target.value;
-        });
 
-        if(check.length == 0) {
-            var playlist_references = this.state.playlist_references.slice();
-            playlist_references.push(this.state.newPlaylistReference);
+        if(this.state.newPlaylistReference.length != 0){
             
-            playlist_references.sort(function(a, b){
-                if(a < b) { return -1; }
-                if(a > b) { return 1; }
-                return 0;
-            });
-            
-            this.setState({
-                playlist_references: playlist_references,
-                newPlaylistReference: ''
-            });
-            axios.post('/api/playlist', {
-                name: this.state.name,
-                playlist_references: playlist_references
-            }).catch((error) => {
-                showMessage(`error adding reference (${error.response.status})`);
-            });
+            var check = this.state.playlist_references.includes(this.state.newPlaylistReference);
+
+            if(check == false) {
+                var playlist_references = this.state.playlist_references.slice();
+                playlist_references.push(this.state.newPlaylistReference);
+                
+                playlist_references.sort(function(a, b){
+                    if(a < b) { return -1; }
+                    if(a > b) { return 1; }
+                    return 0;
+                });
+
+                var filteredPlaylists = this.state.playlists.filter((entry) => entry.name != this.state.name);
+                
+                this.setState({
+                    playlist_references: playlist_references,
+                    newPlaylistReference: filteredPlaylists.length > 0 ? filteredPlaylists[0].name : ''
+                });
+                axios.post('/api/playlist', {
+                    name: this.state.name,
+                    playlist_references: playlist_references
+                }).catch((error) => {
+                    showMessage(`error adding reference (${error.response.status})`);
+                });
+
+            }else{
+                showMessage('playlist already added');  
+            }
+
+        }else{
+            showMessage('no other playlists to add');   
         }
     }
 
@@ -218,11 +240,20 @@ class PlaylistView extends Component{
     }
 
     handleRun(event){
-        axios.get('/api/playlist/run', {params: {name: this.state.name}})
-        .then((reponse) => {
-            showMessage(`${this.state.name} ran`);
-        })
-        .catch((error) => {
+        axios.get('/api/user')
+        .then((response) => {
+            if(response.data.spotify_linked == true){
+                axios.get('/api/playlist/run', {params: {name: this.state.name}})
+                .then((reponse) => {
+                    showMessage(`${this.state.name} ran`);
+                })
+                .catch((error) => {
+                    showMessage(`error running ${this.state.name} (${error.response.status})`);
+                });
+            }else{
+                showMessage(`link spotify before running`);
+            }
+        }).catch((error) => {
             showMessage(`error running ${this.state.name} (${error.response.status})`);
         });
     }
@@ -240,13 +271,18 @@ class PlaylistView extends Component{
                 { this.state.parts.length > 0 && <ListBlock name="spotify" handler={this.handleRemoveRow} list={this.state.parts}/> }
                 <tbody>
                     <tr>
+                        <td colSpan="2" className="center-text ui-text text-no-select" style={{fontStyle: "italic"}}>
+                            <br></br>spotify playlist can be the name of either your own created playlist or one you follow, names are case sensitive
+                        </td>
+                    </tr>
+                    <tr>
                         <td>
                             <input type="text"
                                 name="newPlaylistName" 
                                 className="full-width" 
                                 value={this.state.newPlaylistName} 
                                 onChange={this.handleInputChange}
-                                placeholder="spotify playlist"></input>
+                                placeholder="spotify playlist name"></input>
                         </td>
                         <td>
                             <button className="button full-width" onClick={this.handleAddPart}>add</button>
@@ -258,7 +294,9 @@ class PlaylistView extends Component{
                                     className="full-width"
                                     value={this.state.newPlaylistReference}
                                     onChange={this.handleInputChange}>
-                                { this.state.playlists.map((entry) => <ReferenceEntry name={entry.name} key={entry.name} />) }
+                                { this.state.playlists
+                                    .filter((entry) => entry.name != this.state.name)
+                                    .map((entry) => <ReferenceEntry name={entry.name} key={entry.name} />) }
                             </select>
                         </td>
                         <td>
@@ -287,7 +325,7 @@ class PlaylistView extends Component{
                     </tr>
                     <tr>
                         <td className="center-text ui-text text-no-select">
-                            recommendations sample size
+                            number of recommendations
                         </td>
                         <td>
                         <input type="number" 
@@ -298,7 +336,7 @@ class PlaylistView extends Component{
                         </td>
                     </tr>
                     { this.state.type == 'recents' &&
-                     <tr>
+                    <tr>
                         <td className="center-text ui-text text-no-select">
                             added since (days)
                         </td>
@@ -309,7 +347,16 @@ class PlaylistView extends Component{
                                 value={this.state.day_boundary}
                                 onChange={this.handleInputChange}></input>
                         </td>
-                    </tr>  
+                    </tr>
+                    }
+                    { this.state.type == 'recents' &&
+                    <tr>
+                        <td colSpan="2" className="center-text ui-text text-no-select" style={{fontStyle: "italic"}}>
+                            <br></br>'recents' playlists search for and include this months and last months playlists when named in the format
+                            <br></br>[month] [year]
+                            <br></br>e.g july 19 (lowercase)
+                        </td>
+                    </tr>
                     }
                     <tr>
                         <td colSpan="2">
