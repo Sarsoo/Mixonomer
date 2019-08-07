@@ -25,8 +25,11 @@ class NewPlaylist extends Component {
     handleSubmit(event){
         axios.get('/api/playlists')
         .then((response) => {
-            var sameName = response.data.playlists.includes(this.state.name);
-            if(sameName.length == false){
+
+            var names = response.data.playlists.map(entry => entry.name)
+
+            var sameName = names.includes(this.state.name);
+            if(sameName == false){
                 axios.put('/api/playlist', {
                     name: this.state.name,
                     parts: [],
