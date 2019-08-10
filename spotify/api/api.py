@@ -9,6 +9,8 @@ from google.cloud import tasks_v2
 from google.protobuf import timestamp_pb2
 from werkzeug.security import check_password_hash, generate_password_hash
 
+from spotify.tasks.run_user_playlist import run_user_playlist as run_user_playlist
+
 import spotify.api.database as database
 
 blueprint = Blueprint('api', __name__)
@@ -307,7 +309,7 @@ def run_playlist():
 
         if playlist_name:
 
-            execute_playlist(session['username'], playlist_name)
+            run_user_playlist(session['username'], playlist_name)
 
             return jsonify({'message': 'execution requested', 'status': 'success'}), 200
 
@@ -325,7 +327,9 @@ def run_playlist_task():
         payload = request.get_data(as_text=True)
         if payload:
             payload = json.loads(payload)
-            execute_playlist(payload['username'], payload['name'])
+
+            run_user_playlist(payload['username'], payload['name'])
+
             return jsonify({'message': 'executed playlist', 'status': 'success'}), 200
     else:
         return jsonify({'error': 'unauthorized'}), 401
@@ -455,7 +459,7 @@ def execute_user(username):
                 # execute_playlist(username, iterate_playlist['name'])
 
 
-def execute_playlist(username, name):
+def push_run_user_playlist_message(username, name):
 
     data = u'{}'.format(name)
     data = data.encode('utf-8')

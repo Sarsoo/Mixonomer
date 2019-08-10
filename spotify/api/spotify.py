@@ -1,6 +1,7 @@
-import requests
-from base64 import b64encode
 from google.cloud import firestore
+
+from spotframework.net.user import User
+from spotframework.net.network import Network
 
 db = firestore.Client()
 
@@ -14,30 +15,12 @@ def create_playlist(username, name):
         user_dict = users[0].to_dict()
         spotify_keys = db.document('key/spotify').get().to_dict()
 
-        idsecret = b64encode(bytes(spotify_keys['clientid'] + ':' + spotify_keys['clientsecret'], "utf-8")).decode("ascii")
+        net = Network(User(spotify_keys['clientid'],
+                           spotify_keys['clientsecret'],
+                           user_dict['access_token'],
+                           user_dict['refresh_token']))
 
-        token_headers = {'Authorization': 'Basic %s' % idsecret}
-        headers = {"Content-Type": "application/json"}
+        net.create_playlist(net.user.username, name)
 
-        data = {"grant_type": "refresh_token", "refresh_token": user_dict['refresh_token']}
-
-        token_req = requests.post('https://accounts.spotify.com/api/token', data=data, headers=token_headers)
-
-        if 200 <= token_req.status_code < 300:
-            accesstoken = token_req.json()['access_token']
-
-            json = {"name": name, "public": True, "collaborative": False}
-
-            headers['Authorization'] = 'Bearer ' + accesstoken
-
-            info_id = requests.get('https://api.spotify.com/v1/me', headers=headers).json()['id']
-
-            play_req = requests.post(f'https://api.spotify.com/v1/users/{info_id}/playlists', json=json, headers=headers)
-
-            resp = play_req.json()
-
-            return resp["id"]
-
-        else:
-            print(token_req.status_code)
-            raise Exception('failed to get access token')
+    else:
+        raise ValueError('no/multiple username(s)')
