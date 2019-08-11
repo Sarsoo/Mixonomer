@@ -9,3 +9,5 @@ handlers:
   script: auto
   secure: always
 
+env_variables:
+  DEPLOY_DESTINATION: 'PROD'

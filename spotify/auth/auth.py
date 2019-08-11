@@ -127,7 +127,7 @@ def auth():
             {
                 'client_id': client_id,
                 'response_type': 'code',
-                'scope': 'playlist-modify-public playlist-modify-private playlist-read-private',
+                'scope': 'playlist-modify-public playlist-modify-private playlist-read-private user-modify-playback-state',
                 'redirect_uri': 'https://spotify.sarsoo.xyz/auth/spotify/token'
             }
         )

@@ -19,12 +19,19 @@ logger.setLevel('INFO')
 log_format = '%(levelname)s %(name)s:%(funcName)s - %(message)s'
 formatter = logging.Formatter(log_format)
 
-client = glogging.Client()
-handler = CloudLoggingHandler(client)
+if os.environ.get('DEPLOY_DESTINATION', None) and os.environ['DEPLOY_DESTINATION'] == 'PROD':
+    client = glogging.Client()
+    handler = CloudLoggingHandler(client)
 
-handler.setFormatter(formatter)
+    handler.setFormatter(formatter)
 
-logger.addHandler(handler)
+    logger.addHandler(handler)
+
+else:
+    stream_handler = logging.StreamHandler()
+    stream_handler.setFormatter(formatter)
+
+    logger.addHandler(stream_handler)
 
 app = Flask(__name__, static_folder=os.path.join(os.path.dirname(__file__), '..', 'build'), template_folder="templates")
 app.secret_key = db.collection(u'spotify').document(u'config').get().to_dict()['secret_key']

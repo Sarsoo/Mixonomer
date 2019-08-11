@@ -1,5 +1,6 @@
 from flask import Blueprint, session, request, jsonify
 
+import os
 import datetime
 import json
 
@@ -10,6 +11,7 @@ from google.protobuf import timestamp_pb2
 from werkzeug.security import check_password_hash, generate_password_hash
 
 from spotify.tasks.run_user_playlist import run_user_playlist as run_user_playlist
+from spotify.tasks.play_user_playlist import play_user_playlist as play_user_playlist
 
 import spotify.api.database as database
 
@@ -169,6 +171,9 @@ def playlist():
                 if playlist_recommendation_sample is not None:
                     dic['recommendation_sample'] = playlist_recommendation_sample
 
+                if playlist_type is not None:
+                    dic['type'] = playlist_type
+
                 if len(dic) == 0:
                     return jsonify({"message": 'no changes to make', "status": "error"}), 400
 
@@ -300,6 +305,76 @@ def change_password():
         return jsonify({'error': 'not logged in'}), 401
 
 
+@blueprint.route('/playlist/play', methods=['POST'])
+def play_playlist():
+
+    if 'username' in session:
+
+        request_json = request.get_json()
+
+        request_parts = request_json.get('parts', None)
+        request_playlist_type = request_json.get('playlist_type', 'default')
+        request_playlists = request_json.get('playlists', None)
+        request_shuffle = request_json.get('shuffle', False)
+        request_include_recommendations = request_json.get('include_recommendations', True)
+        request_recommendation_sample = request_json.get('recommendation_sample', 10)
+        request_day_boundary = request_json.get('day_boundary', 10)
+
+        if request_parts or request_playlists:
+            if len(request_parts) > 0 or len(request_playlists) > 0:
+
+                if os.environ.get('DEPLOY_DESTINATION', None) and os.environ['DEPLOY_DESTINATION'] == 'PROD':
+                    create_play_user_playlist_task(session['username'],
+                                                   parts=request_parts,
+                                                   playlist_type=request_playlist_type,
+                                                   playlists=request_playlists,
+                                                   shuffle=request_shuffle,
+                                                   include_recommendations=request_include_recommendations,
+                                                   recommendation_sample=request_recommendation_sample,
+                                                   day_boundary=request_day_boundary)
+                else:
+                    play_user_playlist(session['username'],
+                                       parts=request_parts,
+                                       playlist_type=request_playlist_type,
+                                       playlists=request_playlists,
+                                       shuffle=request_shuffle,
+                                       include_recommendations=request_include_recommendations,
+                                       recommendation_sample=request_recommendation_sample,
+                                       day_boundary=request_day_boundary)
+
+                return jsonify({'message': 'execution requested', 'status': 'success'}), 200
+
+            else:
+                return jsonify({'error': 'insufficient playlist sources'}), 400
+
+        else:
+            return jsonify({'error': 'insufficient playlist sources'}), 400
+
+    else:
+        return jsonify({'error': 'not logged in'}), 401
+
+
+@blueprint.route('/playlist/play/task', methods=['POST'])
+def play_playlist_task():
+    if request.headers.get('X-AppEngine-QueueName', None):
+        payload = request.get_data(as_text=True)
+        if payload:
+            payload = json.loads(payload)
+
+            play_user_playlist(payload['username'],
+                               parts=payload['parts'],
+                               playlist_type=payload['playlist_type'],
+                               playlists=payload['playlists'],
+                               shuffle=payload['shuffle'],
+                               include_recommendations=payload['include_recommendations'],
+                               recommendation_sample=payload['recommendation_sample'],
+                               day_boundary=payload['day_boundary'])
+
+            return jsonify({'message': 'executed playlist', 'status': 'success'}), 200
+    else:
+        return jsonify({'error': 'unauthorized'}), 401
+
+
 @blueprint.route('/playlist/run', methods=['GET'])
 def run_playlist():
 
@@ -309,7 +384,10 @@ def run_playlist():
 
         if playlist_name:
 
-            run_user_playlist(session['username'], playlist_name)
+            if os.environ.get('DEPLOY_DESTINATION', None) and os.environ['DEPLOY_DESTINATION'] == 'PROD':
+                create_run_user_playlist_task(session['username'], playlist_name)
+            else:
+                run_user_playlist(session['username'], playlist_name)
 
             return jsonify({'message': 'execution requested', 'status': 'success'}), 200
 
@@ -432,31 +510,78 @@ def execute_user(username):
         if len(iterate_playlist['parts']) > 0 or len(iterate_playlist['playlist_references']) > 0:
             if iterate_playlist.get('playlist_id', None):
 
-                task = {
-                    'app_engine_http_request': {  # Specify the type of request.
-                        'http_method': 'POST',
-                        'relative_uri': '/api/playlist/run/task',
-                        'body': json.dumps({
-                            'username': username,
-                            'name': iterate_playlist['name']
-                        }).encode()
-                    }
-                }
+                if os.environ.get('DEPLOY_DESTINATION', None) and os.environ['DEPLOY_DESTINATION'] == 'PROD':
+                    create_run_user_playlist_task(username, iterate_playlist['name'], seconds_delay)
+                else:
+                    run_playlist(username, iterate_playlist['name'])
 
-                d = datetime.datetime.utcnow() + datetime.timedelta(seconds=seconds_delay)
+                seconds_delay += 6
 
-                # Create Timestamp protobuf.
-                timestamp = timestamp_pb2.Timestamp()
-                timestamp.FromDatetime(d)
 
-                # Add the timestamp to the tasks.
-                task['schedule_time'] = timestamp
+def create_run_user_playlist_task(username, playlist_name, delay=0):
 
-                tasker.create_task(task_path, task)
+    task = {
+        'app_engine_http_request': {  # Specify the type of request.
+            'http_method': 'POST',
+            'relative_uri': '/api/playlist/run/task',
+            'body': json.dumps({
+                'username': username,
+                'name': playlist_name
+            }).encode()
+        }
+    }
 
-                seconds_delay += 10
+    if delay > 0:
 
-                # execute_playlist(username, iterate_playlist['name'])
+        d = datetime.datetime.utcnow() + datetime.timedelta(seconds=delay)
+
+        # Create Timestamp protobuf.
+        timestamp = timestamp_pb2.Timestamp()
+        timestamp.FromDatetime(d)
+
+        # Add the timestamp to the tasks.
+        task['schedule_time'] = timestamp
+
+    tasker.create_task(task_path, task)
+
+
+def create_play_user_playlist_task(username,
+                                   parts=None,
+                                   playlist_type='default',
+                                   playlists=None,
+                                   shuffle=False,
+                                   include_recommendations=False,
+                                   recommendation_sample=10,
+                                   day_boundary=10,
+                                   delay=0):
+    task = {
+        'app_engine_http_request': {  # Specify the type of request.
+            'http_method': 'POST',
+            'relative_uri': '/api/playlist/play/task',
+            'body': json.dumps({
+                'username': username,
+                'playlist_type': playlist_type,
+                'parts': parts,
+                'playlists': playlists,
+                'shuffle': shuffle,
+                'include_recommendations': include_recommendations,
+                'recommendation_sample': recommendation_sample,
+                'day_boundary': day_boundary
+            }).encode()
+        }
+    }
+
+    if delay > 0:
+        d = datetime.datetime.utcnow() + datetime.timedelta(seconds=delay)
+
+        # Create Timestamp protobuf.
+        timestamp = timestamp_pb2.Timestamp()
+        timestamp.FromDatetime(d)
+
+        # Add the timestamp to the tasks.
+        task['schedule_time'] = timestamp
+
+    tasker.create_task(task_path, task)
 
 
 def push_run_user_playlist_message(username, name):

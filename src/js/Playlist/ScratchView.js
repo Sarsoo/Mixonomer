@@ -3,20 +3,20 @@ const axios = require('axios');
 
 import showMessage from "../Toast.js"
 
-class PlaylistView extends Component{
+class ScratchView extends Component{
 
     constructor(props){
         super(props);
         this.state = {
-            name: this.props.match.params.name,
+            name: 'play',
             parts: [],
             playlists: [],
             filteredPlaylists: [],
             playlist_references: [],
             type: 'default',
 
-            day_boundary: '',
-            recommendation_sample: '',
+            day_boundary: 5,
+            recommendation_sample: 5,
             newPlaylistName: '',
             newPlaylistReference: '',
 
@@ -36,74 +36,29 @@ class PlaylistView extends Component{
     }
 
     componentDidMount(){
-        axios.all([this.getPlaylistInfo(), this.getPlaylists()])
-        .then(axios.spread((info, playlists) => {
-            
-            info.data.parts.sort(function(a, b){
-                if(a < b) { return -1; }
-                if(a > b) { return 1; }
-                return 0;
-            });
 
-            info.data.playlist_references.sort(function(a, b){
-                if(a < b) { return -1; }
-                if(a > b) { return 1; }
-                return 0;
-            });
-
-            var filteredPlaylists = playlists.data.playlists.filter((entry) => entry.name != this.state.name);
-
-            this.setState(info.data);
-            this.setState({
-                playlists: playlists.data.playlists,
-                newPlaylistReference: filteredPlaylists.length > 0 ? filteredPlaylists[0].name : ''
-            });
-        }))
-        .catch((error) => {
-            showMessage(`error getting playlist info (${error.response.status})`);
-        });
+        this.getPlaylists();
     }
 
-    getPlaylistInfo(){
-        return axios.get(`/api/playlist?name=${ this.state.name }`);
-    }
 
     getPlaylists(){
-        return axios.get(`/api/playlists`);
+        return axios.get(`/api/playlists`)
+        .then((response) => {
+            var filteredPlaylists = response.data.playlists.filter((entry) => entry.name != this.state.name);
+
+            this.setState({
+                playlists: response.data.playlists,
+                newPlaylistReference: filteredPlaylists.length > 0 ? filteredPlaylists[0].name : ''
+            });
+        })
+        .catch((error) => {
+            showMessage(`error getting playlists (${error.response.status})`);
+        });
     }
 
     handleInputChange(event){
-        
         this.setState({
             [event.target.name]: event.target.value
-        });
-
-        if(event.target.name == 'day_boundary'){
-            this.handleDayBoundaryChange(event.target.value);
-        }
-        if(event.target.name == 'recommendation_sample'){
-            this.handleRecSampleChange(event.target.value);
-        }
-        if(event.target.name == 'type'){
-            this.handleTypeChange(event.target.value);
-        }
-    }
-
-    handleDayBoundaryChange(boundary) {
-        axios.post('/api/playlist', {
-            name: this.state.name,
-            day_boundary: parseInt(boundary)
-        }).catch((error) => {
-            showMessage(`error updating boundary value (${error.response.status})`);
-        });
-    }
-
-    handleRecSampleChange(sample){
-        axios.post('/api/playlist', {
-            name: this.state.name,
-            recommendation_sample: parseInt(sample)
-        }).catch((error) => {
-            showMessage(`error updating rec. sample value (${error.response.status})`);
         });
     }
 
@@ -120,23 +75,11 @@ class PlaylistView extends Component{
         this.setState({
             shuffle: event.target.checked
         });
-        axios.post('/api/playlist', {
-            name: this.state.name,
-            shuffle: event.target.checked
-        }).catch((error) => {
-            showMessage(`error updating shuffle value (${error.response.status})`);
-        });
     }
 
     handleRecChange(event) {
         this.setState({
             include_recommendations: event.target.checked
-        });
-        axios.post('/api/playlist', {
-            name: this.state.name,
-            include_recommendations: event.target.checked
-        }).catch((error) => {
-            showMessage(`error updating rec. value (${error.response.status})`);
         });
     }
 
@@ -159,12 +102,6 @@ class PlaylistView extends Component{
                 this.setState({
                     parts: parts,
                     newPlaylistName: ''
-                });
-                axios.post('/api/playlist', {
-                    name: this.state.name,
-                    parts: parts
-                }).catch((error) => {
-                    showMessage(`error adding part (${error.response.status})`);
                 });
             }else{
                 showMessage('playlist already added');  
@@ -197,12 +134,6 @@ class PlaylistView extends Component{
                     playlist_references: playlist_references,
                     newPlaylistReference: filteredPlaylists.length > 0 ? filteredPlaylists[0].name : ''
                 });
-                axios.post('/api/playlist', {
-                    name: this.state.name,
-                    playlist_references: playlist_references
-                }).catch((error) => {
-                    showMessage(`error adding reference (${error.response.status})`);
-                });
 
             }else{
                 showMessage('playlist already added');  
@@ -223,13 +154,6 @@ class PlaylistView extends Component{
         if(parts.length == 0) {
             parts = -1;
         }
-
-        axios.post('/api/playlist', {
-            name: this.state.name,
-            parts: parts
-        }).catch((error) => {
-            showMessage(`error removing part (${error.response.status})`);
-        });
     }
 
     handleRemoveRefRow(id, event){
@@ -238,17 +162,6 @@ class PlaylistView extends Component{
         this.setState({
             playlist_references: playlist_references
         });
-
-        if(playlist_references.length == 0) {
-            playlist_references = -1;
-        }
-
-        axios.post('/api/playlist', {
-            name: this.state.name,
-            playlist_references: playlist_references
-        }).catch((error) => {
-            showMessage(`error removing reference (${error.response.status})`);
-        });
     }
 
     handleRun(event){
@@ -256,18 +169,26 @@ class PlaylistView extends Component{
             axios.get('/api/user')
             .then((response) => {
                 if(response.data.spotify_linked == true){
-                    axios.get('/api/playlist/run', {params: {name: this.state.name}})
+                    axios.post('/api/playlist/play', {
+                        parts: this.state.parts,
+                        playlists: this.state.playlist_references,
+                        shuffle: this.state.shuffle,
+                        include_recommendations: this.state.include_recommendations,
+                        recommendation_sample: this.state.recommendation_sample,
+                        day_boundary: this.state.day_boundary,
+                        playlist_type: this.state.type
+                    })
                     .then((reponse) => {
-                        showMessage(`${this.state.name} ran`);
+                        showMessage(`played`);
                     })
                     .catch((error) => {
-                        showMessage(`error running ${this.state.name} (${error.response.status})`);
+                        showMessage(`error playing (${error.response.status})`);
                     });
                 }else{
                     showMessage(`link spotify before running`);
                 }
             }).catch((error) => {
-                showMessage(`error running ${this.state.name} (${error.response.status})`);
+                showMessage(`error playing (${error.response.status})`);
             });
         }else{
             showMessage(`add either playlists or parts`);
@@ -278,11 +199,11 @@ class PlaylistView extends Component{
 
         const table = (
             <table className="app-table max-width">
-                <thead>
+                {/* <thead>
                     <tr>
                         <th colSpan="2"><h1 className="text-no-select">{ this.state.name }</h1></th>
                     </tr>
-                </thead>
+                </thead> */}
                 { this.state.playlist_references.length > 0 && <ListBlock name="managed" handler={this.handleRemoveRefRow} list={this.state.playlist_references}/> }
                 { this.state.parts.length > 0 && <ListBlock name="spotify" handler={this.handleRemoveRow} list={this.state.parts}/> }
                 <tbody>
@@ -324,7 +245,8 @@ class PlaylistView extends Component{
                             shuffle output?
                         </td>
                         <td>
-                            <input type="checkbox" 
+                            <input type="checkbox"
+                                name="shuffle"
                                 checked={this.state.shuffle}
                                 onChange={this.handleShuffleChange}></input>
                         </td>
@@ -334,7 +256,8 @@ class PlaylistView extends Component{
                             include recommendations?
                         </td>
                         <td>
-                            <input type="checkbox" 
+                            <input type="checkbox"
+                                name="include_recommendations"
                                 checked={this.state.include_recommendations}
                                 onChange={this.handleRecChange}></input>
                         </td>
@@ -390,7 +313,7 @@ class PlaylistView extends Component{
                     }
                     <tr>
                         <td colSpan="2">
-                            <button className="button full-width" onClick={this.handleRun}>run</button>
+                            <button className="button full-width" onClick={this.handleRun}>play</button>
                         </td>
                     </tr>
                 </tbody>
@@ -428,4 +351,4 @@ function Row (props) {
     );
 }
 
-export default PlaylistView;
+export default ScratchView;
