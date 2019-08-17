@@ -15,6 +15,8 @@ db = firestore.Client()
 
 captured_playlists = []
 
+logger = logging.getLogger(__name__)
+
 
 def play_user_playlist(username,
                        playlist_type='default',
@@ -23,25 +25,31 @@ def play_user_playlist(username,
                        shuffle=False,
                        include_recommendations=True,
                        recommendation_sample=10,
-                       day_boundary=10):
-
-    logger = logging.getLogger(__name__)
+                       day_boundary=10,
+                       add_this_month=False,
+                       add_last_month=False):
 
     users = [i for i in db.collection(u'spotify_users').where(u'username', u'==', username).stream()]
 
-    logger.info(f'{username}')
+    logger.info(f'playing for {username}')
 
     if len(users) == 1:
 
         user_dict = users[0].to_dict()
 
-        if not parts and not playlists:
+        if parts is None and playlists is None:
             logger.critical(f'no playlists to use for creation ({username})')
-            return
+            return None
+
+        if parts is None:
+            parts = []
+
+        if playlists is None:
+            playlists = []
 
         if len(parts) == 0 and len(playlists) == 0:
             logger.critical(f'no playlists to use for creation ({username})')
-            return
+            return None
 
         spotify_keys = db.document('key/spotify').get().to_dict()
 
@@ -63,9 +71,6 @@ def play_user_playlist(username,
         global captured_playlists
         captured_playlists = []
 
-        if not parts:
-            parts = []
-
         submit_parts = parts
 
         for part in playlists:
@@ -79,7 +84,9 @@ def play_user_playlist(username,
                                                 submit_parts,
                                                 processors,
                                                 include_recommendations=include_recommendations,
-                                                recommendation_limit=int(recommendation_sample))
+                                                recommendation_limit=int(recommendation_sample),
+                                                add_this_month=add_this_month,
+                                                add_last_month=add_last_month)
         else:
             tracks = engine.make_playlist(submit_parts,
                                           processors,
@@ -90,7 +97,7 @@ def play_user_playlist(username,
 
     else:
         logger.critical(f'multiple/no user(s) found ({username})')
-        return
+        return None
 
 
 def generate_parts(user_id, name):

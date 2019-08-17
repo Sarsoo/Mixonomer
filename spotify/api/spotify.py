@@ -1,12 +1,18 @@
 from google.cloud import firestore
 
+import logging
+
 from spotframework.net.user import User
 from spotframework.net.network import Network
 
 db = firestore.Client()
 
+logger = logging.getLogger(__name__)
+
 
 def create_playlist(username, name):
+
+    logger.info(f'creating {username} / {name}')
 
     users = [i for i in db.collection(u'spotify_users').where(u'username', u'==', username).stream()]
 
@@ -22,10 +28,12 @@ def create_playlist(username, name):
 
         resp = net.create_playlist(net.user.username, name)
 
-        if 'id' in resp:
+        if resp and resp.get('id', None):
             return resp['id']
         else:
-            raise Exception('Error creating playlist')
+            logger.error(f'no response received {username} / {name}')
+            return None
 
     else:
-        raise ValueError('no/multiple username(s)')
+        logger.error(f'{len(users)} users found')
+        return None

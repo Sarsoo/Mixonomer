@@ -3,6 +3,7 @@ from flask import Blueprint, session, request, jsonify
 import os
 import datetime
 import json
+import logging
 
 from google.cloud import firestore
 from google.cloud import pubsub_v1
@@ -18,11 +19,12 @@ import spotify.api.database as database
 blueprint = Blueprint('api', __name__)
 db = firestore.Client()
 publisher = pubsub_v1.PublisherClient()
+
 tasker = tasks_v2.CloudTasksClient()
-
 task_path = tasker.queue_path('sarsooxyz', 'europe-west2', 'spotify-executions')
-
 run_playlist_topic_path = publisher.topic_path('sarsooxyz', 'run_user_playlist')
+
+logger = logging.getLogger(__name__)
 
 
 @blueprint.route('/playlists', methods=['GET'])
@@ -41,6 +43,7 @@ def get_playlists():
         return jsonify(response), 200
 
     else:
+        logger.warning('user not logged in')
         return jsonify({'error': 'not logged in'}), 401
 
 
@@ -70,6 +73,7 @@ def playlist():
 
                 elif request.method == 'DELETE':
 
+                    logger.info(f'deleted {session["username"]} / {queried_playlist[0].to_dict()["name"]}')
                     playlists.document(queried_playlist[0].id).delete()
 
                     return jsonify({"message": 'playlist deleted', "status": "success"}), 200
@@ -94,6 +98,8 @@ def playlist():
             playlist_type = request_json.get('type', None)
 
             playlist_day_boundary = request_json.get('day_boundary', None)
+            playlist_add_this_month = request_json.get('add_this_month', None)
+            playlist_add_last_month = request_json.get('add_last_month', None)
 
             playlist_recommendation = request_json.get('include_recommendations', None)
             playlist_recommendation_sample = request_json.get('recommendation_sample', None)
@@ -127,8 +133,11 @@ def playlist():
 
                 if playlist_type == 'recents':
                     to_add['day_boundary'] = playlist_day_boundary if playlist_day_boundary is not None else 21
+                    to_add['add_this_month'] = playlist_add_this_month if playlist_add_this_month is not None else False
+                    to_add['add_last_month'] = playlist_add_last_month if playlist_add_last_month is not None else False
 
                 playlists.document().set(to_add)
+                logger.info(f'added {session["username"]} / {playlist_name}')
 
                 return jsonify({"message": 'playlist added', "status": "success"}), 201
 
@@ -165,6 +174,12 @@ def playlist():
                 if playlist_day_boundary is not None:
                     dic['day_boundary'] = playlist_day_boundary
 
+                if playlist_add_this_month is not None:
+                    dic['add_this_month'] = playlist_add_this_month
+
+                if playlist_add_last_month is not None:
+                    dic['add_last_month'] = playlist_add_last_month
+
                 if playlist_recommendation is not None:
                     dic['include_recommendations'] = playlist_recommendation
 
@@ -175,13 +190,16 @@ def playlist():
                     dic['type'] = playlist_type
 
                 if len(dic) == 0:
+                    logger.warning(f'no changes to make for {session["username"]} / {playlist_name}')
                     return jsonify({"message": 'no changes to make', "status": "error"}), 400
 
                 playlist_doc.update(dic)
+                logger.info(f'updated {session["username"]} / {playlist_name}')
 
                 return jsonify({"message": 'playlist updated', "status": "success"}), 200
 
     else:
+        logger.warning('user not logged in')
         return jsonify({'error': 'not logged in'}), 401
 
 
@@ -221,9 +239,11 @@ def user():
             dic = {}
 
             if 'locked' in request_json:
+                logger.info(f'updating lock {request_json["username"]} / {request_json["locked"]}')
                 dic['locked'] = request_json['locked']
 
             if 'spotify_linked' in request_json:
+                logger.info(f'deauthing {request_json["username"]}')
                 if request_json['spotify_linked'] is False:
                     dic.update({
                         'access_token': None,
@@ -232,13 +252,16 @@ def user():
                     })
 
             if len(dic) == 0:
+                logger.warning(f'no updates for {request_json["username"]}')
                 return jsonify({"message": 'no changes to make', "status": "error"}), 400
 
             actionable_user.update(dic)
+            logger.info(f'updated {request_json["username"]}')
 
             return jsonify({'message': 'account updated', 'status': 'succeeded'}), 200
 
     else:
+        logger.warning('user not logged in')
         return jsonify({'error': 'not logged in'}), 401
 
 
@@ -292,10 +315,12 @@ def change_password():
             if check_password_hash(current_user.get().to_dict()['password'], request_json['current_password']):
 
                 current_user.update({'password': generate_password_hash(request_json['new_password'])})
+                logger.info(f'password udpated {session["username"]}')
 
                 return jsonify({"message": 'password changed', "status": "success"}), 200
 
             else:
+                logger.warning(f"incorrect password {session['username']}")
                 return jsonify({'error': 'wrong password provided'}), 401
 
         else:
@@ -319,11 +344,15 @@ def play_playlist():
         request_include_recommendations = request_json.get('include_recommendations', True)
         request_recommendation_sample = request_json.get('recommendation_sample', 10)
         request_day_boundary = request_json.get('day_boundary', 10)
+        request_add_this_month = request_json.get('add_this_month', False)
+        request_add_last_month = request_json.get('add_last_month', False)
+
+        logger.info(f'playing {session["username"]}')
 
         if request_parts or request_playlists:
             if len(request_parts) > 0 or len(request_playlists) > 0:
 
-                if os.environ.get('DEPLOY_DESTINATION', None) and os.environ['DEPLOY_DESTINATION'] == 'PROD':
+                if os.environ.get('DEPLOY_DESTINATION', None) == 'PROD':
                     create_play_user_playlist_task(session['username'],
                                                    parts=request_parts,
                                                    playlist_type=request_playlist_type,
@@ -331,7 +360,9 @@ def play_playlist():
                                                    shuffle=request_shuffle,
                                                    include_recommendations=request_include_recommendations,
                                                    recommendation_sample=request_recommendation_sample,
-                                                   day_boundary=request_day_boundary)
+                                                   day_boundary=request_day_boundary,
+                                                   add_this_month=request_add_this_month,
+                                                   add_last_month=request_add_last_month)
                 else:
                     play_user_playlist(session['username'],
                                        parts=request_parts,
@@ -340,17 +371,22 @@ def play_playlist():
                                        shuffle=request_shuffle,
                                        include_recommendations=request_include_recommendations,
                                        recommendation_sample=request_recommendation_sample,
-                                       day_boundary=request_day_boundary)
+                                       day_boundary=request_day_boundary,
+                                       add_this_month=request_add_this_month,
+                                       add_last_month=request_add_last_month)
 
                 return jsonify({'message': 'execution requested', 'status': 'success'}), 200
 
             else:
+                logger.error(f'insufficient playlist/part lengths {session["username"]}')
                 return jsonify({'error': 'insufficient playlist sources'}), 400
 
         else:
+            logger.error(f'no playlists/parts {session["username"]}')
             return jsonify({'error': 'insufficient playlist sources'}), 400
 
     else:
+        logger.warning('user not logged in')
         return jsonify({'error': 'not logged in'}), 401
 
 
@@ -360,6 +396,7 @@ def play_playlist_task():
         payload = request.get_data(as_text=True)
         if payload:
             payload = json.loads(payload)
+            logger.info(f'playing {payload["username"]}')
 
             play_user_playlist(payload['username'],
                                parts=payload['parts'],
@@ -368,10 +405,13 @@ def play_playlist_task():
                                shuffle=payload['shuffle'],
                                include_recommendations=payload['include_recommendations'],
                                recommendation_sample=payload['recommendation_sample'],
-                               day_boundary=payload['day_boundary'])
+                               day_boundary=payload['day_boundary'],
+                               add_this_month=payload['add_this_month'],
+                               add_last_month=payload['add_last_month'])
 
             return jsonify({'message': 'executed playlist', 'status': 'success'}), 200
     else:
+        logger.warning('non tasks request')
         return jsonify({'error': 'unauthorized'}), 401
 
 
@@ -384,7 +424,7 @@ def run_playlist():
 
         if playlist_name:
 
-            if os.environ.get('DEPLOY_DESTINATION', None) and os.environ['DEPLOY_DESTINATION'] == 'PROD':
+            if os.environ.get('DEPLOY_DESTINATION', None) == 'PROD':
                 create_run_user_playlist_task(session['username'], playlist_name)
             else:
                 run_user_playlist(session['username'], playlist_name)
@@ -392,9 +432,11 @@ def run_playlist():
             return jsonify({'message': 'execution requested', 'status': 'success'}), 200
 
         else:
+            logger.warning('no playlist requested')
             return jsonify({"error": 'no name requested'}), 400
 
     else:
+        logger.warning('user not logged in')
         return jsonify({'error': 'not logged in'}), 401
 
 
@@ -406,10 +448,13 @@ def run_playlist_task():
         if payload:
             payload = json.loads(payload)
 
+            logger.info(f'running {payload["username"]} / {payload["name"]}')
+
             run_user_playlist(payload['username'], payload['name'])
 
             return jsonify({'message': 'executed playlist', 'status': 'success'}), 200
     else:
+        logger.warning('non tasks request')
         return jsonify({'error': 'unauthorized'}), 401
 
 
@@ -428,6 +473,7 @@ def run_user():
         return jsonify({'message': 'executed user', 'status': 'success'}), 200
 
     else:
+        logger.warning('user not logged in')
         return jsonify({'error': 'not logged in'}), 401
 
 
@@ -440,6 +486,7 @@ def run_user_task():
             execute_user(payload)
             return jsonify({'message': 'executed user', 'status': 'success'}), 200
     else:
+        logger.warning('non tasks request')
         return jsonify({'error': 'unauthorized'}), 401
 
 
@@ -456,6 +503,7 @@ def run_users():
         return jsonify({'message': 'executed all users', 'status': 'success'}), 200
 
     else:
+        logger.warning('user not logged in')
         return jsonify({'error': 'not logged in'}), 401
 
 
@@ -466,12 +514,14 @@ def run_users_cron():
         execute_all_users()
         return jsonify({'status': 'success'}), 200
     else:
+        logger.warning('user not logged in')
         return jsonify({'status': 'error', 'message': 'unauthorised'}), 401
 
 
 def execute_all_users():
 
     seconds_delay = 0
+    logger.info('running')
 
     for iter_user in [i.to_dict() for i in db.collection(u'spotify_users').stream()]:
 
@@ -505,12 +555,13 @@ def execute_user(username):
                  database.get_user_playlists_collection(database.get_user_query_stream(username)[0].id).stream()]
 
     seconds_delay = 0
+    logger.info(f'running {username}')
 
     for iterate_playlist in playlists:
         if len(iterate_playlist['parts']) > 0 or len(iterate_playlist['playlist_references']) > 0:
             if iterate_playlist.get('playlist_id', None):
 
-                if os.environ.get('DEPLOY_DESTINATION', None) and os.environ['DEPLOY_DESTINATION'] == 'PROD':
+                if os.environ.get('DEPLOY_DESTINATION', None) == 'PROD':
                     create_run_user_playlist_task(username, iterate_playlist['name'], seconds_delay)
                 else:
                     run_playlist(username, iterate_playlist['name'])
@@ -553,6 +604,8 @@ def create_play_user_playlist_task(username,
                                    include_recommendations=False,
                                    recommendation_sample=10,
                                    day_boundary=10,
+                                   add_this_month=False,
+                                   add_last_month=False,
                                    delay=0):
     task = {
         'app_engine_http_request': {  # Specify the type of request.
@@ -566,7 +619,9 @@ def create_play_user_playlist_task(username,
                 'shuffle': shuffle,
                 'include_recommendations': include_recommendations,
                 'recommendation_sample': recommendation_sample,
-                'day_boundary': day_boundary
+                'day_boundary': day_boundary,
+                'add_this_month': add_this_month,
+                'add_last_month': add_last_month
             }).encode()
         }
     }

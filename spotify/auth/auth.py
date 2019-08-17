@@ -4,6 +4,7 @@ from werkzeug.security import check_password_hash, generate_password_hash
 
 import urllib
 import datetime
+import logging
 from base64 import b64encode
 import requests
 
@@ -12,6 +13,8 @@ import spotify.api.database as database
 blueprint = Blueprint('authapi', __name__)
 
 db = firestore.Client()
+
+logger = logging.getLogger(__name__)
 
 
 @blueprint.route('/login', methods=['GET', 'POST'])
@@ -48,15 +51,18 @@ def login():
         if check_password_hash(doc['password'], password):
 
             if doc['locked']:
+                logger.warning(f'locked account attempt {username}')
                 flash('account locked')
                 return redirect(url_for('index'))
 
             user_reference = db.collection(u'spotify_users').document(u'{}'.format(users[0].id))
             user_reference.update({'last_login': datetime.datetime.utcnow()})
 
+            logger.info(f'success {username}')
             session['username'] = username
             return redirect(url_for('app_route'))
         else:
+            logger.warning(f'failed attempt {username}')
             flash('incorrect password')
             return redirect(url_for('index'))
 
@@ -66,6 +72,8 @@ def login():
 
 @blueprint.route('/logout', methods=['GET', 'POST'])
 def logout():
+    if 'username' in session:
+        logger.info(f'logged out {session["username"]}')
     session.pop('username', None)
     flash('logged out')
     return redirect(url_for('index'))
@@ -113,6 +121,7 @@ def register():
             'validated': True
         })
 
+        logger.info(f'new user {username}')
         session['username'] = username
         return redirect(url_for('authapi.auth'))
 

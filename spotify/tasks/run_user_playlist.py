@@ -15,14 +15,14 @@ db = firestore.Client()
 
 captured_playlists = []
 
+logger = logging.getLogger(__name__)
+
 
 def run_user_playlist(username, playlist_name):
 
-    logger = logging.getLogger(__name__)
-
     users = [i for i in db.collection(u'spotify_users').where(u'username', u'==', username).stream()]
 
-    logger.info(f'{username} / {playlist_name}')
+    logger.info(f'running {username} / {playlist_name}')
 
     if len(users) == 1:
 
@@ -38,11 +38,11 @@ def run_user_playlist(username, playlist_name):
 
             if playlist_dict['playlist_id'] is None:
                 logger.critical(f'no playlist id to populate ({username}/{playlist_name})')
-                return
+                return None
 
             if len(playlist_dict['parts']) == 0 and len(playlist_dict['playlist_references']) == 0:
                 logger.critical(f'no playlists to use for creation ({username}/{playlist_name})')
-                return
+                return None
 
             spotify_keys = db.document('key/spotify').get().to_dict()
 
@@ -74,7 +74,9 @@ def run_user_playlist(username, playlist_name):
                                                     submit_parts,
                                                     processors,
                                                     include_recommendations=playlist_dict['include_recommendations'],
-                                                    recommendation_limit=int(playlist_dict['recommendation_sample']))
+                                                    recommendation_limit=int(playlist_dict['recommendation_sample']),
+                                                    add_this_month=playlist_dict.get('add_this_month', False),
+                                                    add_last_month=playlist_dict.get('add_last_month', False))
             else:
                 tracks = engine.make_playlist(submit_parts,
                                               processors,
@@ -86,11 +88,11 @@ def run_user_playlist(username, playlist_name):
 
         else:
             logger.critical(f'multiple/no playlists found ({username}/{playlist_name})')
-            return
+            return None
 
     else:
         logger.critical(f'multiple/no user(s) found ({username}/{playlist_name})')
-        return
+        return None
 
 
 def generate_parts(user_id, name):
