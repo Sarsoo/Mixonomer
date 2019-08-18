@@ -84,7 +84,14 @@ def run_user_playlist(username, playlist_name):
                                               recommendation_limit=int(playlist_dict['recommendation_sample']))
 
             engine.execute_playlist(tracks, playlist_dict['playlist_id'])
-            engine.change_description(sorted(submit_parts), playlist_dict['playlist_id'])
+
+            overwrite = playlist_dict.get('description_overwrite', None)
+            suffix = playlist_dict.get('description_suffix', None)
+
+            engine.change_description(sorted(submit_parts),
+                                      playlist_dict['playlist_id'],
+                                      overwrite=overwrite,
+                                      suffix=suffix)
 
         else:
             logger.critical(f'multiple/no playlists found ({username}/{playlist_name})')
