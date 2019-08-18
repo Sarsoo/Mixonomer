@@ -7,14 +7,13 @@ logger = logging.getLogger(__name__)
 logger.setLevel('DEBUG')
 
 if os.environ.get('DEPLOY_DESTINATION', None) == 'PROD':
-    from google.cloud.logging.handlers import CloudLoggingHandler
     from google.cloud import logging as glogging
 
     log_format = '%(funcName)s - %(message)s'
     formatter = logging.Formatter(log_format)
 
     client = glogging.Client()
-    handler = CloudLoggingHandler(client, name='playlist-manager')
+    handler = client.get_default_handler()
 
     handler.setFormatter(formatter)
 

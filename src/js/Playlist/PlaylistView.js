@@ -3,6 +3,36 @@ const axios = require('axios');
 
 import showMessage from "../Toast.js"
 
+var thisMonth = [
+    'january',
+    'february',
+    'march',
+    'april',
+    'may',
+    'june',
+    'july',
+    'august',
+    'septempber',
+    'october',
+    'november',
+    'december'
+];
+
+var lastMonth = [
+    'december',
+    'january',
+    'february',
+    'march',
+    'april',
+    'may',
+    'june',
+    'july',
+    'august',
+    'septempber',
+    'october',
+    'november'
+];
+
 class PlaylistView extends Component{
 
     constructor(props){
@@ -18,21 +48,25 @@ class PlaylistView extends Component{
             day_boundary: '',
             recommendation_sample: '',
             newPlaylistName: '',
-            newPlaylistReference: '',
+            newReferenceName: '',
 
             shuffle: false,
-            include_recommendations: false
+            include_recommendations: false,
+            add_this_month: false,
+            add_last_month: false
         }
         this.handleAddPart = this.handleAddPart.bind(this);
         this.handleAddReference = this.handleAddReference.bind(this);
         this.handleInputChange = this.handleInputChange.bind(this);
-        this.handleRemoveRow = this.handleRemoveRow.bind(this);
-        this.handleRemoveRefRow = this.handleRemoveRefRow.bind(this);
+        this.handleRemovePart = this.handleRemovePart.bind(this);
+        this.handleRemoveReference = this.handleRemoveReference.bind(this);
 
         this.handleRun = this.handleRun.bind(this);
 
         this.handleShuffleChange = this.handleShuffleChange.bind(this);
-        this.handleRecChange = this.handleRecChange.bind(this);
+        this.handleIncludeRecommendationsChange = this.handleIncludeRecommendationsChange.bind(this);
+        this.handleThisMonthChange = this.handleThisMonthChange.bind(this);
+        this.handleLastMonthChange = this.handleLastMonthChange.bind(this);
     }
 
     componentDidMount(){
@@ -56,7 +90,7 @@ class PlaylistView extends Component{
             this.setState(info.data);
             this.setState({
                 playlists: playlists.data.playlists,
-                newPlaylistReference: filteredPlaylists.length > 0 ? filteredPlaylists[0].name : ''
+                newReferenceName: filteredPlaylists.length > 0 ? filteredPlaylists[0].name : ''
             });
         }))
         .catch((error) => {
@@ -82,7 +116,7 @@ class PlaylistView extends Component{
             this.handleDayBoundaryChange(event.target.value);
         }
         if(event.target.name == 'recommendation_sample'){
-            this.handleRecSampleChange(event.target.value);
+            this.handleRecommendationsSampleChange(event.target.value);
         }
         if(event.target.name == 'type'){
             this.handleTypeChange(event.target.value);
@@ -90,6 +124,12 @@ class PlaylistView extends Component{
     }
 
     handleDayBoundaryChange(boundary) {
+        if(boundary == ''){
+            boundary = 0;
+            this.setState({
+                day_boundary: 0
+            });
+        }
         axios.post('/api/playlist', {
             name: this.state.name,
             day_boundary: parseInt(boundary)
@@ -98,7 +138,13 @@ class PlaylistView extends Component{
         });
     }
 
-    handleRecSampleChange(sample){
+    handleRecommendationsSampleChange(sample){
+        if(sample == ''){
+            sample = 0;
+            this.setState({
+                recommendation_sample: 0
+            });
+        }
         axios.post('/api/playlist', {
             name: this.state.name,
             recommendation_sample: parseInt(sample)
@@ -128,7 +174,31 @@ class PlaylistView extends Component{
         });
     }
 
-    handleRecChange(event) {
+    handleThisMonthChange(event) {
+        this.setState({
+            add_this_month: event.target.checked
+        });
+        axios.post('/api/playlist', {
+            name: this.state.name,
+            add_this_month: event.target.checked
+        }).catch((error) => {
+            showMessage(`error updating add this month (${error.response.status})`);
+        });
+    }
+
+    handleLastMonthChange(event) {
+        this.setState({
+            add_last_month: event.target.checked
+        });
+        axios.post('/api/playlist', {
+            name: this.state.name,
+            add_last_month: event.target.checked
+        }).catch((error) => {
+            showMessage(`error updating add last month (${error.response.status})`);
+        });
+    }
+
+    handleIncludeRecommendationsChange(event) {
         this.setState({
             include_recommendations: event.target.checked
         });
@@ -177,13 +247,13 @@ class PlaylistView extends Component{
 
     handleAddReference(event){
 
-        if(this.state.newPlaylistReference.length != 0){
+        if(this.state.newReferenceName.length != 0){
             
-            var check = this.state.playlist_references.includes(this.state.newPlaylistReference);
+            var check = this.state.playlist_references.includes(this.state.newReferenceName);
 
             if(check == false) {
                 var playlist_references = this.state.playlist_references.slice();
-                playlist_references.push(this.state.newPlaylistReference);
+                playlist_references.push(this.state.newReferenceName);
                 
                 playlist_references.sort(function(a, b){
                     if(a < b) { return -1; }
@@ -195,7 +265,7 @@ class PlaylistView extends Component{
                 
                 this.setState({
                     playlist_references: playlist_references,
-                    newPlaylistReference: filteredPlaylists.length > 0 ? filteredPlaylists[0].name : ''
+                    newReferenceName: filteredPlaylists.length > 0 ? filteredPlaylists[0].name : ''
                 });
                 axios.post('/api/playlist', {
                     name: this.state.name,
@@ -213,7 +283,7 @@ class PlaylistView extends Component{
         }
     }
 
-    handleRemoveRow(id, event){
+    handleRemovePart(id, event){
         var parts = this.state.parts;
         parts = parts.filter(e => e !== id);
         this.setState({
@@ -232,7 +302,7 @@ class PlaylistView extends Component{
         });
     }
 
-    handleRemoveRefRow(id, event){
+    handleRemoveReference(id, event){
         var playlist_references = this.state.playlist_references;
         playlist_references = playlist_references.filter(e => e !== id);
         this.setState({
@@ -276,6 +346,8 @@ class PlaylistView extends Component{
 
     render(){
 
+        var date = new Date();
+
         const table = (
             <table className="app-table max-width">
                 <thead>
@@ -283,8 +355,8 @@ class PlaylistView extends Component{
                         <th colSpan="2"><h1 className="text-no-select">{ this.state.name }</h1></th>
                     </tr>
                 </thead>
-                { this.state.playlist_references.length > 0 && <ListBlock name="managed" handler={this.handleRemoveRefRow} list={this.state.playlist_references}/> }
-                { this.state.parts.length > 0 && <ListBlock name="spotify" handler={this.handleRemoveRow} list={this.state.parts}/> }
+                { this.state.playlist_references.length > 0 && <ListBlock name="managed" handler={this.handleRemoveReference} list={this.state.playlist_references}/> }
+                { this.state.parts.length > 0 && <ListBlock name="spotify" handler={this.handleRemovePart} list={this.state.parts}/> }
                 <tbody>
                     <tr>
                         <td colSpan="2" className="center-text ui-text text-no-select" style={{fontStyle: "italic"}}>
@@ -306,9 +378,9 @@ class PlaylistView extends Component{
                     </tr>
                     <tr>
                         <td>
-                            <select name="newPlaylistReference" 
+                            <select name="newReferenceName" 
                                     className="full-width"
-                                    value={this.state.newPlaylistReference}
+                                    value={this.state.newReferenceName}
                                     onChange={this.handleInputChange}>
                                 { this.state.playlists
                                     .filter((entry) => entry.name != this.state.name)
@@ -336,7 +408,7 @@ class PlaylistView extends Component{
                         <td>
                             <input type="checkbox" 
                                 checked={this.state.include_recommendations}
-                                onChange={this.handleRecChange}></input>
+                                onChange={this.handleIncludeRecommendationsChange}></input>
                         </td>
                     </tr>
                     <tr>
@@ -365,6 +437,30 @@ class PlaylistView extends Component{
                         </td>
                     </tr>
                     }
+                    { this.state.type == 'recents' &&
+                    <tr>
+                        <td className="center-text ui-text text-no-select">
+                            include {thisMonth[date.getMonth()]} playlist
+                        </td>
+                        <td>
+                            <input type="checkbox" 
+                                checked={this.state.add_this_month}
+                                onChange={this.handleThisMonthChange}></input>
+                        </td>
+                    </tr>
+                    }
+                    { this.state.type == 'recents' &&
+                    <tr>
+                        <td className="center-text ui-text text-no-select">
+                            include {lastMonth[date.getMonth()]} playlist
+                        </td>
+                        <td>
+                            <input type="checkbox" 
+                                checked={this.state.add_last_month}
+                                onChange={this.handleLastMonthChange}></input>
+                        </td>
+                    </tr>
+                    }
                     <tr>
                         <td className="center-text ui-text text-no-select">
                             playlist type
@@ -379,15 +475,6 @@ class PlaylistView extends Component{
                             </select>
                         </td>
                     </tr>
-                    { this.state.type == 'recents' &&
-                    <tr>
-                        <td colSpan="2" className="center-text ui-text text-no-select" style={{fontStyle: "italic"}}>
-                            <br></br>'recents' playlists search for and include this months and last months playlists when named in the format
-                            <br></br>[month] [year]
-                            <br></br>e.g july 19 (lowercase)
-                        </td>
-                    </tr>
-                    }
                     <tr>
                         <td colSpan="2">
                             <button className="button full-width" onClick={this.handleRun}>run</button>

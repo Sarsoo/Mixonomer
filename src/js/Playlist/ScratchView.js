@@ -3,6 +3,36 @@ const axios = require('axios');
 
 import showMessage from "../Toast.js"
 
+var thisMonth = [
+    'january',
+    'february',
+    'march',
+    'april',
+    'may',
+    'june',
+    'july',
+    'august',
+    'septempber',
+    'october',
+    'november',
+    'december'
+];
+
+var lastMonth = [
+    'december',
+    'january',
+    'february',
+    'march',
+    'april',
+    'may',
+    'june',
+    'july',
+    'august',
+    'septempber',
+    'october',
+    'november'
+];
+
 class ScratchView extends Component{
 
     constructor(props){
@@ -18,21 +48,25 @@ class ScratchView extends Component{
             day_boundary: 5,
             recommendation_sample: 5,
             newPlaylistName: '',
-            newPlaylistReference: '',
+            newReferenceName: '',
 
             shuffle: false,
-            include_recommendations: false
+            include_recommendations: false,
+            add_this_month: false,
+            add_last_month: false
         }
         this.handleAddPart = this.handleAddPart.bind(this);
         this.handleAddReference = this.handleAddReference.bind(this);
         this.handleInputChange = this.handleInputChange.bind(this);
-        this.handleRemoveRow = this.handleRemoveRow.bind(this);
-        this.handleRemoveRefRow = this.handleRemoveRefRow.bind(this);
+        this.handleRemovePart = this.handleRemovePart.bind(this);
+        this.handleRemoveReference = this.handleRemoveReference.bind(this);
 
         this.handleRun = this.handleRun.bind(this);
 
         this.handleShuffleChange = this.handleShuffleChange.bind(this);
-        this.handleRecChange = this.handleRecChange.bind(this);
+        this.handleIncludeRecommendationsChange = this.handleIncludeRecommendationsChange.bind(this);
+        this.handleThisMonthChange = this.handleThisMonthChange.bind(this);
+        this.handleLastMonthChange = this.handleLastMonthChange.bind(this);
     }
 
     componentDidMount(){
@@ -48,7 +82,7 @@ class ScratchView extends Component{
 
             this.setState({
                 playlists: response.data.playlists,
-                newPlaylistReference: filteredPlaylists.length > 0 ? filteredPlaylists[0].name : ''
+                newReferenceName: filteredPlaylists.length > 0 ? filteredPlaylists[0].name : ''
             });
         })
         .catch((error) => {
@@ -62,22 +96,25 @@ class ScratchView extends Component{
         });
     }
 
-    handleTypeChange(sample){
-        axios.post('/api/playlist', {
-            name: this.state.name,
-            type: sample
-        }).catch((error) => {
-            showMessage(`error updating type (${error.response.status})`);
-        });
-    }
-
     handleShuffleChange(event) {
         this.setState({
             shuffle: event.target.checked
         });
     }
 
-    handleRecChange(event) {
+    handleThisMonthChange(event) {
+        this.setState({
+            add_this_month: event.target.checked
+        });
+    }
+
+    handleLastMonthChange(event) {
+        this.setState({
+            add_last_month: event.target.checked
+        });
+    }
+
+    handleIncludeRecommendationsChange(event) {
         this.setState({
             include_recommendations: event.target.checked
         });
@@ -114,13 +151,13 @@ class ScratchView extends Component{
 
     handleAddReference(event){
 
-        if(this.state.newPlaylistReference.length != 0){
+        if(this.state.newReferenceName.length != 0){
             
-            var check = this.state.playlist_references.includes(this.state.newPlaylistReference);
+            var check = this.state.playlist_references.includes(this.state.newReferenceName);
 
             if(check == false) {
                 var playlist_references = this.state.playlist_references.slice();
-                playlist_references.push(this.state.newPlaylistReference);
+                playlist_references.push(this.state.newReferenceName);
                 
                 playlist_references.sort(function(a, b){
                     if(a < b) { return -1; }
@@ -132,7 +169,7 @@ class ScratchView extends Component{
                 
                 this.setState({
                     playlist_references: playlist_references,
-                    newPlaylistReference: filteredPlaylists.length > 0 ? filteredPlaylists[0].name : ''
+                    newReferenceName: filteredPlaylists.length > 0 ? filteredPlaylists[0].name : ''
                 });
 
             }else{
@@ -144,7 +181,7 @@ class ScratchView extends Component{
         }
     }
 
-    handleRemoveRow(id, event){
+    handleRemovePart(id, event){
         var parts = this.state.parts;
         parts = parts.filter(e => e !== id);
         this.setState({
@@ -156,7 +193,7 @@ class ScratchView extends Component{
         }
     }
 
-    handleRemoveRefRow(id, event){
+    handleRemoveReference(id, event){
         var playlist_references = this.state.playlist_references;
         playlist_references = playlist_references.filter(e => e !== id);
         this.setState({
@@ -176,7 +213,9 @@ class ScratchView extends Component{
                         include_recommendations: this.state.include_recommendations,
                         recommendation_sample: this.state.recommendation_sample,
                         day_boundary: this.state.day_boundary,
-                        playlist_type: this.state.type
+                        playlist_type: this.state.type,
+                        add_this_month: this.state.add_this_month,
+                        add_last_month: this.state.add_last_month
                     })
                     .then((reponse) => {
                         showMessage(`played`);
@@ -197,6 +236,8 @@ class ScratchView extends Component{
 
     render(){
 
+        var date = new Date();
+
         const table = (
             <table className="app-table max-width">
                 {/* <thead>
@@ -204,8 +245,8 @@ class ScratchView extends Component{
                         <th colSpan="2"><h1 className="text-no-select">{ this.state.name }</h1></th>
                     </tr>
                 </thead> */}
-                { this.state.playlist_references.length > 0 && <ListBlock name="managed" handler={this.handleRemoveRefRow} list={this.state.playlist_references}/> }
-                { this.state.parts.length > 0 && <ListBlock name="spotify" handler={this.handleRemoveRow} list={this.state.parts}/> }
+                { this.state.playlist_references.length > 0 && <ListBlock name="managed" handler={this.handleRemoveReference} list={this.state.playlist_references}/> }
+                { this.state.parts.length > 0 && <ListBlock name="spotify" handler={this.handleRemovePart} list={this.state.parts}/> }
                 <tbody>
                     <tr>
                         <td colSpan="2" className="center-text ui-text text-no-select" style={{fontStyle: "italic"}}>
@@ -227,9 +268,9 @@ class ScratchView extends Component{
                     </tr>
                     <tr>
                         <td>
-                            <select name="newPlaylistReference" 
+                            <select name="newReferenceName" 
                                     className="full-width"
-                                    value={this.state.newPlaylistReference}
+                                    value={this.state.newReferenceName}
                                     onChange={this.handleInputChange}>
                                 { this.state.playlists
                                     .filter((entry) => entry.name != this.state.name)
@@ -259,7 +300,7 @@ class ScratchView extends Component{
                             <input type="checkbox"
                                 name="include_recommendations"
                                 checked={this.state.include_recommendations}
-                                onChange={this.handleRecChange}></input>
+                                onChange={this.handleIncludeRecommendationsChange}></input>
                         </td>
                     </tr>
                     <tr>
@@ -288,6 +329,30 @@ class ScratchView extends Component{
                         </td>
                     </tr>
                     }
+                    { this.state.type == 'recents' &&
+                    <tr>
+                        <td className="center-text ui-text text-no-select">
+                            include {thisMonth[date.getMonth()]} playlist
+                        </td>
+                        <td>
+                            <input type="checkbox" 
+                                checked={this.state.add_this_month}
+                                onChange={this.handleThisMonthChange}></input>
+                        </td>
+                    </tr>
+                    }
+                    { this.state.type == 'recents' &&
+                    <tr>
+                        <td className="center-text ui-text text-no-select">
+                            include {lastMonth[date.getMonth()]} playlist
+                        </td>
+                        <td>
+                            <input type="checkbox" 
+                                checked={this.state.add_last_month}
+                                onChange={this.handleLastMonthChange}></input>
+                        </td>
+                    </tr>
+                    }
                     <tr>
                         <td className="center-text ui-text text-no-select">
                             playlist type
@@ -302,15 +367,6 @@ class ScratchView extends Component{
                             </select>
                         </td>
                     </tr>
-                    { this.state.type == 'recents' &&
-                    <tr>
-                        <td colSpan="2" className="center-text ui-text text-no-select" style={{fontStyle: "italic"}}>
-                            <br></br>'recents' playlists search for and include this months and last months playlists when named in the format
-                            <br></br>[month] [year]
-                            <br></br>e.g july 19 (lowercase)
-                        </td>
-                    </tr>
-                    }
                     <tr>
                         <td colSpan="2">
                             <button className="button full-width" onClick={this.handleRun}>play</button>
