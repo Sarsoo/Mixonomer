@@ -90,12 +90,10 @@ class PlaylistsView extends Component {
 
     render() {
         
-        const table =   <div>
-                            <Table playlists={this.state.playlists} 
-                                handleRunPlaylist={this.handleRunPlaylist} 
-                                handleDeletePlaylist={this.handleDeletePlaylist}
-                                handleRunAll={this.handleRunAll}/>
-                        </div>;
+        const table =   <Table playlists={this.state.playlists} 
+                            handleRunPlaylist={this.handleRunPlaylist} 
+                            handleDeletePlaylist={this.handleDeletePlaylist}
+                            handleRunAll={this.handleRunAll}/>;
 
         const loadingMessage = <p className="center-text">loading...</p>;
 

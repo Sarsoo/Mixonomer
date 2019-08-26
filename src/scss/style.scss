@@ -4,6 +4,7 @@ $ui-colour: #131313;
 $light-ui: #575757;
 $text-colour: white;
 $ui-element: #505050;
+$ui-shadow: #404040;
 
 $pad-px: 20px;
 
@@ -54,7 +55,7 @@ p {
 
 	display: inline-block;
 	
-	border-radius: 5px;
+	border-radius: 3px;
 	border: none;
 	margin: 4px auto;
 	padding: 15px;
@@ -66,6 +67,7 @@ p {
 	box-shadow: 0 9px #383838;
 	
 	text: {
+		shadow: 0.5px 0.5px 0.5px rgba(0,0,0,0.14);
 		align: center;
 		decoration: none;
 	}
@@ -77,10 +79,10 @@ p {
 }
 
 input[type=text], input[type=password], input[type=number], select {
-	padding: 10px;
+	padding: 15px;
 	background-color: $ui-element;
 	border: black;
-	border-radius: 4px;
+	border-radius: 3px;
 	color: white;
 }
 
@@ -186,34 +188,48 @@ h1.sectiontitle {
 
 ul.navbar {
 	list-style-type: none;
-	border-radius: 5px 5px;
-	/*box-shadow: 3px 3px 1px grey;*/
+	background-color: $light-ui;
 	margin: 10px;
+	border-radius: 5px;
+	/*box-shadow: 3px 3px 1px grey;*/
 	padding: 0;
 	overflow: hidden;
-	background-color: $light-ui;
+	
+
+	user-select: none;
+	-webkit-user-select: none;
+	-moz-user-select: none;
+	-ms-user-select: none;
+	-webkit-user-drag: none;
+	-khtml-user-drag: none;
+	-moz-user-drag: none;
+	-o-user-drag: none;
+
+	box-shadow: 0 9px 12px 0 black, 0 9px 12px 0 black;
 
 	li {
 		float: left;
 		position: -webkit-sticky;
 		position: sticky;
 		top: 0;
-		
 
 		a {
 			display: block;
 			color: $text-colour;
 			text-align: center;
 			padding: 14px 16px;
+			// padding: 10px;
+			margin: 2px;
+			border-radius: 5px;
 
 			text-decoration: none;
-			text-shadow: 1px 1px 2px black;
+			text-shadow: 1px 1px 1px rgba(0,0,0, 0.5);
 			-webkit-transition: background-color 0.4s;
   			transition: background-color 0.4s;
 		
 
 			&:hover {
-				background-color: #080808;
+				background-color: $ui-shadow;
 			}
 		}
 	}
@@ -223,13 +239,24 @@ ul.navbar {
 
 .sidebar {
 	
-	background-color: $light-ui;
 	list-style-type: none;
+	background-color: $light-ui;
 	margin-left: 10px;
 	margin-right: 10px;
 	border-radius: 5px;
-	padding-top: 10px;
-	padding-bottom: 10px;
+	// padding-top: 10px;
+	// padding-bottom: 10px;
+
+	user-select: none;
+	-webkit-user-select: none;
+	-moz-user-select: none;
+	-ms-user-select: none;
+	-webkit-user-drag: none;
+	-khtml-user-drag: none;
+	-moz-user-drag: none;
+	-o-user-drag: none;
+
+	box-shadow: 0 9px 12px 0 black, 0 9px 12px 0 black;
 
 	tr {
 		top: 0;
@@ -237,7 +264,7 @@ ul.navbar {
 
 		td {
 			
-			height: 50px;
+			// height: 50px;
 			text-align: center;
 			vertical-align: center;
 
@@ -253,13 +280,13 @@ ul.navbar {
 				padding: 10px;
 				
 				text-decoration: none;
-				text-shadow: 1px 1px 2px black;
+				text-shadow: 1px 1px 1px rgba(0,0,0, 0.5);
 				-webkit-transition: background-color 0.4s;
 				transition: background-color 0.4s;	
 			}	
 
 			&:hover {
-				background-color: black;
+				background-color: $ui-shadow;
 			}
 		}
 	}
