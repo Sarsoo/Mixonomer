@@ -23,7 +23,7 @@ def get_user_doc_ref(user):
 
     if len(users) > 0:
         if len(users) == 1:
-            return db.collection(u'spotify_users').document(u'{}'.format(users[0].id))
+            return users[0].reference
 
         else:
             logger.error(f"multiple {user}'s found")
@@ -41,33 +41,45 @@ def get_user_playlists_collection(user_id):
     return playlists
 
 
-def get_user_playlist_ref(user, playlist):
+def get_user_playlist_ref_by_username(user, playlist):
 
     user_ref = get_user_doc_ref(user)
 
     if user_ref:
 
-        playlist_collection = get_user_playlists_collection(user_ref.id)
-
-        if playlist_collection:
-            query = [i for i in playlist_collection.where(u'name', u'==', playlist).stream()]
-
-            if len(query) > 0:
-                if len(query) > 1:
-                    return playlist_collection.document(u'{}'.format(query[0].id))
-
-                else:
-                    logger.error(f'{user} multiple response playlists found for {playlist}')
-                    return query
-
-            else:
-                logger.error(f'{user} no playlist found for {playlist}')
-                return None
-
-        else:
-            logger.error(f'{user} playlist collection not found, looking up {playlist}')
-            return None
+        return get_user_playlist_ref_by_user_ref(user_ref, playlist)
 
     else:
         logger.error(f'{user} not found, looking up {playlist}')
+        return None
+
+
+def get_user_playlist_ref_by_user_ref(user_ref, playlist):
+
+    playlist_collection = get_user_playlists_collection(user_ref.id)
+
+    username = user_ref.get().to_dict()['username']
+
+    if playlist_collection:
+        query = [i for i in playlist_collection.where(u'name', u'==', playlist).stream()]
+
+        if len(query) > 0:
+            if len(query) == 1:
+                if query[0].exists:
+                    return query[0].reference
+
+                else:
+                    logger.error(f'{playlist} for {username} does not exist')
+                    return query[0]
+
+            else:
+                logger.error(f'{username} multiple response playlists found for {playlist}')
+                return query
+
+        else:
+            logger.error(f'{username} no playlist found for {playlist}')
+            return None
+
+    else:
+        logger.error(f'{username} playlist collection not found, looking up {playlist}')
         return None

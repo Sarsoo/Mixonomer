@@ -34,10 +34,16 @@ def get_playlists():
 
         pulled_user = database.get_user_doc_ref(session['username'])
 
-        playlists = database.get_user_playlists_collection(pulled_user.id)
+        playlists = pulled_user.collection(u'playlists')
+
+        playlist_docs = [i.to_dict() for i in playlists.stream()]
+
+        for j in playlist_docs:
+            j['playlist_references'] = [i.get().to_dict().get('name', 'n/a')
+                                        for i in j['playlist_references']]
 
         response = {
-            'playlists': [i.to_dict() for i in playlists.stream()]
+            'playlists':  playlist_docs
         }
 
         return jsonify(response), 200
@@ -53,7 +59,7 @@ def playlist():
     if 'username' in session:
 
         user_ref = database.get_user_doc_ref(session['username'])
-        playlists = database.get_user_playlists_collection(user_ref.id)
+        playlists = user_ref.collection(u'playlists')
 
         if request.method == 'GET' or request.method == 'DELETE':
             playlist_name = request.args.get('name', None)
@@ -69,12 +75,17 @@ def playlist():
 
                 if request.method == "GET":
 
-                    return jsonify(queried_playlist[0].to_dict()), 200
+                    playlist_doc = queried_playlist[0].to_dict()
+
+                    playlist_doc['playlist_references'] = [i.get().to_dict().get('name', 'n/a')
+                                                           for i in playlist_doc['playlist_references']]
+
+                    return jsonify(playlist_doc), 200
 
                 elif request.method == 'DELETE':
 
                     logger.info(f'deleted {session["username"]} / {queried_playlist[0].to_dict()["name"]}')
-                    playlists.document(queried_playlist[0].id).delete()
+                    queried_playlist[0].reference.delete()
 
                     return jsonify({"message": 'playlist deleted', "status": "success"}), 200
 
@@ -91,7 +102,19 @@ def playlist():
             playlist_name = request_json['name']
 
             playlist_parts = request_json.get('parts', None)
-            playlist_references = request_json.get('playlist_references', None)
+
+            playlist_references = []
+
+            if request_json.get('playlist_references', None):
+                for i in request_json['playlist_references']:
+                    retrieved_ref = database.get_user_playlist_ref_by_user_ref(user_ref, i)
+                    if retrieved_ref:
+                        playlist_references.append(retrieved_ref)
+                    else:
+                        return jsonify({"message": f'managed playlist {i} not found', "status": "error"}), 400
+
+            if len(playlist_references) == 0:
+                playlist_references = None
 
             playlist_id = request_json.get('id', None)
             playlist_shuffle = request_json.get('shuffle', None)
