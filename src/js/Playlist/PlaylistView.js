@@ -74,14 +74,14 @@ class PlaylistView extends Component{
         .then(axios.spread((info, playlists) => {
             
             info.data.parts.sort(function(a, b){
-                if(a < b) { return -1; }
-                if(a > b) { return 1; }
+                if(a.toLowerCase() < b.toLowerCase()) { return -1; }
+                if(a.toLowerCase() > b.toLowerCase()) { return 1; }
                 return 0;
             });
 
             info.data.playlist_references.sort(function(a, b){
-                if(a < b) { return -1; }
-                if(a > b) { return 1; }
+                if(a.toLowerCase() < b.toLowerCase()) { return -1; }
+                if(a.toLowerCase() > b.toLowerCase()) { return 1; }
                 return 0;
             });
 
@@ -221,8 +221,8 @@ class PlaylistView extends Component{
                 parts.push(this.state.newPlaylistName);
 
                 parts.sort(function(a, b){
-                    if(a < b) { return -1; }
-                    if(a > b) { return 1; }
+                    if(a.toLowerCase() < b.toLowerCase()) { return -1; }
+                    if(a.toLowerCase() > b.toLowerCase()) { return 1; }
                     return 0;
                 });
 
@@ -256,8 +256,8 @@ class PlaylistView extends Component{
                 playlist_references.push(this.state.newReferenceName);
                 
                 playlist_references.sort(function(a, b){
-                    if(a < b) { return -1; }
-                    if(a > b) { return 1; }
+                    if(a.toLowerCase() < b.toLowerCase()) { return -1; }
+                    if(a.toLowerCase() > b.toLowerCase()) { return 1; }
                     return 0;
                 });
 

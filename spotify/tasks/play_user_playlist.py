@@ -11,6 +11,9 @@ from spotframework.engine.filter.deduplicatebyid import DeduplicateByID
 from spotframework.net.network import Network
 from spotframework.net.user import User
 
+import spotify.db.database as database
+from spotify.db.part_generator import PartGenerator
+
 db = firestore.Client()
 
 captured_playlists = []
@@ -29,7 +32,7 @@ def play_user_playlist(username,
                        add_this_month=False,
                        add_last_month=False):
 
-    users = [i for i in db.collection(u'spotify_users').where(u'username', u'==', username).stream()]
+    users = database.get_user_query_stream(username)
 
     logger.info(f'playing for {username}')
 
@@ -68,13 +71,12 @@ def play_user_playlist(username,
         else:
             processors.append(SortReverseReleaseDate())
 
-        global captured_playlists
-        captured_playlists = []
-
         submit_parts = parts
 
+        part_generator = PartGenerator(user_id=users[0].id)
+
         for part in playlists:
-            submit_parts += generate_parts(users[0].id, part)
+            submit_parts += part_generator.get_recursive_parts(part)
 
         submit_parts = [i for i in {j for j in submit_parts}]
 
@@ -98,21 +100,3 @@ def play_user_playlist(username,
     else:
         logger.critical(f'multiple/no user(s) found ({username})')
         return None
-
-
-def generate_parts(user_id, name):
-
-    playlist_doc = [i.to_dict() for i in
-                    db.document(u'spotify_users/{}'.format(user_id))
-                    .collection(u'playlists')
-                    .where(u'name', '==', name).stream()][0]
-
-    return_parts = playlist_doc['parts']
-
-    captured_playlists.append(name)
-
-    for i in playlist_doc['playlist_references']:
-        if i not in captured_playlists:
-            return_parts += generate_parts(user_id, i)
-
-    return return_parts

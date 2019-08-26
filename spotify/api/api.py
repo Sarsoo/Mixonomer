@@ -14,7 +14,7 @@ from werkzeug.security import check_password_hash, generate_password_hash
 from spotify.tasks.run_user_playlist import run_user_playlist as run_user_playlist
 from spotify.tasks.play_user_playlist import play_user_playlist as play_user_playlist
 
-import spotify.api.database as database
+import spotify.db.database as database
 
 blueprint = Blueprint('api', __name__)
 db = firestore.Client()
