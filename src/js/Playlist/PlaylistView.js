@@ -53,7 +53,9 @@ class PlaylistView extends Component{
             shuffle: false,
             include_recommendations: false,
             add_this_month: false,
-            add_last_month: false
+            add_last_month: false,
+
+            isLoading: true
         }
         this.handleAddPart = this.handleAddPart.bind(this);
         this.handleAddReference = this.handleAddReference.bind(this);
@@ -90,7 +92,8 @@ class PlaylistView extends Component{
             this.setState(info.data);
             this.setState({
                 playlists: playlists.data.playlists,
-                newReferenceName: filteredPlaylists.length > 0 ? filteredPlaylists[0].name : ''
+                newReferenceName: filteredPlaylists.length > 0 ? filteredPlaylists[0].name : '',
+                isLoading: false
             });
         }))
         .catch((error) => {
@@ -485,8 +488,9 @@ class PlaylistView extends Component{
         );
 
         const error = <p style={{textAlign: "center"}}>{ this.state.error_text }</p>;
+        const loadingMessage = <p className="center-text">loading...</p>;
 
-        return this.state.error ? error : table;
+        return this.state.isLoading ? loadingMessage : ( this.state.error ? error : table );
     }
 
 }
