@@ -2,7 +2,7 @@ from google.cloud import firestore
 
 import logging
 
-from spotframework.net.user import User
+from spotframework.net.user import NetworkUser
 from spotframework.net.network import Network
 
 db = firestore.Client()
@@ -21,10 +21,10 @@ def create_playlist(username, name):
         user_dict = users[0].to_dict()
         spotify_keys = db.document('key/spotify').get().to_dict()
 
-        net = Network(User(spotify_keys['clientid'],
-                           spotify_keys['clientsecret'],
-                           user_dict['access_token'],
-                           user_dict['refresh_token']))
+        net = Network(NetworkUser(spotify_keys['clientid'],
+                                  spotify_keys['clientsecret'],
+                                  user_dict['access_token'],
+                                  user_dict['refresh_token']))
 
         resp = net.create_playlist(net.user.username, name)
 

@@ -5,11 +5,11 @@ import logging
 
 from spotframework.engine.playlistengine import PlaylistEngine
 from spotframework.engine.filter.shuffle import Shuffle
-from spotframework.engine.filter.sortreversereleasedate import SortReverseReleaseDate
-from spotframework.engine.filter.deduplicatebyid import DeduplicateByID
+from spotframework.engine.filter.sort import SortReverseReleaseDate
+from spotframework.engine.filter.deduplicate import DeduplicateByID
 
 from spotframework.net.network import Network
-from spotframework.net.user import User
+from spotframework.net.user import NetworkUser
 
 import spotify.db.database as database
 from spotify.db.part_generator import PartGenerator
@@ -56,10 +56,10 @@ def play_user_playlist(username,
 
         spotify_keys = db.document('key/spotify').get().to_dict()
 
-        net = Network(User(spotify_keys['clientid'],
-                           spotify_keys['clientsecret'],
-                           user_dict['access_token'],
-                           user_dict['refresh_token']))
+        net = Network(NetworkUser(spotify_keys['clientid'],
+                                  spotify_keys['clientsecret'],
+                                  user_dict['access_token'],
+                                  user_dict['refresh_token']))
 
         engine = PlaylistEngine(net)
         engine.load_user_playlists()
@@ -95,7 +95,7 @@ def play_user_playlist(username,
                                           include_recommendations=include_recommendations,
                                           recommendation_limit=int(recommendation_sample))
 
-        net.play(uris=[i['uri'] for i in tracks])
+        net.play(uris=[i.uri for i in tracks])
 
     else:
         logger.critical(f'multiple/no user(s) found ({username})')
