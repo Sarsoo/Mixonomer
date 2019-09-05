@@ -6,6 +6,8 @@ import os
 logger = logging.getLogger(__name__)
 logger.setLevel('DEBUG')
 
+spotframework_logger = logging.getLogger('spotframework')
+
 if os.environ.get('DEPLOY_DESTINATION', None) == 'PROD':
     from google.cloud import logging as glogging
 
@@ -18,6 +20,7 @@ if os.environ.get('DEPLOY_DESTINATION', None) == 'PROD':
     handler.setFormatter(formatter)
 
     logger.addHandler(handler)
+    spotframework_logger.addHandler(handler)
 
 else:
     log_format = '%(levelname)s %(name)s:%(funcName)s - %(message)s'
@@ -27,3 +30,4 @@ else:
     stream_handler.setFormatter(formatter)
 
     logger.addHandler(stream_handler)
+    spotframework_logger.addHandler(stream_handler)
