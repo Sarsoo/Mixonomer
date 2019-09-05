@@ -4,9 +4,9 @@ import datetime
 import logging
 
 from spotframework.engine.playlistengine import PlaylistEngine
-from spotframework.engine.filter.shuffle import Shuffle
-from spotframework.engine.filter.sort import SortReleaseDate
-from spotframework.engine.filter.deduplicate import DeduplicateByID
+from spotframework.engine.processor.shuffle import Shuffle
+from spotframework.engine.processor.sort import SortReleaseDate
+from spotframework.engine.processor.deduplicate import DeduplicateByID
 
 from spotframework.net.network import Network
 from spotframework.net.user import NetworkUser
