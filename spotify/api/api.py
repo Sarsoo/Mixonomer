@@ -6,7 +6,6 @@ import json
 import logging
 
 from google.cloud import firestore
-from google.cloud import pubsub_v1
 from google.cloud import tasks_v2
 from google.protobuf import timestamp_pb2
 from werkzeug.security import check_password_hash, generate_password_hash
@@ -18,11 +17,9 @@ import spotify.db.database as database
 
 blueprint = Blueprint('api', __name__)
 db = firestore.Client()
-publisher = pubsub_v1.PublisherClient()
 
 tasker = tasks_v2.CloudTasksClient()
 task_path = tasker.queue_path('sarsooxyz', 'europe-west2', 'spotify-executions')
-run_playlist_topic_path = publisher.topic_path('sarsooxyz', 'run_user_playlist')
 
 logger = logging.getLogger(__name__)
 
@@ -660,11 +657,3 @@ def create_play_user_playlist_task(username,
         task['schedule_time'] = timestamp
 
     tasker.create_task(task_path, task)
-
-
-def push_run_user_playlist_message(username, name):
-
-    data = u'{}'.format(name)
-    data = data.encode('utf-8')
-
-    publisher.publish(run_playlist_topic_path, data=data, username=username)

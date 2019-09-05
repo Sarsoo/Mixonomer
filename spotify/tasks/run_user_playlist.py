@@ -5,7 +5,7 @@ import logging
 
 from spotframework.engine.playlistengine import PlaylistEngine
 from spotframework.engine.filter.shuffle import Shuffle
-from spotframework.engine.filter.sort import SortReverseReleaseDate
+from spotframework.engine.filter.sort import SortReleaseDate
 from spotframework.engine.filter.deduplicate import DeduplicateByID
 
 from spotframework.net.network import Network
@@ -14,8 +14,6 @@ import spotify.db.database as database
 from spotify.db.part_generator import PartGenerator
 
 db = firestore.Client()
-
-captured_playlists = []
 
 logger = logging.getLogger(__name__)
 
@@ -61,7 +59,7 @@ def run_user_playlist(username, playlist_name):
             if playlist_dict['shuffle'] is True:
                 processors.append(Shuffle())
             else:
-                processors.append(SortReverseReleaseDate())
+                processors.append(SortReleaseDate(reverse=True))
 
             part_generator = PartGenerator(user_id=users[0].id)
             submit_parts = part_generator.get_recursive_parts(playlist_dict['name'])
