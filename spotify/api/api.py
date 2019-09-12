@@ -103,14 +103,15 @@ def playlist():
             playlist_references = []
 
             if request_json.get('playlist_references', None):
-                for i in request_json['playlist_references']:
-                    retrieved_ref = database.get_user_playlist_ref_by_user_ref(user_ref, i)
-                    if retrieved_ref:
-                        playlist_references.append(retrieved_ref)
-                    else:
-                        return jsonify({"message": f'managed playlist {i} not found', "status": "error"}), 400
+                if request_json['playlist_references'] != -1:
+                    for i in request_json['playlist_references']:
+                        retrieved_ref = database.get_user_playlist_ref_by_user_ref(user_ref, i)
+                        if retrieved_ref:
+                            playlist_references.append(retrieved_ref)
+                        else:
+                            return jsonify({"message": f'managed playlist {i} not found', "status": "error"}), 400
 
-            if len(playlist_references) == 0:
+            if len(playlist_references) == 0 and request_json.get('playlist_references', None) != -1:
                 playlist_references = None
 
             playlist_id = request_json.get('id', None)
