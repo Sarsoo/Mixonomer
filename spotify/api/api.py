@@ -150,7 +150,7 @@ def playlist():
 
                 if user_ref.get().to_dict()['spotify_linked']:
                     new_playlist = create_playlist(session['username'], playlist_name)
-                    to_add['uri'] = str(new_playlist.uri)
+                    to_add['uri'] = str(new_playlist.uri) if new_playlist is not None else None
 
                 if playlist_type == 'recents':
                     to_add['day_boundary'] = playlist_day_boundary if playlist_day_boundary is not None else 21
