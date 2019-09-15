@@ -48,8 +48,8 @@ def run_user_playlist(username, playlist_name):
 
             net = Network(NetworkUser(spotify_keys['clientid'],
                                       spotify_keys['clientsecret'],
-                                      user_dict['access_token'],
-                                      user_dict['refresh_token']))
+                                      user_dict['refresh_token'],
+                                      user_dict['access_token']))
 
             engine = PlaylistEngine(net)
             engine.load_user_playlists()

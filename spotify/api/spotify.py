@@ -23,8 +23,8 @@ def create_playlist(username, name):
 
         net = Network(NetworkUser(spotify_keys['clientid'],
                                   spotify_keys['clientsecret'],
-                                  user_dict['access_token'],
-                                  user_dict['refresh_token']))
+                                  user_dict['refresh_token'],
+                                  user_dict['access_token']))
 
         resp = net.create_playlist(net.user.username, name)
 
