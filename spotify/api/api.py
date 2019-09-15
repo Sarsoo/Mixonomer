@@ -114,7 +114,7 @@ def playlist():
             if len(playlist_references) == 0 and request_json.get('playlist_references', None) != -1:
                 playlist_references = None
 
-            playlist_id = request_json.get('id', None)
+            playlist_uri = request_json.get('uri', None)
             playlist_shuffle = request_json.get('shuffle', None)
             playlist_type = request_json.get('type', None)
 
@@ -143,14 +143,14 @@ def playlist():
                     'playlist_references': playlist_references if playlist_references is not None else [],
                     'include_recommendations': playlist_recommendation if playlist_recommendation is not None else False,
                     'recommendation_sample': playlist_recommendation_sample if playlist_recommendation_sample is not None else 10,
-                    'playlist_id': None,
+                    'uri': None,
                     'shuffle': playlist_shuffle if playlist_shuffle is not None else False,
                     'type': playlist_type if playlist_type is not None else 'default'
                 }
 
                 if user_ref.get().to_dict()['spotify_linked']:
-                    new_playlist_id = create_playlist(session['username'], playlist_name)
-                    to_add['playlist_id'] = new_playlist_id
+                    new_playlist = create_playlist(session['username'], playlist_name)
+                    to_add['uri'] = str(new_playlist.uri)
 
                 if playlist_type == 'recents':
                     to_add['day_boundary'] = playlist_day_boundary if playlist_day_boundary is not None else 21
@@ -186,8 +186,8 @@ def playlist():
                     else:
                         dic['playlist_references'] = playlist_references
 
-                if playlist_id is not None:
-                    dic['playlist_id'] = playlist_id
+                if playlist_uri is not None:
+                    dic['uri'] = playlist_uri
 
                 if playlist_shuffle is not None:
                     dic['shuffle'] = playlist_shuffle
@@ -580,7 +580,7 @@ def execute_user(username):
 
     for iterate_playlist in playlists:
         if len(iterate_playlist['parts']) > 0 or len(iterate_playlist['playlist_references']) > 0:
-            if iterate_playlist.get('playlist_id', None):
+            if iterate_playlist.get('uri', None):
 
                 if os.environ.get('DEPLOY_DESTINATION', None) == 'PROD':
                     create_run_user_playlist_task(username, iterate_playlist['name'], seconds_delay)

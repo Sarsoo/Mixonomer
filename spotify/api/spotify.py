@@ -26,10 +26,10 @@ def create_playlist(username, name):
                                   user_dict['refresh_token'],
                                   user_dict['access_token']))
 
-        resp = net.create_playlist(net.user.username, name)
+        playlist = net.create_playlist(net.user.username, name)
 
-        if resp and resp.get('id', None):
-            return resp['id']
+        if playlist is not None:
+            return playlist
         else:
             logger.error(f'no response received {username} / {name}')
             return None

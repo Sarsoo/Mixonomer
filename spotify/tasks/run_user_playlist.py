@@ -8,6 +8,8 @@ from spotframework.engine.processor.shuffle import Shuffle
 from spotframework.engine.processor.sort import SortReleaseDate
 from spotframework.engine.processor.deduplicate import DeduplicateByID
 
+from spotframework.model.uri import Uri
+
 from spotframework.net.network import Network
 from spotframework.net.user import NetworkUser
 import spotify.db.database as database
@@ -36,7 +38,7 @@ def run_user_playlist(username, playlist_name):
 
             playlist_dict = playlists[0].to_dict()
 
-            if playlist_dict['playlist_id'] is None:
+            if playlist_dict['uri'] is None:
                 logger.critical(f'no playlist id to populate ({username}/{playlist_name})')
                 return None
 
@@ -65,7 +67,8 @@ def run_user_playlist(username, playlist_name):
             submit_parts = part_generator.get_recursive_parts(playlist_dict['name'])
 
             if playlist_dict['type'] == 'recents':
-                boundary_date = datetime.datetime.now() - datetime.timedelta(days=int(playlist_dict['day_boundary']))
+                boundary_date = datetime.datetime.now(datetime.timezone.utc) - \
+                                datetime.timedelta(days=int(playlist_dict['day_boundary']))
                 tracks = engine.get_recent_playlist(boundary_date,
                                                     submit_parts,
                                                     processors,
@@ -79,13 +82,13 @@ def run_user_playlist(username, playlist_name):
                                               include_recommendations=playlist_dict['include_recommendations'],
                                               recommendation_limit=int(playlist_dict['recommendation_sample']))
 
-            engine.execute_playlist(tracks, playlist_dict['playlist_id'])
+            engine.execute_playlist(tracks, Uri(playlist_dict['uri']))
 
             overwrite = playlist_dict.get('description_overwrite', None)
             suffix = playlist_dict.get('description_suffix', None)
 
             engine.change_description(sorted(submit_parts),
-                                      playlist_dict['playlist_id'],
+                                      uri=Uri(playlist_dict['uri']),
                                       overwrite=overwrite,
                                       suffix=suffix)
 

@@ -81,7 +81,7 @@ def play_user_playlist(username,
         submit_parts = [i for i in {j for j in submit_parts}]
 
         if playlist_type == 'recents':
-            boundary_date = datetime.datetime.now() - datetime.timedelta(days=int(day_boundary))
+            boundary_date = datetime.datetime.now(datetime.timezone.utc) - datetime.timedelta(days=int(day_boundary))
             tracks = engine.get_recent_playlist(boundary_date,
                                                 submit_parts,
                                                 processors,
