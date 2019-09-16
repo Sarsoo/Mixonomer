@@ -1,12 +1,13 @@
 from google.cloud import firestore
 import logging
+from typing import List, Optional
 
 db = firestore.Client()
 
 logger = logging.getLogger(__name__)
 
 
-def get_user_query_stream(user):
+def get_user_query_stream(user: str) -> List[firestore.DocumentSnapshot]:
 
     users = [i for i in db.collection(u'spotify_users').where(u'username', u'==', user).stream()]
 
@@ -17,7 +18,7 @@ def get_user_query_stream(user):
         return []
 
 
-def get_user_doc_ref(user):
+def get_user_doc_ref(user: str) -> Optional[firestore.DocumentReference]:
 
     users = get_user_query_stream(user)
 
@@ -34,14 +35,14 @@ def get_user_doc_ref(user):
         return None
 
 
-def get_user_playlists_collection(user_id):
+def get_user_playlists_collection(user_id: str) -> firestore.CollectionReference:
 
     playlists = db.document(u'spotify_users/{}'.format(user_id)).collection(u'playlists')
 
     return playlists
 
 
-def get_user_playlist_ref_by_username(user, playlist):
+def get_user_playlist_ref_by_username(user: str, playlist: str) -> Optional[firestore.CollectionReference]:
 
     user_ref = get_user_doc_ref(user)
 
@@ -54,7 +55,8 @@ def get_user_playlist_ref_by_username(user, playlist):
         return None
 
 
-def get_user_playlist_ref_by_user_ref(user_ref, playlist):
+def get_user_playlist_ref_by_user_ref(user_ref: firestore.DocumentReference,
+                                      playlist: str) -> Optional[firestore.CollectionReference]:
 
     playlist_collection = get_user_playlists_collection(user_ref.id)
 
