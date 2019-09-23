@@ -3,7 +3,7 @@ from google.cloud import firestore
 import datetime
 import logging
 
-from spotframework.engine.playlistengine import PlaylistEngine
+from spotframework.engine.playlistengine import PlaylistEngine, PlaylistSource, RecommendationSource
 from spotframework.engine.processor.shuffle import Shuffle
 from spotframework.engine.processor.sort import SortReleaseDate
 from spotframework.engine.processor.deduplicate import DeduplicateByID
@@ -60,7 +60,6 @@ def play_user_playlist(username,
                                   user_dict['access_token']))
 
         engine = PlaylistEngine(net)
-        engine.load_user_playlists()
 
         player = Player(net)
 
@@ -80,20 +79,21 @@ def play_user_playlist(username,
 
         submit_parts = [i for i in {j for j in submit_parts}]
 
+        params = [
+            PlaylistSource.Params(names=submit_parts, processors=processors)
+        ]
+
+        if include_recommendations:
+            params.append(RecommendationSource.Params(recommendation_limit=int(recommendation_sample)))
+
         if playlist_type == 'recents':
             boundary_date = datetime.datetime.now(datetime.timezone.utc) - datetime.timedelta(days=int(day_boundary))
-            tracks = engine.get_recent_playlist(boundary_date,
-                                                submit_parts,
-                                                processors,
-                                                include_recommendations=include_recommendations,
-                                                recommendation_limit=int(recommendation_sample),
+            tracks = engine.get_recent_playlist(params=params,
+                                                boundary_date=boundary_date,
                                                 add_this_month=add_this_month,
                                                 add_last_month=add_last_month)
         else:
-            tracks = engine.make_playlist(submit_parts,
-                                          processors,
-                                          include_recommendations=include_recommendations,
-                                          recommendation_limit=int(recommendation_sample))
+            tracks = engine.make_playlist(params=params)
 
         player.play(tracks=tracks)
 

@@ -3,7 +3,7 @@ from google.cloud import firestore
 import datetime
 import logging
 
-from spotframework.engine.playlistengine import PlaylistEngine
+from spotframework.engine.playlistengine import PlaylistEngine, PlaylistSource, RecommendationSource, LibraryTrackSource
 from spotframework.engine.processor.shuffle import Shuffle
 from spotframework.engine.processor.sort import SortReleaseDate
 from spotframework.engine.processor.deduplicate import DeduplicateByID
@@ -54,7 +54,6 @@ def run_user_playlist(username, playlist_name):
                                       user_dict['access_token']))
 
             engine = PlaylistEngine(net)
-            engine.load_user_playlists()
 
             processors = [DeduplicateByID()]
 
@@ -66,21 +65,27 @@ def run_user_playlist(username, playlist_name):
             part_generator = PartGenerator(user_id=users[0].id)
             submit_parts = part_generator.get_recursive_parts(playlist_dict['name'])
 
+            params = [
+                PlaylistSource.Params(names=submit_parts)
+            ]
+
+            if playlist_dict['include_recommendations']:
+                params.append(RecommendationSource.Params(recommendation_limit=playlist_dict['recommendation_sample']))
+
+            if playlist_dict.get('include_library_tracks', False):
+                params.append(LibraryTrackSource.Params())
+
             if playlist_dict['type'] == 'recents':
                 boundary_date = datetime.datetime.now(datetime.timezone.utc) - \
                                 datetime.timedelta(days=int(playlist_dict['day_boundary']))
-                tracks = engine.get_recent_playlist(boundary_date,
-                                                    submit_parts,
-                                                    processors,
-                                                    include_recommendations=playlist_dict['include_recommendations'],
-                                                    recommendation_limit=int(playlist_dict['recommendation_sample']),
+                tracks = engine.get_recent_playlist(params=params,
+                                                    processors=processors,
+                                                    boundary_date=boundary_date,
                                                     add_this_month=playlist_dict.get('add_this_month', False),
                                                     add_last_month=playlist_dict.get('add_last_month', False))
             else:
-                tracks = engine.make_playlist(submit_parts,
-                                              processors,
-                                              include_recommendations=playlist_dict['include_recommendations'],
-                                              recommendation_limit=int(playlist_dict['recommendation_sample']))
+                tracks = engine.make_playlist(params=params,
+                                              processors=processors)
 
             engine.execute_playlist(tracks, Uri(playlist_dict['uri']))
 
