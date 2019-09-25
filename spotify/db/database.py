@@ -1,10 +1,27 @@
 from google.cloud import firestore
 import logging
 from typing import List, Optional
+from werkzeug.security import check_password_hash
 
 db = firestore.Client()
 
 logger = logging.getLogger(__name__)
+
+
+def check_user_password(username, password):
+
+    user = get_user_doc_ref(user=username)
+    if user:
+        user_dict = user.get().to_dict()
+
+        if check_password_hash(user_dict['password'], password):
+            return True
+        else:
+            logger.error(f'password mismatch {username}')
+    else:
+        logger.error(f'user {username} not found')
+
+    return False
 
 
 def get_user_query_stream(user: str) -> List[firestore.DocumentSnapshot]:

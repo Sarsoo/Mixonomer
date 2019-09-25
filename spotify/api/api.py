@@ -25,20 +25,50 @@ task_path = tasker.queue_path('sarsooxyz', 'europe-west2', 'spotify-executions')
 logger = logging.getLogger(__name__)
 
 
+def is_logged_in():
+    if 'username' in session:
+        return True
+    else:
+        return False
+
+
+def is_basic_authed():
+    if request.authorization:
+        if request.authorization.get('username', None) and request.authorization.get('password', None):
+            if database.check_user_password(request.authorization.username, request.authorization.password):
+                return True
+
+    return False
+
+
 def login_required(func):
     @functools.wraps(func)
-    def wrapper(*args, **kwargs):
-        if 'username' in session:
-            return func(*args, **kwargs)
+    def login_required_wrapper(*args, **kwargs):
+        if is_logged_in():
+            return func(username=session['username'], *args, **kwargs)
         else:
             logger.warning('user not logged in')
             return jsonify({'error': 'not logged in'}), 401
-    return wrapper
+    return login_required_wrapper
+
+
+def login_or_basic_auth(func):
+    @functools.wraps(func)
+    def login_or_basic_auth_wrapper(*args, **kwargs):
+        if is_logged_in():
+            return func(username=session['username'], *args, **kwargs)
+        elif is_basic_authed():
+            return func(username=request.authorization.username, *args, **kwargs)
+        else:
+            logger.warning('user not logged in')
+            return jsonify({'error': 'not logged in'}), 401
+
+    return login_or_basic_auth_wrapper
 
 
 def admin_required(func):
     @functools.wraps(func)
-    def wrapper(*args, **kwargs):
+    def admin_required_wrapper(*args, **kwargs):
         user_dict = database.get_user_doc_ref(session['username']).get().to_dict()
 
         if user_dict:
@@ -51,12 +81,12 @@ def admin_required(func):
             logger.warning('user not logged in')
             return jsonify({'error': 'not logged in'}), 401
 
-    return wrapper
+    return admin_required_wrapper
 
 
 def gae_cron(func):
     @functools.wraps(func)
-    def wrapper(*args, **kwargs):
+    def gae_cron_wrapper(*args, **kwargs):
 
         if request.headers.get('X-Appengine-Cron', None):
             return func(*args, **kwargs)
@@ -64,12 +94,12 @@ def gae_cron(func):
             logger.warning('user not logged in')
             return jsonify({'status': 'error', 'message': 'unauthorised'}), 401
 
-    return wrapper
+    return gae_cron_wrapper
 
 
 def cloud_task(func):
     @functools.wraps(func)
-    def wrapper(*args, **kwargs):
+    def cloud_task_wrapper(*args, **kwargs):
 
         if request.headers.get('X-AppEngine-QueueName', None):
             return func(*args, **kwargs)
@@ -77,14 +107,14 @@ def cloud_task(func):
             logger.warning('non tasks request')
             return jsonify({'status': 'error', 'message': 'unauthorised'}), 401
 
-    return wrapper
+    return cloud_task_wrapper
 
 
 @blueprint.route('/playlists', methods=['GET'])
-@login_required
-def get_playlists():
+@login_or_basic_auth
+def get_playlists(username=None):
 
-    pulled_user = database.get_user_doc_ref(session['username'])
+    pulled_user = database.get_user_doc_ref(username)
 
     playlists = pulled_user.collection(u'playlists')
 
@@ -102,10 +132,10 @@ def get_playlists():
 
 
 @blueprint.route('/playlist', methods=['GET', 'POST', 'PUT', 'DELETE'])
-@login_required
-def playlist():
+@login_or_basic_auth
+def playlist(username=None):
 
-    user_ref = database.get_user_doc_ref(session['username'])
+    user_ref = database.get_user_doc_ref(username)
     playlists = user_ref.collection(u'playlists')
 
     if request.method == 'GET' or request.method == 'DELETE':
@@ -131,7 +161,7 @@ def playlist():
 
             elif request.method == 'DELETE':
 
-                logger.info(f'deleted {session["username"]} / {queried_playlist[0].to_dict()["name"]}')
+                logger.info(f'deleted {username} / {queried_playlist[0].to_dict()["name"]}')
                 queried_playlist[0].reference.delete()
 
                 return jsonify({"message": 'playlist deleted', "status": "success"}), 200
@@ -199,7 +229,7 @@ def playlist():
             }
 
             if user_ref.get().to_dict()['spotify_linked']:
-                new_playlist = create_playlist(session['username'], playlist_name)
+                new_playlist = create_playlist(username, playlist_name)
                 to_add['uri'] = str(new_playlist.uri) if new_playlist is not None else None
 
             if playlist_type == 'recents':
@@ -208,7 +238,7 @@ def playlist():
                 to_add['add_last_month'] = playlist_add_last_month if playlist_add_last_month is not None else False
 
             playlists.document().set(to_add)
-            logger.info(f'added {session["username"]} / {playlist_name}')
+            logger.info(f'added {username} / {playlist_name}')
 
             return jsonify({"message": 'playlist added', "status": "success"}), 201
 
@@ -261,22 +291,22 @@ def playlist():
                 dic['type'] = playlist_type
 
             if len(dic) == 0:
-                logger.warning(f'no changes to make for {session["username"]} / {playlist_name}')
+                logger.warning(f'no changes to make for {username} / {playlist_name}')
                 return jsonify({"message": 'no changes to make', "status": "error"}), 400
 
             playlist_doc.update(dic)
-            logger.info(f'updated {session["username"]} / {playlist_name}')
+            logger.info(f'updated {username} / {playlist_name}')
 
             return jsonify({"message": 'playlist updated', "status": "success"}), 200
 
 
 @blueprint.route('/user', methods=['GET', 'POST'])
-@login_required
-def user():
+@login_or_basic_auth
+def user(username=None):
 
     if request.method == 'GET':
 
-        pulled_user = database.get_user_doc_ref(session['username']).get().to_dict()
+        pulled_user = database.get_user_doc_ref(username).get().to_dict()
 
         response = {
             'username': pulled_user['username'],
@@ -289,7 +319,7 @@ def user():
 
     else:
 
-        if database.get_user_doc_ref(session['username']).get().to_dict()['type'] != 'admin':
+        if database.get_user_doc_ref(username).get().to_dict()['type'] != 'admin':
             return jsonify({'status': 'error', 'message': 'unauthorized'}), 401
 
         request_json = request.get_json()
@@ -383,8 +413,8 @@ def change_password():
 
 
 @blueprint.route('/playlist/play', methods=['POST'])
-@login_required
-def play_playlist():
+@login_or_basic_auth
+def play_playlist(username=None):
 
     request_json = request.get_json()
 
@@ -398,42 +428,40 @@ def play_playlist():
     request_add_this_month = request_json.get('add_this_month', False)
     request_add_last_month = request_json.get('add_last_month', False)
 
-    logger.info(f'playing {session["username"]}')
+    request_device_name = request_json.get('device_name', None)
 
-    if request_parts or request_playlists:
-        if len(request_parts) > 0 or len(request_playlists) > 0:
+    logger.info(f'playing {username}')
 
-            if os.environ.get('DEPLOY_DESTINATION', None) == 'PROD':
-                create_play_user_playlist_task(session['username'],
-                                               parts=request_parts,
-                                               playlist_type=request_playlist_type,
-                                               playlists=request_playlists,
-                                               shuffle=request_shuffle,
-                                               include_recommendations=request_include_recommendations,
-                                               recommendation_sample=request_recommendation_sample,
-                                               day_boundary=request_day_boundary,
-                                               add_this_month=request_add_this_month,
-                                               add_last_month=request_add_last_month)
-            else:
-                play_user_playlist(session['username'],
-                                   parts=request_parts,
-                                   playlist_type=request_playlist_type,
-                                   playlists=request_playlists,
-                                   shuffle=request_shuffle,
-                                   include_recommendations=request_include_recommendations,
-                                   recommendation_sample=request_recommendation_sample,
-                                   day_boundary=request_day_boundary,
-                                   add_this_month=request_add_this_month,
-                                   add_last_month=request_add_last_month)
+    if (request_parts and len(request_parts) > 0) or (request_playlists and len(request_playlists) > 0):
 
-            return jsonify({'message': 'execution requested', 'status': 'success'}), 200
-
+        if os.environ.get('DEPLOY_DESTINATION', None) == 'PROD':
+            create_play_user_playlist_task(username,
+                                           parts=request_parts,
+                                           playlist_type=request_playlist_type,
+                                           playlists=request_playlists,
+                                           shuffle=request_shuffle,
+                                           include_recommendations=request_include_recommendations,
+                                           recommendation_sample=request_recommendation_sample,
+                                           day_boundary=request_day_boundary,
+                                           add_this_month=request_add_this_month,
+                                           add_last_month=request_add_last_month,
+                                           device_name=request_device_name)
         else:
-            logger.error(f'insufficient playlist/part lengths {session["username"]}')
-            return jsonify({'error': 'insufficient playlist sources'}), 400
+            play_user_playlist(username,
+                               parts=request_parts,
+                               playlist_type=request_playlist_type,
+                               playlists=request_playlists,
+                               shuffle=request_shuffle,
+                               include_recommendations=request_include_recommendations,
+                               recommendation_sample=request_recommendation_sample,
+                               day_boundary=request_day_boundary,
+                               add_this_month=request_add_this_month,
+                               add_last_month=request_add_last_month,
+                               device_name=request_device_name)
 
+        return jsonify({'message': 'execution requested', 'status': 'success'}), 200
     else:
-        logger.error(f'no playlists/parts {session["username"]}')
+        logger.error(f'no playlists/parts {username}')
         return jsonify({'error': 'insufficient playlist sources'}), 400
 
 
@@ -454,23 +482,24 @@ def play_playlist_task():
                            recommendation_sample=payload['recommendation_sample'],
                            day_boundary=payload['day_boundary'],
                            add_this_month=payload['add_this_month'],
-                           add_last_month=payload['add_last_month'])
+                           add_last_month=payload['add_last_month'],
+                           device_name=payload['device_name'])
 
         return jsonify({'message': 'executed playlist', 'status': 'success'}), 200
 
 
 @blueprint.route('/playlist/run', methods=['GET'])
-@login_required
-def run_playlist():
+@login_or_basic_auth
+def run_playlist(username=None):
 
     playlist_name = request.args.get('name', None)
 
     if playlist_name:
 
         if os.environ.get('DEPLOY_DESTINATION', None) == 'PROD':
-            create_run_user_playlist_task(session['username'], playlist_name)
+            create_run_user_playlist_task(username, playlist_name)
         else:
-            run_user_playlist(session['username'], playlist_name)
+            run_user_playlist(username, playlist_name)
 
         return jsonify({'message': 'execution requested', 'status': 'success'}), 200
 
@@ -495,13 +524,13 @@ def run_playlist_task():
 
 
 @blueprint.route('/playlist/run/user', methods=['GET'])
-@login_required
-def run_user():
+@login_or_basic_auth
+def run_user(username=None):
 
-    if database.get_user_doc_ref(session['username']).get().to_dict()['type'] == 'admin':
-        user_name = request.args.get('username', session['username'])
+    if database.get_user_doc_ref(username).get().to_dict()['type'] == 'admin':
+        user_name = request.args.get('username', username)
     else:
-        user_name = session['username']
+        user_name = username
 
     execute_user(user_name)
 
@@ -623,7 +652,8 @@ def create_play_user_playlist_task(username,
                                    day_boundary=10,
                                    add_this_month=False,
                                    add_last_month=False,
-                                   delay=0):
+                                   delay=0,
+                                   device_name=None):
     task = {
         'app_engine_http_request': {  # Specify the type of request.
             'http_method': 'POST',
@@ -638,7 +668,8 @@ def create_play_user_playlist_task(username,
                 'recommendation_sample': recommendation_sample,
                 'day_boundary': day_boundary,
                 'add_this_month': add_this_month,
-                'add_last_month': add_last_month
+                'add_last_month': add_last_month,
+                'device_name': device_name
             }).encode()
         }
     }

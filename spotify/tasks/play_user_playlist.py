@@ -28,7 +28,8 @@ def play_user_playlist(username,
                        recommendation_sample=10,
                        day_boundary=10,
                        add_this_month=False,
-                       add_last_month=False):
+                       add_last_month=False,
+                       device_name=None):
 
     users = database.get_user_query_stream(username)
 
@@ -58,6 +59,16 @@ def play_user_playlist(username,
                                   spotify_keys['clientsecret'],
                                   user_dict['refresh_token'],
                                   user_dict['access_token']))
+
+        device = None
+        if device_name:
+            devices = net.get_available_devices()
+            if devices and len(devices) > 0:
+                device = next((i for i in devices if i.name == device_name), None)
+                if device is None:
+                    logger.error(f'error selecting device {device_name} to play on')
+            else:
+                logger.warning(f'no available devices to play')
 
         engine = PlaylistEngine(net)
 
@@ -95,7 +106,7 @@ def play_user_playlist(username,
         else:
             tracks = engine.make_playlist(params=params)
 
-        player.play(tracks=tracks)
+        player.play(tracks=tracks, device=device)
 
     else:
         logger.critical(f'multiple/no user(s) found ({username})')
