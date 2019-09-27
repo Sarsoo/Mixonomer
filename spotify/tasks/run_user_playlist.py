@@ -10,8 +10,6 @@ from spotframework.engine.processor.deduplicate import DeduplicateByID
 
 from spotframework.model.uri import Uri
 
-from spotframework.net.network import Network
-from spotframework.net.user import NetworkUser
 import spotify.db.database as database
 from spotify.db.part_generator import PartGenerator
 
@@ -27,8 +25,6 @@ def run_user_playlist(username, playlist_name):
     logger.info(f'running {username} / {playlist_name}')
 
     if len(users) == 1:
-
-        user_dict = users[0].to_dict()
 
         playlist_collection = db.collection(u'spotify_users', u'{}'.format(users[0].id), 'playlists')
 
@@ -46,12 +42,7 @@ def run_user_playlist(username, playlist_name):
                 logger.critical(f'no playlists to use for creation ({username}/{playlist_name})')
                 return None
 
-            spotify_keys = db.document('key/spotify').get().to_dict()
-
-            net = Network(NetworkUser(spotify_keys['clientid'],
-                                      spotify_keys['clientsecret'],
-                                      user_dict['refresh_token'],
-                                      user_dict['access_token']))
+            net = database.get_authed_network(username)
 
             engine = PlaylistEngine(net)
 

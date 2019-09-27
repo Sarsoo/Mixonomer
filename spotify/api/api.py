@@ -13,6 +13,10 @@ from werkzeug.security import check_password_hash, generate_password_hash
 
 from spotify.tasks.run_user_playlist import run_user_playlist as run_user_playlist
 from spotify.tasks.play_user_playlist import play_user_playlist as play_user_playlist
+from spotframework.model.track import SpotifyTrack
+from spotframework.model.uri import Uri
+from spotframework.model.service import Context
+from spotframework.player.player import Player
 
 import spotify.db.database as database
 
@@ -110,13 +114,90 @@ def cloud_task(func):
     return cloud_task_wrapper
 
 
+@blueprint.route('/play', methods=['POST'])
+@login_or_basic_auth
+def play(username=None):
+    user_ref = database.get_user_doc_ref(username)
+    user_dict = user_ref.get().to_dict()
+
+    if user_dict.get('spotify_linked', None):
+        request_json = request.get_json()
+
+        if 'uri' in request_json:
+            try:
+                uri = Uri(request_json['uri'])
+                if uri.object_type in [Uri.ObjectType.album, Uri.ObjectType.artist, Uri.ObjectType.playlist]:
+                    context = Context(uri)
+
+                    net = database.get_authed_network(username)
+
+                    player = Player(net)
+                    device = None
+                    if 'device_name' in request_json:
+                        devices = net.get_available_devices()
+                        device = next((i for i in devices if i.name == request_json['device_name']), None)
+
+                    player.play(context=context, device=device)
+                    logger.info(f'played {uri}')
+                    return jsonify({'message': 'played', 'status': 'success'}), 200
+                else:
+                    return jsonify({'error': "uri not context compatible"}), 400
+            except ValueError:
+                return jsonify({'error': "malformed uri provided"}), 400
+        elif 'playlist_name' in request_json:
+            net = database.get_authed_network(username)
+            playlists = net.get_playlists()
+            if playlists is not None:
+                playlist_to_play = next((i for i in playlists if i.name == request_json['playlist_name']), None)
+
+                if playlist_to_play is not None:
+                    player = Player(net)
+                    device = None
+                    if 'device_name' in request_json:
+                        devices = net.get_available_devices()
+                        device = next((i for i in devices if i.name == request_json['device_name']), None)
+
+                    player.play(context=Context(playlist_to_play.uri), device=device)
+                    logger.info(f'played {request_json["playlist_name"]}')
+                    return jsonify({'message': 'played', 'status': 'success'}), 200
+                else:
+                    return jsonify({'error': f"playlist {request_json['playlist_name']} not found"}), 404
+            else:
+                return jsonify({'error': "playlists not returned"}), 400
+        elif 'tracks' in request_json:
+            try:
+                uris = [Uri(i) for i in request_json['tracks']]
+                uris = [SpotifyTrack.get_uri_shell(i) for i in uris if i.object_type == Uri.ObjectType.track]
+
+                if len(uris) > 0:
+                    net = database.get_authed_network(username)
+
+                    player = Player(net)
+                    device = None
+                    if 'device_name' in request_json:
+                        devices = net.get_available_devices()
+                        device = next((i for i in devices if i.name == request_json['device_name']), None)
+
+                    player.play(tracks=uris, device=device)
+                    logger.info(f'played tracks')
+                    return jsonify({'message': 'played', 'status': 'success'}), 200
+                else:
+                    return jsonify({'error': "no track uris provided"}), 400
+            except ValueError:
+                return jsonify({'error': "uris failed to parse"}), 400
+        else:
+            return jsonify({'error': "no uris provided"}), 400
+    else:
+        return jsonify({'error': "spotify not linked"}), 400
+
+
 @blueprint.route('/playlists', methods=['GET'])
 @login_or_basic_auth
 def get_playlists(username=None):
 
-    pulled_user = database.get_user_doc_ref(username)
+    user_ref = database.get_user_doc_ref(username)
 
-    playlists = pulled_user.collection(u'playlists')
+    playlists = user_ref.collection(u'playlists')
 
     playlist_docs = [i.to_dict() for i in playlists.stream()]
 

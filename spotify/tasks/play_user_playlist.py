@@ -8,8 +8,6 @@ from spotframework.engine.processor.shuffle import Shuffle
 from spotframework.engine.processor.sort import SortReleaseDate
 from spotframework.engine.processor.deduplicate import DeduplicateByID
 
-from spotframework.net.network import Network
-from spotframework.net.user import NetworkUser
 from spotframework.player.player import Player
 import spotify.db.database as database
 from spotify.db.part_generator import PartGenerator
@@ -37,8 +35,6 @@ def play_user_playlist(username,
 
     if len(users) == 1:
 
-        user_dict = users[0].to_dict()
-
         if parts is None and playlists is None:
             logger.critical(f'no playlists to use for creation ({username})')
             return None
@@ -53,12 +49,7 @@ def play_user_playlist(username,
             logger.critical(f'no playlists to use for creation ({username})')
             return None
 
-        spotify_keys = db.document('key/spotify').get().to_dict()
-
-        net = Network(NetworkUser(spotify_keys['clientid'],
-                                  spotify_keys['clientsecret'],
-                                  user_dict['refresh_token'],
-                                  user_dict['access_token']))
+        net = database.get_authed_network(username)
 
         device = None
         if device_name:

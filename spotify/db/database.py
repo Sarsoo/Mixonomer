@@ -1,11 +1,57 @@
 from google.cloud import firestore
 import logging
+from datetime import timedelta, datetime, timezone
 from typing import List, Optional
 from werkzeug.security import check_password_hash
+
+from spotframework.net.network import Network
+from spotify.db.user import DatabaseUser
 
 db = firestore.Client()
 
 logger = logging.getLogger(__name__)
+
+
+def refresh_token_database_callback(user):
+    if isinstance(user, DatabaseUser):
+        user_ref = get_user_doc_ref(user.user_id)
+
+        user_ref.update({
+            'access_token': user.accesstoken,
+            'last_refreshed': user.last_refreshed,
+            'token_expiry': user.token_expiry
+        })
+        logger.debug(f'{user.user_id} database entry updated')
+    else:
+        logger.error('user has no attached id')
+
+
+def get_authed_network(username):
+
+    user = get_user_doc_ref(username)
+    if user:
+        user_dict = user.get().to_dict()
+
+        if user_dict.get('spotify_linked', None):
+            spotify_keys = db.document('key/spotify').get().to_dict()
+
+            user_obj = DatabaseUser(client_id=spotify_keys['clientid'],
+                                    client_secret=spotify_keys['clientsecret'],
+                                    refresh_token=user_dict['refresh_token'],
+                                    user_id=username,
+                                    access_token=user_dict['access_token'])
+            user_obj.on_refresh.append(refresh_token_database_callback)
+
+            if user_dict['last_refreshed'] + timedelta(seconds=user_dict['token_expiry'] - 1) \
+                    < datetime.now(timezone.utc):
+                user_obj.refresh_token()
+
+            user_obj.refresh_info()
+            return Network(user_obj)
+        else:
+            logger.error('user spotify not linked')
+    else:
+        logger.error(f'user {username} not found')
 
 
 def check_user_password(username, password):
@@ -93,7 +139,7 @@ def get_user_playlist_ref_by_user_ref(user_ref: firestore.DocumentReference,
 
             else:
                 logger.error(f'{username} multiple response playlists found for {playlist}')
-                return query
+                return query[0]
 
         else:
             logger.error(f'{username} no playlist found for {playlist}')
