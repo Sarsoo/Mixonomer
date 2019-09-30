@@ -4,19 +4,15 @@ import os
 import datetime
 import json
 import logging
-import functools
 
 from google.cloud import firestore
 from google.cloud import tasks_v2
 from google.protobuf import timestamp_pb2
 from werkzeug.security import check_password_hash, generate_password_hash
 
+from spotify.api.decorators import login_required, login_or_basic_auth, admin_required, gae_cron, cloud_task
 from spotify.tasks.run_user_playlist import run_user_playlist as run_user_playlist
 from spotify.tasks.play_user_playlist import play_user_playlist as play_user_playlist
-from spotframework.model.track import SpotifyTrack
-from spotframework.model.uri import Uri
-from spotframework.model.service import Context
-from spotframework.player.player import Player
 
 import spotify.db.database as database
 
@@ -27,168 +23,6 @@ tasker = tasks_v2.CloudTasksClient()
 task_path = tasker.queue_path('sarsooxyz', 'europe-west2', 'spotify-executions')
 
 logger = logging.getLogger(__name__)
-
-
-def is_logged_in():
-    if 'username' in session:
-        return True
-    else:
-        return False
-
-
-def is_basic_authed():
-    if request.authorization:
-        if request.authorization.get('username', None) and request.authorization.get('password', None):
-            if database.check_user_password(request.authorization.username, request.authorization.password):
-                return True
-
-    return False
-
-
-def login_required(func):
-    @functools.wraps(func)
-    def login_required_wrapper(*args, **kwargs):
-        if is_logged_in():
-            return func(username=session['username'], *args, **kwargs)
-        else:
-            logger.warning('user not logged in')
-            return jsonify({'error': 'not logged in'}), 401
-    return login_required_wrapper
-
-
-def login_or_basic_auth(func):
-    @functools.wraps(func)
-    def login_or_basic_auth_wrapper(*args, **kwargs):
-        if is_logged_in():
-            return func(username=session['username'], *args, **kwargs)
-        elif is_basic_authed():
-            return func(username=request.authorization.username, *args, **kwargs)
-        else:
-            logger.warning('user not logged in')
-            return jsonify({'error': 'not logged in'}), 401
-
-    return login_or_basic_auth_wrapper
-
-
-def admin_required(func):
-    @functools.wraps(func)
-    def admin_required_wrapper(*args, **kwargs):
-        user_dict = database.get_user_doc_ref(session['username']).get().to_dict()
-
-        if user_dict:
-            if user_dict['type'] == 'admin':
-                return func(*args, **kwargs)
-            else:
-                logger.warning(f'{user_dict["username"]} not authorized')
-                return jsonify({'status': 'error', 'message': 'unauthorized'}), 401
-        else:
-            logger.warning('user not logged in')
-            return jsonify({'error': 'not logged in'}), 401
-
-    return admin_required_wrapper
-
-
-def gae_cron(func):
-    @functools.wraps(func)
-    def gae_cron_wrapper(*args, **kwargs):
-
-        if request.headers.get('X-Appengine-Cron', None):
-            return func(*args, **kwargs)
-        else:
-            logger.warning('user not logged in')
-            return jsonify({'status': 'error', 'message': 'unauthorised'}), 401
-
-    return gae_cron_wrapper
-
-
-def cloud_task(func):
-    @functools.wraps(func)
-    def cloud_task_wrapper(*args, **kwargs):
-
-        if request.headers.get('X-AppEngine-QueueName', None):
-            return func(*args, **kwargs)
-        else:
-            logger.warning('non tasks request')
-            return jsonify({'status': 'error', 'message': 'unauthorised'}), 401
-
-    return cloud_task_wrapper
-
-
-@blueprint.route('/play', methods=['POST'])
-@login_or_basic_auth
-def play(username=None):
-    user_ref = database.get_user_doc_ref(username)
-    user_dict = user_ref.get().to_dict()
-
-    if user_dict.get('spotify_linked', None):
-        request_json = request.get_json()
-
-        if 'uri' in request_json:
-            try:
-                uri = Uri(request_json['uri'])
-                if uri.object_type in [Uri.ObjectType.album, Uri.ObjectType.artist, Uri.ObjectType.playlist]:
-                    context = Context(uri)
-
-                    net = database.get_authed_network(username)
-
-                    player = Player(net)
-                    device = None
-                    if 'device_name' in request_json:
-                        devices = net.get_available_devices()
-                        device = next((i for i in devices if i.name == request_json['device_name']), None)
-
-                    player.play(context=context, device=device)
-                    logger.info(f'played {uri}')
-                    return jsonify({'message': 'played', 'status': 'success'}), 200
-                else:
-                    return jsonify({'error': "uri not context compatible"}), 400
-            except ValueError:
-                return jsonify({'error': "malformed uri provided"}), 400
-        elif 'playlist_name' in request_json:
-            net = database.get_authed_network(username)
-            playlists = net.get_playlists()
-            if playlists is not None:
-                playlist_to_play = next((i for i in playlists if i.name == request_json['playlist_name']), None)
-
-                if playlist_to_play is not None:
-                    player = Player(net)
-                    device = None
-                    if 'device_name' in request_json:
-                        devices = net.get_available_devices()
-                        device = next((i for i in devices if i.name == request_json['device_name']), None)
-
-                    player.play(context=Context(playlist_to_play.uri), device=device)
-                    logger.info(f'played {request_json["playlist_name"]}')
-                    return jsonify({'message': 'played', 'status': 'success'}), 200
-                else:
-                    return jsonify({'error': f"playlist {request_json['playlist_name']} not found"}), 404
-            else:
-                return jsonify({'error': "playlists not returned"}), 400
-        elif 'tracks' in request_json:
-            try:
-                uris = [Uri(i) for i in request_json['tracks']]
-                uris = [SpotifyTrack.get_uri_shell(i) for i in uris if i.object_type == Uri.ObjectType.track]
-
-                if len(uris) > 0:
-                    net = database.get_authed_network(username)
-
-                    player = Player(net)
-                    device = None
-                    if 'device_name' in request_json:
-                        devices = net.get_available_devices()
-                        device = next((i for i in devices if i.name == request_json['device_name']), None)
-
-                    player.play(tracks=uris, device=device)
-                    logger.info(f'played tracks')
-                    return jsonify({'message': 'played', 'status': 'success'}), 200
-                else:
-                    return jsonify({'error': "no track uris provided"}), 400
-            except ValueError:
-                return jsonify({'error': "uris failed to parse"}), 400
-        else:
-            return jsonify({'error': "no uris provided"}), 400
-    else:
-        return jsonify({'error': "spotify not linked"}), 400
 
 
 @blueprint.route('/playlists', methods=['GET'])
@@ -296,7 +130,7 @@ def playlist(username=None):
             # if playlist_id is None or playlist_shuffle is None:
             #     return jsonify({'error': 'parts and id required'}), 400
 
-            from spotify.api.spotify import create_playlist as create_playlist
+            from spotify.tasks.create_playlist import create_playlist as create_playlist
 
             to_add = {
                 'name': playlist_name,
@@ -439,9 +273,9 @@ def user(username=None):
 
 
 @blueprint.route('/users', methods=['GET'])
-@login_required
+@login_or_basic_auth
 @admin_required
-def users():
+def users(username=None):
 
     dic = {
         'accounts': []
@@ -629,9 +463,9 @@ def run_user_task():
 
 
 @blueprint.route('/playlist/run/users', methods=['GET'])
-@login_required
+@login_or_basic_auth
 @admin_required
-def run_users():
+def run_users(username=None):
 
     execute_all_users()
     return jsonify({'message': 'executed all users', 'status': 'success'}), 200

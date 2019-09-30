@@ -4,7 +4,7 @@ from google.cloud import firestore
 import os
 
 from spotify.auth import auth_blueprint
-from spotify.api import api_blueprint
+from spotify.api import api_blueprint, player_blueprint
 
 db = firestore.Client()
 
@@ -12,6 +12,7 @@ app = Flask(__name__, static_folder=os.path.join(os.path.dirname(__file__), '..'
 app.secret_key = db.collection(u'spotify').document(u'config').get().to_dict()['secret_key']
 app.register_blueprint(auth_blueprint, url_prefix='/auth')
 app.register_blueprint(api_blueprint, url_prefix='/api')
+app.register_blueprint(player_blueprint, url_prefix='/api/player')
 
 
 @app.route('/')
