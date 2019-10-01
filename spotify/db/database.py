@@ -17,7 +17,8 @@ def refresh_token_database_callback(user):
         user_ref = get_user_doc_ref(user.user_id)
 
         user_ref.update({
-            'access_token': user.accesstoken,
+            'access_token': user.access_token,
+            'refresh_token': user.refresh_token,
             'last_refreshed': user.last_refreshed,
             'token_expiry': user.token_expiry
         })
@@ -44,7 +45,7 @@ def get_authed_network(username):
 
             if user_dict['last_refreshed'] + timedelta(seconds=user_dict['token_expiry'] - 1) \
                     < datetime.now(timezone.utc):
-                user_obj.refresh_token()
+                user_obj.refresh_access_token()
 
             user_obj.refresh_info()
             return Network(user_obj)

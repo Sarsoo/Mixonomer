@@ -178,6 +178,8 @@ def token():
                 user_reference.update({
                     'access_token': resp['access_token'],
                     'refresh_token': resp['refresh_token'],
+                    'last_refreshed': datetime.datetime.now(datetime.timezone.utc),
+                    'token_expiry': resp['expires_in'],
                     'spotify_linked': True
                 })
 
@@ -200,6 +202,8 @@ def deauth():
         user_reference.update({
             'access_token': None,
             'refresh_token': None,
+            'last_refreshed': datetime.datetime.now(datetime.timezone.utc),
+            'token_expiry': None,
             'spotify_linked': False
         })
 

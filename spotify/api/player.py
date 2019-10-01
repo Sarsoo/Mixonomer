@@ -33,12 +33,8 @@ def play(username=None):
                 net = database.get_authed_network(username)
 
                 player = Player(net)
-                device = None
-                if 'device_name' in request_json:
-                    devices = net.get_available_devices()
-                    device = next((i for i in devices if i.name == request_json['device_name']), None)
+                player.play(context=context, device_name=request_json.get('device_name', None))
 
-                player.play(context=context, device=device)
                 logger.info(f'played {uri}')
                 return jsonify({'message': 'played', 'status': 'success'}), 200
             else:
@@ -53,12 +49,8 @@ def play(username=None):
 
             if playlist_to_play is not None:
                 player = Player(net)
-                device = None
-                if 'device_name' in request_json:
-                    devices = net.get_available_devices()
-                    device = next((i for i in devices if i.name == request_json['device_name']), None)
+                player.play(context=Context(playlist_to_play.uri), device_name=request_json.get('device_name', None))
 
-                player.play(context=Context(playlist_to_play.uri), device=device)
                 logger.info(f'played {request_json["playlist_name"]}')
                 return jsonify({'message': 'played', 'status': 'success'}), 200
             else:
@@ -74,12 +66,8 @@ def play(username=None):
                 net = database.get_authed_network(username)
 
                 player = Player(net)
-                device = None
-                if 'device_name' in request_json:
-                    devices = net.get_available_devices()
-                    device = next((i for i in devices if i.name == request_json['device_name']), None)
+                player.play(tracks=uris, device_name=request_json.get('device_name', None))
 
-                player.play(tracks=uris, device=device)
                 logger.info(f'played tracks')
                 return jsonify({'message': 'played', 'status': 'success'}), 200
             else:
