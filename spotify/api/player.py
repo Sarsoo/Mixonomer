@@ -60,7 +60,7 @@ def play(username=None):
     elif 'tracks' in request_json:
         try:
             uris = [Uri(i) for i in request_json['tracks']]
-            uris = [SpotifyTrack.get_uri_shell(i) for i in uris if i.object_type == Uri.ObjectType.track]
+            uris = [SpotifyTrack.wrap(uri=i) for i in uris if i.object_type == Uri.ObjectType.track]
 
             if len(uris) > 0:
                 net = database.get_authed_network(username)
@@ -120,7 +120,7 @@ def volume(username=None):
                 net = database.get_authed_network(username)
                 player = Player(net)
 
-                player.set_volume(value=request_json['volume'])
+                player.volume(value=request_json['volume'])
                 return jsonify({'message': f'volume set to {request_json["volume"]}', 'status': 'success'}), 200
             else:
                 return jsonify({'error': "volume must be between 0 and 100"}), 400
