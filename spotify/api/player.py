@@ -30,7 +30,7 @@ def play(username=None):
             if uri.object_type in [Uri.ObjectType.album, Uri.ObjectType.artist, Uri.ObjectType.playlist]:
                 context = Context(uri)
 
-                net = database.get_authed_network(username)
+                net = database.get_authed_spotify_network(username)
 
                 player = Player(net)
                 player.play(context=context, device_name=request_json.get('device_name', None))
@@ -42,7 +42,7 @@ def play(username=None):
         except ValueError:
             return jsonify({'error': "malformed uri provided"}), 400
     elif 'playlist_name' in request_json:
-        net = database.get_authed_network(username)
+        net = database.get_authed_spotify_network(username)
         playlists = net.get_playlists()
         if playlists is not None:
             playlist_to_play = next((i for i in playlists if i.name == request_json['playlist_name']), None)
@@ -63,7 +63,7 @@ def play(username=None):
             uris = [SpotifyTrack.wrap(uri=i) for i in uris if i.object_type == Uri.ObjectType.track]
 
             if len(uris) > 0:
-                net = database.get_authed_network(username)
+                net = database.get_authed_spotify_network(username)
 
                 player = Player(net)
                 player.play(tracks=uris, device_name=request_json.get('device_name', None))
@@ -82,7 +82,7 @@ def play(username=None):
 @login_or_basic_auth
 @spotify_link_required
 def next_track(username=None):
-    net = database.get_authed_network(username)
+    net = database.get_authed_spotify_network(username)
     player = Player(net)
 
     player.next()
@@ -97,7 +97,7 @@ def shuffle(username=None):
 
     if 'state' in request_json:
         if isinstance(request_json['state'], bool):
-            net = database.get_authed_network(username)
+            net = database.get_authed_spotify_network(username)
             player = Player(net)
 
             player.shuffle(state=request_json['state'])
@@ -117,7 +117,7 @@ def volume(username=None):
     if 'volume' in request_json:
         if isinstance(request_json['volume'], int):
             if 0 <= request_json['volume'] <= 100:
-                net = database.get_authed_network(username)
+                net = database.get_authed_spotify_network(username)
                 player = Player(net)
 
                 player.volume(value=request_json['volume'])

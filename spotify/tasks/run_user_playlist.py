@@ -42,7 +42,7 @@ def run_user_playlist(username, playlist_name):
                 logger.critical(f'no playlists to use for creation ({username}/{playlist_name})')
                 return None
 
-            net = database.get_authed_network(username)
+            net = database.get_authed_spotify_network(username)
 
             engine = PlaylistEngine(net)
 

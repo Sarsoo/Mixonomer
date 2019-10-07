@@ -49,7 +49,7 @@ def play_user_playlist(username,
             logger.critical(f'no playlists to use for creation ({username})')
             return None
 
-        net = database.get_authed_network(username)
+        net = database.get_authed_spotify_network(username)
 
         device = None
         if device_name:

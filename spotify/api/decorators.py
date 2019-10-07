@@ -85,6 +85,24 @@ def spotify_link_required(func):
     return spotify_link_required_wrapper
 
 
+def lastfm_username_required(func):
+    @functools.wraps(func)
+    def lastfm_username_required_wrapper(*args, **kwargs):
+        user_dict = database.get_user_doc_ref(kwargs.get('username')).get().to_dict()
+
+        if user_dict:
+            if user_dict.get('lastfm_username'):
+                return func(*args, **kwargs)
+            else:
+                logger.warning(f'no last.fm username for {user_dict["username"]}')
+                return jsonify({'status': 'error', 'message': 'no last.fm username'}), 401
+        else:
+            logger.warning('user not logged in')
+            return jsonify({'error': 'not logged in'}), 401
+
+    return lastfm_username_required_wrapper
+
+
 def gae_cron(func):
     @functools.wraps(func)
     def gae_cron_wrapper(*args, **kwargs):

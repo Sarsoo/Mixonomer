@@ -4,7 +4,8 @@ from datetime import timedelta, datetime, timezone
 from typing import List, Optional
 from werkzeug.security import check_password_hash
 
-from spotframework.net.network import Network
+from spotframework.net.network import Network as SpotifyNetwork
+from fmframework.net.network import Network as FmNetwork
 from spotify.db.user import DatabaseUser
 
 db = firestore.Client()
@@ -27,7 +28,7 @@ def refresh_token_database_callback(user):
         logger.error('user has no attached id')
 
 
-def get_authed_network(username):
+def get_authed_spotify_network(username):
 
     user = get_user_doc_ref(username)
     if user:
@@ -48,9 +49,25 @@ def get_authed_network(username):
                 user_obj.refresh_access_token()
 
             user_obj.refresh_info()
-            return Network(user_obj)
+            return SpotifyNetwork(user_obj)
         else:
             logger.error('user spotify not linked')
+    else:
+        logger.error(f'user {username} not found')
+
+
+def get_authed_lastfm_network(username):
+
+    user = get_user_doc_ref(username)
+    if user:
+        user_dict = user.get().to_dict()
+
+        if user_dict.get('lastfm_username', None):
+            fm_keys = db.document('key/fm').get().to_dict()
+
+            return FmNetwork(username=user_dict['lastfm_username'], api_key=fm_keys['clientid'])
+        else:
+            logger.error(f'{username} has no last.fm username')
     else:
         logger.error(f'user {username} not found')
 

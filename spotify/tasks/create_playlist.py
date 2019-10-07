@@ -17,7 +17,7 @@ def create_playlist(username, name):
 
     if len(users) == 1:
 
-        net = database.get_authed_network(username)
+        net = database.get_authed_spotify_network(username)
 
         playlist = net.create_playlist(net.user.username, name)
 
