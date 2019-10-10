@@ -1,18 +1,13 @@
 from flask import Blueprint, jsonify, request
 import logging
 
-from google.cloud import firestore
-
 from spotify.api.decorators import login_or_basic_auth, lastfm_username_required, spotify_link_required
-
 import spotify.db.database as database
 
 from spotfm.maths.counter import Counter
 from spotframework.model.uri import Uri
 
 blueprint = Blueprint('spotfm-api', __name__)
-db = firestore.Client()
-
 logger = logging.getLogger(__name__)
 
 

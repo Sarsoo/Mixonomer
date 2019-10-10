@@ -2,8 +2,6 @@ from flask import Blueprint, request, jsonify
 
 import logging
 
-from google.cloud import firestore
-
 from spotify.api.decorators import login_or_basic_auth, spotify_link_required
 import spotify.db.database as database
 
@@ -13,7 +11,6 @@ from spotframework.model.service import Context
 from spotframework.player.player import Player
 
 blueprint = Blueprint('player_api', __name__)
-db = firestore.Client()
 
 logger = logging.getLogger(__name__)
 

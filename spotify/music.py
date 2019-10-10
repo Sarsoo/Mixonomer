@@ -1,10 +1,10 @@
-from flask import Flask, render_template, redirect, request, session, flash, url_for
+from flask import Flask, render_template, redirect, session, flash, url_for
 from google.cloud import firestore
 
 import os
 
 from spotify.auth import auth_blueprint
-from spotify.api import api_blueprint, player_blueprint, fm_blueprint, spotfm_blueprint
+from spotify.api import api_blueprint, player_blueprint, fm_blueprint, spotfm_blueprint, spotify_blueprint
 
 db = firestore.Client()
 
@@ -15,6 +15,7 @@ app.register_blueprint(api_blueprint, url_prefix='/api')
 app.register_blueprint(player_blueprint, url_prefix='/api/player')
 app.register_blueprint(fm_blueprint, url_prefix='/api/fm')
 app.register_blueprint(spotfm_blueprint, url_prefix='/api/spotfm')
+app.register_blueprint(spotify_blueprint, url_prefix='/api/spotify')
 
 
 @app.route('/')
