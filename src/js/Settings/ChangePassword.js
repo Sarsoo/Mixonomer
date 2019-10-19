@@ -1,6 +1,8 @@
 import React, { Component } from "react";
 const axios = require('axios');
 
+import showMessage from "../Toast.js"
+
 class ChangePassword extends Component {
     
     constructor(props){
@@ -8,9 +10,7 @@ class ChangePassword extends Component {
         this.state = {
             current: "",
             new1: "",
-            new2: "",
-            error: false,
-            errorValue: null
+            new2: ""
         }
         this.handleCurrentChange = this.handleCurrentChange.bind(this);
         this.handleNewChange = this.handleNewChange.bind(this);
@@ -37,37 +37,21 @@ class ChangePassword extends Component {
     handleSubmit(event){
 
         if(this.state.current.length == 0){
-            this.setState({
-                error: true,
-                errorValue: "enter current password"
-            });
+            showMessage("enter current password");
         }else{
             if(this.state.new1.length == 0){
-                this.setState({
-                    error: true,
-                    errorValue: "enter new password"
-                });
+                showMessage("enter new password");
             }else{
                 if(this.state.new1 != this.state.new2){
-                this.setState({
-                    error: true,
-                    errorValue: "new password mismatch"
-                });
+                showMessage("new password mismatch");
                 }else{
-
                     axios.post('/api/user/password',{
                         current_password: this.state.current,
                         new_password: this.state.new1
                     }).then((response) => {
-                    this.setState({
-                        error: true,
-                        errorValue: "password changed"
-                    });
+                    showMessage("password changed");
                     }).catch((error) => {
-                        this.setState({
-                            error: true,
-                            errorValue: "error changing password"
-                        });
+                        showMessage(`error changing password (${error.response.status})`);
                     });
                 }
             }            

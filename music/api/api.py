@@ -227,7 +227,8 @@ def user(username=None):
             'username': pulled_user['username'],
             'type': pulled_user['type'],
             'spotify_linked': pulled_user['spotify_linked'],
-            'validated': pulled_user['validated']
+            'validated': pulled_user['validated'],
+            'lastfm_username': pulled_user['lastfm_username']
         }
 
         return jsonify(response), 200
@@ -239,10 +240,10 @@ def user(username=None):
 
         request_json = request.get_json()
 
-        if 'username' not in request_json:
-            return jsonify({'status': 'error', 'message': 'no username provided'}), 400
+        if 'username' in request_json:
+            username = request_json['username']
 
-        actionable_user = database.get_user_doc_ref(request_json['username'])
+        actionable_user = database.get_user_doc_ref(username)
 
         if actionable_user.get().exists is False:
             return jsonify({"message": 'non-existent user', "status": "error"}), 400
@@ -262,12 +263,16 @@ def user(username=None):
                     'spotify_linked': False
                 })
 
+        if 'lastfm_username' in request_json:
+            logger.info(f'updating lastfm username {username} -> {request_json["lastfm_username"]}')
+            dic['lastfm_username'] = request_json['lastfm_username']
+
         if len(dic) == 0:
             logger.warning(f'no updates for {request_json["username"]}')
             return jsonify({"message": 'no changes to make', "status": "error"}), 400
 
         actionable_user.update(dic)
-        logger.info(f'updated {request_json["username"]}')
+        logger.info(f'updated {username}')
 
         return jsonify({'message': 'account updated', 'status': 'succeeded'}), 200
 
@@ -298,7 +303,7 @@ def users(username=None):
 
 @blueprint.route('/user/password', methods=['POST'])
 @login_required
-def change_password():
+def change_password(username=None):
 
     request_json = request.get_json()
 
@@ -310,17 +315,17 @@ def change_password():
         if len(request_json['new_password']) > 30:
             return jsonify({"error": 'password too long'}), 400
 
-        current_user = database.get_user_doc_ref(session['username'])
+        current_user = database.get_user_doc_ref(username)
 
         if check_password_hash(current_user.get().to_dict()['password'], request_json['current_password']):
 
             current_user.update({'password': generate_password_hash(request_json['new_password'])})
-            logger.info(f'password udpated {session["username"]}')
+            logger.info(f'password udpated {username}')
 
             return jsonify({"message": 'password changed', "status": "success"}), 200
 
         else:
-            logger.warning(f"incorrect password {session['username']}")
+            logger.warning(f"incorrect password {username}")
             return jsonify({'error': 'wrong password provided'}), 401
 
     else:

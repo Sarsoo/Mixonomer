@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import { BrowserRouter as Router, Route, Link, Switch, Redirect} from "react-router-dom";
 
 import Index from "./Index/Index.js";
+import Maths from "./Maths/Maths.js";
 import Playlists from "./Playlist/Playlists.js";
 import PlaylistView from "./Playlist/PlaylistView.js";
 import Settings from "./Settings/Settings.js";
@@ -57,8 +58,9 @@ class PlaylistManager extends Component {
                         <tbody>
                         <tr><td><span><Link to="/app">home</Link></span></td></tr>
                         <tr><td><Link to="/app/playlists">playlists</Link></td></tr>
-                        <tr><td><Link to="/app/settings">settings</Link></td></tr>
-                        { this.state.type == 'admin' && <tr><td><Link to="/app/admin">admin</Link></td></tr> }
+                        <tr><td><Link to="/app/maths">maths</Link></td></tr>
+                        <tr><td><Link to="/app/settings/password">settings</Link></td></tr>
+                        { this.state.type == 'admin' && <tr><td><Link to="/app/admin/lock">admin</Link></td></tr> }
                         <tr><td><a href="/auth/logout">logout</a></td></tr>
                         <tr><td><a href="https://sarsoo.xyz">sarsoo.xyz</a></td></tr>
                         </tbody>
@@ -68,6 +70,7 @@ class PlaylistManager extends Component {
                         <Switch>
                             <Route path="/app" exact component={Index} />
                             <Route path="/app/playlists" component={Playlists} />
+                            <Route path="/app/maths" component={Maths} />
                             <Route path="/app/settings" component={Settings} />
                             { this.state.type == 'admin' && <Route path="/app/admin" component={Admin} /> }
                             <Route path='/app/playlist/:name' component={PlaylistView} />
