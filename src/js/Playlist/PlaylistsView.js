@@ -146,7 +146,7 @@ function PlaylistLink(props){
 }
 
 function getPlaylistLink(playlistName){
-    return '/app/playlist/' + playlistName;
+    return `/app/playlist/${playlistName}/edit`;
 }
 
 export default PlaylistsView;

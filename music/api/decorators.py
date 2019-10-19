@@ -91,7 +91,7 @@ def lastfm_username_required(func):
         user_dict = database.get_user_doc_ref(kwargs.get('username')).get().to_dict()
 
         if user_dict:
-            if user_dict.get('lastfm_username'):
+            if user_dict.get('lastfm_username') and len(user_dict.get('lastfm_username')) > 0:
                 return func(*args, **kwargs)
             else:
                 logger.warning(f'no last.fm username for {user_dict["username"]}')

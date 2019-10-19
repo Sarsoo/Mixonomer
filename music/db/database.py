@@ -123,7 +123,7 @@ def get_user_playlists_collection(user_id: str) -> firestore.CollectionReference
     return playlists
 
 
-def get_user_playlist_ref_by_username(user: str, playlist: str) -> Optional[firestore.CollectionReference]:
+def get_user_playlist_ref_by_username(user: str, playlist: str) -> Optional[firestore.DocumentReference]:
 
     user_ref = get_user_doc_ref(user)
 
@@ -137,7 +137,7 @@ def get_user_playlist_ref_by_username(user: str, playlist: str) -> Optional[fire
 
 
 def get_user_playlist_ref_by_user_ref(user_ref: firestore.DocumentReference,
-                                      playlist: str) -> Optional[firestore.CollectionReference]:
+                                      playlist: str) -> Optional[firestore.DocumentReference]:
 
     playlist_collection = get_user_playlists_collection(user_ref.id)
 

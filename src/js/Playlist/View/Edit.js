@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 const axios = require('axios');
 
-import showMessage from "../Toast.js"
+import showMessage from "../../Toast.js"
 
 var thisMonth = [
     'january',
@@ -33,12 +33,12 @@ var lastMonth = [
     'november'
 ];
 
-class PlaylistView extends Component{
+class Edit extends Component{
 
     constructor(props){
         super(props);
         this.state = {
-            name: this.props.match.params.name,
+            name: this.props.name,
             parts: [],
             playlists: [],
             filteredPlaylists: [],
@@ -352,162 +352,157 @@ class PlaylistView extends Component{
         var date = new Date();
 
         const table = (
-            <table className="app-table max-width">
-                <thead>
-                    <tr>
-                        <th colSpan="2"><h1 className="text-no-select">{ this.state.name }</h1></th>
-                    </tr>
-                </thead>
-                { this.state.playlist_references.length > 0 && <ListBlock name="managed" handler={this.handleRemoveReference} list={this.state.playlist_references}/> }
-                { this.state.parts.length > 0 && <ListBlock name="spotify" handler={this.handleRemovePart} list={this.state.parts}/> }
-                <tbody>
-                    <tr>
-                        <td colSpan="2" className="center-text ui-text text-no-select" style={{fontStyle: "italic"}}>
-                            <br></br>spotify playlist can be the name of either your own created playlist or one you follow, names are case sensitive
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <input type="text"
-                                name="newPlaylistName" 
-                                className="full-width" 
-                                value={this.state.newPlaylistName} 
-                                onChange={this.handleInputChange}
-                                placeholder="spotify playlist name"></input>
-                        </td>
-                        <td>
-                            <button className="button full-width" onClick={this.handleAddPart}>add</button>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <select name="newReferenceName" 
-                                    className="full-width"
-                                    value={this.state.newReferenceName}
-                                    onChange={this.handleInputChange}>
-                                { this.state.playlists
-                                    .filter((entry) => entry.name != this.state.name)
-                                    .map((entry) => <ReferenceEntry name={entry.name} key={entry.name} />) }
-                            </select>
-                        </td>
-                        <td>
-                            <button className="button full-width" onClick={this.handleAddReference}>add</button>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td className="center-text ui-text text-no-select">
-                            shuffle output?
-                        </td>
-                        <td>
-                            <input type="checkbox" 
-                                checked={this.state.shuffle}
-                                onChange={this.handleShuffleChange}></input>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td className="center-text ui-text text-no-select">
-                            include recommendations?
-                        </td>
-                        <td>
-                            <input type="checkbox" 
-                                checked={this.state.include_recommendations}
-                                onChange={this.handleIncludeRecommendationsChange}></input>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td className="center-text ui-text text-no-select">
-                            number of recommendations
-                        </td>
-                        <td>
+            <tbody>
+                { this.state.playlist_references.length > 0 && <tr><td colSpan="2" className="ui-text center-text text-no-select" style={{fontStyle: 'italic'}}>managed</td></tr> }
+                { this.state.playlist_references.length > 0 && <ListBlock handler={this.handleRemoveReference} list={this.state.playlist_references}/> }
+
+                { this.state.parts.length > 0 && <tr><td colSpan="2" className="ui-text center-text text-no-select" style={{fontStyle: 'italic'}}>spotify</td></tr> }
+                { this.state.parts.length > 0 && <ListBlock handler={this.handleRemovePart} list={this.state.parts}/> }
+                <tr>
+                    <td colSpan="2" className="center-text ui-text text-no-select" style={{fontStyle: "italic"}}>
+                        <br></br>spotify playlist can be the name of either your own created playlist or one you follow, names are case sensitive
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <input type="text"
+                            name="newPlaylistName" 
+                            className="full-width" 
+                            value={this.state.newPlaylistName} 
+                            onChange={this.handleInputChange}
+                            placeholder="spotify playlist name"></input>
+                    </td>
+                    <td>
+                        <button className="button full-width" onClick={this.handleAddPart}>add</button>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <select name="newReferenceName" 
+                                className="full-width"
+                                value={this.state.newReferenceName}
+                                onChange={this.handleInputChange}>
+                            { this.state.playlists
+                                .filter((entry) => entry.name != this.state.name)
+                                .map((entry) => <ReferenceEntry name={entry.name} key={entry.name} />) }
+                        </select>
+                    </td>
+                    <td>
+                        <button className="button full-width" onClick={this.handleAddReference}>add</button>
+                    </td>
+                </tr>
+                <tr>
+                    <td className="center-text ui-text text-no-select">
+                        shuffle output?
+                    </td>
+                    <td>
+                        <input type="checkbox" 
+                            checked={this.state.shuffle}
+                            onChange={this.handleShuffleChange}></input>
+                    </td>
+                </tr>
+                <tr>
+                    <td className="center-text ui-text text-no-select">
+                        include recommendations?
+                    </td>
+                    <td>
+                        <input type="checkbox" 
+                            checked={this.state.include_recommendations}
+                            onChange={this.handleIncludeRecommendationsChange}></input>
+                    </td>
+                </tr>
+                <tr>
+                    <td className="center-text ui-text text-no-select">
+                        number of recommendations
+                    </td>
+                    <td>
+                    <input type="number" 
+                            name="recommendation_sample"
+                            className="full-width"
+                            value={this.state.recommendation_sample}
+                            onChange={this.handleInputChange}></input>
+                    </td>
+                </tr>
+                { this.state.type == 'recents' &&
+                <tr>
+                    <td className="center-text ui-text text-no-select">
+                        added since (days)
+                    </td>
+                    <td>
                         <input type="number" 
-                                name="recommendation_sample"
-                                className="full-width"
-                                value={this.state.recommendation_sample}
-                                onChange={this.handleInputChange}></input>
-                        </td>
-                    </tr>
-                    { this.state.type == 'recents' &&
-                    <tr>
-                        <td className="center-text ui-text text-no-select">
-                            added since (days)
-                        </td>
-                        <td>
-                            <input type="number" 
-                                name="day_boundary"
-                                className="full-width"
-                                value={this.state.day_boundary}
-                                onChange={this.handleInputChange}></input>
-                        </td>
-                    </tr>
-                    }
-                    { this.state.type == 'recents' &&
-                    <tr>
-                        <td className="center-text ui-text text-no-select">
-                            include {thisMonth[date.getMonth()]} playlist
-                        </td>
-                        <td>
-                            <input type="checkbox" 
-                                checked={this.state.add_this_month}
-                                onChange={this.handleThisMonthChange}></input>
-                        </td>
-                    </tr>
-                    }
-                    { this.state.type == 'recents' &&
-                    <tr>
-                        <td className="center-text ui-text text-no-select">
-                            include {lastMonth[date.getMonth()]} playlist
-                        </td>
-                        <td>
-                            <input type="checkbox" 
-                                checked={this.state.add_last_month}
-                                onChange={this.handleLastMonthChange}></input>
-                        </td>
-                    </tr>
-                    }
-                    <tr>
-                        <td className="center-text ui-text text-no-select">
-                            playlist type
-                        </td>
-                        <td>
-                            <select className="full-width" 
-                                    name="type" 
-                                    onChange={this.handleInputChange}
-                                    value={this.state.type}>
-                                <option value="default">default</option>
-                                <option value="recents">recents</option>
-                            </select>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td colSpan="2">
-                            <button className="button full-width" onClick={this.handleRun}>run</button>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
+                            name="day_boundary"
+                            className="full-width"
+                            value={this.state.day_boundary}
+                            onChange={this.handleInputChange}></input>
+                    </td>
+                </tr>
+                }
+                { this.state.type == 'recents' &&
+                <tr>
+                    <td className="center-text ui-text text-no-select">
+                        include {thisMonth[date.getMonth()]} playlist
+                    </td>
+                    <td>
+                        <input type="checkbox" 
+                            checked={this.state.add_this_month}
+                            onChange={this.handleThisMonthChange}></input>
+                    </td>
+                </tr>
+                }
+                { this.state.type == 'recents' &&
+                <tr>
+                    <td className="center-text ui-text text-no-select">
+                        include {lastMonth[date.getMonth()]} playlist
+                    </td>
+                    <td>
+                        <input type="checkbox" 
+                            checked={this.state.add_last_month}
+                            onChange={this.handleLastMonthChange}></input>
+                    </td>
+                </tr>
+                }
+                <tr>
+                    <td className="center-text ui-text text-no-select">
+                        playlist type
+                    </td>
+                    <td>
+                        <select className="full-width" 
+                                name="type" 
+                                onChange={this.handleInputChange}
+                                value={this.state.type}>
+                            <option value="default">default</option>
+                            <option value="recents">recents</option>
+                        </select>
+                    </td>
+                </tr>
+                <tr>
+                    <td colSpan="2">
+                        <button className="button full-width" onClick={this.handleRun}>run</button>
+                    </td>
+                </tr>
+            </tbody>
         );
 
-        const error = <p style={{textAlign: "center"}}>{ this.state.error_text }</p>;
-        const loadingMessage = <p className="center-text">loading...</p>;
+        const loadingMessage = 
+            <tbody>
+                <tr>
+                    <td>
+                        <p className="center-text">loading...</p>
+                    </td>
+                </tr>
+            </tbody>;
 
-        return this.state.isLoading ? loadingMessage : ( this.state.error ? error : table );
+        return this.state.isLoading ? loadingMessage : table;
     }
 
 }
 
 function ReferenceEntry(props) {
-    return (
-        <option value={props.name}>{props.name}</option>
-    );
+    return <option value={props.name}>{props.name}</option>;
 }
 
 function ListBlock(props) {
-    return (
-        <tbody>
-            <tr><td colSpan="2" className="ui-text center-text text-no-select" style={{fontStyle: 'italic'}}>{props.name}</td></tr>
-            { props.list.map((part) => <Row part={ part } key={ part } handler={props.handler}/>) }
-        </tbody>
-    );
+    return props.list.map((part) => <Row part={ part } key={ part } handler={props.handler}/>);
 }
 
 function Row (props) {
@@ -519,4 +514,4 @@ function Row (props) {
     );
 }
 
-export default PlaylistView;
+export default Edit;
