@@ -3,7 +3,7 @@ import logging
 
 from flask import session, request, jsonify
 
-from spotify.db import database as database
+from music.db import database as database
 
 logger = logging.getLogger(__name__)
 

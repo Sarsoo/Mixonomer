@@ -3,8 +3,8 @@ from google.cloud import firestore
 
 import os
 
-from spotify.auth import auth_blueprint
-from spotify.api import api_blueprint, player_blueprint, fm_blueprint, spotfm_blueprint, spotify_blueprint
+from music.auth import auth_blueprint
+from music.api import api_blueprint, player_blueprint, fm_blueprint, spotfm_blueprint, spotify_blueprint
 
 db = firestore.Client()
 

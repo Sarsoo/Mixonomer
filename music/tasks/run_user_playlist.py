@@ -10,8 +10,8 @@ from spotframework.engine.processor.deduplicate import DeduplicateByID
 
 from spotframework.model.uri import Uri
 
-import spotify.db.database as database
-from spotify.db.part_generator import PartGenerator
+import music.db.database as database
+from music.db.part_generator import PartGenerator
 
 db = firestore.Client()
 

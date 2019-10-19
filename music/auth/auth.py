@@ -8,7 +8,7 @@ import logging
 from base64 import b64encode
 import requests
 
-import spotify.db.database as database
+import music.db.database as database
 
 blueprint = Blueprint('authapi', __name__)
 

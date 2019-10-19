@@ -1,4 +1,4 @@
-from spotify import app
+from music import app
 
 app = app
 

@@ -1,5 +1,5 @@
 from google.cloud import firestore
-import spotify.db.database as database
+import music.db.database as database
 import logging
 
 db = firestore.Client()

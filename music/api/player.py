@@ -2,8 +2,8 @@ from flask import Blueprint, request, jsonify
 
 import logging
 
-from spotify.api.decorators import login_or_basic_auth, spotify_link_required
-import spotify.db.database as database
+from music.api.decorators import login_or_basic_auth, spotify_link_required
+import music.db.database as database
 
 from spotframework.model.track import SpotifyTrack
 from spotframework.model.uri import Uri

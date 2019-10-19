@@ -1,8 +1,8 @@
 from flask import Blueprint, jsonify, request
 import logging
 
-from spotify.api.decorators import login_or_basic_auth, lastfm_username_required, spotify_link_required
-import spotify.db.database as database
+from music.api.decorators import login_or_basic_auth, lastfm_username_required, spotify_link_required
+import music.db.database as database
 
 from spotfm.maths.counter import Counter
 from spotframework.model.uri import Uri

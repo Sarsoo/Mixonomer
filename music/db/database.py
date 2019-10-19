@@ -6,7 +6,7 @@ from werkzeug.security import check_password_hash
 
 from spotframework.net.network import Network as SpotifyNetwork
 from fmframework.net.network import Network as FmNetwork
-from spotify.db.user import DatabaseUser
+from music.db.user import DatabaseUser
 
 db = firestore.Client()
 

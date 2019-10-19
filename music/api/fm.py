@@ -2,9 +2,9 @@ from flask import Blueprint, jsonify
 from datetime import date
 import logging
 
-from spotify.api.decorators import login_or_basic_auth, lastfm_username_required
+from music.api.decorators import login_or_basic_auth, lastfm_username_required
 
-import spotify.db.database as database
+import music.db.database as database
 
 blueprint = Blueprint('fm-api', __name__)
 logger = logging.getLogger(__name__)

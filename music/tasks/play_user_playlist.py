@@ -9,8 +9,8 @@ from spotframework.engine.processor.sort import SortReleaseDate
 from spotframework.engine.processor.deduplicate import DeduplicateByID
 
 from spotframework.player.player import Player
-import spotify.db.database as database
-from spotify.db.part_generator import PartGenerator
+import music.db.database as database
+from music.db.part_generator import PartGenerator
 
 db = firestore.Client()
 

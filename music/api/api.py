@@ -10,11 +10,11 @@ from google.cloud import tasks_v2
 from google.protobuf import timestamp_pb2
 from werkzeug.security import check_password_hash, generate_password_hash
 
-from spotify.api.decorators import login_required, login_or_basic_auth, admin_required, gae_cron, cloud_task
-from spotify.tasks.run_user_playlist import run_user_playlist as run_user_playlist
-from spotify.tasks.play_user_playlist import play_user_playlist as play_user_playlist
+from music.api.decorators import login_required, login_or_basic_auth, admin_required, gae_cron, cloud_task
+from music.tasks.run_user_playlist import run_user_playlist as run_user_playlist
+from music.tasks.play_user_playlist import play_user_playlist as play_user_playlist
 
-import spotify.db.database as database
+import music.db.database as database
 
 blueprint = Blueprint('api', __name__)
 db = firestore.Client()
@@ -130,7 +130,7 @@ def playlist(username=None):
             # if playlist_id is None or playlist_shuffle is None:
             #     return jsonify({'error': 'parts and id required'}), 400
 
-            from spotify.tasks.create_playlist import create_playlist as create_playlist
+            from music.tasks.create_playlist import create_playlist as create_playlist
 
             to_add = {
                 'name': playlist_name,
