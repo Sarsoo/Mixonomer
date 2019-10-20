@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 const axios = require('axios');
 
-import showMessage from "../../Toast.js"
+import showMessage from "../../Toast.js";
 
 var thisMonth = [
     'january',
