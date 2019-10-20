@@ -2,6 +2,7 @@ import React, { Component } from "react";
 const axios = require('axios');
 
 import showMessage from "../Toast.js";
+import BarChart from "./BarChart.js";
 
 class Count extends Component {
 
@@ -44,7 +45,15 @@ class Count extends Component {
 
     render() {
 
-        var table = <table className="app-table max-width">
+        var data = this.state.playlists.map((entry) => {
+            return {
+                "label": entry.name,
+                "value": entry.lastfm_stat_count
+            };
+        })
+
+        var table = <div>
+            <table className="app-table max-width">
                 <thead>
                     <tr>
                         <th colSpan='2'>
@@ -55,7 +64,9 @@ class Count extends Component {
                 <tbody>
                     {this.state.playlists.map((entry) => <Row name={entry.name} count={entry.lastfm_stat_count} percent={entry.lastfm_stat_percent} key={entry.name}/>)}
                 </tbody>
-            </table>;
+            </table>
+            <BarChart data={data} title='scrobbles'/>
+            </div>;
 
         const loadingMessage = <p className="center-text">loading...</p>;
 

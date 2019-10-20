@@ -2,6 +2,7 @@ import React, { Component } from "react";
 const axios = require('axios');
 
 import showMessage from "../../Toast.js"
+import PieChart from "../../Maths/PieChart.js";
 
 class Count extends Component {
 
@@ -65,6 +66,18 @@ class Count extends Component {
                     <td className="ui-text center-text text-no-select">last updated <b>{this.state.lastfm_refresh.toLocaleString()}</b></td>
                 </tr>
                 <tr>
+                    <td>
+                        <PieChart data={[{
+                                "label": this.state.name,
+                                "value": this.state.lastfm_percent
+                            },{
+                                "label": 'other',
+                                "value": 100 - this.state.lastfm_percent
+                            }]} 
+                            title={this.state.name}/>
+                    </td>
+                </tr>
+                <tr>
                     <td colSpan="2">
                         <button style={{width: "100%"}} className="button" onClick={this.updateStats}>update</button>
                     </td>
@@ -73,7 +86,5 @@ class Count extends Component {
         );
     }
 }
-
-
 
 export default Count;
