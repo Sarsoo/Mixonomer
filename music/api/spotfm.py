@@ -6,7 +6,9 @@ import datetime
 
 from music.api.decorators import admin_required, login_or_basic_auth, lastfm_username_required, spotify_link_required, cloud_task, gae_cron
 import music.db.database as database
-from music.tasks.refresh_lastfm_stats import refresh_lastfm_stats
+from music.tasks.refresh_lastfm_stats import refresh_lastfm_track_stats, \
+    refresh_lastfm_album_stats, \
+    refresh_lastfm_artist_stats
 
 from spotfm.maths.counter import Counter
 from spotframework.model.uri import Uri
@@ -82,7 +84,9 @@ def playlist_refresh(username=None):
         if os.environ.get('DEPLOY_DESTINATION', None) == 'PROD':
             create_refresh_playlist_task(username, playlist_name)
         else:
-            refresh_lastfm_stats(username, playlist_name)
+            refresh_lastfm_track_stats(username, playlist_name)
+            refresh_lastfm_album_stats(username, playlist_name)
+            refresh_lastfm_artist_stats(username, playlist_name)
 
         return jsonify({'message': 'execution requested', 'status': 'success'}), 200
 
@@ -91,17 +95,47 @@ def playlist_refresh(username=None):
         return jsonify({"error": 'no name requested'}), 400
 
 
-@blueprint.route('/playlist/refresh/task', methods=['POST'])
+@blueprint.route('/playlist/refresh/task/track', methods=['POST'])
 @cloud_task
-def run_playlist_task():
+def run_playlist_track_task():
 
     payload = request.get_data(as_text=True)
     if payload:
         payload = json.loads(payload)
 
-        logger.info(f'running {payload["username"]} / {payload["name"]}')
+        logger.info(f'refreshing tracks {payload["username"]} / {payload["name"]}')
 
-        refresh_lastfm_stats(payload['username'], payload['name'])
+        refresh_lastfm_track_stats(payload['username'], payload['name'])
+
+        return jsonify({'message': 'executed playlist', 'status': 'success'}), 200
+
+
+@blueprint.route('/playlist/refresh/task/album', methods=['POST'])
+@cloud_task
+def run_playlist_album_task():
+
+    payload = request.get_data(as_text=True)
+    if payload:
+        payload = json.loads(payload)
+
+        logger.info(f'refreshing albums {payload["username"]} / {payload["name"]}')
+
+        refresh_lastfm_album_stats(payload['username'], payload['name'])
+
+        return jsonify({'message': 'executed playlist', 'status': 'success'}), 200
+
+
+@blueprint.route('/playlist/refresh/task/artist', methods=['POST'])
+@cloud_task
+def run_playlist_artist_task():
+
+    payload = request.get_data(as_text=True)
+    if payload:
+        payload = json.loads(payload)
+
+        logger.info(f'refreshing artists {payload["username"]} / {payload["name"]}')
+
+        refresh_lastfm_artist_stats(payload['username'], payload['name'])
 
         return jsonify({'message': 'executed playlist', 'status': 'success'}), 200
 
@@ -185,7 +219,7 @@ def execute_user(username):
                 if os.environ.get('DEPLOY_DESTINATION', None) == 'PROD':
                     create_refresh_playlist_task(username, iterate_playlist['name'], seconds_delay)
                 else:
-                    refresh_lastfm_stats(username, iterate_playlist['name'])
+                    refresh_lastfm_track_stats(username, iterate_playlist['name'])
 
                 seconds_delay += 1200
     else:
@@ -217,26 +251,55 @@ def create_refresh_user_task(username, delay=0):
 
 def create_refresh_playlist_task(username, playlist_name, delay=0):
 
-    task = {
+    track_task = {
         'app_engine_http_request': {  # Specify the type of request.
             'http_method': 'POST',
-            'relative_uri': '/api/spotfm/playlist/refresh/task',
+            'relative_uri': '/api/spotfm/playlist/refresh/task/track',
             'body': json.dumps({
                 'username': username,
                 'name': playlist_name
             }).encode()
         }
     }
-
     if delay > 0:
-
         d = datetime.datetime.utcnow() + datetime.timedelta(seconds=delay)
-
-        # Create Timestamp protobuf.
         timestamp = timestamp_pb2.Timestamp()
         timestamp.FromDatetime(d)
 
-        # Add the timestamp to the tasks.
-        task['schedule_time'] = timestamp
+        track_task['schedule_time'] = timestamp
 
-    tasker.create_task(task_path, task)
+    album_task = {
+        'app_engine_http_request': {  # Specify the type of request.
+            'http_method': 'POST',
+            'relative_uri': '/api/spotfm/playlist/refresh/task/album',
+            'body': json.dumps({
+                'username': username,
+                'name': playlist_name
+            }).encode()
+        }
+    }
+    d = datetime.datetime.utcnow() + datetime.timedelta(seconds=delay + 180)
+    timestamp = timestamp_pb2.Timestamp()
+    timestamp.FromDatetime(d)
+
+    album_task['schedule_time'] = timestamp
+
+    artist_task = {
+        'app_engine_http_request': {  # Specify the type of request.
+            'http_method': 'POST',
+            'relative_uri': '/api/spotfm/playlist/refresh/task/artist',
+            'body': json.dumps({
+                'username': username,
+                'name': playlist_name
+            }).encode()
+        }
+    }
+    d = datetime.datetime.utcnow() + datetime.timedelta(seconds=delay + 360)
+    timestamp = timestamp_pb2.Timestamp()
+    timestamp.FromDatetime(d)
+
+    artist_task['schedule_time'] = timestamp
+
+    tasker.create_task(task_path, track_task)
+    tasker.create_task(task_path, album_task)
+    tasker.create_task(task_path, artist_task)
