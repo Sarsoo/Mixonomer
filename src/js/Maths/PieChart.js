@@ -21,7 +21,7 @@ class PieChart extends Component {
           },
           options: {
               legend : {
-                  display : false
+                  display : true
               },
               elements: {
                   arc : {

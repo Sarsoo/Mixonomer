@@ -9,6 +9,17 @@ class Count extends Component {
     constructor(props){
         super(props);
         this.state = {
+            playlist: {
+                lastfm_stat_album_count: 0,
+                lastfm_stat_artist_count: 0,
+                lastfm_stat_count: 0,
+
+                lastfm_stat_album_percent: 0,
+                lastfm_stat_artist_percent: 0,
+                lastfm_stat_percent: 0,
+
+                lastfm_stat_last_refresh: ''
+            },
             name: props.name,
             lastfm_refresh: 'never',
             lastfm_percent: 0,
@@ -25,9 +36,7 @@ class Count extends Component {
         .then((response) => {
             if(response.data.lastfm_stat_last_refresh != undefined){
                 this.setState({
-                    count: response.data.lastfm_stat_count,
-                    lastfm_refresh: response.data.lastfm_stat_last_refresh,
-                    lastfm_percent: response.data.lastfm_stat_percent,
+                    playlist: response.data,
                     isLoading: false
                 })
             }else{
@@ -57,24 +66,51 @@ class Count extends Component {
         return (
             <tbody>
                 <tr>
-                    <td className="ui-text center-text text-no-select">scrobble count: <b>{this.state.count.toLocaleString()}</b></td>
+                    <td className="ui-text center-text text-no-select">scrobble count: <b>{this.state.playlist.lastfm_stat_count.toLocaleString()} / {this.state.playlist.lastfm_stat_percent}%</b></td>
                 </tr>
                 <tr>
-                    <td className="ui-text center-text text-no-select">that's <b>{this.state.lastfm_percent}%</b> of all scrobbles</td>
+                    <td className="ui-text center-text text-no-select">album count: <b>{this.state.playlist.lastfm_stat_album_count.toLocaleString()} / {this.state.playlist.lastfm_stat_album_percent}%</b></td>
                 </tr>
                 <tr>
-                    <td className="ui-text center-text text-no-select">last updated <b>{this.state.lastfm_refresh.toLocaleString()}</b></td>
+                    <td className="ui-text center-text text-no-select">artist count: <b>{this.state.playlist.lastfm_stat_artist_count.toLocaleString()} / {this.state.playlist.lastfm_stat_artist_percent}%</b></td>
+                </tr>
+                <tr>
+                    <td className="ui-text center-text text-no-select">last updated <b>{this.state.playlist.lastfm_stat_last_refresh.toLocaleString()}</b></td>
                 </tr>
                 <tr>
                     <td>
                         <PieChart data={[{
-                                "label": this.state.name,
-                                "value": this.state.lastfm_percent
+                                "label": `${this.state.playlist.name} tracks`,
+                                "value": this.state.playlist.lastfm_stat_percent
                             },{
                                 "label": 'other',
-                                "value": 100 - this.state.lastfm_percent
+                                "value": 100 - this.state.playlist.lastfm_stat_percent
                             }]} 
-                            title={this.state.name}/>
+                            title={this.state.playlist.name}/>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <PieChart data={[{
+                                "label": `${this.state.playlist.name} albums`,
+                                "value": this.state.playlist.lastfm_stat_album_percent
+                            },{
+                                "label": 'other',
+                                "value": 100 - this.state.playlist.lastfm_stat_album_percent
+                            }]} 
+                            title={this.state.playlist.name}/>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <PieChart data={[{
+                                "label": `${this.state.playlist.name} artists`,
+                                "value": this.state.playlist.lastfm_stat_artist_percent
+                            },{
+                                "label": 'other',
+                                "value": 100 - this.state.playlist.lastfm_stat_artist_percent
+                            }]} 
+                            title={this.state.playlist.name}/>
                     </td>
                 </tr>
                 <tr>
