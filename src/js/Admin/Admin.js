@@ -4,6 +4,7 @@ const axios = require('axios');
 
 import Lock from "./Lock.js";
 import Functions from "./Functions.js";
+import Tasks from "./Tasks.js";
 
 class Admin extends Component {
     render(){
@@ -12,10 +13,12 @@ class Admin extends Component {
                 <ul className="navbar" style={{width: "100%"}}>
                     <li><Link to={`${this.props.match.url}/lock`}>lock accounts</Link></li>
                     <li><Link to={`${this.props.match.url}/functions`}>functions</Link></li>
+                    <li><Link to={`${this.props.match.url}/tasks`}>tasks</Link></li>
                 </ul>
 
                 <Route path={`${this.props.match.url}/lock`} component={Lock} />
                 <Route path={`${this.props.match.url}/functions`} component={Functions} />
+                <Route path={`${this.props.match.url}/tasks`} component={Tasks} />
 
             </div>
         );

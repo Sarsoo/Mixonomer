@@ -4,7 +4,8 @@ from google.cloud import firestore
 import os
 
 from music.auth import auth_blueprint
-from music.api import api_blueprint, player_blueprint, fm_blueprint, spotfm_blueprint, spotify_blueprint
+from music.api import api_blueprint, player_blueprint, fm_blueprint, \
+    spotfm_blueprint, spotify_blueprint, admin_blueprint
 
 db = firestore.Client()
 
@@ -16,6 +17,7 @@ app.register_blueprint(player_blueprint, url_prefix='/api/player')
 app.register_blueprint(fm_blueprint, url_prefix='/api/fm')
 app.register_blueprint(spotfm_blueprint, url_prefix='/api/spotfm')
 app.register_blueprint(spotify_blueprint, url_prefix='/api/spotify')
+app.register_blueprint(admin_blueprint, url_prefix='/api/admin')
 
 
 @app.route('/')
