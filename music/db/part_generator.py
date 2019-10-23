@@ -1,5 +1,6 @@
 from google.cloud import firestore
 import music.db.database as database
+from music.model.user import User
 import logging
 
 db = firestore.Client()
@@ -8,16 +9,16 @@ logger = logging.getLogger(__name__)
 
 class PartGenerator:
 
-    def __init__(self, user_id=None, username=None):
+    def __init__(self, user: User, username=None):
         self.queried_playlists = []
         self.parts = []
 
-        if user_id:
-            self.user_id = user_id
+        if user:
+            self.user = user
         elif username:
-            user_doc = database.get_user_doc_ref(username)
-            if user_doc:
-                self.user_id = user_doc.id
+            pulled_user = database.get_user(username)
+            if pulled_user:
+                self.user = pulled_user
             else:
                 raise LookupError(f'{username} not found')
         else:
@@ -28,7 +29,7 @@ class PartGenerator:
         self.parts = []
 
     def get_recursive_parts(self, name):
-        logger.info(f'getting part from {name} for {self.user_id}')
+        logger.info(f'getting part from {name} for {self.user.username}')
 
         self.reset()
         self.process_reference_by_name(name)
@@ -37,26 +38,20 @@ class PartGenerator:
 
     def process_reference_by_name(self, name):
 
-        playlist_query = [i for i in
-                          database.get_user_playlists_collection(self.user_id).where(u'name', u'==', name).stream()]
+        playlist = database.get_playlist(username=self.user.username, name=name)
 
-        if len(playlist_query) > 0:
-            if len(playlist_query) == 1:
+        if playlist is not None:
 
-                if playlist_query[0].id not in self.queried_playlists:
+            if playlist.db_ref.id not in self.queried_playlists:
 
-                    playlist_doc = playlist_query[0].to_dict()
-                    self.parts += playlist_doc['parts']
+                self.parts += playlist.parts
 
-                    for i in playlist_doc['playlist_references']:
-                        if i.id not in self.queried_playlists:
-                            self.process_reference_by_reference(i)
-
-                else:
-                    logger.warning(f'playlist reference {name} already queried')
+                for i in playlist.playlist_references:
+                    if i.id not in self.queried_playlists:
+                        self.process_reference_by_reference(i)
 
             else:
-                logger.warning(f"multiple {name}'s found")
+                logger.warning(f'playlist reference {name} already queried')
 
         else:
             logger.warning(f'playlist reference {name} not found')

@@ -18,7 +18,7 @@ def is_logged_in():
 def is_basic_authed():
     if request.authorization:
         if request.authorization.get('username', None) and request.authorization.get('password', None):
-            if database.check_user_password(request.authorization.username, request.authorization.password):
+            if database.get_user(request.authorization.username).check_password(request.authorization.password):
                 return True
 
     return False
@@ -52,13 +52,13 @@ def login_or_basic_auth(func):
 def admin_required(func):
     @functools.wraps(func)
     def admin_required_wrapper(*args, **kwargs):
-        user_dict = database.get_user_doc_ref(kwargs.get('username')).get().to_dict()
+        db_user = database.get_user(kwargs.get('username'))
 
-        if user_dict:
-            if user_dict['type'] == 'admin':
+        if db_user is not None:
+            if db_user.user_type == db_user.Type.admin:
                 return func(*args, **kwargs)
             else:
-                logger.warning(f'{user_dict["username"]} not authorized')
+                logger.warning(f'{db_user.username} not authorized')
                 return jsonify({'status': 'error', 'message': 'unauthorized'}), 401
         else:
             logger.warning('user not logged in')
@@ -70,13 +70,13 @@ def admin_required(func):
 def spotify_link_required(func):
     @functools.wraps(func)
     def spotify_link_required_wrapper(*args, **kwargs):
-        user_dict = database.get_user_doc_ref(kwargs.get('username')).get().to_dict()
+        db_user = database.get_user(kwargs.get('username'))
 
-        if user_dict:
-            if user_dict['spotify_linked']:
+        if db_user is not None:
+            if db_user.spotify_linked:
                 return func(*args, **kwargs)
             else:
-                logger.warning(f'{user_dict["username"]} spotify not linked')
+                logger.warning(f'{db_user.username} spotify not linked')
                 return jsonify({'status': 'error', 'message': 'spotify not linked'}), 401
         else:
             logger.warning('user not logged in')
@@ -88,13 +88,13 @@ def spotify_link_required(func):
 def lastfm_username_required(func):
     @functools.wraps(func)
     def lastfm_username_required_wrapper(*args, **kwargs):
-        user_dict = database.get_user_doc_ref(kwargs.get('username')).get().to_dict()
+        db_user = database.get_user(kwargs.get('username'))
 
-        if user_dict:
-            if user_dict.get('lastfm_username') and len(user_dict.get('lastfm_username')) > 0:
+        if db_user is not None:
+            if db_user.lastfm_username and len(db_user.lastfm_username) > 0:
                 return func(*args, **kwargs)
             else:
-                logger.warning(f'no last.fm username for {user_dict["username"]}')
+                logger.warning(f'no last.fm username for {db_user.username}')
                 return jsonify({'status': 'error', 'message': 'no last.fm username'}), 401
         else:
             logger.warning('user not logged in')

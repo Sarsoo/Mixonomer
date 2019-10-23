@@ -29,11 +29,11 @@ def play_user_playlist(username,
                        add_last_month=False,
                        device_name=None):
 
-    users = database.get_user_query_stream(username)
+    user = database.get_user(username)
 
     logger.info(f'playing for {username}')
 
-    if len(users) == 1:
+    if user:
 
         if parts is None and playlists is None:
             logger.critical(f'no playlists to use for creation ({username})')
@@ -74,7 +74,7 @@ def play_user_playlist(username,
 
         submit_parts = parts
 
-        part_generator = PartGenerator(user_id=users[0].id)
+        part_generator = PartGenerator(user=user)
 
         for part in playlists:
             submit_parts += part_generator.get_recursive_parts(part)
@@ -100,5 +100,4 @@ def play_user_playlist(username,
         player.play(tracks=tracks, device=device)
 
     else:
-        logger.critical(f'multiple/no user(s) found ({username})')
-        return None
+        logger.critical(f'{username} not found')

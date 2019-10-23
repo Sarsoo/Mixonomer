@@ -8,7 +8,6 @@ import logging
 from google.cloud import firestore
 from google.cloud import tasks_v2
 from google.protobuf import timestamp_pb2
-from werkzeug.security import check_password_hash, generate_password_hash
 
 from music.api.decorators import login_required, login_or_basic_auth, admin_required, gae_cron, cloud_task
 from music.tasks.run_user_playlist import run_user_playlist as run_user_playlist
@@ -28,27 +27,16 @@ logger = logging.getLogger(__name__)
 @blueprint.route('/playlists', methods=['GET'])
 @login_or_basic_auth
 def get_playlists(username=None):
-
-    user_ref = database.get_user_doc_ref(username)
-
-    playlists = user_ref.collection(u'playlists')
-
-    playlist_docs = [i.to_dict() for i in playlists.stream()]
-
-    for j in playlist_docs:
-        j['playlist_references'] = [i.get().to_dict().get('name', 'n/a')
-                                    for i in j['playlist_references']]
-
-    response = {
-        'playlists':  playlist_docs
-    }
-
-    return jsonify(response), 200
+    return jsonify({
+        'playlists':  [i.to_dict() for i in database.get_user_playlists(username)]
+    }), 200
 
 
 @blueprint.route('/playlist', methods=['GET', 'POST', 'PUT', 'DELETE'])
 @login_or_basic_auth
 def playlist(username=None):
+
+    user_playlists = database.get_user_playlists(username)
 
     user_ref = database.get_user_doc_ref(username)
     playlists = user_ref.collection(u'playlists')
@@ -58,27 +46,16 @@ def playlist(username=None):
 
         if playlist_name:
 
-            queried_playlist = [i for i in playlists.where(u'name', u'==', playlist_name).stream()]
+            queried_playlist = next((i for i in user_playlists if i.name == playlist_name), None)
 
-            if len(queried_playlist) == 0:
+            if queried_playlist is None:
                 return jsonify({'error': 'no playlist found'}), 404
-            elif len(queried_playlist) > 1:
-                return jsonify({'error': 'multiple playlists found'}), 500
 
             if request.method == "GET":
-
-                playlist_doc = queried_playlist[0].to_dict()
-
-                playlist_doc['playlist_references'] = [i.get().to_dict().get('name', 'n/a')
-                                                       for i in playlist_doc['playlist_references']]
-
-                return jsonify(playlist_doc), 200
+                return jsonify(queried_playlist.to_dict()), 200
 
             elif request.method == 'DELETE':
-
-                logger.info(f'deleted {username} / {queried_playlist[0].to_dict()["name"]}')
-                queried_playlist[0].reference.delete()
-
+                database.delete_playlist(username=username, name=playlist_name)
                 return jsonify({"message": 'playlist deleted', "status": "success"}), 200
 
         else:
@@ -100,9 +77,10 @@ def playlist(username=None):
         if request_json.get('playlist_references', None):
             if request_json['playlist_references'] != -1:
                 for i in request_json['playlist_references']:
-                    retrieved_ref = database.get_user_playlist_ref_by_user_ref(user_ref, i)
-                    if retrieved_ref:
-                        playlist_references.append(retrieved_ref)
+
+                    updating_playlist = database.get_playlist(username=username, name=i)
+                    if updating_playlist is not None:
+                        playlist_references.append(updating_playlist.db_ref)
                     else:
                         return jsonify({"message": f'managed playlist {i} not found', "status": "error"}), 400
 
@@ -126,9 +104,6 @@ def playlist(username=None):
 
             if len(queried_playlist) != 0:
                 return jsonify({'error': 'playlist already exists'}), 400
-
-            # if playlist_id is None or playlist_shuffle is None:
-            #     return jsonify({'error': 'parts and id required'}), 400
 
             from music.tasks.create_playlist import create_playlist as create_playlist
 
@@ -165,7 +140,7 @@ def playlist(username=None):
             if len(queried_playlist) > 1:
                 return jsonify({'error': "multiple playlists exist"}), 500
 
-            playlist_doc = playlists.document(queried_playlist[0].id)
+            updating_playlist = database.get_playlist(username=username, name=playlist_name)
 
             dic = {}
 
@@ -209,7 +184,7 @@ def playlist(username=None):
                 logger.warning(f'no changes to make for {username} / {playlist_name}')
                 return jsonify({"message": 'no changes to make', "status": "error"}), 400
 
-            playlist_doc.update(dic)
+            updating_playlist.update_database(dic)
             logger.info(f'updated {username} / {playlist_name}')
 
             return jsonify({"message": 'playlist updated', "status": "success"}), 200
@@ -221,21 +196,14 @@ def user(username=None):
 
     if request.method == 'GET':
 
-        pulled_user = database.get_user_doc_ref(username).get().to_dict()
-
-        response = {
-            'username': pulled_user['username'],
-            'type': pulled_user['type'],
-            'spotify_linked': pulled_user['spotify_linked'],
-            'validated': pulled_user['validated'],
-            'lastfm_username': pulled_user['lastfm_username']
-        }
-
-        return jsonify(response), 200
+        database_user = database.get_user(username)
+        return jsonify(database_user.to_dict()), 200
 
     else:
 
-        if database.get_user_doc_ref(username).get().to_dict()['type'] != 'admin':
+        db_user = database.get_user(username)
+
+        if db_user.user_type != db_user.Type.admin:
             return jsonify({'status': 'error', 'message': 'unauthorized'}), 401
 
         request_json = request.get_json()
@@ -243,21 +211,16 @@ def user(username=None):
         if 'username' in request_json:
             username = request_json['username']
 
-        actionable_user = database.get_user_doc_ref(username)
-
-        if actionable_user.get().exists is False:
-            return jsonify({"message": 'non-existent user', "status": "error"}), 400
-
-        dic = {}
+        actionable_user = database.get_user(username)
 
         if 'locked' in request_json:
-            logger.info(f'updating lock {request_json["username"]} / {request_json["locked"]}')
-            dic['locked'] = request_json['locked']
+            logger.info(f'updating lock {username} / {request_json["locked"]}')
+            actionable_user.locked = request_json['locked']
 
         if 'spotify_linked' in request_json:
-            logger.info(f'deauthing {request_json["username"]}')
+            logger.info(f'deauthing {username}')
             if request_json['spotify_linked'] is False:
-                dic.update({
+                actionable_user.update_database({
                     'access_token': None,
                     'refresh_token': None,
                     'spotify_linked': False
@@ -265,13 +228,8 @@ def user(username=None):
 
         if 'lastfm_username' in request_json:
             logger.info(f'updating lastfm username {username} -> {request_json["lastfm_username"]}')
-            dic['lastfm_username'] = request_json['lastfm_username']
+            actionable_user.lastfm_username = request_json['lastfm_username']
 
-        if len(dic) == 0:
-            logger.warning(f'no updates for {request_json["username"]}')
-            return jsonify({"message": 'no changes to make', "status": "error"}), 400
-
-        actionable_user.update(dic)
         logger.info(f'updated {username}')
 
         return jsonify({'message': 'account updated', 'status': 'succeeded'}), 200
@@ -281,24 +239,9 @@ def user(username=None):
 @login_or_basic_auth
 @admin_required
 def users(username=None):
-
-    dic = {
-        'accounts': []
-    }
-
-    for account in [i.to_dict() for i in db.collection(u'spotify_users').stream()]:
-
-        user_dic = {
-            'username': account['username'],
-            'type': account['type'],
-            'spotify_linked': account['spotify_linked'],
-            'locked': account['locked'],
-            'last_login': account['last_login']
-        }
-
-        dic['accounts'].append(user_dic)
-
-    return jsonify(dic), 200
+    return jsonify({
+        'accounts': [i.to_dict() for i in database.get_users()]
+    }), 200
 
 
 @blueprint.route('/user/password', methods=['POST'])
@@ -315,15 +258,12 @@ def change_password(username=None):
         if len(request_json['new_password']) > 30:
             return jsonify({"error": 'password too long'}), 400
 
-        current_user = database.get_user_doc_ref(username)
-
-        if check_password_hash(current_user.get().to_dict()['password'], request_json['current_password']):
-
-            current_user.update({'password': generate_password_hash(request_json['new_password'])})
+        db_user = database.get_user(username)
+        if db_user.check_password(request_json['current_password']):
+            db_user.password = request_json['new_password']
             logger.info(f'password udpated {username}')
 
             return jsonify({"message": 'password changed', "status": "success"}), 200
-
         else:
             logger.warning(f"incorrect password {username}")
             return jsonify({'error': 'wrong password provided'}), 401
@@ -489,48 +429,44 @@ def execute_all_users():
     seconds_delay = 0
     logger.info('running')
 
-    for iter_user in [i.to_dict() for i in db.collection(u'spotify_users').stream()]:
+    for iter_user in database.get_users():
 
-        if iter_user['spotify_linked'] and not iter_user['locked']:
+        if iter_user.spotify_linked and not iter_user.locked:
 
             task = {
                 'app_engine_http_request': {  # Specify the type of request.
                     'http_method': 'POST',
                     'relative_uri': '/api/playlist/run/user/task',
-                    'body': iter_user['username'].encode()
+                    'body': iter_user.username.encode()
                 }
             }
 
             d = datetime.datetime.utcnow() + datetime.timedelta(seconds=seconds_delay)
 
-            # Create Timestamp protobuf.
             timestamp = timestamp_pb2.Timestamp()
             timestamp.FromDatetime(d)
 
-            # Add the timestamp to the tasks.
             task['schedule_time'] = timestamp
 
             tasker.create_task(task_path, task)
-
             seconds_delay += 30
 
 
 def execute_user(username):
 
-    playlists = [i.to_dict() for i in
-                 database.get_user_playlists_collection(database.get_user_query_stream(username)[0].id).stream()]
+    playlists = database.get_user_playlists(username)
 
     seconds_delay = 0
     logger.info(f'running {username}')
 
     for iterate_playlist in playlists:
-        if len(iterate_playlist['parts']) > 0 or len(iterate_playlist['playlist_references']) > 0:
-            if iterate_playlist.get('uri', None):
+        if len(iterate_playlist.parts) > 0 or len(iterate_playlist.playlist_references) > 0:
+            if iterate_playlist.uri:
 
                 if os.environ.get('DEPLOY_DESTINATION', None) == 'PROD':
-                    create_run_user_playlist_task(username, iterate_playlist['name'], seconds_delay)
+                    create_run_user_playlist_task(username, iterate_playlist.name, seconds_delay)
                 else:
-                    run_playlist(username, iterate_playlist['name'])
+                    run_playlist(username, iterate_playlist.name)
 
                 seconds_delay += 6
 

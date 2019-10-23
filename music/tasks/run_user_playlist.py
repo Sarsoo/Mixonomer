@@ -12,6 +12,7 @@ from spotframework.model.uri import Uri
 
 import music.db.database as database
 from music.db.part_generator import PartGenerator
+from music.model.playlist import RecentsPlaylist
 
 db = firestore.Client()
 
@@ -19,26 +20,21 @@ logger = logging.getLogger(__name__)
 
 
 def run_user_playlist(username, playlist_name):
-
-    users = database.get_user_query_stream(username)
+    user = database.get_user(username)
 
     logger.info(f'running {username} / {playlist_name}')
 
-    if len(users) == 1:
+    if user:
 
-        playlist_collection = db.collection(u'spotify_users', u'{}'.format(users[0].id), 'playlists')
+        playlist = database.get_playlist(username=username, name=playlist_name)
 
-        playlists = [i for i in playlist_collection.where(u'name', u'==', playlist_name).stream()]
+        if playlist is not None:
 
-        if len(playlists) == 1:
-
-            playlist_dict = playlists[0].to_dict()
-
-            if playlist_dict['uri'] is None:
+            if playlist.uri is None:
                 logger.critical(f'no playlist id to populate ({username}/{playlist_name})')
                 return None
 
-            if len(playlist_dict['parts']) == 0 and len(playlist_dict['playlist_references']) == 0:
+            if len(playlist.parts) == 0 and len(playlist.playlist_references) == 0:
                 logger.critical(f'no playlists to use for creation ({username}/{playlist_name})')
                 return None
 
@@ -48,50 +44,49 @@ def run_user_playlist(username, playlist_name):
 
             processors = [DeduplicateByID()]
 
-            if playlist_dict['shuffle'] is True:
+            if playlist.shuffle is True:
                 processors.append(Shuffle())
             else:
                 processors.append(SortReleaseDate(reverse=True))
 
-            part_generator = PartGenerator(user_id=users[0].id)
-            submit_parts = part_generator.get_recursive_parts(playlist_dict['name'])
+            part_generator = PartGenerator(user=user)
+            submit_parts = part_generator.get_recursive_parts(playlist.name)
 
             params = [
                 PlaylistSource.Params(names=submit_parts)
             ]
 
-            if playlist_dict['include_recommendations']:
-                params.append(RecommendationSource.Params(recommendation_limit=playlist_dict['recommendation_sample']))
+            if playlist.include_recommendations:
+                params.append(RecommendationSource.Params(recommendation_limit=playlist.recommendation_sample))
 
-            if playlist_dict.get('include_library_tracks', False):
+            if playlist.include_library_tracks:
                 params.append(LibraryTrackSource.Params())
 
-            if playlist_dict['type'] == 'recents':
+            if isinstance(playlist, RecentsPlaylist):
                 boundary_date = datetime.datetime.now(datetime.timezone.utc) - \
-                                datetime.timedelta(days=int(playlist_dict['day_boundary']))
+                                datetime.timedelta(days=int(playlist.day_boundary))
                 tracks = engine.get_recent_playlist(params=params,
                                                     processors=processors,
                                                     boundary_date=boundary_date,
-                                                    add_this_month=playlist_dict.get('add_this_month', False),
-                                                    add_last_month=playlist_dict.get('add_last_month', False))
+                                                    add_this_month=playlist.add_this_month,
+                                                    add_last_month=playlist.add_last_month)
             else:
                 tracks = engine.make_playlist(params=params,
                                               processors=processors)
 
-            engine.execute_playlist(tracks, Uri(playlist_dict['uri']))
+            engine.execute_playlist(tracks, Uri(playlist.uri))
 
-            overwrite = playlist_dict.get('description_overwrite', None)
-            suffix = playlist_dict.get('description_suffix', None)
+            overwrite = playlist.description_overwrite
+            suffix = playlist.description_suffix
 
             engine.change_description(sorted(submit_parts),
-                                      uri=Uri(playlist_dict['uri']),
+                                      uri=Uri(playlist.uri),
                                       overwrite=overwrite,
                                       suffix=suffix)
 
         else:
-            logger.critical(f'multiple/no playlists found ({username}/{playlist_name})')
+            logger.critical(f'playlist not found ({username}/{playlist_name})')
             return None
 
     else:
-        logger.critical(f'multiple/no user(s) found ({username}/{playlist_name})')
-        return None
+        logger.critical(f'{username} not found')

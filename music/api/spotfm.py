@@ -184,42 +184,38 @@ def execute_all_users():
     seconds_delay = 0
     logger.info('running')
 
-    for iter_user in [i.to_dict() for i in db.collection(u'spotify_users').stream()]:
+    for iter_user in database.get_users():
 
-        if iter_user.get('spotify_linked') \
-                and iter_user.get('lastfm_username') \
-                and len(iter_user.get('lastfm_username')) > 0 \
-                and not iter_user['locked']:
+        if iter_user.spotify_linked and iter_user.lastfm_username and \
+                len(iter_user.lastfm_username) > 0 and not iter_user.locked:
 
             if os.environ.get('DEPLOY_DESTINATION', None) == 'PROD':
-                create_refresh_user_task(username=iter_user.get('username'), delay=seconds_delay)
+                create_refresh_user_task(username=iter_user.username, delay=seconds_delay)
             else:
-                execute_user(username=iter_user.get('username'))
+                execute_user(username=iter_user.username)
 
             seconds_delay += 2400
 
         else:
-            logger.debug(f'skipping {iter_user.get("username")}')
+            logger.debug(f'skipping {iter_user.username}')
 
 
 def execute_user(username):
 
-    playlists = [i.to_dict() for i in
-                 database.get_user_playlists_collection(database.get_user_query_stream(username)[0].id).stream()]
+    playlists = database.get_user_playlists(username)
+    user = database.get_user(username)
 
     seconds_delay = 0
     logger.info(f'running {username}')
 
-    user = database.get_user_doc_ref(username).get().to_dict()
-
-    if user.get('lastfm_username') and len(user.get('lastfm_username')) > 0:
-        for iterate_playlist in playlists:
-            if iterate_playlist.get('uri', None):
+    if user.lastfm_username and len(user.lastfm_username) > 0:
+        for playlist in playlists:
+            if playlist.uri:
 
                 if os.environ.get('DEPLOY_DESTINATION', None) == 'PROD':
-                    create_refresh_playlist_task(username, iterate_playlist['name'], seconds_delay)
+                    create_refresh_playlist_task(username, playlist.name, seconds_delay)
                 else:
-                    refresh_lastfm_track_stats(username, iterate_playlist['name'])
+                    refresh_lastfm_track_stats(username, playlist.name)
 
                 seconds_delay += 1200
     else:
@@ -239,11 +235,9 @@ def create_refresh_user_task(username, delay=0):
     if delay > 0:
         d = datetime.datetime.utcnow() + datetime.timedelta(seconds=delay)
 
-        # Create Timestamp protobuf.
         timestamp = timestamp_pb2.Timestamp()
         timestamp.FromDatetime(d)
 
-        # Add the timestamp to the tasks.
         task['schedule_time'] = timestamp
 
     tasker.create_task(task_path, task)

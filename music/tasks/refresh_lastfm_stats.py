@@ -21,17 +21,18 @@ def refresh_lastfm_track_stats(username, playlist_name):
     spotnet = database.get_authed_spotify_network(username=username)
     counter = Counter(fmnet=fmnet, spotnet=spotnet)
 
-    database_ref = database.get_user_playlist_ref_by_username(user=username, playlist=playlist_name)
+    playlist = database.get_playlist(username=username, name=playlist_name)
 
-    playlist_dict = database_ref.get().to_dict()
-
-    spotify_playlist = spotnet.get_playlist(uri=Uri(playlist_dict['uri']))
+    spotify_playlist = spotnet.get_playlist(uri=Uri(playlist.uri))
     track_count = counter.count_playlist(playlist=spotify_playlist)
 
     user_count = fmnet.get_user_scrobble_count()
-    percent = round((track_count * 100) / user_count, 2)
+    if user_count > 0:
+        percent = round((track_count * 100) / user_count, 2)
+    else:
+        percent = 0
 
-    database_ref.update({
+    playlist.update_database({
         'lastfm_stat_count': track_count,
         'lastfm_stat_percent': percent,
 
@@ -47,17 +48,18 @@ def refresh_lastfm_album_stats(username, playlist_name):
     spotnet = database.get_authed_spotify_network(username=username)
     counter = Counter(fmnet=fmnet, spotnet=spotnet)
 
-    database_ref = database.get_user_playlist_ref_by_username(user=username, playlist=playlist_name)
+    playlist = database.get_playlist(username=username, name=playlist_name)
 
-    playlist_dict = database_ref.get().to_dict()
-
-    spotify_playlist = spotnet.get_playlist(uri=Uri(playlist_dict['uri']))
+    spotify_playlist = spotnet.get_playlist(uri=Uri(playlist.uri))
     album_count = counter.count_playlist(playlist=spotify_playlist, query_album=True)
 
     user_count = fmnet.get_user_scrobble_count()
-    album_percent = round((album_count * 100) / user_count, 2)
+    if user_count > 0:
+        album_percent = round((album_count * 100) / user_count, 2)
+    else:
+        album_percent = 0
 
-    database_ref.update({
+    playlist.update_database({
         'lastfm_stat_album_count': album_count,
         'lastfm_stat_album_percent': album_percent,
 
@@ -73,17 +75,18 @@ def refresh_lastfm_artist_stats(username, playlist_name):
     spotnet = database.get_authed_spotify_network(username=username)
     counter = Counter(fmnet=fmnet, spotnet=spotnet)
 
-    database_ref = database.get_user_playlist_ref_by_username(user=username, playlist=playlist_name)
+    playlist = database.get_playlist(username=username, name=playlist_name)
 
-    playlist_dict = database_ref.get().to_dict()
-
-    spotify_playlist = spotnet.get_playlist(uri=Uri(playlist_dict['uri']))
+    spotify_playlist = spotnet.get_playlist(uri=Uri(playlist.uri))
     artist_count = counter.count_playlist(playlist=spotify_playlist, query_artist=True)
 
     user_count = fmnet.get_user_scrobble_count()
-    artist_percent = round((artist_count * 100) / user_count, 2)
+    if user_count > 0:
+        artist_percent = round((artist_count * 100) / user_count, 2)
+    else:
+        artist_percent = 0
 
-    database_ref.update({
+    playlist.update_database({
         'lastfm_stat_artist_count': artist_count,
         'lastfm_stat_artist_percent': artist_percent,
 

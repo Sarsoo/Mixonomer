@@ -10,13 +10,10 @@ logger = logging.getLogger(__name__)
 
 
 def create_playlist(username, name):
-
     logger.info(f'creating {username} / {name}')
 
-    users = [i for i in db.collection(u'spotify_users').where(u'username', u'==', username).stream()]
-
-    if len(users) == 1:
-
+    user = database.get_user(username)
+    if user is not None:
         net = database.get_authed_spotify_network(username)
 
         playlist = net.create_playlist(net.user.username, name)
@@ -28,5 +25,5 @@ def create_playlist(username, name):
             return None
 
     else:
-        logger.error(f'{len(users)} users found')
+        logger.error(f'{username} not found')
         return None
