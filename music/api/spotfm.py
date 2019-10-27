@@ -159,7 +159,8 @@ def run_users_task():
 @login_or_basic_auth
 def run_user(username=None):
 
-    if database.get_user_doc_ref(username).get().to_dict()['type'] == 'admin':
+    db_user = database.get_user(username)
+    if db_user.type == db_user.Type.admin:
         user_name = request.args.get('username', username)
     else:
         user_name = username

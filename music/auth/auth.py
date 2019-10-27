@@ -32,31 +32,19 @@ def login():
             return redirect(url_for('index'))
 
         username = username.lower()
+        user = database.get_user(username)
 
-        users = database.get_user_query_stream(username)
-
-        if len(users) == 0:
+        if user is None:
             flash('user not found')
             return redirect(url_for('index'))
 
-        if len(users) > 1:
-            flash('multiple users found')
-            return redirect(url_for('index'))
-
-        doc = users[0].to_dict()
-        if doc is None:
-            flash('username not found')
-            return redirect(url_for('index'))
-
-        if check_password_hash(doc['password'], password):
-
-            if doc['locked']:
+        if user.check_password(password):
+            if user.locked:
                 logger.warning(f'locked account attempt {username}')
                 flash('account locked')
                 return redirect(url_for('index'))
 
-            user_reference = db.collection(u'spotify_users').document(u'{}'.format(users[0].id))
-            user_reference.update({'last_login': datetime.datetime.utcnow()})
+            user.last_login = datetime.datetime.utcnow()
 
             logger.info(f'success {username}')
             session['username'] = username
@@ -108,18 +96,7 @@ def register():
             flash('username already registered')
             return redirect('authapi.register')
 
-        db.collection(u'spotify_users').add({
-            'access_token': None,
-            'email': None,
-            'last_login': datetime.datetime.utcnow(),
-            'locked': False,
-            'password': generate_password_hash(password),
-            'refresh_token': None,
-            'spotify_linked': False,
-            'type': 'user',
-            'username': username,
-            'validated': True
-        })
+        database.create_user(username=username, password=password)
 
         logger.info(f'new user {username}')
         session['username'] = username
@@ -173,9 +150,9 @@ def token():
 
                 resp = req.json()
 
-                user_reference = database.get_user_doc_ref(session['username'])
+                user = database.get_user(session['username'])
 
-                user_reference.update({
+                user.update_database({
                     'access_token': resp['access_token'],
                     'refresh_token': resp['refresh_token'],
                     'last_refreshed': datetime.datetime.now(datetime.timezone.utc),
@@ -197,9 +174,9 @@ def deauth():
 
     if 'username' in session:
 
-        user_reference = database.get_user_doc_ref(session['username'])
+        user = database.get_user(session['username'])
 
-        user_reference.update({
+        user.update_database({
             'access_token': None,
             'refresh_token': None,
             'last_refreshed': datetime.datetime.now(datetime.timezone.utc),

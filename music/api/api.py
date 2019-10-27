@@ -38,7 +38,7 @@ def playlist(username=None):
 
     user_playlists = database.get_user_playlists(username)
 
-    user_ref = database.get_user_doc_ref(username)
+    user_ref = database.get_user(username).db_ref
     playlists = user_ref.collection(u'playlists')
 
     if request.method == 'GET' or request.method == 'DELETE':
@@ -387,7 +387,8 @@ def run_playlist_task():
 @login_or_basic_auth
 def run_user(username=None):
 
-    if database.get_user_doc_ref(username).get().to_dict()['type'] == 'admin':
+    db_user = database.get_user(username)
+    if db_user.type == db_user.Type.admin:
         user_name = request.args.get('username', username)
     else:
         user_name = username
