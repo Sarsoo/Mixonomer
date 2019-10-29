@@ -17,9 +17,9 @@ logger = logging.getLogger(__name__)
 
 def refresh_token_database_callback(user):
     if isinstance(user, DatabaseUser):
-        user = get_user(user.user_id)
+        user_obj = get_user(user.user_id)
 
-        user.update_database({
+        user_obj.update_database({
             'access_token': user.access_token,
             'refresh_token': user.refresh_token,
             'last_refreshed': user.last_refreshed,
