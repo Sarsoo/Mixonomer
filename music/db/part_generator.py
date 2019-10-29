@@ -9,7 +9,7 @@ logger = logging.getLogger(__name__)
 
 class PartGenerator:
 
-    def __init__(self, user: User, username=None):
+    def __init__(self, user: User = None, username: str = None):
         self.queried_playlists = []
         self.parts = []
 
