@@ -3,6 +3,8 @@ from enum import Enum
 from datetime import datetime
 from google.cloud.firestore import DocumentReference
 
+from fmframework.net.network import Network
+
 import music.db.database as database
 
 
@@ -73,6 +75,7 @@ class Playlist:
         return {
             'uri': self.uri,
             'name': self.name,
+            'type': 'default',
 
             'include_recommendations': self.include_recommendations,
             'recommendation_sample': self.recommendation_sample,
@@ -325,7 +328,8 @@ class RecentsPlaylist(Playlist):
         response.update({
             'add_last_month': self.add_last_month,
             'add_this_month': self.add_this_month,
-            'day_boundary': self.day_boundary
+            'day_boundary': self.day_boundary,
+            'type': 'recents'
         })
         return response
 
@@ -355,3 +359,97 @@ class RecentsPlaylist(Playlist):
     def day_boundary(self, value):
         database.update_playlist(self.username, self.name, {'day_boundary': value})
         self._day_boundary = value
+
+
+class LastFMChartPlaylist(Playlist):
+    def __init__(self,
+                 uri: str,
+                 name: str,
+                 username: str,
+
+                 chart_range: Network.Range,
+
+                 db_ref: DocumentReference,
+
+
+                 include_recommendations: bool,
+                 recommendation_sample: int,
+                 include_library_tracks: bool,
+
+                 parts: List[str],
+                 playlist_references: List[DocumentReference],
+                 shuffle: bool,
+
+                 chart_limit: int = 50,
+
+                 sort: Sort = None,
+
+                 description_overwrite: str = None,
+                 description_suffix: str = None,
+
+                 lastfm_stat_count: int = None,
+                 lastfm_stat_album_count: int = None,
+                 lastfm_stat_artist_count: int = None,
+
+                 lastfm_stat_percent: int = None,
+                 lastfm_stat_album_percent: int = None,
+                 lastfm_stat_artist_percent: int = None,
+
+                 lastfm_stat_last_refresh: datetime = None):
+        super().__init__(uri=uri,
+                         name=name,
+                         username=username,
+
+                         db_ref=db_ref,
+
+                         include_recommendations=include_recommendations,
+                         recommendation_sample=recommendation_sample,
+                         include_library_tracks=include_library_tracks,
+
+                         parts=parts,
+                         playlist_references=playlist_references,
+                         shuffle=shuffle,
+
+                         sort=sort,
+
+                         description_overwrite=description_overwrite,
+                         description_suffix=description_suffix,
+
+                         lastfm_stat_count=lastfm_stat_count,
+                         lastfm_stat_album_count=lastfm_stat_album_count,
+                         lastfm_stat_artist_count=lastfm_stat_artist_count,
+
+                         lastfm_stat_percent=lastfm_stat_percent,
+                         lastfm_stat_album_percent=lastfm_stat_album_percent,
+                         lastfm_stat_artist_percent=lastfm_stat_artist_percent,
+
+                         lastfm_stat_last_refresh=lastfm_stat_last_refresh)
+        self._chart_range = chart_range
+        self._chart_limit = chart_limit
+
+    def to_dict(self):
+        response = super().to_dict()
+        response.update({
+            'chart_limit': self.chart_limit,
+            'chart_range': self.chart_range.name,
+            'type': 'fmchart'
+        })
+        return response
+
+    @property
+    def chart_range(self):
+        return self._chart_range
+
+    @chart_range.setter
+    def chart_range(self, value):
+        database.update_playlist(self.username, self.name, {'chart_range': value.name})
+        self._chart_range = value
+
+    @property
+    def chart_limit(self):
+        return self._chart_limit
+
+    @chart_limit.setter
+    def chart_limit(self, value):
+        database.update_playlist(self.username, self.name, {'chart_limit': value})
+        self._chart_limit = value

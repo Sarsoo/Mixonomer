@@ -10,9 +10,11 @@ from spotframework.engine.processor.deduplicate import DeduplicateByID
 
 from spotframework.model.uri import Uri
 
+from spotfm.engine.chart_source import ChartSource
+
 import music.db.database as database
 from music.db.part_generator import PartGenerator
-from music.model.playlist import RecentsPlaylist
+from music.model.playlist import RecentsPlaylist, LastFMChartPlaylist
 
 db = firestore.Client()
 
@@ -34,20 +36,20 @@ def run_user_playlist(username, playlist_name):
                 logger.critical(f'no playlist id to populate ({username}/{playlist_name})')
                 return None
 
-            if len(playlist.parts) == 0 and len(playlist.playlist_references) == 0:
-                logger.critical(f'no playlists to use for creation ({username}/{playlist_name})')
-                return None
-
             net = database.get_authed_spotify_network(username)
 
             engine = PlaylistEngine(net)
 
+            if isinstance(playlist, LastFMChartPlaylist) and user.lastfm_username is not None:
+                engine.sources.append(ChartSource(spotnet=net, fmnet=database.get_authed_lastfm_network(user.username)))
+
             processors = [DeduplicateByID()]
 
-            if playlist.shuffle is True:
-                processors.append(Shuffle())
-            else:
-                processors.append(SortReleaseDate(reverse=True))
+            if not isinstance(playlist, LastFMChartPlaylist):
+                if playlist.shuffle is True:
+                    processors.append(Shuffle())
+                else:
+                    processors.append(SortReleaseDate(reverse=True))
 
             part_generator = PartGenerator(user=user)
             submit_parts = part_generator.get_recursive_parts(playlist.name)
@@ -61,6 +63,9 @@ def run_user_playlist(username, playlist_name):
 
             if playlist.include_library_tracks:
                 params.append(LibraryTrackSource.Params())
+
+            if isinstance(playlist, LastFMChartPlaylist):
+                params.append(ChartSource.Params(chart_range=playlist.chart_range, limit=playlist.chart_limit))
 
             if isinstance(playlist, RecentsPlaylist):
                 boundary_date = datetime.datetime.now(datetime.timezone.utc) - \

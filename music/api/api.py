@@ -95,8 +95,13 @@ def playlist(username=None):
         playlist_add_this_month = request_json.get('add_this_month', None)
         playlist_add_last_month = request_json.get('add_last_month', None)
 
+        playlist_library_tracks = request_json.get('include_library_tracks', None)
+
         playlist_recommendation = request_json.get('include_recommendations', None)
         playlist_recommendation_sample = request_json.get('recommendation_sample', None)
+
+        playlist_chart_range = request_json.get('chart_range', None)
+        playlist_chart_limit = request_json.get('chart_limit', None)
 
         queried_playlist = [i for i in playlists.where(u'name', u'==', playlist_name).stream()]
 
@@ -111,6 +116,7 @@ def playlist(username=None):
                 'name': playlist_name,
                 'parts': playlist_parts if playlist_parts is not None else [],
                 'playlist_references': playlist_references if playlist_references is not None else [],
+                'include_library_tracks': playlist_library_tracks if playlist_library_tracks is not None else False,
                 'include_recommendations': playlist_recommendation if playlist_recommendation is not None else False,
                 'recommendation_sample': playlist_recommendation_sample if playlist_recommendation_sample is not None else 10,
                 'uri': None,
@@ -126,6 +132,10 @@ def playlist(username=None):
                 to_add['day_boundary'] = playlist_day_boundary if playlist_day_boundary is not None else 21
                 to_add['add_this_month'] = playlist_add_this_month if playlist_add_this_month is not None else False
                 to_add['add_last_month'] = playlist_add_last_month if playlist_add_last_month is not None else False
+
+            if playlist_type == 'fmchart':
+                to_add['chart_range'] = playlist_chart_range
+                to_add['chart_limit'] = playlist_chart_limit if playlist_chart_limit is not None else 50
 
             playlists.document().set(to_add)
             logger.info(f'added {username} / {playlist_name}')
@@ -171,14 +181,27 @@ def playlist(username=None):
             if playlist_add_last_month is not None:
                 dic['add_last_month'] = playlist_add_last_month
 
+            if playlist_library_tracks is not None:
+                dic['include_library_tracks'] = playlist_library_tracks
+
             if playlist_recommendation is not None:
                 dic['include_recommendations'] = playlist_recommendation
 
             if playlist_recommendation_sample is not None:
                 dic['recommendation_sample'] = playlist_recommendation_sample
 
+            if playlist_chart_range is not None:
+                dic['chart_range'] = playlist_chart_range
+
+            if playlist_chart_limit is not None:
+                dic['chart_limit'] = playlist_chart_limit
+
             if playlist_type is not None:
                 dic['type'] = playlist_type
+
+                if playlist_type == 'fmchart':
+                    dic['chart_range'] = 'YEAR'
+                    dic['chart_limit'] = 50
 
             if len(dic) == 0:
                 logger.warning(f'no changes to make for {username} / {playlist_name}')

@@ -45,6 +45,9 @@ class Edit extends Component{
             playlist_references: [],
             type: 'default',
 
+            chart_limit: '',
+            chart_range: '',
+
             day_boundary: '',
             recommendation_sample: '',
             newPlaylistName: '',
@@ -66,9 +69,15 @@ class Edit extends Component{
         this.handleRun = this.handleRun.bind(this);
 
         this.handleShuffleChange = this.handleShuffleChange.bind(this);
+
+        this.handleIncludeLibraryTracksChange = this.handleIncludeLibraryTracksChange.bind(this);
+
         this.handleIncludeRecommendationsChange = this.handleIncludeRecommendationsChange.bind(this);
         this.handleThisMonthChange = this.handleThisMonthChange.bind(this);
         this.handleLastMonthChange = this.handleLastMonthChange.bind(this);
+
+        this.handleChartLimitChange = this.handleChartLimitChange.bind(this);
+        this.handleChartRangeChange = this.handleChartRangeChange.bind(this);
     }
 
     componentDidMount(){
@@ -123,6 +132,12 @@ class Edit extends Component{
         }
         if(event.target.name == 'type'){
             this.handleTypeChange(event.target.value);
+        }
+        if(event.target.name == 'chart_range'){
+            this.handleChartRangeChange(event.target.value);
+        }
+        if(event.target.name == 'chart_limit'){
+            this.handleChartLimitChange(event.target.value);
         }
     }
 
@@ -210,6 +225,36 @@ class Edit extends Component{
             include_recommendations: event.target.checked
         }).catch((error) => {
             showMessage(`error updating rec. value (${error.response.status})`);
+        });
+    }
+
+    handleIncludeLibraryTracksChange(event) {
+        this.setState({
+            include_library_tracks: event.target.checked
+        });
+        axios.post('/api/playlist', {
+            name: this.state.name,
+            include_library_tracks: event.target.checked
+        }).catch((error) => {
+            showMessage(`error updating library tracks (${error.response.status})`);
+        });
+    }
+
+    handleChartRangeChange(value) {
+        axios.post('/api/playlist', {
+            name: this.state.name,
+            chart_range: value
+        }).catch((error) => {
+            showMessage(`error updating chart range (${error.response.status})`);
+        });
+    }
+
+    handleChartLimitChange(value) {
+        axios.post('/api/playlist', {
+            name: this.state.name,
+            chart_limit: parseInt(value)
+        }).catch((error) => {
+            showMessage(`error updating limit (${error.response.status})`);
         });
     }
 
@@ -325,26 +370,22 @@ class Edit extends Component{
     }
 
     handleRun(event){
-        if(this.state.playlist_references.length > 0 || this.state.parts.length > 0){
-            axios.get('/api/user')
-            .then((response) => {
-                if(response.data.spotify_linked == true){
-                    axios.get('/api/playlist/run', {params: {name: this.state.name}})
-                    .then((reponse) => {
-                        showMessage(`${this.state.name} ran`);
-                    })
-                    .catch((error) => {
-                        showMessage(`error running ${this.state.name} (${error.response.status})`);
-                    });
-                }else{
-                    showMessage(`link spotify before running`);
-                }
-            }).catch((error) => {
-                showMessage(`error running ${this.state.name} (${error.response.status})`);
-            });
-        }else{
-            showMessage(`add either playlists or parts`);
-        }
+        axios.get('/api/user')
+        .then((response) => {
+            if(response.data.spotify_linked == true){
+                axios.get('/api/playlist/run', {params: {name: this.state.name}})
+                .then((reponse) => {
+                    showMessage(`${this.state.name} ran`);
+                })
+                .catch((error) => {
+                    showMessage(`error running ${this.state.name} (${error.response.status})`);
+                });
+            }else{
+                showMessage(`link spotify before running`);
+            }
+        }).catch((error) => {
+            showMessage(`error running ${this.state.name} (${error.response.status})`);
+        });
     }
 
     render(){
@@ -413,6 +454,16 @@ class Edit extends Component{
                 </tr>
                 <tr>
                     <td className="center-text ui-text text-no-select">
+                        include library tracks?
+                    </td>
+                    <td>
+                        <input type="checkbox" 
+                            checked={this.state.include_library_tracks}
+                            onChange={this.handleIncludeLibraryTracksChange}></input>
+                    </td>
+                </tr>
+                <tr>
+                    <td className="center-text ui-text text-no-select">
                         number of recommendations
                     </td>
                     <td>
@@ -423,6 +474,42 @@ class Edit extends Component{
                             onChange={this.handleInputChange}></input>
                     </td>
                 </tr>
+
+                { this.state.type == 'fmchart' &&
+                <tr>
+                    <td className="center-text ui-text text-no-select">
+                        limit
+                    </td>
+                    <td>
+                        <input type="number" 
+                            name="chart_limit"
+                            className="full-width"
+                            value={this.state.chart_limit}
+                            onChange={this.handleInputChange}></input>
+                    </td>
+                </tr>
+                }
+                { this.state.type == 'fmchart' &&
+                <tr>
+                    <td className="center-text ui-text text-no-select">
+                        chart range
+                    </td>
+                    <td>
+                        <select className="full-width" 
+                                    name="chart_range" 
+                                    onChange={this.handleInputChange}
+                                    value={this.state.chart_range}>
+                                <option value="WEEK">7 day</option>
+                                <option value="MONTH">30 day</option>
+                                <option value="QUARTER">90 day</option>
+                                <option value="HALFYEAR">180 day</option>
+                                <option value="YEAR">365 day</option>
+                                <option value="OVERALL">overall</option>
+                            </select>
+                    </td>
+                </tr>
+                }
+
                 { this.state.type == 'recents' &&
                 <tr>
                     <td className="center-text ui-text text-no-select">
@@ -461,6 +548,8 @@ class Edit extends Component{
                     </td>
                 </tr>
                 }
+
+
                 <tr>
                     <td className="center-text ui-text text-no-select">
                         playlist type
@@ -472,6 +561,7 @@ class Edit extends Component{
                                 value={this.state.type}>
                             <option value="default">default</option>
                             <option value="recents">recents</option>
+                            <option value="fmchart">last.fm chart</option>
                         </select>
                     </td>
                 </tr>

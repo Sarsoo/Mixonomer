@@ -8,7 +8,7 @@ from spotframework.net.network import Network as SpotifyNetwork
 from fmframework.net.network import Network as FmNetwork
 from music.db.user import DatabaseUser
 from music.model.user import User
-from music.model.playlist import Playlist, RecentsPlaylist, Sort
+from music.model.playlist import Playlist, RecentsPlaylist, LastFMChartPlaylist, Sort
 
 db = firestore.Client()
 
@@ -259,6 +259,39 @@ def parse_playlist_reference(username, playlist_ref=None, playlist_snapshot=None
                                add_last_month=playlist_dict.get('add_last_month'),
                                add_this_month=playlist_dict.get('add_this_month'),
                                day_boundary=playlist_dict.get('day_boundary'))
+
+    elif playlist_dict.get('type') == 'fmchart':
+        return LastFMChartPlaylist(uri=playlist_dict.get('uri'),
+                                   name=playlist_dict.get('name'),
+                                   username=username,
+
+                                   db_ref=playlist_ref,
+
+                                   include_recommendations=playlist_dict.get('include_recommendations', False),
+                                   recommendation_sample=playlist_dict.get('recommendation_sample', 0),
+                                   include_library_tracks=playlist_dict.get('include_library_tracks', False),
+
+                                   parts=playlist_dict.get('parts'),
+                                   playlist_references=playlist_dict.get('playlist_references'),
+                                   shuffle=playlist_dict.get('shuffle'),
+
+                                   sort=Sort[playlist_dict.get('sort', 'release_date')],
+
+                                   description_overwrite=playlist_dict.get('description_overwrite'),
+                                   description_suffix=playlist_dict.get('description_suffix'),
+
+                                   lastfm_stat_count=playlist_dict.get('lastfm_stat_count', 0),
+                                   lastfm_stat_album_count=playlist_dict.get('lastfm_stat_album_count', 0),
+                                   lastfm_stat_artist_count=playlist_dict.get('lastfm_stat_artist_count', 0),
+
+                                   lastfm_stat_percent=playlist_dict.get('lastfm_stat_percent', 0),
+                                   lastfm_stat_album_percent=playlist_dict.get('lastfm_stat_album_percent', 0),
+                                   lastfm_stat_artist_percent=playlist_dict.get('lastfm_stat_artist_percent', 0),
+
+                                   lastfm_stat_last_refresh=playlist_dict.get('lastfm_stat_last_refresh'),
+
+                                   chart_limit=playlist_dict.get('chart_limit'),
+                                   chart_range=FmNetwork.Range[playlist_dict.get('chart_range')])
 
 
 def update_playlist(username: str, name: str, updates: dict) -> None:
