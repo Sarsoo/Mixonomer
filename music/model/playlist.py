@@ -9,8 +9,9 @@ import music.db.database as database
 
 
 class Sort(Enum):
-    shuffle = 1
-    release_date = 2
+    default = 1
+    shuffle = 2
+    release_date = 3
 
 
 class Playlist:

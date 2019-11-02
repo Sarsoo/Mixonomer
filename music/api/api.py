@@ -484,15 +484,14 @@ def execute_user(username):
     logger.info(f'running {username}')
 
     for iterate_playlist in playlists:
-        if len(iterate_playlist.parts) > 0 or len(iterate_playlist.playlist_references) > 0:
-            if iterate_playlist.uri:
+        if iterate_playlist.uri:
 
-                if os.environ.get('DEPLOY_DESTINATION', None) == 'PROD':
-                    create_run_user_playlist_task(username, iterate_playlist.name, seconds_delay)
-                else:
-                    run_playlist(username, iterate_playlist.name)
+            if os.environ.get('DEPLOY_DESTINATION', None) == 'PROD':
+                create_run_user_playlist_task(username, iterate_playlist.name, seconds_delay)
+            else:
+                run_playlist(username, iterate_playlist.name)
 
-                seconds_delay += 6
+            seconds_delay += 6
 
 
 def create_run_user_playlist_task(username, playlist_name, delay=0):
