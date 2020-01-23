@@ -11,13 +11,15 @@ fmframework_logger = logging.getLogger('fmframework')
 spotfm_logger = logging.getLogger('spotfm')
 
 if os.environ.get('DEPLOY_DESTINATION', None) == 'PROD':
-    from google.cloud import logging as glogging
+    import google.cloud.logging
+    from google.cloud.logging.handlers import CloudLoggingHandler, setup_logging
 
     log_format = '%(funcName)s - %(message)s'
     formatter = logging.Formatter(log_format)
 
-    client = glogging.Client()
-    handler = client.get_default_handler()
+    client = google.cloud.logging.Client()
+    handler = CloudLoggingHandler(client, name="music-tools")
+    setup_logging(handler)
 
     handler.setFormatter(formatter)
 
