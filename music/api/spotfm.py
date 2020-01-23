@@ -6,7 +6,7 @@ import datetime
 
 from music.api.decorators import admin_required, login_or_basic_auth, lastfm_username_required, spotify_link_required, cloud_task, gae_cron
 import music.db.database as database
-from music.tasks.refresh_lastfm_stats import refresh_lastfm_track_stats, \
+from music.tasks.refresh_playlist_lastfm_stats import refresh_lastfm_track_stats, \
     refresh_lastfm_album_stats, \
     refresh_lastfm_artist_stats
 

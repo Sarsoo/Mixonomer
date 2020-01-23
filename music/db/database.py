@@ -5,10 +5,12 @@ from typing import List, Optional
 from werkzeug.security import generate_password_hash
 
 from spotframework.net.network import Network as SpotifyNetwork
+from spotframework.model.uri import Uri
 from fmframework.net.network import Network as FmNetwork
 from music.db.user import DatabaseUser
 from music.model.user import User
 from music.model.playlist import Playlist, RecentsPlaylist, LastFMChartPlaylist, Sort
+from music.model.stats import Stats
 
 db = firestore.Client()
 
@@ -324,3 +326,106 @@ def delete_playlist(username: str, name: str) -> None:
         playlist.db_ref.delete()
     else:
         logger.error(f'playlist {name} not found for {username}')
+
+
+def get_user_stats(username):
+    logger.info(f'retrieving stats for {username}')
+
+    user = get_user(username)
+    if user:
+        stats_refs = [i for i in user.db_ref.collection(u'stats').stream()]
+
+        return [parse_user_stats_reference(username=username, stats_snapshot=i) for i in stats_refs]
+    else:
+        logger.error(f'user {username} not found')
+
+
+def get_stat(username: str = None, uri: Uri = None, name: str = None) -> Optional[Stats]:
+    logger.info(f'retrieving {uri}/{name} stats for {username}')
+
+    user = get_user(username)
+
+    if user:
+
+        if uri is not None:
+            stats = [i for i in user.db_ref.collection(u'stats').where(u'uri', u'==', str(uri)).stream()]
+        else:
+            stats = [i for i in user.db_ref.collection(u'stats').where(u'name', u'==', name).stream()]
+
+        if len(stats) == 0:
+            logger.error(f'stat {uri} for {user} not found')
+            return None
+        if len(stats) > 1:
+            logger.critical(f"multiple {uri} stats for {user} found")
+            return None
+
+        return parse_user_stats_reference(username=username, stats_snapshot=stats[0])
+    else:
+        logger.error(f'user {username} not found')
+
+
+def parse_user_stats_reference(username, stats_ref=None, stats_snapshot=None) -> Stats:
+    if stats_ref is None and stats_snapshot is None:
+        raise ValueError('no user object supplied')
+
+    if stats_ref is None:
+        stats_ref = stats_snapshot.reference
+
+    if stats_snapshot is None:
+        stats_snapshot = stats_ref.get()
+
+    stats_dict = stats_snapshot.to_dict()
+
+    return Stats(name=stats_dict.get('name'),
+                 username=username,
+                 uri=stats_dict.get('uri'),
+                 artists=stats_dict.get('artists'),
+                 albums=stats_dict.get('albums'),
+                 tracks=stats_dict.get('tracks'),
+                 user_total=stats_dict.get('user_total'),
+                 db_ref=stats_ref)
+
+
+def update_stats(username: str, uri: Uri, updates: dict) -> None:
+    if len(updates) > 0:
+        logger.debug(f'updating {uri} stat for {username}')
+
+        user = get_user(username)
+
+        stats = [i for i in user.db_ref.collection(u'stats').where(u'uri', u'==', str(uri)).stream()]
+
+        if len(stats) == 0:
+            logger.error(f'stat {uri} for {username} not found')
+            return None
+        if len(stats) > 1:
+            logger.critical(f"multiple {uri} stats for {username} found")
+            return None
+
+        stats[0].reference.update(updates)
+    else:
+        logger.debug(f'nothing to update for {uri} for {username}')
+
+
+def create_stat(username: str, uri: Uri):
+    logger.info(f'creating {uri} stat for {username}')
+
+    user = get_user(username=username)
+
+    net = get_authed_spotify_network(username)
+    playlist = net.get_playlist(uri=uri)
+
+    if playlist is not None:
+
+        if user is not None:
+            db_ref = user.db_ref.collection(u'stats').document()
+            db_ref.set({
+                'uri': str(uri),
+                'name': playlist.name,
+                'artists': {},
+                'albums': {},
+                'tracks': {},
+                'user_total': 0
+            })
+            return parse_user_stats_reference(stats_ref=db_ref)
+        else:
+            logger.error(f'no {username} user returned')
