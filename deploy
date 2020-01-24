@@ -1,0 +1,35 @@
+#!/usr/bin/env bash
+
+stage_dir=_playlist-manager
+
+echo '>> backing up a directory'
+cd ..
+
+echo '>> deleting old deployment stage'
+rm -rf $stage_dir
+
+echo '>> copying main source'
+cp -r playlist-manager $stage_dir
+
+echo '>> injecting spotframework'
+cp -r spotframework/spotframework $stage_dir/
+
+echo '>> injecting fmframework'
+cp -r fmframework/fmframework $stage_dir/
+
+echo '>> injecting spotfm'
+cp -r spotfm/spotfm $stage_dir/
+
+cd $stage_dir
+
+echo '>> building css'
+sass --style=compressed src/scss/style.scss build/style.css
+
+echo '>> building javascript'
+npm run build
+
+echo '>> deploying'
+gcloud config set project sarsooxyz
+gcloud app deploy
+
+

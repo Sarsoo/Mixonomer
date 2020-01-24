@@ -13,6 +13,7 @@
 .git
 .gitignore
 .vscode
+service.json
 
 venv
 node_modules
