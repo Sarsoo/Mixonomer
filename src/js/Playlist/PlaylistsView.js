@@ -36,7 +36,7 @@ class PlaylistsView extends Component {
             });
         })
         .catch((error) => {
-            showMessage(`error getting playlists (${error.response.status})`);
+            showMessage(`Error Getting Playlists (${error.response.status})`);
         });
     }
 
@@ -49,23 +49,23 @@ class PlaylistsView extends Component {
                     showMessage(`${name} ran`);
                 })
                 .catch((error) => {
-                    showMessage(`error running ${name} (${error.response.status})`);
+                    showMessage(`Error Running ${name} (${error.response.status})`);
                 });
             }else{
-                showMessage(`link spotify before running`);
+                showMessage(`Link Spotify Before Running`);
             }
         }).catch((error) => {
-            showMessage(`error running ${this.state.name} (${error.response.status})`);
+            showMessage(`Error Running ${this.state.name} (${error.response.status})`);
         });
     }
 
     handleDeletePlaylist(name, event){
         axios.delete('/api/playlist', { params: { name: name } })
         .then((response) => {
-            showMessage(`${name} deleted`);
+            showMessage(`${name} Deleted`);
             this.getPlaylists();
         }).catch((error) => {
-            showMessage(`error deleting ${name} (${error.response.status})`);
+            showMessage(`Error Deleting ${name} (${error.response.status})`);
         });
     }
 
@@ -75,16 +75,16 @@ class PlaylistsView extends Component {
             if(response.data.spotify_linked == true){
                 axios.get('/api/playlist/run/user')
                 .then((response) => {
-                    showMessage("all playlists ran");
+                    showMessage("All Playlists Ran");
                 })
                 .catch((error)  => {
-                    showMessage(`error running all (${error.response.status})`);
+                    showMessage(`Error Running All (${error.response.status})`);
                 });
             }else{
-                showMessage(`link spotify before running`);
+                showMessage(`Link Spotify Before Running`);
             }
         }).catch((error) => {
-            showMessage(`error running ${this.state.name} (${error.response.status})`);
+            showMessage(`Error Running ${this.state.name} (${error.response.status})`);
         });
     }
 
@@ -108,7 +108,7 @@ function Table(props){
                 <tbody>
                     <tr>
                         <td className="ui-text text-no-select center-text">
-                            no playlists
+                            No Playlists
                         </td>
                     </tr>
                 </tbody>
@@ -119,7 +119,7 @@ function Table(props){
                                                         handleDeletePlaylist={props.handleDeletePlaylist}
                                                         key={ playlist.name }/>) }
                 <tr>
-                    <td colSpan="3"><button className="full-width button" onClick={props.handleRunAll}>run all</button></td>
+                    <td colSpan="3"><button className="full-width button" onClick={props.handleRunAll}>Run All</button></td>
                 </tr>
             </tbody>
             )}
@@ -131,8 +131,8 @@ function Row(props){
     return (
         <tr>
             <PlaylistLink playlist={props.playlist}/>
-            <td style={{width: "100px"}}><button className="button" style={{width: "100px"}} onClick={(e) => props.handleRunPlaylist(props.playlist.name, e)}>run</button></td>
-            <td style={{width: "100px"}}><button className="button"  style={{width: "100px"}} onClick={(e) => props.handleDeletePlaylist(props.playlist.name, e)}>delete</button></td>
+            <td style={{width: "100px"}}><button className="button" style={{width: "100px"}} onClick={(e) => props.handleRunPlaylist(props.playlist.name, e)}>Run</button></td>
+            <td style={{width: "100px"}}><button className="button"  style={{width: "100px"}} onClick={(e) => props.handleDeletePlaylist(props.playlist.name, e)}>Delete</button></td>
         </tr>
     );
 }

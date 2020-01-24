@@ -1,6 +1,6 @@
 import React from "react";
 import ReactDOM from "react-dom";
 
-import PlaylistManager from "./PlaylistManager.js";
+import MusicTools from "./MusicTools";
 
-ReactDOM.render(<PlaylistManager />, document.getElementById('react'));
+ReactDOM.render(<MusicTools />, document.getElementById('react'));

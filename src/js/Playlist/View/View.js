@@ -18,8 +18,8 @@ class View extends Component{
                         <th colSpan="2">
                             <div>
                                 <ul className="navbar" style={{width: "100%"}}>
-                                    <li><Link to={`${this.props.match.url}/edit`}>edit</Link></li>
-                                    <li><Link to={`${this.props.match.url}/count`}>count</Link></li>
+                                    <li><Link to={`${this.props.match.url}/edit`}>Edit</Link></li>
+                                    <li><Link to={`${this.props.match.url}/count`}>Count</Link></li>
                                 </ul>
                             </div>
                         </th>

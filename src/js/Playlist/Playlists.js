@@ -11,8 +11,8 @@ class Playlists extends Component {
         return (
             <div>
                 <ul className="navbar" style={{width: "100%"}}>
-                    <li><Link to={`${this.props.match.url}/new`}>new</Link></li>
-                    <li><Link to={`${this.props.match.url}/play`}>play</Link></li>
+                    <li><Link to={`${this.props.match.url}/new`}>New</Link></li>
+                    <li><Link to={`${this.props.match.url}/play`}>Play</Link></li>
                 </ul>
                 
                 <Switch>

@@ -11,9 +11,9 @@ class Admin extends Component {
         return (
             <div>
                 <ul className="navbar" style={{width: "100%"}}>
-                    <li><Link to={`${this.props.match.url}/lock`}>lock accounts</Link></li>
-                    <li><Link to={`${this.props.match.url}/functions`}>functions</Link></li>
-                    <li><Link to={`${this.props.match.url}/tasks`}>tasks</Link></li>
+                    <li><Link to={`${this.props.match.url}/lock`}>Lock Accounts</Link></li>
+                    <li><Link to={`${this.props.match.url}/functions`}>Functions</Link></li>
+                    <li><Link to={`${this.props.match.url}/tasks`}>Tasks</Link></li>
                 </ul>
 
                 <Route path={`${this.props.match.url}/lock`} component={Lock} />

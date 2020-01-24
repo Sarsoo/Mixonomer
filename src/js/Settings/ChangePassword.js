@@ -68,12 +68,12 @@ class ChangePassword extends Component {
                     <table className="app-table max-width">
                         <thead>
                             <tr>
-                                <th colSpan="2"><h1 className="text-no-select">change password</h1></th>
+                                <th colSpan="2"><h1 className="text-no-select">Change Password</h1></th>
                             </tr>
                         </thead>
                         <tbody>
                             <tr>
-                                <td className="ui-text center-text text-no-select">current:</td>
+                                <td className="ui-text center-text text-no-select">Current:</td>
                                 <td><input 
                                         type="password" 
                                         name="current" 
@@ -82,7 +82,7 @@ class ChangePassword extends Component {
                                         className="full-width" /></td>
                             </tr>
                             <tr>
-                                <td className="ui-text center-text text-no-select">new:</td>
+                                <td className="ui-text center-text text-no-select">New:</td>
                                 <td><input 
                                         type="password" 
                                         name="new1" 
@@ -91,7 +91,7 @@ class ChangePassword extends Component {
                                         className="full-width" /></td>
                             </tr>
                             <tr>
-                                <td className="ui-text center-text text-no-select">new again:</td>
+                                <td className="ui-text center-text text-no-select">New Again:</td>
                                 <td><input 
                                         type="password" 
                                         name="new2" 
@@ -100,7 +100,7 @@ class ChangePassword extends Component {
                                         className="full-width" /></td>
                             </tr>
                             <tr>
-                                <td colSpan="2"><input type="submit" style={{width: "100%"}} className="button" value="change" /></td>
+                                <td colSpan="2"><input type="submit" style={{width: "100%"}} className="button" value="Change" /></td>
                             </tr>
                         </tbody>
                     </table>

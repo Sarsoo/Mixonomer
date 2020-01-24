@@ -15,20 +15,20 @@ class Functions extends Component {
     runAllUsers(event){
         axios.get('/api/playlist/run/users')
         .then((response) => {
-            showMessage('users run');
+            showMessage('Users Run');
         })
         .catch((error) => {
-            showMessage(`error running all users (${error.response.status})`);
+            showMessage(`Error Running All Users (${error.response.status})`);
         });
     }
 
     runStats(event){
         axios.get('/api/spotfm/playlist/refresh/users')
         .then((response) => {
-            showMessage('stats run');
+            showMessage('Stats Run');
         })
         .catch((error) => {
-            showMessage(`error running all users (${error.response.status})`);
+            showMessage(`Error Running All Users (${error.response.status})`);
         });
     }
 
@@ -38,19 +38,19 @@ class Functions extends Component {
                 <thead>
                     <tr>
                         <th>
-                           <h1 className="text-no-select full-width center-text ui-text">admin functions</h1> 
+                           <h1 className="text-no-select full-width center-text ui-text">Admin Functions</h1> 
                         </th>
                     </tr>
                 </thead>
                 <tbody>
                     <tr>
                         <td>
-                            <button className="full-width button" onClick={this.runAllUsers}>run all users</button>
+                            <button className="full-width button" onClick={this.runAllUsers}>Run All Users</button>
                         </td>
                     </tr>
                     <tr>
                         <td>
-                            <button className="full-width button" onClick={this.runStats}>run stats</button>
+                            <button className="full-width button" onClick={this.runStats}>Run Stats</button>
                         </td>
                     </tr>
                 </tbody>

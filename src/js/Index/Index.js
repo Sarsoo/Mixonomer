@@ -14,29 +14,29 @@ class Index extends Component{
                 <thead>
                     <tr>
                         <th>
-                            <h1 className="center-text text-no-select">music tools</h1>
+                            <h1 className="center-text text-no-select">Music Tools</h1>
                         </th>
                     </tr>
                 </thead>
                 <tbody>
                     <tr>
                         <td className="center-text text-no-select ui-text" style={{fontSize: "20px"}}>
-                            construct spotify playlists from selections of other playlists
+                            Construct spotify playlists from selections of other playlists
                         </td>
                     </tr>
                     <tr>
                         <td className="center-text text-no-select ui-text">
-                            group sub-genre playlists
+                            Group sub-genre playlists
                         </td>
                     </tr>
                     <tr>
                         <td className="center-text text-no-select ui-text">
-                            optionally append auto-generated recommendations
+                            Optionally append auto-generated recommendations
                         </td>
                     </tr>
                     <tr>
                         <td className="center-text text-no-select ui-text">
-                            <br></br>playlists are run multiple times a day
+                            <br></br>Playlists are run multiple times a day
                         </td>
                     </tr>
                 </tbody>

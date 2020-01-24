@@ -86,7 +86,7 @@ class ScratchView extends Component{
             });
         })
         .catch((error) => {
-            showMessage(`error getting playlists (${error.response.status})`);
+            showMessage(`Error Getting Playlists (${error.response.status})`);
         });
     }
 
@@ -141,11 +141,11 @@ class ScratchView extends Component{
                     newPlaylistName: ''
                 });
             }else{
-                showMessage('playlist already added');  
+                showMessage('Playlist Already Added');  
             }
 
         }else{
-            showMessage('enter playlist name');
+            showMessage('Enter Playlist Name');
         }
     }
 
@@ -173,11 +173,11 @@ class ScratchView extends Component{
                 });
 
             }else{
-                showMessage('playlist already added');  
+                showMessage('Playlist Already Added');  
             }
 
         }else{
-            showMessage('no other playlists to add');   
+            showMessage('No Other Playlists To Add');   
         }
     }
 
@@ -218,19 +218,19 @@ class ScratchView extends Component{
                         add_last_month: this.state.add_last_month
                     })
                     .then((reponse) => {
-                        showMessage(`played`);
+                        showMessage(`Played`);
                     })
                     .catch((error) => {
-                        showMessage(`error playing (${error.response.status})`);
+                        showMessage(`Error Playing (${error.response.status})`);
                     });
                 }else{
-                    showMessage(`link spotify before running`);
+                    showMessage(`Link Spotify Before Running`);
                 }
             }).catch((error) => {
-                showMessage(`error playing (${error.response.status})`);
+                showMessage(`Error Playing (${error.response.status})`);
             });
         }else{
-            showMessage(`add either playlists or parts`);
+            showMessage(`Add Either Playlists Or Parts`);
         }
     }
 
@@ -250,7 +250,7 @@ class ScratchView extends Component{
                 <tbody>
                     <tr>
                         <td colSpan="2" className="center-text ui-text text-no-select" style={{fontStyle: "italic"}}>
-                            <br></br>spotify playlist can be the name of either your own created playlist or one you follow, names are case sensitive
+                            <br></br>Spotify playlist can be the name of either your own created playlist or one you follow, names are case sensitive
                         </td>
                     </tr>
                     <tr>
@@ -260,10 +260,10 @@ class ScratchView extends Component{
                                 className="full-width" 
                                 value={this.state.newPlaylistName} 
                                 onChange={this.handleInputChange}
-                                placeholder="spotify playlist name"></input>
+                                placeholder="Spotify Playlist Name"></input>
                         </td>
                         <td>
-                            <button className="button full-width" onClick={this.handleAddPart}>add</button>
+                            <button className="button full-width" onClick={this.handleAddPart}>Add</button>
                         </td>
                     </tr>
                     <tr>
@@ -278,12 +278,12 @@ class ScratchView extends Component{
                             </select>
                         </td>
                         <td>
-                            <button className="button full-width" onClick={this.handleAddReference}>add</button>
+                            <button className="button full-width" onClick={this.handleAddReference}>Add</button>
                         </td>
                     </tr>
                     <tr>
                         <td className="center-text ui-text text-no-select">
-                            shuffle output?
+                            Shuffle Output
                         </td>
                         <td>
                             <input type="checkbox"
@@ -294,7 +294,7 @@ class ScratchView extends Component{
                     </tr>
                     <tr>
                         <td className="center-text ui-text text-no-select">
-                            include recommendations?
+                            Include Recommendations
                         </td>
                         <td>
                             <input type="checkbox"
@@ -305,7 +305,7 @@ class ScratchView extends Component{
                     </tr>
                     <tr>
                         <td className="center-text ui-text text-no-select">
-                            number of recommendations
+                            Recommendation Size
                         </td>
                         <td>
                         <input type="number" 
@@ -318,7 +318,7 @@ class ScratchView extends Component{
                     { this.state.type == 'recents' &&
                     <tr>
                         <td className="center-text ui-text text-no-select">
-                            added since (days)
+                            Added Since (Days)
                         </td>
                         <td>
                             <input type="number" 
@@ -332,7 +332,7 @@ class ScratchView extends Component{
                     { this.state.type == 'recents' &&
                     <tr>
                         <td className="center-text ui-text text-no-select">
-                            include {thisMonth[date.getMonth()]} playlist
+                            Include {thisMonth[date.getMonth()]} Playlist
                         </td>
                         <td>
                             <input type="checkbox" 
@@ -344,7 +344,7 @@ class ScratchView extends Component{
                     { this.state.type == 'recents' &&
                     <tr>
                         <td className="center-text ui-text text-no-select">
-                            include {lastMonth[date.getMonth()]} playlist
+                            Include {lastMonth[date.getMonth()]} Playlist
                         </td>
                         <td>
                             <input type="checkbox" 
@@ -355,15 +355,15 @@ class ScratchView extends Component{
                     }
                     <tr>
                         <td className="center-text ui-text text-no-select">
-                            playlist type
+                            Type
                         </td>
                         <td>
                             <select className="full-width" 
                                     name="type" 
                                     onChange={this.handleInputChange}
                                     value={this.state.type}>
-                                <option value="default">default</option>
-                                <option value="recents">recents</option>
+                                <option value="default">Default</option>
+                                <option value="recents">Recents</option>
                             </select>
                         </td>
                     </tr>
@@ -402,7 +402,7 @@ function Row (props) {
     return (
         <tr>
             <td className="ui-text center-text text-no-select">{ props.part }</td>
-            <td><button className="ui-text center-text button full-width" onClick={(e) => props.handler(props.part, e)}>remove</button></td>
+            <td><button className="ui-text center-text button full-width" onClick={(e) => props.handler(props.part, e)}>Remove</button></td>
         </tr>
     );
 }

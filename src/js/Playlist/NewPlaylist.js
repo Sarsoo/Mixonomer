@@ -25,12 +25,12 @@ class NewPlaylist extends Component {
         switch(value){
             case 'default':
                 this.setState({
-                    description: 'merge playlists as-is with deduplication by spotify id'
+                    description: 'Merge playlists as-is with deduplication by spotify id'
                 })
                 break;
             case 'recents':
                 this.setState({
-                    description: "select songs from playlists which have been added since a variable number of days"
+                    description: "Select songs from playlists which have been added since a variable number of days"
                 })
                 break;
         }
@@ -64,19 +64,19 @@ class NewPlaylist extends Component {
                         shuffle: false,
                         type: this.state.type,
                     }).then((response) => {
-                        showMessage(`${this.state.name} created`);
+                        showMessage(`${this.state.name} Created`);
                     }).catch((error) => {
-                        showMessage(`error creating playlist (${error.response.status})`);
+                        showMessage(`Error Creating Playlist (${error.response.status})`);
                     });
                 }else{
-                    showMessage('named playlist already exists');
+                    showMessage('Named Playlist Already Exists');
                 }
             })
             .catch((error) => {
-                showMessage(`error getting playlists (${error.response.status})`);
+                showMessage(`Error Getting Playlists (${error.response.status})`);
             });
         }else{
-            showMessage('enter name');
+            showMessage('Enter Name');
         }
     }
 
@@ -86,7 +86,7 @@ class NewPlaylist extends Component {
                 <thead>
                     <tr>
                         <th colSpan="2">
-                            <h1 className="ui-text center-text text-no-select">new playlist</h1>
+                            <h1 className="ui-text center-text text-no-select">New Playlist</h1>
                         </th>
                     </tr>
                 </thead>
@@ -94,8 +94,8 @@ class NewPlaylist extends Component {
                     <tr>
                         <td>
                             <select className="full-width" name="type" onChange={this.handleInputChange}>
-                                <option value="default">default</option>
-                                <option value="recents">recents</option>
+                                <option value="default">Default</option>
+                                <option value="recents">Recents</option>
                             </select>
                         </td>
                         <td>
@@ -105,12 +105,12 @@ class NewPlaylist extends Component {
                                 type="text" 
                                 value={this.state.name} 
                                 onChange={this.handleInputChange}
-                                placeholder="name"/>
+                                placeholder="Name"/>
                         </td>
                     </tr>
                     <tr>
                         <td colSpan="2">
-                            <input type="submit" className="button full-width" onClick={this.handleSubmit} value="create" />
+                            <input type="submit" className="button full-width" onClick={this.handleSubmit} value="Create" />
                         </td>
                     </tr>
                     <tr>

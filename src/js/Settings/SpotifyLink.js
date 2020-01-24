@@ -32,13 +32,13 @@ class SpotifyLink extends Component {
             <table className="app-table max-width">
                 <thead>
                     <tr>
-                        <th><h1 className="ui-text center-text text-no-select">spotify link status</h1></th>
+                        <th><h1 className="ui-text center-text text-no-select">Spotify Link</h1></th>
                     </tr>
                 </thead>
                 <tbody>
                     <tr>
                         <td className="ui-text center-text text-no-select">
-                            status: { this.state.spotify_linked ? "linked" : "unlinked" }
+                            Status: { this.state.spotify_linked ? "Linked" : "Unlinked" }
                         </td>
                     </tr>
                     <tr>
@@ -49,18 +49,18 @@ class SpotifyLink extends Component {
                 </tbody>
             </table>;
 
-        const loadingMessage = <p className="center-text text-no-select">loading...</p>;
+        const loadingMessage = <p className="center-text text-no-select">Loading...</p>;
 
         return this.state.isLoading ? loadingMessage : table;
     }
 }
 
 function AuthButton(props) {
-    return <a className="button full-width" href="/auth/spotify">auth</a>;
+    return <a className="button full-width" href="/auth/spotify">Auth</a>;
 }
 
 function DeAuthButton(props) {
-    return <a className="button full-width" href="/auth/spotify/deauth">de-auth</a>;
+    return <a className="button full-width" href="/auth/spotify/deauth">De-Auth</a>;
 }
 
 export default SpotifyLink;

@@ -14,7 +14,7 @@ import showMessage from "./Toast.js"
 
 const axios = require('axios');
 
-class PlaylistManager extends Component {
+class MusicTools extends Component {
 
     constructor(props){
         super(props);
@@ -56,12 +56,12 @@ class PlaylistManager extends Component {
                 <div className="card pad-12">
                     <table className="sidebar pad-3">
                         <tbody>
-                        <tr><td><span><Link to="/app">home</Link></span></td></tr>
-                        <tr><td><Link to="/app/playlists">playlists</Link></td></tr>
-                        <tr><td><Link to="/app/maths/count">maths</Link></td></tr>
-                        <tr><td><Link to="/app/settings/password">settings</Link></td></tr>
-                        { this.state.type == 'admin' && <tr><td><Link to="/app/admin/lock">admin</Link></td></tr> }
-                        <tr><td><a href="/auth/logout">logout</a></td></tr>
+                        <tr><td><span><Link to="/app">Home</Link></span></td></tr>
+                        <tr><td><Link to="/app/playlists">Playlists</Link></td></tr>
+                        <tr><td><Link to="/app/maths/count">Maths</Link></td></tr>
+                        <tr><td><Link to="/app/settings/password">Settings</Link></td></tr>
+                        { this.state.type == 'admin' && <tr><td><Link to="/app/admin/lock">Admin</Link></td></tr> }
+                        <tr><td><a href="/auth/logout">Logout</a></td></tr>
                         <tr><td><a href="https://sarsoo.xyz">sarsoo.xyz</a></td></tr>
                         </tbody>
                     </table>
@@ -87,4 +87,4 @@ class PlaylistManager extends Component {
 
 }
 
-export default PlaylistManager;
+export default MusicTools;

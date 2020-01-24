@@ -69,12 +69,12 @@ class LastFM extends Component {
                 <table className="app-table max-width">
                     <thead>
                         <tr>
-                            <th colSpan="2"><h1 className="ui-text center-text text-no-select">last.fm username</h1></th>
+                            <th colSpan="2"><h1 className="ui-text center-text text-no-select">Last.fm Username</h1></th>
                         </tr>
                     </thead>
                     <tbody>
                     <tr>
-                        <td className="ui-text center-text text-no-select">username:</td>
+                        <td className="ui-text center-text text-no-select">Username:</td>
                         <td><input 
                                 type="text" 
                                 name="current" 
@@ -89,7 +89,7 @@ class LastFM extends Component {
                 </table>
             </form>;
 
-        const loadingMessage = <p className="center-text text-no-select">loading...</p>;
+        const loadingMessage = <p className="center-text text-no-select">Loading...</p>;
 
         return this.state.isLoading ? loadingMessage : table;
     }

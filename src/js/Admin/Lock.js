@@ -26,7 +26,7 @@ class Lock extends Component {
             })
         })
         .catch((error) => {
-            showMessage(`error getting users info (${error.response.status})`);
+            showMessage(`Error Getting User Info (${error.response.status})`);
         });
     }
 
@@ -36,7 +36,7 @@ class Lock extends Component {
             locked: to_state
         }).catch((error) => {
             var lockMessage = to_state ? 'locking' : 'unlocking';
-            showMessage(`error ${lockMessage} ${username} (${error.response.status})`);
+            showMessage(`Error ${lockMessage} ${username} (${error.response.status})`);
         }).finally(() => {
             this.getUserInfo();
         });
@@ -53,7 +53,7 @@ class Lock extends Component {
                         <tr>
                             <th colSpan='3'>
                                 <h1 className="text-no-select">
-                                    account locks
+                                    Account Locks
                                 </h1>
                             </th>
                         </tr>
@@ -78,7 +78,7 @@ function Row(props){
             <td style={{width: "30%"}}>
                 <button className="button full-width"
                         onClick={(e) => props.handler(e, props.account.username, !props.account.locked)}>
-                            {props.account.locked ? "unlock" : "lock"}
+                            {props.account.locked ? "Unlock" : "Lock"}
                 </button>
             </td>
         </tr>

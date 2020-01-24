@@ -11,9 +11,9 @@ class Settings extends Component {
         return (
             <div>
                 <ul className="navbar" style={{width: "100%"}}>
-                    <li><Link to={`${this.props.match.url}/password`}>password</Link></li>
-                    <li><Link to={`${this.props.match.url}/spotify`}>spotify</Link></li>
-                    <li><Link to={`${this.props.match.url}/lastfm`}>last.fm</Link></li>
+                    <li><Link to={`${this.props.match.url}/password`}>Password</Link></li>
+                    <li><Link to={`${this.props.match.url}/spotify`}>Spotify</Link></li>
+                    <li><Link to={`${this.props.match.url}/lastfm`}>Last.fm</Link></li>
                 </ul>
                 
                 <Route path={`${this.props.match.url}/password`} component={ChangePassword} />

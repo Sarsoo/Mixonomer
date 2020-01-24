@@ -40,24 +40,24 @@ class Count extends Component {
                     isLoading: false
                 })
             }else{
-                showMessage('no stats for this playlist');
+                showMessage('No Stats For This Playlist');
             }
         })
         .catch((error) => {
-            showMessage(`error getting playlist info (${error.response.status})`);
+            showMessage(`Error Getting Playlist Info (${error.response.status})`);
         });
     }
 
     updateStats(){
         axios.get(`/api/spotfm/playlist/refresh?name=${ this.state.name }`)
         .then((response) => {
-            showMessage('stats refresh queued');
+            showMessage('Stats Refresh Queued');
         })
         .catch((error) => {
             if(error.response.status == 401){
-                showMessage('missing either spotify or last.fm link');
+                showMessage('Missing Either Spotify or Last.fm link');
             }else{
-                showMessage(`error refreshing (${error.response.status})`);
+                showMessage(`Error Refreshing (${error.response.status})`);
             }
         });
     }
@@ -66,24 +66,24 @@ class Count extends Component {
         return (
             <tbody>
                 <tr>
-                    <td className="ui-text center-text text-no-select">scrobble count: <b>{this.state.playlist.lastfm_stat_count.toLocaleString()} / {this.state.playlist.lastfm_stat_percent}%</b></td>
+                    <td className="ui-text center-text text-no-select">Scrobble Count: <b>{this.state.playlist.lastfm_stat_count.toLocaleString()} / {this.state.playlist.lastfm_stat_percent}%</b></td>
                 </tr>
                 <tr>
-                    <td className="ui-text center-text text-no-select">album count: <b>{this.state.playlist.lastfm_stat_album_count.toLocaleString()} / {this.state.playlist.lastfm_stat_album_percent}%</b></td>
+                    <td className="ui-text center-text text-no-select">Album Count: <b>{this.state.playlist.lastfm_stat_album_count.toLocaleString()} / {this.state.playlist.lastfm_stat_album_percent}%</b></td>
                 </tr>
                 <tr>
-                    <td className="ui-text center-text text-no-select">artist count: <b>{this.state.playlist.lastfm_stat_artist_count.toLocaleString()} / {this.state.playlist.lastfm_stat_artist_percent}%</b></td>
+                    <td className="ui-text center-text text-no-select">Artist Count: <b>{this.state.playlist.lastfm_stat_artist_count.toLocaleString()} / {this.state.playlist.lastfm_stat_artist_percent}%</b></td>
                 </tr>
                 <tr>
-                    <td className="ui-text center-text text-no-select">last updated <b>{this.state.playlist.lastfm_stat_last_refresh.toLocaleString()}</b></td>
+                    <td className="ui-text center-text text-no-select">Last Updated <b>{this.state.playlist.lastfm_stat_last_refresh.toLocaleString()}</b></td>
                 </tr>
                 <tr>
                     <td>
                         <PieChart data={[{
-                                "label": `${this.state.playlist.name} tracks`,
+                                "label": `${this.state.playlist.name} Tracks`,
                                 "value": this.state.playlist.lastfm_stat_percent
                             },{
-                                "label": 'other',
+                                "label": 'Other',
                                 "value": 100 - this.state.playlist.lastfm_stat_percent
                             }]} 
                             title={this.state.playlist.name}/>
@@ -92,10 +92,10 @@ class Count extends Component {
                 <tr>
                     <td>
                         <PieChart data={[{
-                                "label": `${this.state.playlist.name} albums`,
+                                "label": `${this.state.playlist.name} Albums`,
                                 "value": this.state.playlist.lastfm_stat_album_percent
                             },{
-                                "label": 'other',
+                                "label": 'Other',
                                 "value": 100 - this.state.playlist.lastfm_stat_album_percent
                             }]} 
                             title={this.state.playlist.name}/>
@@ -104,10 +104,10 @@ class Count extends Component {
                 <tr>
                     <td>
                         <PieChart data={[{
-                                "label": `${this.state.playlist.name} artists`,
+                                "label": `${this.state.playlist.name} Artists`,
                                 "value": this.state.playlist.lastfm_stat_artist_percent
                             },{
-                                "label": 'other',
+                                "label": 'Other',
                                 "value": 100 - this.state.playlist.lastfm_stat_artist_percent
                             }]} 
                             title={this.state.playlist.name}/>
@@ -115,7 +115,7 @@ class Count extends Component {
                 </tr>
                 <tr>
                     <td colSpan="2">
-                        <button style={{width: "100%"}} className="button" onClick={this.updateStats}>update</button>
+                        <button style={{width: "100%"}} className="button" onClick={this.updateStats}>Update</button>
                     </td>
                 </tr>
             </tbody>

@@ -106,7 +106,7 @@ class Edit extends Component{
             });
         }))
         .catch((error) => {
-            showMessage(`error getting playlist info (${error.response.status})`);
+            showMessage(`Error Getting Playlist Info (${error.response.status})`);
         });
     }
 
@@ -152,7 +152,7 @@ class Edit extends Component{
             name: this.state.name,
             day_boundary: parseInt(boundary)
         }).catch((error) => {
-            showMessage(`error updating boundary value (${error.response.status})`);
+            showMessage(`Error Updating Boundary Value (${error.response.status})`);
         });
     }
 
@@ -167,7 +167,7 @@ class Edit extends Component{
             name: this.state.name,
             recommendation_sample: parseInt(sample)
         }).catch((error) => {
-            showMessage(`error updating rec. sample value (${error.response.status})`);
+            showMessage(`Error Updating Rec. Sample Value (${error.response.status})`);
         });
     }
 
@@ -176,7 +176,7 @@ class Edit extends Component{
             name: this.state.name,
             type: sample
         }).catch((error) => {
-            showMessage(`error updating type (${error.response.status})`);
+            showMessage(`Error Updating Type (${error.response.status})`);
         });
     }
 
@@ -188,7 +188,7 @@ class Edit extends Component{
             name: this.state.name,
             shuffle: event.target.checked
         }).catch((error) => {
-            showMessage(`error updating shuffle value (${error.response.status})`);
+            showMessage(`Error Updating Shuffle Value (${error.response.status})`);
         });
     }
 
@@ -200,7 +200,7 @@ class Edit extends Component{
             name: this.state.name,
             add_this_month: event.target.checked
         }).catch((error) => {
-            showMessage(`error updating add this month (${error.response.status})`);
+            showMessage(`Error Updating Add This Month (${error.response.status})`);
         });
     }
 
@@ -212,7 +212,7 @@ class Edit extends Component{
             name: this.state.name,
             add_last_month: event.target.checked
         }).catch((error) => {
-            showMessage(`error updating add last month (${error.response.status})`);
+            showMessage(`Error Updating Add Last Month (${error.response.status})`);
         });
     }
 
@@ -224,7 +224,7 @@ class Edit extends Component{
             name: this.state.name,
             include_recommendations: event.target.checked
         }).catch((error) => {
-            showMessage(`error updating rec. value (${error.response.status})`);
+            showMessage(`Error Updating Rec. Value (${error.response.status})`);
         });
     }
 
@@ -236,7 +236,7 @@ class Edit extends Component{
             name: this.state.name,
             include_library_tracks: event.target.checked
         }).catch((error) => {
-            showMessage(`error updating library tracks (${error.response.status})`);
+            showMessage(`Error Updating Library Tracks (${error.response.status})`);
         });
     }
 
@@ -245,7 +245,7 @@ class Edit extends Component{
             name: this.state.name,
             chart_range: value
         }).catch((error) => {
-            showMessage(`error updating chart range (${error.response.status})`);
+            showMessage(`Error Updating Chart Range (${error.response.status})`);
         });
     }
 
@@ -254,7 +254,7 @@ class Edit extends Component{
             name: this.state.name,
             chart_limit: parseInt(value)
         }).catch((error) => {
-            showMessage(`error updating limit (${error.response.status})`);
+            showMessage(`Error Updating Limit (${error.response.status})`);
         });
     }
 
@@ -282,14 +282,14 @@ class Edit extends Component{
                     name: this.state.name,
                     parts: parts
                 }).catch((error) => {
-                    showMessage(`error adding part (${error.response.status})`);
+                    showMessage(`Error Adding Part (${error.response.status})`);
                 });
             }else{
-                showMessage('playlist already added');  
+                showMessage('Playlist Already Added');  
             }
 
         }else{
-            showMessage('enter playlist name');
+            showMessage('Enter Playlist Name');
         }
     }
 
@@ -319,15 +319,15 @@ class Edit extends Component{
                     name: this.state.name,
                     playlist_references: playlist_references
                 }).catch((error) => {
-                    showMessage(`error adding reference (${error.response.status})`);
+                    showMessage(`Error Adding Reference (${error.response.status})`);
                 });
 
             }else{
-                showMessage('playlist already added');  
+                showMessage('Playlist Already Added');  
             }
 
         }else{
-            showMessage('no other playlists to add');   
+            showMessage('No Other Playlists to Add');   
         }
     }
 
@@ -346,7 +346,7 @@ class Edit extends Component{
             name: this.state.name,
             parts: parts
         }).catch((error) => {
-            showMessage(`error removing part (${error.response.status})`);
+            showMessage(`Error Removing Part (${error.response.status})`);
         });
     }
 
@@ -365,7 +365,7 @@ class Edit extends Component{
             name: this.state.name,
             playlist_references: playlist_references
         }).catch((error) => {
-            showMessage(`error removing reference (${error.response.status})`);
+            showMessage(`Error Removing Reference (${error.response.status})`);
         });
     }
 
@@ -375,16 +375,16 @@ class Edit extends Component{
             if(response.data.spotify_linked == true){
                 axios.get('/api/playlist/run', {params: {name: this.state.name}})
                 .then((reponse) => {
-                    showMessage(`${this.state.name} ran`);
+                    showMessage(`${this.state.name} Run`);
                 })
                 .catch((error) => {
-                    showMessage(`error running ${this.state.name} (${error.response.status})`);
+                    showMessage(`Error Running ${this.state.name} (${error.response.status})`);
                 });
             }else{
-                showMessage(`link spotify before running`);
+                showMessage(`Link Spotify Before Running`);
             }
         }).catch((error) => {
-            showMessage(`error running ${this.state.name} (${error.response.status})`);
+            showMessage(`Error Running ${this.state.name} (${error.response.status})`);
         });
     }
 
@@ -394,14 +394,14 @@ class Edit extends Component{
 
         const table = (
             <tbody>
-                { this.state.playlist_references.length > 0 && <tr><td colSpan="2" className="ui-text center-text text-no-select" style={{fontStyle: 'italic'}}>managed</td></tr> }
+                { this.state.playlist_references.length > 0 && <tr><td colSpan="2" className="ui-text center-text text-no-select" style={{fontStyle: 'italic'}}>Managed</td></tr> }
                 { this.state.playlist_references.length > 0 && <ListBlock handler={this.handleRemoveReference} list={this.state.playlist_references}/> }
 
-                { this.state.parts.length > 0 && <tr><td colSpan="2" className="ui-text center-text text-no-select" style={{fontStyle: 'italic'}}>spotify</td></tr> }
+                { this.state.parts.length > 0 && <tr><td colSpan="2" className="ui-text center-text text-no-select" style={{fontStyle: 'italic'}}>Spotify</td></tr> }
                 { this.state.parts.length > 0 && <ListBlock handler={this.handleRemovePart} list={this.state.parts}/> }
                 <tr>
                     <td colSpan="2" className="center-text ui-text text-no-select" style={{fontStyle: "italic"}}>
-                        <br></br>spotify playlist can be the name of either your own created playlist or one you follow, names are case sensitive
+                        <br></br>Spotify playlist can be the name of either your own created playlist or one you follow, names are case sensitive
                     </td>
                 </tr>
                 <tr>
@@ -411,10 +411,10 @@ class Edit extends Component{
                             className="full-width" 
                             value={this.state.newPlaylistName} 
                             onChange={this.handleInputChange}
-                            placeholder="spotify playlist name"></input>
+                            placeholder="Spotify Playlist Name"></input>
                     </td>
                     <td>
-                        <button className="button full-width" onClick={this.handleAddPart}>add</button>
+                        <button className="button full-width" onClick={this.handleAddPart}>Add</button>
                     </td>
                 </tr>
                 <tr>
@@ -429,12 +429,12 @@ class Edit extends Component{
                         </select>
                     </td>
                     <td>
-                        <button className="button full-width" onClick={this.handleAddReference}>add</button>
+                        <button className="button full-width" onClick={this.handleAddReference}>Add</button>
                     </td>
                 </tr>
                 <tr>
                     <td className="center-text ui-text text-no-select">
-                        shuffle output?
+                        Shuffle Output
                     </td>
                     <td>
                         <input type="checkbox" 
@@ -444,7 +444,7 @@ class Edit extends Component{
                 </tr>
                 <tr>
                     <td className="center-text ui-text text-no-select">
-                        include recommendations?
+                        Include Recommendations
                     </td>
                     <td>
                         <input type="checkbox" 
@@ -454,7 +454,7 @@ class Edit extends Component{
                 </tr>
                 <tr>
                     <td className="center-text ui-text text-no-select">
-                        include library tracks?
+                        Include Library Tracks
                     </td>
                     <td>
                         <input type="checkbox" 
@@ -464,7 +464,7 @@ class Edit extends Component{
                 </tr>
                 <tr>
                     <td className="center-text ui-text text-no-select">
-                        number of recommendations
+                        Recommendation Size
                     </td>
                     <td>
                     <input type="number" 
@@ -478,7 +478,7 @@ class Edit extends Component{
                 { this.state.type == 'fmchart' &&
                 <tr>
                     <td className="center-text ui-text text-no-select">
-                        limit
+                        Chart Size
                     </td>
                     <td>
                         <input type="number" 
@@ -492,19 +492,19 @@ class Edit extends Component{
                 { this.state.type == 'fmchart' &&
                 <tr>
                     <td className="center-text ui-text text-no-select">
-                        chart range
+                        Chart Range
                     </td>
                     <td>
                         <select className="full-width" 
                                     name="chart_range" 
                                     onChange={this.handleInputChange}
                                     value={this.state.chart_range}>
-                                <option value="WEEK">7 day</option>
-                                <option value="MONTH">30 day</option>
-                                <option value="QUARTER">90 day</option>
-                                <option value="HALFYEAR">180 day</option>
-                                <option value="YEAR">365 day</option>
-                                <option value="OVERALL">overall</option>
+                                <option value="WEEK">7 Day</option>
+                                <option value="MONTH">30 Day</option>
+                                <option value="QUARTER">90 Day</option>
+                                <option value="HALFYEAR">180 Day</option>
+                                <option value="YEAR">365 Day</option>
+                                <option value="OVERALL">Overall</option>
                             </select>
                     </td>
                 </tr>
@@ -513,7 +513,7 @@ class Edit extends Component{
                 { this.state.type == 'recents' &&
                 <tr>
                     <td className="center-text ui-text text-no-select">
-                        added since (days)
+                        Added Since (days)
                     </td>
                     <td>
                         <input type="number" 
@@ -527,7 +527,7 @@ class Edit extends Component{
                 { this.state.type == 'recents' &&
                 <tr>
                     <td className="center-text ui-text text-no-select">
-                        include {thisMonth[date.getMonth()]} playlist
+                        Include {thisMonth[date.getMonth()]} Playlist
                     </td>
                     <td>
                         <input type="checkbox" 
@@ -539,7 +539,7 @@ class Edit extends Component{
                 { this.state.type == 'recents' &&
                 <tr>
                     <td className="center-text ui-text text-no-select">
-                        include {lastMonth[date.getMonth()]} playlist
+                        Include {lastMonth[date.getMonth()]} Playlist
                     </td>
                     <td>
                         <input type="checkbox" 
@@ -552,22 +552,22 @@ class Edit extends Component{
 
                 <tr>
                     <td className="center-text ui-text text-no-select">
-                        playlist type
+                        Type
                     </td>
                     <td>
                         <select className="full-width" 
                                 name="type" 
                                 onChange={this.handleInputChange}
                                 value={this.state.type}>
-                            <option value="default">default</option>
-                            <option value="recents">recents</option>
-                            <option value="fmchart">last.fm chart</option>
+                            <option value="default">Default</option>
+                            <option value="recents">Recents</option>
+                            <option value="fmchart">Last.fm Chart</option>
                         </select>
                     </td>
                 </tr>
                 <tr>
                     <td colSpan="2">
-                        <button className="button full-width" onClick={this.handleRun}>run</button>
+                        <button className="button full-width" onClick={this.handleRun}>Run</button>
                     </td>
                 </tr>
             </tbody>
@@ -577,7 +577,7 @@ class Edit extends Component{
             <tbody>
                 <tr>
                     <td>
-                        <p className="center-text">loading...</p>
+                        <p className="center-text">Loading...</p>
                     </td>
                 </tr>
             </tbody>;
@@ -599,7 +599,7 @@ function Row (props) {
     return (
         <tr>
             <td className="ui-text center-text text-no-select">{ props.part }</td>
-            <td><button className="ui-text center-text button full-width" onClick={(e) => props.handler(props.part, e)}>remove</button></td>
+            <td><button className="ui-text center-text button full-width" onClick={(e) => props.handler(props.part, e)}>Remove</button></td>
         </tr>
     );
 }

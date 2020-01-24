@@ -25,7 +25,7 @@ class Tasks extends Component {
             });
         })
         .catch((error) => {
-            showMessage(`error getting tasks (${error.response.status})`);
+            showMessage(`Error Getting Tasks (${error.response.status})`);
         });
     }
 
@@ -35,7 +35,7 @@ class Tasks extends Component {
                 <thead>
                     <tr>
                         <th>
-                           <h1 className="text-no-select full-width center-text ui-text">running tasks</h1> 
+                           <h1 className="text-no-select full-width center-text ui-text">Running Tasks</h1> 
                         </th>
                     </tr>
                 </thead>
@@ -43,7 +43,7 @@ class Tasks extends Component {
                 <tbody>
                     <tr>
                         <td className="text-no-select full-width center-text ui-text" colSpan='2'>
-                            <b>{this.state.total_tasks}</b> running tasks
+                            <b>{this.state.total_tasks}</b> Currently Running
                         </td>
                     </tr>
                 </tbody>
