@@ -1,13 +1,6 @@
 import React, { Component } from "react";
 import { BrowserRouter as Router, Route, Link, Switch, Redirect} from "react-router-dom";
 
-import Index from "./Index/Index.js";
-import Maths from "./Maths/Maths.js";
-import Playlists from "./Playlist/Playlists.js";
-import PlaylistView from "./Playlist/View/View.js";
-import Settings from "./Settings/Settings.js";
-import Admin from "./Admin/Admin.js";
-
 import NotFound from "./Error/NotFound.js";
 
 import showMessage from "./Toast.js"
@@ -32,6 +25,13 @@ import HomeIcon from '@material-ui/icons/Home';
 import { Build, PieChart, QueueMusic, ExitToApp, AccountCircle, KeyboardBackspace } from '@material-ui/icons'
 
 const axios = require('axios');
+
+const LazyIndex = React.lazy(() => import("./Index/Index"))
+const LazyMaths = React.lazy(() => import("./Maths/Maths"))
+const LazyPlaylists = React.lazy(() => import("./Playlist/Playlists"))
+const LazyPlaylistView = React.lazy(() => import("./Playlist/View/View"))
+const LazySettings = React.lazy(() => import("./Settings/Settings"))
+const LazyAdmin = React.lazy(() => import("./Admin/Admin"))
 
 class MusicTools extends Component {
 
@@ -88,7 +88,7 @@ class MusicTools extends Component {
                         <MenuIcon />
                         </IconButton>
                         <Typography variant="h6">
-                            Music Tools
+                            <Link to='/app/playlists' style={{textDecoration: 'none'}}>Music Tools</Link>
                         </Typography>
                     </Toolbar>
                     </AppBar>
@@ -137,25 +137,28 @@ class MusicTools extends Component {
                         </List>
                     </Drawer>
                 </ThemeProvider>
-                    <div className="pad-12">
+                    <div className="full-width">
                         <Switch>
-                            <Route path="/app" exact component={Index} />
-                            <Route path="/app/playlists" component={Playlists} />
-                            <Route path="/app/maths" component={Maths} />
-                            <Route path="/app/settings" component={Settings} />
-                            { this.state.type == 'admin' && <Route path="/app/admin" component={Admin} /> }
-                            <Route path='/app/playlist/:name' component={PlaylistView} />
+                            <React.Suspense fallback={<LoadingMessage/>}>
+                                <Route path="/app" exact component={LazyIndex} />
+                                <Route path="/app/playlists" component={LazyPlaylists} />
+                                <Route path="/app/maths" component={LazyMaths} />
+                                <Route path="/app/settings" component={LazySettings} />
+                                { this.state.type == 'admin' && <Route path="/app/admin" component={LazyAdmin} /> }
+                                <Route path='/app/playlist/:name' component={LazyPlaylistView} />
+                            </React.Suspense>
                             <Route component={NotFound} />
                         </Switch>
                     </div>
                 </div>
-                <footer>
-                    <a href="https://github.com/Sarsoo/spotify-web">view source code</a>
-                </footer>
             </Router>
         );
     }
 
+}
+
+function LoadingMessage(props) {
+    return <ThemeProvider theme={GlobalTheme}><Typography variant="h5" component="h2" className="ui-text center-text">Loading...</Typography></ThemeProvider>;
 }
 
 export default MusicTools;

@@ -1,6 +1,5 @@
 import React, { Component } from "react";
 import { BrowserRouter as Router, Route, Link, Switch } from "react-router-dom";
-const axios = require('axios');
 
 import PlaylistsView from "./PlaylistsView.js"
 import NewPlaylist from "./NewPlaylist.js";

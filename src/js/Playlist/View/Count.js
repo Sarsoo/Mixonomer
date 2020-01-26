@@ -2,7 +2,8 @@ import React, { Component } from "react";
 const axios = require('axios');
 
 import showMessage from "../../Toast.js"
-import PieChart from "../../Maths/PieChart.js";
+
+const LazyPieChart = React.lazy(() => import("../../Maths/PieChart"))
 
 class Count extends Component {
 
@@ -63,7 +64,9 @@ class Count extends Component {
     }
 
     render() {
+        const loadingMessage = <ThemeProvider theme={GlobalTheme}><Typography variant="h5" component="h2" className="ui-text center-text">Loading...</Typography></ThemeProvider>;
         return (
+            <React.Suspense fallback={<loadingMessage/>}>
             <tbody>
                 <tr>
                     <td className="ui-text center-text text-no-select">Scrobble Count: <b>{this.state.playlist.lastfm_stat_count.toLocaleString()} / {this.state.playlist.lastfm_stat_percent}%</b></td>
@@ -79,7 +82,7 @@ class Count extends Component {
                 </tr>
                 <tr>
                     <td>
-                        <PieChart data={[{
+                        <LazyPieChart data={[{
                                 "label": `${this.state.playlist.name} Tracks`,
                                 "value": this.state.playlist.lastfm_stat_percent
                             },{
@@ -91,7 +94,7 @@ class Count extends Component {
                 </tr>
                 <tr>
                     <td>
-                        <PieChart data={[{
+                        <LazyPieChart data={[{
                                 "label": `${this.state.playlist.name} Albums`,
                                 "value": this.state.playlist.lastfm_stat_album_percent
                             },{
@@ -103,7 +106,7 @@ class Count extends Component {
                 </tr>
                 <tr>
                     <td>
-                        <PieChart data={[{
+                        <LazyPieChart data={[{
                                 "label": `${this.state.playlist.name} Artists`,
                                 "value": this.state.playlist.lastfm_stat_artist_percent
                             },{
@@ -119,6 +122,7 @@ class Count extends Component {
                     </td>
                 </tr>
             </tbody>
+            </React.Suspense>
         );
     }
 }

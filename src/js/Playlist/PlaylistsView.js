@@ -95,18 +95,18 @@ class PlaylistsView extends Component {
 
     render() {
         
-        const table =   <Table playlists={this.state.playlists} 
+        const grid =   <PlaylistGrid playlists={this.state.playlists} 
                             handleRunPlaylist={this.handleRunPlaylist} 
                             handleDeletePlaylist={this.handleDeletePlaylist}
                             handleRunAll={this.handleRunAll}/>;
 
-        const loadingMessage = <p className="center-text">loading...</p>;
+        const loadingMessage = <ThemeProvider theme={GlobalTheme}><Typography variant="h5" component="h2" className="ui-text center-text">Loading...</Typography></ThemeProvider>;
 
-        return this.state.isLoading ? loadingMessage : table;
+        return this.state.isLoading ? loadingMessage : grid;
     }
 }
 
-function Table(props){
+function PlaylistGrid(props){
     return (
         <ThemeProvider theme={GlobalTheme}>
         <Grid container 
@@ -120,7 +120,7 @@ function Table(props){
                     <Typography variant="h5" component="h2">No Playlists</Typography>
                 </Grid>
             ) : (
-                props.playlists.map((playlist) => <Row playlist={ playlist } 
+                props.playlists.map((playlist) => <PlaylistCard playlist={ playlist } 
                                                         handleRunPlaylist={props.handleRunPlaylist} 
                                                         handleDeletePlaylist={props.handleDeletePlaylist}
                                                         key={ playlist.name }/>) 
@@ -131,24 +131,23 @@ function Table(props){
     );
 }
 
-function Row(props){
+function PlaylistCard(props){
     return (
         <Grid item xs>
-                <Card>
-                    <CardContent>
-                        <Typography variant="h5" component="h2">
-                        { props.playlist.name }
-                        </Typography>
-                    </CardContent>
-                    {/* <Button variant="contained" color="primary" component={Link} to={getPlaylistLink(props.playlist.name)}>{ props.playlist.name }</Button> */}
-                    <CardActions>
-                        <ButtonGroup color="primary">
-                        <Button variant="contained" color="primary" component={Link} to={getPlaylistLink(props.playlist.name)}>View</Button>
-                        <Button variant="contained" color="primary" onClick={(e) => props.handleRunPlaylist(props.playlist.name, e)}>Run</Button>
-                        <Button variant="contained" color="primary" onClick={(e) => props.handleDeletePlaylist(props.playlist.name, e)}>Delete</Button>
-                        </ButtonGroup>
-                    </CardActions>
-                </Card>
+            <Card>
+                <CardContent>
+                    <Typography variant="h5" component="h2">
+                    { props.playlist.name }
+                    </Typography>
+                </CardContent>
+                <CardActions>
+                    <ButtonGroup color="primary">
+                    <Button variant="contained" component={Link} to={getPlaylistLink(props.playlist.name)}>View</Button>
+                    <Button variant="contained" onClick={(e) => props.handleRunPlaylist(props.playlist.name, e)}>Run</Button>
+                    <Button variant="contained" onClick={(e) => props.handleDeletePlaylist(props.playlist.name, e)}>Delete</Button>
+                    </ButtonGroup>
+                </CardActions>
+            </Card>
         </Grid>
     );
 }

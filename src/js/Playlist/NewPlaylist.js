@@ -1,5 +1,4 @@
 import React, { Component } from "react";
-import { BrowserRouter as Redirect } from "react-router-dom";
 const axios = require('axios');
 
 import showMessage from "../Toast.js"

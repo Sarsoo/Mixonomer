@@ -1,9 +1,12 @@
 import React, { Component } from "react";
-import { BrowserRouter as Router, Route, Link, Switch, Redirect} from "react-router-dom";
-const axios = require('axios');
+import { ThemeProvider, Typography } from "@material-ui/core";
+import { BrowserRouter as Route, Link} from "react-router-dom";
 
-import Edit from "./Edit.js";
-import Count from "./Count.js";
+import GlobalTheme from "../../Theme";
+
+const LazyEdit = React.lazy(() => import("./Edit"))
+const LazyCount = React.lazy(() => import("./Count"))
+
 
 class View extends Component{
 
@@ -25,12 +28,18 @@ class View extends Component{
                         </th>
                     </tr>
                 </thead>
-                <Route path={`${this.props.match.url}/edit`} render={(props) => <Edit {...props} name={this.props.match.params.name}/>} />
-                <Route path={`${this.props.match.url}/count`} render={(props) => <Count {...props} name={this.props.match.params.name}/>} />
+                <React.Suspense fallback={<LoadingMessage/>}>
+                    <Route path={`${this.props.match.url}/edit`} render={(props) => <LazyEdit {...props} name={this.props.match.params.name}/>} />
+                    <Route path={`${this.props.match.url}/count`} render={(props) => <LazyCount {...props} name={this.props.match.params.name}/>} />
+                </React.Suspense>
             </table>
         );
     }
 
+}
+
+function LoadingMessage(props) {
+    return <ThemeProvider theme={GlobalTheme}><Typography variant="h5" component="h2" className="ui-text center-text">Loading...</Typography></ThemeProvider>;
 }
 
 export default View;

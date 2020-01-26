@@ -1,5 +1,4 @@
 import React, { Component } from "react";
-const axios = require('axios');
 
 class Index extends Component{
 
@@ -11,13 +10,6 @@ class Index extends Component{
     render(){
         return (
             <table className="app-table">
-                <thead>
-                    <tr>
-                        <th>
-                            <h1 className="center-text text-no-select">Music Tools</h1>
-                        </th>
-                    </tr>
-                </thead>
                 <tbody>
                     <tr>
                         <td className="center-text text-no-select ui-text" style={{fontSize: "20px"}}>
