@@ -1,7 +1,9 @@
 import React, { Component } from "react";
+import { ThemeProvider, Typography } from "@material-ui/core";
 const axios = require('axios');
 
 import showMessage from "../../Toast.js"
+import GlobalTheme from "../../Theme";
 
 const LazyPieChart = React.lazy(() => import("../../Maths/PieChart"))
 
@@ -64,9 +66,7 @@ class Count extends Component {
     }
 
     render() {
-        const loadingMessage = <ThemeProvider theme={GlobalTheme}><Typography variant="h5" component="h2" className="ui-text center-text">Loading...</Typography></ThemeProvider>;
         return (
-            <React.Suspense fallback={<loadingMessage/>}>
             <tbody>
                 <tr>
                     <td className="ui-text center-text text-no-select">Scrobble Count: <b>{this.state.playlist.lastfm_stat_count.toLocaleString()} / {this.state.playlist.lastfm_stat_percent}%</b></td>
@@ -80,6 +80,7 @@ class Count extends Component {
                 <tr>
                     <td className="ui-text center-text text-no-select">Last Updated <b>{this.state.playlist.lastfm_stat_last_refresh.toLocaleString()}</b></td>
                 </tr>
+                <React.Suspense fallback={<LoadingMessage/>}>
                 <tr>
                     <td>
                         <LazyPieChart data={[{
@@ -121,10 +122,14 @@ class Count extends Component {
                         <button style={{width: "100%"}} className="button" onClick={this.updateStats}>Update</button>
                     </td>
                 </tr>
+                </React.Suspense>
             </tbody>
-            </React.Suspense>
         );
     }
+}
+
+function LoadingMessage(props) {
+    return <tr><td><ThemeProvider theme={GlobalTheme}><Typography variant="h5" component="h2" className="ui-text center-text">Loading...</Typography></ThemeProvider></td></tr>;
 }
 
 export default Count;
