@@ -27,11 +27,11 @@ import { Build, PieChart, QueueMusic, ExitToApp, AccountCircle, KeyboardBackspac
 const axios = require('axios');
 
 const LazyIndex = React.lazy(() => import("./Index/Index"))
-const LazyMaths = React.lazy(() => import("./Maths/Maths"))
-const LazyPlaylists = React.lazy(() => import("./Playlist/Playlists"))
-const LazyPlaylistView = React.lazy(() => import("./Playlist/View/View"))
-const LazySettings = React.lazy(() => import("./Settings/Settings"))
-const LazyAdmin = React.lazy(() => import("./Admin/Admin"))
+const LazyMaths = React.lazy(() => import("./Maths/MathsRouter"))
+const LazyPlaylists = React.lazy(() => import("./Playlist/AllPlaylistsRouter"))
+const LazyPlaylistView = React.lazy(() => import("./Playlist/View/PlaylistRouter"))
+const LazySettings = React.lazy(() => import("./Settings/SettingsRouter"))
+const LazyAdmin = React.lazy(() => import("./Admin/AdminRouter"))
 
 class MusicTools extends Component {
 
@@ -96,6 +96,7 @@ class MusicTools extends Component {
                         variant="persistent"
                         anchor="left"
                         open={this.state.drawerOpen}
+                        onClose={(e) => this.setOpen(false)}
                     >
                         <div>
                         <IconButton onClick={(e) => this.setOpen(false)}>
@@ -103,6 +104,11 @@ class MusicTools extends Component {
                         </IconButton>
                         </div>
                         <Divider />
+                        <div
+                        role="presentation"
+                        onClick={(e) => this.setOpen(false)}
+                        onKeyDown={(e) => this.setOpen(false)}
+                        >
                         <List>
                             <ListItem button key="home" component={Link} to='/app'>
                                 <ListItemIcon><HomeIcon /></ListItemIcon>
@@ -135,6 +141,7 @@ class MusicTools extends Component {
                                 <ListItemText primary="sarsoo.xyz" />
                             </ListItem>
                         </List>
+                        </div>
                     </Drawer>
                 </ThemeProvider>
                     <div className="full-width">

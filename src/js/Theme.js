@@ -2,12 +2,19 @@ import { createMuiTheme, responsiveFontSizes } from '@material-ui/core/styles';
 
 let GlobalTheme = createMuiTheme({
     root: {
-        flexGrow: 1,
-        },
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        spacing: 20
+    },
     typography: {
         button: {
         fontSize: '1rem',
         },
+    },
+    paper: {
+        display: 'flex',
+        spacing: 5
     },
     card: {
         display: 'flex',
@@ -19,12 +26,12 @@ let GlobalTheme = createMuiTheme({
             main: '#1a237e',
         },
         secondary: {
-            main: '#1a237e',
+            main: '#2196f3',
         }
     },
     status: {
         danger: 'orange',
-    },
+    }
 });
 GlobalTheme = responsiveFontSizes(GlobalTheme);
 

@@ -1,8 +1,8 @@
 import React, { Component } from "react";
 import { BrowserRouter as Router, Route, Link, Switch } from "react-router-dom";
 
-import PlaylistsView from "./PlaylistsView.js"
-import NewPlaylist from "./NewPlaylist.js";
+import PlaylistsView from "./PlaylistsList.js"
+import NewPlaylist from "./New.js";
 import ScratchView from  "./ScratchView.js";
 
 class Playlists extends Component {

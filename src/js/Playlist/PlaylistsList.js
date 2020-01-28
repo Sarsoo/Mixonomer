@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
-import { Button, ButtonGroup, Typography, Card, Grid } from '@material-ui/core';
+import { Button, ButtonGroup, Typography, Card, Grid, CircularProgress } from '@material-ui/core';
 import CardActions from '@material-ui/core/CardActions';
 import CardContent from '@material-ui/core/CardContent';
 import { ThemeProvider } from '@material-ui/core/styles';
@@ -100,9 +100,7 @@ class PlaylistsView extends Component {
                             handleDeletePlaylist={this.handleDeletePlaylist}
                             handleRunAll={this.handleRunAll}/>;
 
-        const loadingMessage = <ThemeProvider theme={GlobalTheme}><Typography variant="h5" component="h2" className="ui-text center-text">Loading...</Typography></ThemeProvider>;
-
-        return this.state.isLoading ? loadingMessage : grid;
+        return this.state.isLoading ? <CircularProgress /> : grid;
     }
 }
 

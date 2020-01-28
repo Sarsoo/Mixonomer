@@ -1,6 +1,11 @@
 import React, { Component } from "react";
 const axios = require('axios');
 
+import { Card, Paper, Button, CircularProgress, FormControl, TextField, Input, InputLabel, Select, Checkbox, FormControlLabel, IconButton, InputAdornment } from '@material-ui/core';
+import { ThemeProvider } from '@material-ui/core/styles';
+import { Add, Delete } from '@material-ui/icons';
+import GlobalTheme from "../../Theme.js" 
+
 import showMessage from "../../Toast.js";
 
 var thisMonth = [
@@ -33,7 +38,7 @@ var lastMonth = [
     'november'
 ];
 
-class Edit extends Component{
+export class Edit extends Component{
 
     constructor(props){
         super(props);
@@ -393,7 +398,8 @@ class Edit extends Component{
         var date = new Date();
 
         const table = (
-            <tbody>
+            <ThemeProvider theme={GlobalTheme}>
+            <Card>
                 { this.state.playlist_references.length > 0 && <tr><td colSpan="2" className="ui-text center-text text-no-select" style={{fontStyle: 'italic'}}>Managed</td></tr> }
                 { this.state.playlist_references.length > 0 && <ListBlock handler={this.handleRemoveReference} list={this.state.playlist_references}/> }
 
@@ -404,185 +410,146 @@ class Edit extends Component{
                         <br></br>Spotify playlist can be the name of either your own created playlist or one you follow, names are case sensitive
                     </td>
                 </tr>
+                <FormControl>
+                    <InputLabel htmlFor="newPlaylistName">Spotify Playlist</InputLabel>
+                    <Input
+                        id="newPlaylistName"
+                        name="newPlaylistName"
+                        type="text"
+                        value={this.state.newPlaylistName}
+                        onChange={this.handleInputChange}
+                        endAdornment={
+                        <InputAdornment position="end">
+                            <IconButton onClick={this.handleAddPart} >
+                                <Add/>
+                            </IconButton>
+                        </InputAdornment>
+                        }
+                    />
+                </FormControl>
                 <tr>
                     <td>
-                        <input type="text"
-                            name="newPlaylistName" 
-                            className="full-width" 
-                            value={this.state.newPlaylistName} 
+                        <FormControl variant="filled">
+                            <InputLabel htmlFor="chart_range">Managed Playlist</InputLabel>
+                            <Select
+                            native
+                            value={this.state.newReferenceName}
                             onChange={this.handleInputChange}
-                            placeholder="Spotify Playlist Name"></input>
-                    </td>
-                    <td>
-                        <button className="button full-width" onClick={this.handleAddPart}>Add</button>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <select name="newReferenceName" 
-                                className="full-width"
-                                value={this.state.newReferenceName}
-                                onChange={this.handleInputChange}>
+                            inputProps={{
+                                name: "newReferenceName",
+                                id: "newReferenceName",
+                            }}
+                            >
                             { this.state.playlists
                                 .filter((entry) => entry.name != this.state.name)
                                 .map((entry) => <ReferenceEntry name={entry.name} key={entry.name} />) }
-                        </select>
+                            </Select>
+                        </FormControl>
                     </td>
                     <td>
-                        <button className="button full-width" onClick={this.handleAddReference}>Add</button>
+                        <Button className="full-width" onClick={this.handleAddReference}>Add</Button>
                     </td>
                 </tr>
-                <tr>
-                    <td className="center-text ui-text text-no-select">
-                        Shuffle Output
-                    </td>
-                    <td>
-                        <input type="checkbox" 
-                            checked={this.state.shuffle}
-                            onChange={this.handleShuffleChange}></input>
-                    </td>
-                </tr>
-                <tr>
-                    <td className="center-text ui-text text-no-select">
-                        Include Recommendations
-                    </td>
-                    <td>
-                        <input type="checkbox" 
-                            checked={this.state.include_recommendations}
-                            onChange={this.handleIncludeRecommendationsChange}></input>
-                    </td>
-                </tr>
-                <tr>
-                    <td className="center-text ui-text text-no-select">
-                        Include Library Tracks
-                    </td>
-                    <td>
-                        <input type="checkbox" 
-                            checked={this.state.include_library_tracks}
-                            onChange={this.handleIncludeLibraryTracksChange}></input>
-                    </td>
-                </tr>
-                <tr>
-                    <td className="center-text ui-text text-no-select">
-                        Recommendation Size
-                    </td>
-                    <td>
-                    <input type="number" 
-                            name="recommendation_sample"
-                            className="full-width"
-                            value={this.state.recommendation_sample}
-                            onChange={this.handleInputChange}></input>
-                    </td>
-                </tr>
+                <FormControlLabel
+                    control={
+                    <Checkbox checked={this.state.shuffle} onChange={this.handleShuffleChange} />
+                    }
+                    labelPlacement="bottom"
+                    label="Shuffle"/>
+                <FormControlLabel
+                    control={
+                    <Checkbox checked={this.state.include_recommendations} onChange={this.handleIncludeRecommendationsChange} />
+                    }
+                    labelPlacement="bottom"
+                    label="Recommendations"/>
+                <FormControlLabel
+                    control={
+                    <Checkbox checked={this.state.include_library_tracks} onChange={this.handleIncludeLibraryTracksChange} />
+                    }
+                    labelPlacement="bottom"
+                    label="Library Tracks"/>
+                <TextField type="number" 
+                        name="recommendation_sample"
+                        // className="full-width"
+                        label="Recommendation Size"
+                        value={this.state.recommendation_sample}
+                        onChange={this.handleInputChange}></TextField>
 
                 { this.state.type == 'fmchart' &&
-                <tr>
-                    <td className="center-text ui-text text-no-select">
-                        Chart Size
-                    </td>
-                    <td>
-                        <input type="number" 
-                            name="chart_limit"
-                            className="full-width"
-                            value={this.state.chart_limit}
-                            onChange={this.handleInputChange}></input>
-                    </td>
-                </tr>
+                    <TextField type="number" 
+                        name="chart_limit"
+                        // className="full-width"
+                        label="Chart Size"
+                        value={this.state.chart_limit}
+                        onChange={this.handleInputChange}></TextField>
                 }
                 { this.state.type == 'fmchart' &&
-                <tr>
-                    <td className="center-text ui-text text-no-select">
-                        Chart Range
-                    </td>
-                    <td>
-                        <select className="full-width" 
-                                    name="chart_range" 
-                                    onChange={this.handleInputChange}
-                                    value={this.state.chart_range}>
-                                <option value="WEEK">7 Day</option>
-                                <option value="MONTH">30 Day</option>
-                                <option value="QUARTER">90 Day</option>
-                                <option value="HALFYEAR">180 Day</option>
-                                <option value="YEAR">365 Day</option>
-                                <option value="OVERALL">Overall</option>
-                            </select>
-                    </td>
-                </tr>
-                }
-
-                { this.state.type == 'recents' &&
-                <tr>
-                    <td className="center-text ui-text text-no-select">
-                        Added Since (days)
-                    </td>
-                    <td>
-                        <input type="number" 
-                            name="day_boundary"
-                            className="full-width"
-                            value={this.state.day_boundary}
-                            onChange={this.handleInputChange}></input>
-                    </td>
-                </tr>
+                    <FormControl variant="filled">
+                        <InputLabel htmlFor="chart_range">Chart Range</InputLabel>
+                        <Select
+                        native
+                        value={this.state.chart_range}
+                        onChange={this.handleInputChange}
+                        inputProps={{
+                            name: "chart_range",
+                            id: "chart_range",
+                        }}
+                        >
+                            <option value="WEEK">7 Day</option>
+                            <option value="MONTH">30 Day</option>
+                            <option value="QUARTER">90 Day</option>
+                            <option value="HALFYEAR">180 Day</option>
+                            <option value="YEAR">365 Day</option>
+                            <option value="OVERALL">Overall</option>
+                            </Select>
+                    </FormControl>
                 }
                 { this.state.type == 'recents' &&
-                <tr>
-                    <td className="center-text ui-text text-no-select">
-                        Include {thisMonth[date.getMonth()]} Playlist
-                    </td>
-                    <td>
-                        <input type="checkbox" 
-                            checked={this.state.add_this_month}
-                            onChange={this.handleThisMonthChange}></input>
-                    </td>
-                </tr>
+                <TextField type="number" 
+                    name="day_boundary"
+                    // className="full-width"
+                    label="Added Since (days)"
+                    value={this.state.day_boundary}
+                    onChange={this.handleInputChange}></TextField>
                 }
                 { this.state.type == 'recents' &&
-                <tr>
-                    <td className="center-text ui-text text-no-select">
-                        Include {lastMonth[date.getMonth()]} Playlist
-                    </td>
-                    <td>
-                        <input type="checkbox" 
-                            checked={this.state.add_last_month}
-                            onChange={this.handleLastMonthChange}></input>
-                    </td>
-                </tr>
+                <FormControlLabel
+                    control={
+                    <Checkbox checked={this.state.add_this_month} onChange={this.handleThisMonthChange} />
+                    }
+                    label="This Month"
+                />
                 }
-
-
-                <tr>
-                    <td className="center-text ui-text text-no-select">
-                        Type
-                    </td>
-                    <td>
-                        <select className="full-width" 
-                                name="type" 
-                                onChange={this.handleInputChange}
-                                value={this.state.type}>
-                            <option value="default">Default</option>
-                            <option value="recents">Recents</option>
-                            <option value="fmchart">Last.fm Chart</option>
-                        </select>
-                    </td>
-                </tr>
-                <tr>
-                    <td colSpan="2">
-                        <button className="button full-width" onClick={this.handleRun}>Run</button>
-                    </td>
-                </tr>
-            </tbody>
+                { this.state.type == 'recents' &&
+                <FormControlLabel
+                    control={
+                    <Checkbox checked={this.state.add_last_month} onChange={this.handleLastMonthChange} />
+                    }
+                    label="Last Month"
+                />
+                }
+                <FormControl variant="filled">
+                    <InputLabel htmlFor="type-select">Type</InputLabel>
+                    <Select
+                    native
+                    value={this.state.type}
+                    onChange={this.handleInputChange}
+                    inputProps={{
+                        name: 'type',
+                        id: 'type-select',
+                    }}
+                    >
+                        <option value="default">Default</option>
+                        <option value="recents">Recents</option>
+                        <option value="fmchart">Last.fm Chart</option>
+                    </Select>
+                </FormControl>
+                <Button onClick={this.handleRun} variant="contained" color="primary">Run</Button>
+            </Card>
+            </ThemeProvider>
         );
 
-        const loadingMessage = 
-            <tbody>
-                <tr>
-                    <td>
-                        <p className="center-text">Loading...</p>
-                    </td>
-                </tr>
-            </tbody>;
-
-        return this.state.isLoading ? loadingMessage : table;
+        return this.state.isLoading ? <CircularProgress /> : table;
     }
 
 }
@@ -599,9 +566,11 @@ function Row (props) {
     return (
         <tr>
             <td className="ui-text center-text text-no-select">{ props.part }</td>
-            <td><button className="ui-text center-text button full-width" onClick={(e) => props.handler(props.part, e)}>Remove</button></td>
+            <td>
+                <IconButton aria-label="delete" onClick={(e) => props.handler(props.part, e)}>
+                    <Delete />
+                </IconButton>
+            </td>
         </tr>
     );
 }
-
-export default Edit;

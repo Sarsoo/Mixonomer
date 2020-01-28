@@ -7,7 +7,7 @@ import GlobalTheme from "../../Theme";
 
 const LazyPieChart = React.lazy(() => import("../../Maths/PieChart"))
 
-class Count extends Component {
+export class Count extends Component {
 
     constructor(props){
         super(props);
@@ -131,5 +131,3 @@ class Count extends Component {
 function LoadingMessage(props) {
     return <tr><td><ThemeProvider theme={GlobalTheme}><Typography variant="h5" component="h2" className="ui-text center-text">Loading...</Typography></ThemeProvider></td></tr>;
 }
-
-export default Count;
