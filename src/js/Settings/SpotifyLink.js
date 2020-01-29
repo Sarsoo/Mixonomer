@@ -1,6 +1,8 @@
 import React, { Component } from "react";
 const axios = require('axios');
 
+import { Card, Button, CardContent, CardActions, Typography } from "@material-ui/core";
+
 import showMessage from "../Toast.js"
 
 class SpotifyLink extends Component {
@@ -29,25 +31,17 @@ class SpotifyLink extends Component {
 
     render(){
         const table =  
-            <table className="app-table max-width">
-                <thead>
-                    <tr>
-                        <th><h1 className="ui-text center-text text-no-select">Spotify Link</h1></th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td className="ui-text center-text text-no-select">
-                            Status: { this.state.spotify_linked ? "Linked" : "Unlinked" }
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            { this.state.spotify_linked ? <DeAuthButton /> : <AuthButton /> }
-                        </td>
-                    </tr>
-                </tbody>
-            </table>;
+            <div style={{maxWidth: '400px', margin: 'auto', marginTop: '20px'}}>
+                <Card align="center">
+                    <CardContent>
+                        <Typography variant="h4" color="textPrimary">Admin Functions</Typography>
+                        <Typography variant="body2" color="textSecondary">Status: { this.state.spotify_linked ? "Linked" : "Unlinked" }</Typography>
+                    </CardContent>
+                    <CardActions>
+                        { this.state.spotify_linked ? <DeAuthButton /> : <AuthButton /> }
+                    </CardActions>
+                </Card>
+            </div>;
 
         const loadingMessage = <p className="center-text text-no-select">Loading...</p>;
 
@@ -56,11 +50,11 @@ class SpotifyLink extends Component {
 }
 
 function AuthButton(props) {
-    return <a className="button full-width" href="/auth/spotify">Auth</a>;
+    return <Button component='a' variant="contained" className="full-width" href="/auth/spotify">Auth</Button>;
 }
 
 function DeAuthButton(props) {
-    return <a className="button full-width" href="/auth/spotify/deauth">De-Auth</a>;
+    return <Button component='a' variant="contained" className="full-width" href="/auth/spotify/deauth">De-Auth</Button>;
 }
 
 export default SpotifyLink;

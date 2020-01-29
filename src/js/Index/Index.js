@@ -1,5 +1,6 @@
 import React, { Component } from "react";
-const axios = require('axios');
+
+import { Card, CardContent, Typography, Grid } from '@material-ui/core';
 
 class Index extends Component{
 
@@ -10,37 +11,26 @@ class Index extends Component{
 
     render(){
         return (
-            <table className="app-table">
-                <thead>
-                    <tr>
-                        <th>
-                            <h1 className="center-text text-no-select">Music Tools</h1>
-                        </th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td className="center-text text-no-select ui-text" style={{fontSize: "20px"}}>
-                            Construct spotify playlists from selections of other playlists
-                        </td>
-                    </tr>
-                    <tr>
-                        <td className="center-text text-no-select ui-text">
-                            Group sub-genre playlists
-                        </td>
-                    </tr>
-                    <tr>
-                        <td className="center-text text-no-select ui-text">
-                            Optionally append auto-generated recommendations
-                        </td>
-                    </tr>
-                    <tr>
-                        <td className="center-text text-no-select ui-text">
-                            <br></br>Playlists are run multiple times a day
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
+            <div style={{maxWidth: '500px', margin: 'auto', marginTop: '20px'}}>
+            <Card align="center">
+                <CardContent>
+                    <Grid container>
+                        <Grid item xs={12}>
+                            <Typography variant="body1">Construct spotify playlists from selections of other playlists</Typography>
+                        </Grid>
+                        <Grid item xs={12}>
+                            <Typography variant="body1">Group sub-genre playlists</Typography>
+                        </Grid>
+                        <Grid item xs={12}>
+                            <Typography variant="body1">Optionally append auto-generated recommendations</Typography>
+                        </Grid>
+                        <Grid item xs={12}>
+                            <Typography variant="body1">Playlists are run multiple times a day</Typography>
+                        </Grid>
+                    </Grid>
+                </CardContent>
+            </Card>
+            </div>
         );
     }
 }

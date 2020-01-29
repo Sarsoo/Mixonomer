@@ -1,5 +1,8 @@
 import React, { Component } from "react";
-import { BrowserRouter as Router, Route, Link } from "react-router-dom";
+import { Link } from "react-router-dom";
+import { Button, ButtonGroup, Typography, Card, Grid, CircularProgress } from '@material-ui/core';
+import CardActions from '@material-ui/core/CardActions';
+import CardContent from '@material-ui/core/CardContent';
 const axios = require('axios');
 
 import showMessage from "../Toast.js"
@@ -90,58 +93,66 @@ class PlaylistsView extends Component {
 
     render() {
         
-        const table =   <Table playlists={this.state.playlists} 
+        const grid =   <PlaylistGrid playlists={this.state.playlists} 
                             handleRunPlaylist={this.handleRunPlaylist} 
                             handleDeletePlaylist={this.handleDeletePlaylist}
                             handleRunAll={this.handleRunAll}/>;
 
-        const loadingMessage = <p className="center-text">loading...</p>;
-
-        return this.state.isLoading ? loadingMessage : table;
+        return this.state.isLoading ? <CircularProgress /> : grid;
     }
 }
 
-function Table(props){
+function PlaylistGrid(props){
     return (
-        <table className="app-table max-width">
+        <Grid container 
+                spacing={3} 
+                direction="row"
+                justify="flex-start"
+                alignItems="flex-start"
+                style={{padding: '24px'}}>
+            <Grid item xs>
+                <ButtonGroup 
+                    color="primary"
+                    orientation="vertical" 
+                    className="full-width">
+                    <Button component={Link} to='playlists/new' >New</Button>
+                    <Button onClick={props.handleRunAll}>Run All</Button>
+                </ButtonGroup>
+            </Grid>
             { props.playlists.length == 0 ? (
-                <tbody>
-                    <tr>
-                        <td className="ui-text text-no-select center-text">
-                            No Playlists
-                        </td>
-                    </tr>
-                </tbody>
+                <Grid item xs={12} sm={6} md={3}>
+                    <Typography variant="h5" component="h2">No Playlists</Typography>
+                </Grid>
             ) : (
-            <tbody>
-                { props.playlists.map((playlist) => <Row playlist={ playlist } 
+                props.playlists.map((playlist) => <PlaylistCard playlist={ playlist } 
                                                         handleRunPlaylist={props.handleRunPlaylist} 
                                                         handleDeletePlaylist={props.handleDeletePlaylist}
-                                                        key={ playlist.name }/>) }
-                <tr>
-                    <td colSpan="3"><button className="full-width button" onClick={props.handleRunAll}>Run All</button></td>
-                </tr>
-            </tbody>
+                                                        key={ playlist.name }/>)
             )}
-        </table>
+        </Grid>
     );
 }
 
-function Row(props){
+function PlaylistCard(props){
     return (
-        <tr>
-            <PlaylistLink playlist={props.playlist}/>
-            <td style={{width: "100px"}}><button className="button" style={{width: "100px"}} onClick={(e) => props.handleRunPlaylist(props.playlist.name, e)}>Run</button></td>
-            <td style={{width: "100px"}}><button className="button"  style={{width: "100px"}} onClick={(e) => props.handleDeletePlaylist(props.playlist.name, e)}>Delete</button></td>
-        </tr>
-    );
-}
-
-function PlaylistLink(props){
-    return (
-        <td>
-            <Link to={ getPlaylistLink(props.playlist.name) } className="button full-width">{ props.playlist.name }</Link>
-        </td>
+        <Grid item xs>
+            <Card>
+                <CardContent>
+                    <Typography variant="h5" component="h2">
+                    { props.playlist.name }
+                    </Typography>
+                </CardContent>
+                <CardActions>
+                    <ButtonGroup 
+                    color="primary" 
+                    variant="contained">
+                        <Button component={Link} to={getPlaylistLink(props.playlist.name)}>View</Button>
+                        <Button onClick={(e) => props.handleRunPlaylist(props.playlist.name, e)}>Run</Button>
+                        <Button onClick={(e) => props.handleDeletePlaylist(props.playlist.name, e)}>Delete</Button>
+                    </ButtonGroup>
+                </CardActions>
+            </Card>
+        </Grid>
     );
 }
 

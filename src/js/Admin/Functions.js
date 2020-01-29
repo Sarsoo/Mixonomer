@@ -2,6 +2,7 @@ import React, { Component } from "react";
 const axios = require('axios');
 
 import showMessage from "../Toast.js"
+import { Card, Button, ButtonGroup, CardContent, CardActions, Typography } from "@material-ui/core";
 
 class Functions extends Component {
 
@@ -34,27 +35,20 @@ class Functions extends Component {
 
     render () {
         return ( 
-            <table className="app-table max-width">
-                <thead>
-                    <tr>
-                        <th>
-                           <h1 className="text-no-select full-width center-text ui-text">Admin Functions</h1> 
-                        </th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td>
-                            <button className="full-width button" onClick={this.runAllUsers}>Run All Users</button>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <button className="full-width button" onClick={this.runStats}>Run Stats</button>
-                        </td>
-                    </tr>
-                </tbody>
-        </table>);
+            <div style={{maxWidth: '1000px', margin: 'auto', marginTop: '20px'}}>
+                <Card align="center">
+                    <CardContent>
+                        <Typography variant="h4" color="textPrimary">Admin Functions</Typography>
+                    </CardContent>
+                    <CardActions>
+                        <ButtonGroup variant="contained" color="primary" className="full-width">
+                            <Button className="full-width button" onClick={this.runAllUsers}>Run All Users</Button>
+                            <Button className="full-width button" onClick={this.runStats}>Run Stats</Button>
+                        </ButtonGroup>
+                    </CardActions>
+                </Card>
+            </div>
+        );
     }
 }
 
