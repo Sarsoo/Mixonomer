@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { BrowserRouter as Router, Route, Link, Switch, Redirect} from "react-router-dom";
+import { BrowserRouter as Router, Route, Link, Switch } from "react-router-dom";
 
 import NotFound from "./Error/NotFound.js";
 
@@ -80,7 +80,6 @@ class MusicTools extends Component {
     render(){
         return (
             <Router>
-                <div className="card pad-12">
                 <ThemeProvider theme={GlobalTheme}>
                     <AppBar position="static">
                     <Toolbar>
@@ -143,7 +142,6 @@ class MusicTools extends Component {
                         </List>
                         </div>
                     </Drawer>
-                </ThemeProvider>
                     <div className="full-width">
                         <Switch>
                             <React.Suspense fallback={<LoadingMessage/>}>
@@ -157,7 +155,7 @@ class MusicTools extends Component {
                             <Route component={NotFound} />
                         </Switch>
                     </div>
-                </div>
+                </ThemeProvider>
             </Router>
         );
     }

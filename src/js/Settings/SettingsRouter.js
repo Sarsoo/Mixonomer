@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { BrowserRouter as Router, Route, Link, Switch, Redirect} from "react-router-dom";
+import { BrowserRouter as Route, Link } from "react-router-dom";
 
 import ChangePassword from "./ChangePassword.js";
 import SpotifyLink from "./SpotifyLink.js";

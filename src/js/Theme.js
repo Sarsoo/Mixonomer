@@ -5,8 +5,8 @@ let GlobalTheme = createMuiTheme({
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'center',
-        spacing: 20
     },
+    spacing: 4,
     typography: {
         button: {
         fontSize: '1rem',
@@ -17,16 +17,20 @@ let GlobalTheme = createMuiTheme({
         spacing: 5
     },
     card: {
+        marginTop: 24,
         display: 'flex',
         spacing: 5
     },
     palette: {
         type: 'dark',
         primary: {
-            main: '#1a237e',
+            main: '#1976d2',
         },
         secondary: {
-            main: '#2196f3',
+            main: '#dc004e',
+        },
+        error: {
+            main: '#f44336'
         }
     },
     status: {

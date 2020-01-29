@@ -1,7 +1,17 @@
 import React, { Component } from "react";
 const axios = require('axios');
 
+import { Card, Button, CardActions, CardContent, Typography, Grid } from '@material-ui/core';
+import { makeStyles } from '@material-ui/core/styles';
+
 import showMessage from "../Toast.js"
+
+const useStyles = makeStyles({
+    root: {
+      background: '#9e9e9e',
+      color: '#212121'
+    },
+  });
 
 class Lock extends Component {
 
@@ -46,42 +56,38 @@ class Lock extends Component {
 
         const loadingMessage = <p className="center-text text-no-select">loading...</p>; 
 
-        return this.state.isLoading ? loadingMessage : 
-            <div>
-                <table className="app-table max-width">
-                    <thead>
-                        <tr>
-                            <th colSpan='3'>
-                                <h1 className="text-no-select">
-                                    Account Locks
-                                </h1>
-                            </th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        { this.state.accounts.map((account) => <Row account={account} handler={this.handleLock}
-                        key= {account.username}/>) }
-                    </tbody>
-                </table>
-            </div>;
+        return this.state.isLoading ? loadingMessage :
+            <div style={{maxWidth: '1000px', margin: 'auto', marginTop: '20px'}}>
+                <Card align="center">
+                    <CardContent>
+                        <Typography variant="h4" color="textPrimary">Account Locks</Typography>
+                        <Grid container spacing={3}>
+                            { this.state.accounts.map((account) => <Row account={account} handler={this.handleLock}
+                            key= {account.username}/>) }
+                        </Grid>
+                    </CardContent>
+                </Card>
+            </div>
 
     }
 }
 
 function Row(props){
+    const classes = useStyles();
     return (
-        <tr>
-            <td className="ui-text center-text text-no-select" style={{width: "40%"}}>{ props.account.username }</td>
-            <td className="ui-text center-text text-no-select" style={{width: "30%"}}>
-                { props.account.last_login }
-            </td>
-            <td style={{width: "30%"}}>
-                <button className="button full-width"
-                        onClick={(e) => props.handler(e, props.account.username, !props.account.locked)}>
-                            {props.account.locked ? "Unlock" : "Lock"}
-                </button>
-            </td>
-        </tr>
+        <Grid item xs={12} sm={3} md={2}>
+            <Card variant="outlined" className={classes.root}>
+                <CardContent>
+                    <Typography variant="h5" color="textSecondary" className={classes.root}>{ props.account.username }</Typography>
+                    <Typography variant="body2" color="textSecondary" className={classes.root}>{ props.account.last_login }</Typography>
+                </CardContent>
+                <CardActions>
+                    <Button className="full-width" color="secondary" variant="contained" aria-label="delete" onClick={(e) => props.handler(e, props.account.username, !props.account.locked)}>
+                        {props.account.locked ? "Unlock" : "Lock"}
+                    </Button>
+                </CardActions>
+            </Card>
+        </Grid>
     );
 }
 

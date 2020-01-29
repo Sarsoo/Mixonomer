@@ -3,11 +3,9 @@ import { Link } from "react-router-dom";
 import { Button, ButtonGroup, Typography, Card, Grid, CircularProgress } from '@material-ui/core';
 import CardActions from '@material-ui/core/CardActions';
 import CardContent from '@material-ui/core/CardContent';
-import { ThemeProvider } from '@material-ui/core/styles';
 const axios = require('axios');
 
 import showMessage from "../Toast.js"
-import GlobalTheme from "../Theme.js" 
 
 class PlaylistsView extends Component {
 
@@ -106,26 +104,32 @@ class PlaylistsView extends Component {
 
 function PlaylistGrid(props){
     return (
-        <ThemeProvider theme={GlobalTheme}>
         <Grid container 
                 spacing={3} 
                 direction="row"
                 justify="flex-start"
                 alignItems="flex-start"
                 style={{padding: '24px'}}>
+            <Grid item xs>
+                <ButtonGroup 
+                    color="primary"
+                    orientation="vertical" 
+                    className="full-width">
+                    <Button component={Link} to='playlists/new' >New</Button>
+                    <Button onClick={props.handleRunAll}>Run All</Button>
+                </ButtonGroup>
+            </Grid>
             { props.playlists.length == 0 ? (
-                <Grid item item xs={12} sm={6} md={3}>
+                <Grid item xs={12} sm={6} md={3}>
                     <Typography variant="h5" component="h2">No Playlists</Typography>
                 </Grid>
             ) : (
                 props.playlists.map((playlist) => <PlaylistCard playlist={ playlist } 
                                                         handleRunPlaylist={props.handleRunPlaylist} 
                                                         handleDeletePlaylist={props.handleDeletePlaylist}
-                                                        key={ playlist.name }/>) 
+                                                        key={ playlist.name }/>)
             )}
-            <Grid item xs><Button variant="contained" color="secondary" className="full-width" onClick={props.handleRunAll}>Run All</Button></Grid>
         </Grid>
-        </ThemeProvider>
     );
 }
 
@@ -139,10 +143,12 @@ function PlaylistCard(props){
                     </Typography>
                 </CardContent>
                 <CardActions>
-                    <ButtonGroup color="primary">
-                    <Button variant="contained" component={Link} to={getPlaylistLink(props.playlist.name)}>View</Button>
-                    <Button variant="contained" onClick={(e) => props.handleRunPlaylist(props.playlist.name, e)}>Run</Button>
-                    <Button variant="contained" onClick={(e) => props.handleDeletePlaylist(props.playlist.name, e)}>Delete</Button>
+                    <ButtonGroup 
+                    color="primary" 
+                    variant="contained">
+                        <Button component={Link} to={getPlaylistLink(props.playlist.name)}>View</Button>
+                        <Button onClick={(e) => props.handleRunPlaylist(props.playlist.name, e)}>Run</Button>
+                        <Button onClick={(e) => props.handleDeletePlaylist(props.playlist.name, e)}>Delete</Button>
                     </ButtonGroup>
                 </CardActions>
             </Card>

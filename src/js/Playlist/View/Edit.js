@@ -1,10 +1,10 @@
 import React, { Component } from "react";
 const axios = require('axios');
 
-import { Card, Paper, Button, CircularProgress, FormControl, TextField, Input, InputLabel, Select, Checkbox, FormControlLabel, IconButton, InputAdornment } from '@material-ui/core';
-import { ThemeProvider } from '@material-ui/core/styles';
-import { Add, Delete } from '@material-ui/icons';
-import GlobalTheme from "../../Theme.js" 
+import { Card, Button, CircularProgress, FormControl, TextField, InputLabel, Select, Checkbox, FormControlLabel, 
+    CardActions, CardContent, Typography, Grid } from '@material-ui/core';
+import { Delete } from '@material-ui/icons';
+import { makeStyles } from '@material-ui/core/styles';
 
 import showMessage from "../../Toast.js";
 
@@ -37,6 +37,14 @@ var lastMonth = [
     'october',
     'november'
 ];
+
+
+const useStyles = makeStyles({
+    root: {
+      background: '#9e9e9e',
+      color: '#212121'
+    },
+  });
 
 export class Edit extends Component{
 
@@ -398,155 +406,164 @@ export class Edit extends Component{
         var date = new Date();
 
         const table = (
-            <ThemeProvider theme={GlobalTheme}>
-            <Card>
-                { this.state.playlist_references.length > 0 && <tr><td colSpan="2" className="ui-text center-text text-no-select" style={{fontStyle: 'italic'}}>Managed</td></tr> }
-                { this.state.playlist_references.length > 0 && <ListBlock handler={this.handleRemoveReference} list={this.state.playlist_references}/> }
+            <div style={{maxWidth: '1000px', margin: 'auto', marginTop: '20px'}}>
+            <Card align="center">
+                <CardContent>
+                    <Typography variant="h2" color="textPrimary">{this.state.name}</Typography>
+                    <Grid container spacing={5}>
+                        
+                        { this.state.playlist_references.length > 0 && <Grid item xs={12} ><Typography color="textSecondary" variant="h4">Managed</Typography></Grid> }
+                        { this.state.playlist_references.length > 0 && <ListBlock handler={this.handleRemoveReference} list={this.state.playlist_references}/> }
 
-                { this.state.parts.length > 0 && <tr><td colSpan="2" className="ui-text center-text text-no-select" style={{fontStyle: 'italic'}}>Spotify</td></tr> }
-                { this.state.parts.length > 0 && <ListBlock handler={this.handleRemovePart} list={this.state.parts}/> }
-                <tr>
-                    <td colSpan="2" className="center-text ui-text text-no-select" style={{fontStyle: "italic"}}>
-                        <br></br>Spotify playlist can be the name of either your own created playlist or one you follow, names are case sensitive
-                    </td>
-                </tr>
-                <FormControl>
-                    <InputLabel htmlFor="newPlaylistName">Spotify Playlist</InputLabel>
-                    <Input
-                        id="newPlaylistName"
-                        name="newPlaylistName"
-                        type="text"
-                        value={this.state.newPlaylistName}
-                        onChange={this.handleInputChange}
-                        endAdornment={
-                        <InputAdornment position="end">
-                            <IconButton onClick={this.handleAddPart} >
-                                <Add/>
-                            </IconButton>
-                        </InputAdornment>
+                        { this.state.parts.length > 0 && <Grid item xs={12} ><Typography color="textSecondary" variant="h4">Spotify</Typography></Grid> }
+                        { this.state.parts.length > 0 && <ListBlock handler={this.handleRemovePart} list={this.state.parts}/> }
+                        <Grid item xs={12} ><Typography variant="body2" color="textSecondary">Spotify playlist can be the name of either your own created playlist or one you follow, names are case sensitive</Typography></Grid>
+                        <Grid item xs={8} sm={8} md={3}>
+                            <TextField
+                                name="newPlaylistName"
+                                label="Spotify Playlist"
+                                value={this.state.newPlaylistName}
+                                onChange={this.handleInputChange}
+                               
+                            />
+                        </Grid>
+                        <Grid item xs={4} sm={4} md={3}>
+                            <Button variant="contained" className="full-width" onClick={this.handleAddPart} style={{verticalAlign: 'middle'}}>Add</Button>
+                        </Grid>
+                        <Grid item xs={8} sm={8} md={3}>
+                            <FormControl variant="filled" style={{verticalAlign: 'middle'}}>
+                                <InputLabel htmlFor="chart_range">Managed Playlist</InputLabel>
+                                <Select
+                                native
+                                value={this.state.newReferenceName}
+                                onChange={this.handleInputChange}
+                                inputProps={{
+                                    name: "newReferenceName",
+                                    id: "newReferenceName",
+                                }}
+                                >
+                                { this.state.playlists
+                                    .filter((entry) => entry.name != this.state.name)
+                                    .map((entry) => <ReferenceEntry name={entry.name} key={entry.name} />) }
+                                </Select>
+                            </FormControl>
+                        </Grid>
+                        <Grid item xs={4} sm={4} md={3}>
+                            <Button variant="contained" className="full-width" onClick={this.handleAddReference} style={{verticalAlign: 'middle'}}>Add</Button>
+                        </Grid>
+                        <Grid item xs={12}>
+                            <FormControlLabel
+                                control={
+                                <Checkbox color="primary" checked={this.state.shuffle} onChange={this.handleShuffleChange} />
+                                }
+                                labelPlacement="bottom"
+                                label="Shuffle"/>
+                            <FormControlLabel
+                                control={
+                                <Checkbox color="primary" checked={this.state.include_recommendations} onChange={this.handleIncludeRecommendationsChange} />
+                                }
+                                labelPlacement="bottom"
+                                label="Recommendations"/>
+                            <FormControlLabel
+                                control={
+                                <Checkbox color="primary" checked={this.state.include_library_tracks} onChange={this.handleIncludeLibraryTracksChange} />
+                                }
+                                labelPlacement="bottom"
+                                label="Library Tracks"/>
+                        </Grid>
+                        <Grid item xs={12}>
+                            <TextField type="number" 
+                                    name="recommendation_sample"
+                                    label="Recommendation Size"
+                                    value={this.state.recommendation_sample}
+                                    onChange={this.handleInputChange}></TextField>
+                        </Grid>
+
+                        { this.state.type == 'fmchart' &&
+                        <Grid item xs={12}>
+                            <TextField type="number" 
+                                name="chart_limit"
+                                label="Chart Size"
+                                value={this.state.chart_limit}
+                                onChange={this.handleInputChange}></TextField>
+                        </Grid>
                         }
-                    />
-                </FormControl>
-                <tr>
-                    <td>
-                        <FormControl variant="filled">
-                            <InputLabel htmlFor="chart_range">Managed Playlist</InputLabel>
-                            <Select
-                            native
-                            value={this.state.newReferenceName}
-                            onChange={this.handleInputChange}
-                            inputProps={{
-                                name: "newReferenceName",
-                                id: "newReferenceName",
-                            }}
-                            >
-                            { this.state.playlists
-                                .filter((entry) => entry.name != this.state.name)
-                                .map((entry) => <ReferenceEntry name={entry.name} key={entry.name} />) }
-                            </Select>
-                        </FormControl>
-                    </td>
-                    <td>
-                        <Button className="full-width" onClick={this.handleAddReference}>Add</Button>
-                    </td>
-                </tr>
-                <FormControlLabel
-                    control={
-                    <Checkbox checked={this.state.shuffle} onChange={this.handleShuffleChange} />
-                    }
-                    labelPlacement="bottom"
-                    label="Shuffle"/>
-                <FormControlLabel
-                    control={
-                    <Checkbox checked={this.state.include_recommendations} onChange={this.handleIncludeRecommendationsChange} />
-                    }
-                    labelPlacement="bottom"
-                    label="Recommendations"/>
-                <FormControlLabel
-                    control={
-                    <Checkbox checked={this.state.include_library_tracks} onChange={this.handleIncludeLibraryTracksChange} />
-                    }
-                    labelPlacement="bottom"
-                    label="Library Tracks"/>
-                <TextField type="number" 
-                        name="recommendation_sample"
-                        // className="full-width"
-                        label="Recommendation Size"
-                        value={this.state.recommendation_sample}
-                        onChange={this.handleInputChange}></TextField>
-
-                { this.state.type == 'fmchart' &&
-                    <TextField type="number" 
-                        name="chart_limit"
-                        // className="full-width"
-                        label="Chart Size"
-                        value={this.state.chart_limit}
-                        onChange={this.handleInputChange}></TextField>
-                }
-                { this.state.type == 'fmchart' &&
-                    <FormControl variant="filled">
-                        <InputLabel htmlFor="chart_range">Chart Range</InputLabel>
-                        <Select
-                        native
-                        value={this.state.chart_range}
-                        onChange={this.handleInputChange}
-                        inputProps={{
-                            name: "chart_range",
-                            id: "chart_range",
-                        }}
-                        >
-                            <option value="WEEK">7 Day</option>
-                            <option value="MONTH">30 Day</option>
-                            <option value="QUARTER">90 Day</option>
-                            <option value="HALFYEAR">180 Day</option>
-                            <option value="YEAR">365 Day</option>
-                            <option value="OVERALL">Overall</option>
-                            </Select>
-                    </FormControl>
-                }
-                { this.state.type == 'recents' &&
-                <TextField type="number" 
-                    name="day_boundary"
-                    // className="full-width"
-                    label="Added Since (days)"
-                    value={this.state.day_boundary}
-                    onChange={this.handleInputChange}></TextField>
-                }
-                { this.state.type == 'recents' &&
-                <FormControlLabel
-                    control={
-                    <Checkbox checked={this.state.add_this_month} onChange={this.handleThisMonthChange} />
-                    }
-                    label="This Month"
-                />
-                }
-                { this.state.type == 'recents' &&
-                <FormControlLabel
-                    control={
-                    <Checkbox checked={this.state.add_last_month} onChange={this.handleLastMonthChange} />
-                    }
-                    label="Last Month"
-                />
-                }
-                <FormControl variant="filled">
-                    <InputLabel htmlFor="type-select">Type</InputLabel>
-                    <Select
-                    native
-                    value={this.state.type}
-                    onChange={this.handleInputChange}
-                    inputProps={{
-                        name: 'type',
-                        id: 'type-select',
-                    }}
-                    >
-                        <option value="default">Default</option>
-                        <option value="recents">Recents</option>
-                        <option value="fmchart">Last.fm Chart</option>
-                    </Select>
-                </FormControl>
-                <Button onClick={this.handleRun} variant="contained" color="primary">Run</Button>
+                        { this.state.type == 'fmchart' &&
+                        <Grid item xs={12}>
+                            <FormControl variant="filled">
+                                <InputLabel htmlFor="chart_range">Chart Range</InputLabel>
+                                <Select
+                                native
+                                value={this.state.chart_range}
+                                onChange={this.handleInputChange}
+                                inputProps={{
+                                    name: "chart_range",
+                                    id: "chart_range",
+                                }}
+                                >
+                                    <option value="WEEK">7 Day</option>
+                                    <option value="MONTH">30 Day</option>
+                                    <option value="QUARTER">90 Day</option>
+                                    <option value="HALFYEAR">180 Day</option>
+                                    <option value="YEAR">365 Day</option>
+                                    <option value="OVERALL">Overall</option>
+                                    </Select>
+                            </FormControl>
+                        </Grid>
+                        }
+                        { this.state.type == 'recents' &&
+                        <Grid item xs={12}>
+                            <TextField type="number" 
+                                name="day_boundary"
+                                // className="full-width"
+                                label="Added Since (days)"
+                                value={this.state.day_boundary}
+                                onChange={this.handleInputChange} />
+                        </Grid>
+                        }
+                        { this.state.type == 'recents' &&
+                        <Grid item xs={12}>
+                            <FormControlLabel
+                                control={
+                                <Checkbox color="primary" checked={this.state.add_this_month} onChange={this.handleThisMonthChange} />
+                                }
+                                label="This Month"
+                                labelPlacement="bottom"
+                            />
+                            <FormControlLabel
+                                control={
+                                <Checkbox color="primary" checked={this.state.add_last_month} onChange={this.handleLastMonthChange} />
+                                }
+                                label="Last Month"
+                                labelPlacement="bottom"
+                            />
+                        </Grid>
+                        }
+                        <Grid item xs={12}>
+                            <FormControl variant="filled">
+                                <InputLabel htmlFor="type-select">Type</InputLabel>
+                                <Select
+                                native
+                                value={this.state.type}
+                                onChange={this.handleInputChange}
+                                inputProps={{
+                                    name: 'type',
+                                    id: 'type-select',
+                                }}
+                                >
+                                    <option value="default">Default</option>
+                                    <option value="recents">Recents</option>
+                                    <option value="fmchart">Last.fm Chart</option>
+                                </Select>
+                            </FormControl>
+                        </Grid>
+                    </Grid>
+                </CardContent>
+                <CardActions>
+                    <Button onClick={this.handleRun} variant="contained" color="primary" className="full-width" >Run</Button>
+                </CardActions>
             </Card>
-            </ThemeProvider>
+        </div>
         );
 
         return this.state.isLoading ? <CircularProgress /> : table;
@@ -559,18 +576,30 @@ function ReferenceEntry(props) {
 }
 
 function ListBlock(props) {
-    return props.list.map((part) => <Row part={ part } key={ part } handler={props.handler}/>);
+    return <Grid container 
+                spacing={3} 
+                direction="row"
+                justify="flex-start"
+                alignItems="flex-start"
+                style={{padding: '24px'}}>
+                    {props.list.map((part) => <BlockGridItem part={ part } key={ part } handler={props.handler}/>)}
+            </Grid>
 }
 
-function Row (props) {
+function BlockGridItem (props) {
+    const classes = useStyles();
     return (
-        <tr>
-            <td className="ui-text center-text text-no-select">{ props.part }</td>
-            <td>
-                <IconButton aria-label="delete" onClick={(e) => props.handler(props.part, e)}>
-                    <Delete />
-                </IconButton>
-            </td>
-        </tr>
+        <Grid item xs={12} sm={3} md={2}>
+            <Card variant="outlined" className={classes.root}>
+                <CardContent>
+                    <Typography variant="h5" color="textSecondary" className={classes.root}>{ props.part }</Typography>
+                </CardContent>
+                <CardActions>
+                    <Button className="full-width" color="secondary" variant="contained" aria-label="delete" onClick={(e) => props.handler(props.part, e)} startIcon={<Delete />}>
+                        Delete
+                    </Button>
+                </CardActions>
+            </Card>
+        </Grid>
     );
 }

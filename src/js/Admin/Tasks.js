@@ -1,6 +1,8 @@
 import React, { Component } from "react";
 const axios = require('axios');
 
+import { Card, CardContent, Typography, Grid } from '@material-ui/core';
+
 import showMessage from "../Toast.js"
 
 class Tasks extends Component {
@@ -30,41 +32,26 @@ class Tasks extends Component {
     }
 
     render () {
-        return ( 
-            <table className="app-table max-width">
-                <thead>
-                    <tr>
-                        <th>
-                           <h1 className="text-no-select full-width center-text ui-text">Running Tasks</h1> 
-                        </th>
-                    </tr>
-                </thead>
-                { this.state.tasks.map((entry) => <TaskType url={entry.url} count={entry.count} times={entry.scheduled_times} key={entry.url}/>)}
-                <tbody>
-                    <tr>
-                        <td className="text-no-select full-width center-text ui-text" colSpan='2'>
-                            <b>{this.state.total_tasks}</b> Currently Running
-                        </td>
-                    </tr>
-                </tbody>
-        </table>);
+        return (
+            <div style={{maxWidth: '1000px', margin: 'auto', marginTop: '20px'}}>
+                <Grid container spacing={4}>
+                    { this.state.tasks.map((entry) => <TaskType url={entry.url} count={entry.count} times={entry.scheduled_times} key={entry.url}/>)}
+                </Grid>
+            </div>
+        );
     }
 }
 
 function TaskType(props) {
     return (
-        <tbody>
-            <tr>
-                <td className="text-no-select full-width center-text ui-text" colSpan='2'>
-                    {props.url}: {props.count}
-                </td>
-            </tr>
-            {props.times.map((entry) => <tr key={entry}>
-                <td colSpan='2' className="text-no-select full-width center-text ui-text">
-                    {entry}
-                </td>
-            </tr>)}
-        </tbody>
+        <Grid item xs={12} sm={6} md={4}>
+            <Card align="center">
+                <CardContent>
+                    <Typography variant="body2" color="textSecondary">{props.url}: {props.count}</Typography>
+                    {props.times.map((entry) => <Typography variant="body2" color="textSecondary">{entry}</Typography>)}
+                </CardContent>
+            </Card>
+        </Grid>
     );
 }
 

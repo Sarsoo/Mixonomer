@@ -1,6 +1,8 @@
 import React, { Component } from "react";
 const axios = require('axios');
 
+import { Card, Button, FormControl, TextField, InputLabel, Select, CardActions, CardContent, Typography, Grid } from '@material-ui/core';
+
 import showMessage from "../Toast.js"
 
 class NewPlaylist extends Component {
@@ -81,44 +83,46 @@ class NewPlaylist extends Component {
 
     render(){
         return (
-            <table className="app-table max-width">
-                <thead>
-                    <tr>
-                        <th colSpan="2">
-                            <h1 className="ui-text center-text text-no-select">New Playlist</h1>
-                        </th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td>
-                            <select className="full-width" name="type" onChange={this.handleInputChange}>
-                                <option value="default">Default</option>
-                                <option value="recents">Recents</option>
-                            </select>
-                        </td>
-                        <td>
-                            <input 
-                                className="full-width" 
-                                name="name" 
-                                type="text" 
-                                value={this.state.name} 
+            <Card align="center">
+                <CardContent>
+                    <Grid container>
+                        <Grid item xs={12}>
+                            <Typography variant="h3">New</Typography>
+                        </Grid>
+                        <Grid item xs={4}>
+                            <FormControl variant="filled">
+                                <InputLabel htmlFor="type-select">Type</InputLabel>
+                                <Select
+                                native
+                                value={this.state.type}
                                 onChange={this.handleInputChange}
-                                placeholder="Name"/>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td colSpan="2">
-                            <input type="submit" className="button full-width" onClick={this.handleSubmit} value="Create" />
-                        </td>
-                    </tr>
-                    <tr>
-                        <td colSpan="2" className="ui-text text-no-select center-text">
-                            <br></br>{this.state.description}
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
+                                inputProps={{
+                                    name: 'type',
+                                    id: 'type-select',
+                                }}
+                                >
+                                    <option value="default">Default</option>
+                                    <option value="recents">Recents</option>
+                                </Select>
+                            </FormControl>
+                        </Grid>
+                        <Grid item xs={8}>
+                            <TextField
+                                label="Name" 
+                                variant="outlined" 
+                                onChange={this.handleInputChange}
+                                name="name"
+                                value={this.state.name} />
+                        </Grid>
+                        <Grid item xs={12}>
+                            <Typography variant="body2" color="textSecondary">{ this.state.description }</Typography>
+                        </Grid>
+                    </Grid>
+                </CardContent>
+                <CardActions>
+                    <Button variant="contained" color="primary" className="full-width" onClick={this.handleSubmit}>Create</Button>
+                </CardActions>
+            </Card>
         );
     }
 
