@@ -114,7 +114,7 @@ def auth():
                 'client_id': client_id,
                 'response_type': 'code',
                 'scope': 'playlist-modify-public playlist-modify-private playlist-read-private user-read-playback-state user-modify-playback-state user-library-read',
-                'redirect_uri': 'https://spotify.sarsoo.xyz/auth/spotify/token'
+                'redirect_uri': 'https://music.sarsoo.xyz/auth/spotify/token'
             }
         )
 
@@ -141,7 +141,7 @@ def token():
             data = {
                 'grant_type': 'authorization_code',
                 'code': code,
-                'redirect_uri': 'https://spotify.sarsoo.xyz/auth/spotify/token'
+                'redirect_uri': 'https://music.sarsoo.xyz/auth/spotify/token'
             }
 
             req = requests.post('https://accounts.spotify.com/api/token', data=data, headers=headers)

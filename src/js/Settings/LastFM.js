@@ -1,6 +1,8 @@
 import React, { Component } from "react";
 const axios = require('axios');
 
+import { Card, Button, CardContent, CardActions, Typography, TextField, Grid } from "@material-ui/core";
+
 import showMessage from "../Toast.js"
 
 class LastFM extends Component {
@@ -64,30 +66,32 @@ class LastFM extends Component {
     }
 
     render(){
-        const table =  
-            <form onSubmit={this.handleSubmit}>
-                <table className="app-table max-width">
-                    <thead>
-                        <tr>
-                            <th colSpan="2"><h1 className="ui-text center-text text-no-select">Last.fm Username</h1></th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                    <tr>
-                        <td className="ui-text center-text text-no-select">Username:</td>
-                        <td><input 
-                                type="text" 
-                                name="current" 
-                                value={this.state.lastfm_username} 
-                                onChange={this.handleChange}
-                                className="full-width" /></td>
-                    </tr>
-                    <tr>
-                        <td colSpan="2"><input type="submit" style={{width: "100%"}} className="button" value="save" /></td>
-                    </tr>
-                    </tbody>
-                </table>
-            </form>;
+        const table =
+            <div style={{maxWidth: '400px', margin: 'auto', marginTop: '20px'}}>
+                <Card align="center">
+                    <form onSubmit={this.handleSubmit}>
+                        <CardContent>
+                            <Grid container spacing={3}>
+                                <Grid item className="full-width">
+                                    <Typography variant="h4" color="textPrimary">Last.fm Username</Typography>
+                                </Grid>
+                                <Grid item className="full-width">
+                                    <TextField
+                                        label="last.fm Username" 
+                                        variant="outlined"
+                                        onChange={this.handleChange}
+                                        name="current"
+                                        value={this.state.lastfm_username} 
+                                        className="full-width" />
+                                </Grid>
+                            </Grid>
+                        </CardContent>
+                        <CardActions>
+                            <Button type="submit" variant="contained" className="full-width">Save</Button>
+                        </CardActions>
+                    </form>
+                </Card>
+            </div>;
 
         const loadingMessage = <p className="center-text text-no-select">Loading...</p>;
 

@@ -125,7 +125,7 @@ export class Edit extends Component{
 
     getPlaylistInfo(){
         return axios.get(`/api/playlist?name=${ this.state.name }`);
-    }
+    }    
 
     getPlaylists(){
         return axios.get(`/api/playlists`);
@@ -168,7 +168,7 @@ export class Edit extends Component{
             showMessage(`Error Updating Boundary Value (${error.response.status})`);
         });
     }
-
+    
     handleRecommendationsSampleChange(sample){
         if(sample == ''){
             sample = 0;
@@ -421,6 +421,7 @@ export class Edit extends Component{
                         <Grid item xs={8} sm={8} md={3}>
                             <TextField
                                 name="newPlaylistName"
+                                variant="outlined"
                                 label="Spotify Playlist"
                                 value={this.state.newPlaylistName}
                                 onChange={this.handleInputChange}

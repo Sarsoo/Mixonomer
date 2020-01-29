@@ -1,6 +1,8 @@
 import React, { Component } from "react";
 const axios = require('axios');
 
+import { Card, Grid, Button, TextField, CardContent, CardActions, Typography } from "@material-ui/core";
+
 import showMessage from "../Toast.js"
 
 class ChangePassword extends Component {
@@ -63,49 +65,52 @@ class ChangePassword extends Component {
 
     render(){
         return (
-            <div> 
-                <form onSubmit={this.handleSubmit}>
-                    <table className="app-table max-width">
-                        <thead>
-                            <tr>
-                                <th colSpan="2"><h1 className="text-no-select">Change Password</h1></th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td className="ui-text center-text text-no-select">Current:</td>
-                                <td><input 
+            <div style={{maxWidth: '500px', margin: 'auto', marginTop: '20px'}}>
+                <Card align="center">
+                    <form onSubmit={this.handleSubmit}>
+                        <CardContent>
+                            <Grid container spacing={2}>
+                                <Grid item className="full-width">
+                                    <Typography variant="h4" color="textPrimary">Change Password</Typography>
+                                </Grid>
+                                <Grid item className="full-width">
+                                    <TextField
+                                        label="Current Password" 
                                         type="password" 
-                                        name="current" 
-                                        value={this.state.current} 
+                                        variant="outlined" 
                                         onChange={this.handleCurrentChange}
-                                        className="full-width" /></td>
-                            </tr>
-                            <tr>
-                                <td className="ui-text center-text text-no-select">New:</td>
-                                <td><input 
+                                        name="current"
+                                        value={this.state.current}
+                                        className="full-width" />
+                                </Grid>
+                                <Grid item className="full-width">
+                                    <TextField
+                                        label="New Password" 
+                                        variant="outlined" 
                                         type="password" 
-                                        name="new1" 
-                                        value={this.state.new1} 
                                         onChange={this.handleNewChange}
-                                        className="full-width" /></td>
-                            </tr>
-                            <tr>
-                                <td className="ui-text center-text text-no-select">New Again:</td>
-                                <td><input 
+                                        name="new1"
+                                        value={this.state.new1} 
+                                        className="full-width" />
+                                </Grid>
+                                <Grid item className="full-width">
+                                    <TextField
+                                        label="New Password Again" 
+                                        variant="outlined" 
                                         type="password" 
-                                        name="new2" 
-                                        value={this.state.new2} 
                                         onChange={this.handleNew2Change}
-                                        className="full-width" /></td>
-                            </tr>
-                            <tr>
-                                <td colSpan="2"><input type="submit" style={{width: "100%"}} className="button" value="Change" /></td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </form>
-                { this.state.error && <p style={{color: "red"}} className="center-text">{this.state.errorValue}</p>}
+                                        name="new2"
+                                        value={this.state.new2}
+                                        className="full-width" />
+                                </Grid>
+                                { this.state.error && <Grid item><Typography variant="textSeondary">{this.state.errorValue}</Typography></Grid>}
+                            </Grid>
+                        </CardContent>
+                        <CardActions>
+                            <Button type="submit" variant="contained" className="full-width" onClick={this.runStats}>Change</Button>
+                        </CardActions>
+                    </form>
+                </Card>
             </div>
         );
     }

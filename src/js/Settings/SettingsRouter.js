@@ -1,5 +1,6 @@
 import React, { Component } from "react";
-import { BrowserRouter as Route, Link } from "react-router-dom";
+import { Route, Link, Switch } from "react-router-dom";
+import { Paper, Tabs, Tab} from '@material-ui/core';
 
 import ChangePassword from "./ChangePassword.js";
 import SpotifyLink from "./SpotifyLink.js";
@@ -7,19 +8,41 @@ import LastFM from "./LastFM.js";
 
 class Settings extends Component {
 
+    constructor(props){
+        super(props);
+        this.state = {
+            tab: 0
+        }
+        this.handleChange = this.handleChange.bind(this);
+    }
+
+    handleChange(e, newValue){
+        this.setState({
+            tab: newValue
+        });
+    }
+
     render() {
         return (
             <div>
-                <ul className="navbar" style={{width: "100%"}}>
-                    <li><Link to={`${this.props.match.url}/password`}>Password</Link></li>
-                    <li><Link to={`${this.props.match.url}/spotify`}>Spotify</Link></li>
-                    <li><Link to={`${this.props.match.url}/lastfm`}>Last.fm</Link></li>
-                </ul>
-                
-                <Route path={`${this.props.match.url}/password`} component={ChangePassword} />
-                <Route path={`${this.props.match.url}/spotify`} component={SpotifyLink} />
-                <Route path={`${this.props.match.url}/lastfm`} component={LastFM} />
-
+                <Paper>
+                    <Tabs
+                        value={this.state.tab}
+                        onChange={this.handleChange}
+                        indicatorColor="primary"
+                        centered
+                        width="50%"
+                    >
+                        <Tab label="Password" component={Link} to={`${this.props.match.url}/password`} />
+                        <Tab label="Spotify" component={Link} to={`${this.props.match.url}/spotify`} />
+                        <Tab label="Last.fm" component={Link} to={`${this.props.match.url}/lastfm`} />
+                    </Tabs>
+                </Paper>                
+                <Switch>
+                    <Route path={`${this.props.match.url}/password`} component={ChangePassword} />
+                    <Route path={`${this.props.match.url}/spotify`} component={SpotifyLink} />
+                    <Route path={`${this.props.match.url}/lastfm`} component={LastFM} />
+                </Switch>
             </div>
         );
     }

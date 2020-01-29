@@ -83,13 +83,14 @@ class NewPlaylist extends Component {
 
     render(){
         return (
+            <div style={{maxWidth: '500px', margin: 'auto', marginTop: '20px'}}>
             <Card align="center">
                 <CardContent>
-                    <Grid container>
+                    <Grid container spacing={5}>
                         <Grid item xs={12}>
                             <Typography variant="h3">New</Typography>
                         </Grid>
-                        <Grid item xs={4}>
+                        <Grid item xs={12} sm={4}>
                             <FormControl variant="filled">
                                 <InputLabel htmlFor="type-select">Type</InputLabel>
                                 <Select
@@ -100,19 +101,22 @@ class NewPlaylist extends Component {
                                     name: 'type',
                                     id: 'type-select',
                                 }}
+                                className="full-width"
                                 >
                                     <option value="default">Default</option>
                                     <option value="recents">Recents</option>
+                                    <option value="fmchart">Last.fm Chart</option>
                                 </Select>
                             </FormControl>
                         </Grid>
-                        <Grid item xs={8}>
+                        <Grid item xs={12} sm={8}>
                             <TextField
                                 label="Name" 
                                 variant="outlined" 
                                 onChange={this.handleInputChange}
                                 name="name"
-                                value={this.state.name} />
+                                value={this.state.name} 
+                                className="full-width" />
                         </Grid>
                         <Grid item xs={12}>
                             <Typography variant="body2" color="textSecondary">{ this.state.description }</Typography>
@@ -123,6 +127,7 @@ class NewPlaylist extends Component {
                     <Button variant="contained" color="primary" className="full-width" onClick={this.handleSubmit}>Create</Button>
                 </CardActions>
             </Card>
+            </div>
         );
     }
 
