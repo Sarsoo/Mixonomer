@@ -411,12 +411,40 @@ def update_tag(username: str, tag_id: str, updates: dict) -> None:
         logger.debug(f'nothing to update for {tag_id} for {username}')
 
 
-def delete_tag(username: str, tag_id: str) -> None:
+def delete_tag(username: str, tag_id: str) -> bool:
     logger.info(f'deleting {tag_id} for {username}')
 
     tag = get_tag(username=username, tag_id=tag_id)
 
     if tag:
         tag.db_ref.delete()
+        return True
     else:
         logger.error(f'playlist {tag_id} not found for {username}')
+        return False
+
+
+def create_tag(username: str, tag_id: str):
+    user = get_user(username)
+
+    if user is None:
+        logger.error(f'{username} not found')
+        return None
+
+    if tag_id in [i.tag_id for i in get_user_tags(username)]:
+        logger.error(f'{tag_id} already exists for {username}')
+        return None
+
+    return parse_tag_reference(user.db_ref.collection(u'tags').add({
+        'tag_id': tag_id,
+        'name': tag_id,
+
+        'tracks': [],
+        'albums': [],
+        'artists': [],
+
+        'count': 0,
+        'proportion': 0.0,
+        'total_user_scrobbles': 0,
+        'last_updated': None
+    })[1])

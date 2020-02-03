@@ -5,22 +5,17 @@ app = app
 
 
 def update_tag(event, context):
-    import base64
     import logging
-    import json
 
     logger = logging.getLogger('music')
 
-    if 'data' in event:
-        body = json.loads(base64.b64decode(event['data']).decode('utf-8'))
-
-        if 'username' not in body or 'tag_id' not in body:
-            logger.error('malformed body')
-            return
-
-        do_update_tag(username=body["username"], tag_id=body["tag_id"])
+    if event.get('attributes'):
+        if 'username' in event['attributes'] and 'tag_id' in event['attributes']:
+            do_update_tag(username=event['attributes']['username'], tag_id=event['attributes']["tag_id"])
+        else:
+            logger.error('no parameters in event attributes')
     else:
-        logger.error('no data in event')
+        logger.error('no attributes in event')
 
 
 if __name__ == '__main__':

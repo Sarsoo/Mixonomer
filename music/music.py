@@ -5,7 +5,7 @@ import os
 
 from music.auth import auth_blueprint
 from music.api import api_blueprint, player_blueprint, fm_blueprint, \
-    spotfm_blueprint, spotify_blueprint, admin_blueprint
+    spotfm_blueprint, spotify_blueprint, admin_blueprint, tag_blueprint
 
 db = firestore.Client()
 
@@ -18,6 +18,7 @@ app.register_blueprint(fm_blueprint, url_prefix='/api/fm')
 app.register_blueprint(spotfm_blueprint, url_prefix='/api/spotfm')
 app.register_blueprint(spotify_blueprint, url_prefix='/api/spotify')
 app.register_blueprint(admin_blueprint, url_prefix='/api/admin')
+app.register_blueprint(tag_blueprint, url_prefix='/api')
 
 
 @app.route('/')
