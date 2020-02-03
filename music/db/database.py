@@ -9,6 +9,7 @@ from fmframework.net.network import Network as FmNetwork
 from music.db.user import DatabaseUser
 from music.model.user import User
 from music.model.playlist import Playlist, RecentsPlaylist, LastFMChartPlaylist, Sort
+from music.model.tag import Tag
 
 db = firestore.Client()
 
@@ -324,3 +325,98 @@ def delete_playlist(username: str, name: str) -> None:
         playlist.db_ref.delete()
     else:
         logger.error(f'playlist {name} not found for {username}')
+
+
+def get_user_tags(username: str) -> List[Tag]:
+    logger.info(f'getting tags for {username}')
+
+    user = get_user(username)
+
+    if user:
+        tag_refs = [i for i in user.db_ref.collection(u'tags').stream()]
+
+        return [parse_tag_reference(username=username, tag_snapshot=i) for i in tag_refs]
+    else:
+        logger.error(f'user {username} not found')
+
+
+def get_tag(username: str = None, tag_id: str = None) -> Optional[Tag]:
+    logger.info(f'retrieving {tag_id} for {username}')
+
+    user = get_user(username)
+
+    if user:
+
+        tags = [i for i in user.db_ref.collection(u'tags').where(u'tag_id', u'==', tag_id).stream()]
+
+        if len(tags) == 0:
+            logger.error(f'tag {tag_id} for {user} not found')
+            return None
+        if len(tags) > 1:
+            logger.critical(f"multiple {tag_id}'s for {user} found")
+            return None
+
+        return parse_tag_reference(username=username, tag_snapshot=tags[0])
+    else:
+        logger.error(f'user {username} not found')
+
+
+def parse_tag_reference(username, tag_ref=None, tag_snapshot=None) -> Tag:
+    if tag_ref is None and tag_snapshot is None:
+        raise ValueError('no tag object supplied')
+
+    if tag_ref is None:
+        tag_ref = tag_snapshot.reference
+
+    if tag_snapshot is None:
+        tag_snapshot = tag_ref.get()
+
+    tag_dict = tag_snapshot.to_dict()
+
+    return Tag(tag_id=tag_dict['tag_id'],
+               name=tag_dict.get('name', 'n/a'),
+               username=username,
+
+               db_ref=tag_ref,
+
+               tracks=tag_dict.get('tracks', []),
+               albums=tag_dict.get('albums', []),
+               artists=tag_dict.get('artists', []),
+
+               count=tag_dict.get('count', 0),
+               proportion=tag_dict.get('proportion', 0.0),
+               total_user_scrobbles=tag_dict.get('total_user_scrobbles', 0),
+
+               last_updated=tag_dict.get('last_updated'))
+
+
+def update_tag(username: str, tag_id: str, updates: dict) -> None:
+    if len(updates) > 0:
+        logger.debug(f'updating {tag_id} for {username}')
+
+        user = get_user(username)
+
+        tags = [i for i in user.db_ref.collection(u'tags').where(u'tag_id', u'==', tag_id).stream()]
+
+        if len(tags) == 0:
+            logger.error(f'tag {tag_id} for {username} not found')
+            return None
+        if len(tags) > 1:
+            logger.critical(f"multiple {tag_id}'s for {username} found")
+            return None
+
+        tag = tags[0].reference
+        tag.update(updates)
+    else:
+        logger.debug(f'nothing to update for {tag_id} for {username}')
+
+
+def delete_tag(username: str, tag_id: str) -> None:
+    logger.info(f'deleting {tag_id} for {username}')
+
+    tag = get_tag(username=username, tag_id=tag_id)
+
+    if tag:
+        tag.db_ref.delete()
+    else:
+        logger.error(f'playlist {tag_id} not found for {username}')
