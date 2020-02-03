@@ -2,15 +2,12 @@ from flask import Blueprint, jsonify, request
 
 import logging
 
-from google.cloud import pubsub_v1
-
 import music.db.database as database
 from music.api.decorators import login_or_basic_auth
+from music.cloud.function import update_tag
 
 blueprint = Blueprint('task', __name__)
 logger = logging.getLogger(__name__)
-
-publisher = pubsub_v1.PublisherClient()
 
 
 @blueprint.route('/tag', methods=['GET'])
@@ -26,7 +23,7 @@ def tags(username=None):
 @login_or_basic_auth
 def tag(tag_id, username=None):
     if request.method == 'GET':
-        return put_tag(tag_id, username)
+        return get_tag(tag_id, username)
     elif request.method == 'PUT':
         return put_tag(tag_id, username)
     elif request.method == 'POST':
@@ -63,7 +60,7 @@ def put_tag(tag_id, username):
     update_required = False
 
     tracks = []
-    if request_json.get('tracks'):
+    if request_json.get('tracks') is not None:
         update_required = True
         for track in request_json['tracks']:
             if track.get('name') and track.get('artist'):
@@ -71,10 +68,10 @@ def put_tag(tag_id, username):
                     'name': track['name'],
                     'artist': track['artist']
                 })
-    db_tag.tracks = tracks
+        db_tag.tracks = tracks
 
     albums = []
-    if request_json.get('albums'):
+    if request_json.get('albums') is not None:
         update_required = True
         for album in request_json['albums']:
             if album.get('name') and album.get('artist'):
@@ -82,17 +79,17 @@ def put_tag(tag_id, username):
                     'name': album['name'],
                     'artist': album['artist']
                 })
-    db_tag.album = albums
+        db_tag.albums = albums
 
     artists = []
-    if request_json.get('artists'):
+    if request_json.get('artists') is not None:
         update_required = True
-        for artist in request_json['tracks']:
-            if artist.get('name') and artist.get('artist'):
+        for artist in request_json['artists']:
+            if artist.get('name'):
                 artists.append({
                     'name': artist['name']
                 })
-    db_tag.artists = artists
+        db_tag.artists = artists
 
     if update_required:
         update_tag(username=username, tag_id=tag_id)
@@ -103,11 +100,10 @@ def put_tag(tag_id, username):
 def post_tag(tag_id, username):
     logger.info(f'creating {tag_id} for {username}')
 
-    new_tag = database.create_tag(username=username, tag_id=tag_id)
-    if new_tag is not None:
-        return jsonify({"message": 'tag added', "status": "success"}), 201
-    else:
-        return jsonify({"error": 'tag not created'}), 400
+    tag_id = tag_id.replace(' ', '_')
+
+    database.create_tag(username=username, tag_id=tag_id)
+    return jsonify({"message": 'tag added', "status": "success"}), 201
 
 
 def delete_tag(tag_id, username):
@@ -121,7 +117,9 @@ def delete_tag(tag_id, username):
         return jsonify({"error": 'tag not deleted'}), 400
 
 
-def update_tag(username, tag_id):
-    logger.info(f'queuing {tag_id} update for {username}')
-
-    publisher.publish('projects/sarsooxyz/topics/update_tag', b'', tag_id=tag_id, username=username)
+@blueprint.route('/tag/<tag_id>/update', methods=['GET'])
+@login_or_basic_auth
+def tag_refresh(tag_id, username=None):
+    logger.info(f'updating {tag_id} tag for {username}')
+    update_tag(username=username, tag_id=tag_id)
+    return jsonify({"message": 'tag updated', "status": "success"}), 200

@@ -48,6 +48,7 @@ class Tag:
 
             'count': self.count,
             'proportion': self.proportion,
+            'total_user_scrobbles': self.total_user_scrobbles,
 
             'last_updated': self.last_updated
         }

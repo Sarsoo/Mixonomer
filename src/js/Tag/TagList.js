@@ -15,14 +15,12 @@ class TagList extends Component {
             isLoading: true
         }
         this.getTags();
-        this.handleRunTag = this.handleRunTag.bind(this);
         this.handleDeleteTag = this.handleDeleteTag.bind(this);
-        this.handleRunAll = this.handleRunAll.bind(this);
     }
 
     getTags(){
         var self = this;
-        axios.get('/api/tags')
+        axios.get('/api/tag')
         .then((response) => {
 
             var tags = response.data.tags.slice();
@@ -34,69 +32,29 @@ class TagList extends Component {
             });
 
             self.setState({
-                playlists: tags,
+                tags: tags,
                 isLoading: false
             });
         })
         .catch((error) => {
-            showMessage(`Error Getting Playlists (${error.response.status})`);
+            showMessage(`Error Getting Tags (${error.response.status})`);
         });
     }
 
-    handleRunTag(name, event){
-        axios.get('/api/user')
+    handleDeleteTag(tag_id, event){
+        axios.delete(`/api/tag/${tag_id}`)
         .then((response) => {
-            if(response.data.spotify_linked == true){
-                axios.get('/api/tag/run', {params: {name: name}})
-                .then((response) => {
-                    showMessage(`${name} ran`);
-                })
-                .catch((error) => {
-                    showMessage(`Error Running ${name} (${error.response.status})`);
-                });
-            }else{
-                showMessage(`Link Spotify Before Running`);
-            }
-        }).catch((error) => {
-            showMessage(`Error Running ${this.state.name} (${error.response.status})`);
-        });
-    }
-
-    handleDeleteTag(name, event){
-        axios.delete('/api/playlist', { params: { name: name } })
-        .then((response) => {
-            showMessage(`${name} Deleted`);
+            showMessage(`${tag_id} Deleted`);
             this.getTags();
         }).catch((error) => {
-            showMessage(`Error Deleting ${name} (${error.response.status})`);
-        });
-    }
-
-    handleRunAll(event){
-        axios.get('/api/user')
-        .then((response) => {
-            if(response.data.spotify_linked == true){
-                axios.get('/api/tag/run/user')
-                .then((response) => {
-                    showMessage("All Tags Ran");
-                })
-                .catch((error)  => {
-                    showMessage(`Error Running All (${error.response.status})`);
-                });
-            }else{
-                showMessage(`Link Spotify Before Running`);
-            }
-        }).catch((error) => {
-            showMessage(`Error Running ${this.state.name} (${error.response.status})`);
+            showMessage(`Error Deleting ${tag_id} (${error.response.status})`);
         });
     }
 
     render() {
 
         const grid =   <TagGrid tags={this.state.tags}
-                            handleRunTag={this.handleRunTag}
-                            handleDeleteTag={this.handleDeleteTag}
-                            handleRunAll={this.handleRunAll}/>;
+                            handleDeleteTag={this.handleDeleteTag}/>;
 
         return this.state.isLoading ? <CircularProgress /> : grid;
     }
@@ -116,7 +74,6 @@ function TagGrid(props){
                     orientation="vertical"
                     className="full-width">
                     <Button component={Link} to='tags/new' >New</Button>
-                    <Button onClick={props.handleRunAll}>Run All</Button>
                 </ButtonGroup>
             </Grid>
             { props.tags.length == 0 ? (
@@ -146,9 +103,8 @@ function TagCard(props){
                     <ButtonGroup
                     color="primary"
                     variant="contained">
-                        <Button component={Link} to={getTagLink(props.tag.name)}>View</Button>
-                        <Button onClick={(e) => props.handleRunTag(props.tag.name, e)}>Update</Button>
-                        <Button onClick={(e) => props.handleDeleteTag(props.tag.name, e)}>Delete</Button>
+                        <Button component={Link} to={getTagLink(props.tag.tag_id)}>View</Button>
+                        <Button onClick={(e) => props.handleDeleteTag(props.tag.tag_id, e)}>Delete</Button>
                     </ButtonGroup>
                 </CardActions>
             </Card>
@@ -157,7 +113,7 @@ function TagCard(props){
 }
 
 function getTagLink(tagName){
-    return `/app/tag/${tagName}/edit`;
+    return `/app/tag/${tagName}`;
 }
 
 export default TagList;

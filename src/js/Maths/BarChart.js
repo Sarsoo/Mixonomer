@@ -29,13 +29,21 @@ class BarChart extends Component {
                   }
               },
               scales: {
-                yAxes: [
-                  {
-                    ticks: {
-                      min: 0
-                    }
+                yAxes: [{
+                  ticks: {
+                      fontColor: "#d8d8d8",
+                      fontSize: 16,
+                      stepSize: 1,
+                      beginAtZero: true
                   }
-                ]
+              }],
+              xAxes: [{
+                  ticks: {
+                      fontColor: "#d8d8d8",
+                      fontSize: 16,
+                      stepSize: 1
+                  }
+              }]
               }
           }
         });

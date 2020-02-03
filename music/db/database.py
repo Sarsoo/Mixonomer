@@ -435,7 +435,7 @@ def create_tag(username: str, tag_id: str):
         logger.error(f'{tag_id} already exists for {username}')
         return None
 
-    return parse_tag_reference(user.db_ref.collection(u'tags').add({
+    user.db_ref.collection(u'tags').add({
         'tag_id': tag_id,
         'name': tag_id,
 
@@ -447,4 +447,4 @@ def create_tag(username: str, tag_id: str):
         'proportion': 0.0,
         'total_user_scrobbles': 0,
         'last_updated': None
-    })[1])
+    })

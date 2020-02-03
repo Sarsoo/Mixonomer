@@ -22,7 +22,7 @@ import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
 import HomeIcon from '@material-ui/icons/Home';
-import { Build, PieChart, QueueMusic, ExitToApp, AccountCircle, KeyboardBackspace } from '@material-ui/icons'
+import { Build, PieChart, QueueMusic, ExitToApp, AccountCircle, KeyboardBackspace, GroupWork } from '@material-ui/icons'
 
 const axios = require('axios');
 
@@ -32,6 +32,8 @@ const LazyPlaylists = React.lazy(() => import("./Playlist/AllPlaylistsRouter"))
 const LazyPlaylistView = React.lazy(() => import("./Playlist/View/PlaylistRouter"))
 const LazySettings = React.lazy(() => import("./Settings/SettingsRouter"))
 const LazyAdmin = React.lazy(() => import("./Admin/AdminRouter"))
+const LazyTags = React.lazy(() => import("./Tag/TagRouter"))
+const LazyTag = React.lazy(() => import("./Tag/View"))
 
 class MusicTools extends Component {
 
@@ -117,6 +119,10 @@ class MusicTools extends Component {
                                 <ListItemIcon><QueueMusic /></ListItemIcon>
                                 <ListItemText primary="Playlists" />
                             </ListItem>
+                            <ListItem button key="tags" component={Link} to='/app/tags'>
+                                <ListItemIcon><GroupWork /></ListItemIcon>
+                                <ListItemText primary="Tags" />
+                            </ListItem>
                             <ListItem button key="maths" component={Link} to='/app/maths/count'>
                                 <ListItemIcon><PieChart /></ListItemIcon>
                                 <ListItemText primary="Maths" />
@@ -147,6 +153,8 @@ class MusicTools extends Component {
                             <React.Suspense fallback={<LoadingMessage/>}>
                                 <Route path="/app" exact component={LazyIndex} />
                                 <Route path="/app/playlists" component={LazyPlaylists} />
+                                <Route path="/app/tags" component={LazyTags} />
+                                <Route path="/app/tag/:tag_id" component={LazyTag} />
                                 <Route path="/app/maths" component={LazyMaths} />
                                 <Route path="/app/settings" component={LazySettings} />
                                 { this.state.type == 'admin' && <Route path="/app/admin" component={LazyAdmin} /> }

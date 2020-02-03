@@ -1,15 +1,14 @@
-from flask import Blueprint, session, request, jsonify
+from flask import Blueprint, request, jsonify
 
 import os
-import datetime
 import json
 import logging
 
 from google.cloud import firestore
-from google.cloud import tasks_v2
-from google.protobuf import timestamp_pb2
 
 from music.api.decorators import login_required, login_or_basic_auth, admin_required, gae_cron, cloud_task
+from music.cloud.tasks import execute_all_user_playlists, execute_user_playlists, create_run_user_playlist_task, \
+    create_play_user_playlist_task
 from music.tasks.run_user_playlist import run_user_playlist as run_user_playlist
 from music.tasks.play_user_playlist import play_user_playlist as play_user_playlist
 
@@ -17,9 +16,6 @@ import music.db.database as database
 
 blueprint = Blueprint('api', __name__)
 db = firestore.Client()
-
-tasker = tasks_v2.CloudTasksClient()
-task_path = tasker.queue_path('sarsooxyz', 'europe-west2', 'spotify-executions')
 
 logger = logging.getLogger(__name__)
 
@@ -411,12 +407,12 @@ def run_playlist_task():
 def run_user(username=None):
 
     db_user = database.get_user(username)
-    if db_user.type == db_user.Type.admin:
+    if db_user.user_type == db_user.Type.admin:
         user_name = request.args.get('username', username)
     else:
         user_name = username
 
-    execute_user(user_name)
+    execute_user_playlists(user_name)
 
     return jsonify({'message': 'executed user', 'status': 'success'}), 200
 
@@ -427,7 +423,7 @@ def run_user_task():
 
     payload = request.get_data(as_text=True)
     if payload:
-        execute_user(payload)
+        execute_user_playlists(payload)
         return jsonify({'message': 'executed user', 'status': 'success'}), 200
 
 
@@ -436,7 +432,7 @@ def run_user_task():
 @admin_required
 def run_users(username=None):
 
-    execute_all_users()
+    execute_all_user_playlists()
     return jsonify({'message': 'executed all users', 'status': 'success'}), 200
 
 
@@ -444,123 +440,5 @@ def run_users(username=None):
 @gae_cron
 def run_users_cron():
 
-    execute_all_users()
+    execute_all_user_playlists()
     return jsonify({'status': 'success'}), 200
-
-
-def execute_all_users():
-
-    seconds_delay = 0
-    logger.info('running')
-
-    for iter_user in database.get_users():
-
-        if iter_user.spotify_linked and not iter_user.locked:
-
-            task = {
-                'app_engine_http_request': {  # Specify the type of request.
-                    'http_method': 'POST',
-                    'relative_uri': '/api/playlist/run/user/task',
-                    'body': iter_user.username.encode()
-                }
-            }
-
-            d = datetime.datetime.utcnow() + datetime.timedelta(seconds=seconds_delay)
-
-            timestamp = timestamp_pb2.Timestamp()
-            timestamp.FromDatetime(d)
-
-            task['schedule_time'] = timestamp
-
-            tasker.create_task(task_path, task)
-            seconds_delay += 30
-
-
-def execute_user(username):
-
-    playlists = database.get_user_playlists(username)
-
-    seconds_delay = 0
-    logger.info(f'running {username}')
-
-    for iterate_playlist in playlists:
-        if iterate_playlist.uri:
-
-            if os.environ.get('DEPLOY_DESTINATION', None) == 'PROD':
-                create_run_user_playlist_task(username, iterate_playlist.name, seconds_delay)
-            else:
-                run_playlist(username, iterate_playlist.name)
-
-            seconds_delay += 6
-
-
-def create_run_user_playlist_task(username, playlist_name, delay=0):
-
-    task = {
-        'app_engine_http_request': {  # Specify the type of request.
-            'http_method': 'POST',
-            'relative_uri': '/api/playlist/run/task',
-            'body': json.dumps({
-                'username': username,
-                'name': playlist_name
-            }).encode()
-        }
-    }
-
-    if delay > 0:
-
-        d = datetime.datetime.utcnow() + datetime.timedelta(seconds=delay)
-
-        # Create Timestamp protobuf.
-        timestamp = timestamp_pb2.Timestamp()
-        timestamp.FromDatetime(d)
-
-        # Add the timestamp to the tasks.
-        task['schedule_time'] = timestamp
-
-    tasker.create_task(task_path, task)
-
-
-def create_play_user_playlist_task(username,
-                                   parts=None,
-                                   playlist_type='default',
-                                   playlists=None,
-                                   shuffle=False,
-                                   include_recommendations=False,
-                                   recommendation_sample=10,
-                                   day_boundary=10,
-                                   add_this_month=False,
-                                   add_last_month=False,
-                                   delay=0,
-                                   device_name=None):
-    task = {
-        'app_engine_http_request': {  # Specify the type of request.
-            'http_method': 'POST',
-            'relative_uri': '/api/playlist/play/task',
-            'body': json.dumps({
-                'username': username,
-                'playlist_type': playlist_type,
-                'parts': parts,
-                'playlists': playlists,
-                'shuffle': shuffle,
-                'include_recommendations': include_recommendations,
-                'recommendation_sample': recommendation_sample,
-                'day_boundary': day_boundary,
-                'add_this_month': add_this_month,
-                'add_last_month': add_last_month,
-                'device_name': device_name
-            }).encode()
-        }
-    }
-
-    if delay > 0:
-        d = datetime.datetime.utcnow() + datetime.timedelta(seconds=delay)
-
-        # Create Timestamp protobuf.
-        timestamp = timestamp_pb2.Timestamp()
-        timestamp.FromDatetime(d)
-
-        # Add the timestamp to the tasks.
-        task['schedule_time'] = timestamp
-
-    tasker.create_task(task_path, task)

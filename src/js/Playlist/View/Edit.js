@@ -97,15 +97,21 @@ export class Edit extends Component{
         axios.all([this.getPlaylistInfo(), this.getPlaylists()])
         .then(axios.spread((info, playlists) => {
             
-            info.data.parts.sort(function(a, b){
+            info.data.parts.sort((a, b) => {
                 if(a.toLowerCase() < b.toLowerCase()) { return -1; }
                 if(a.toLowerCase() > b.toLowerCase()) { return 1; }
                 return 0;
             });
 
-            info.data.playlist_references.sort(function(a, b){
+            info.data.playlist_references.sort((a, b) => {
                 if(a.toLowerCase() < b.toLowerCase()) { return -1; }
                 if(a.toLowerCase() > b.toLowerCase()) { return 1; }
+                return 0;
+            });
+
+            playlists.data.playlists.sort( (a, b) => {
+                if(a.name.toLowerCase() < b.name.toLowerCase()) { return -1; }
+                if(a.name.toLowerCase() > b.name.toLowerCase()) { return 1; }
                 return 0;
             });
 
@@ -421,7 +427,7 @@ export class Edit extends Component{
                         <Grid item xs={8} sm={8} md={3}>
                             <TextField
                                 name="newPlaylistName"
-                                variant="outlined"
+                                variant="filled"
                                 label="Spotify Playlist"
                                 value={this.state.newPlaylistName}
                                 onChange={this.handleInputChange}
@@ -476,6 +482,7 @@ export class Edit extends Component{
                             <TextField type="number" 
                                     name="recommendation_sample"
                                     label="Recommendation Size"
+                                    variant="filled"
                                     value={this.state.recommendation_sample}
                                     onChange={this.handleInputChange}></TextField>
                         </Grid>
@@ -485,6 +492,7 @@ export class Edit extends Component{
                             <TextField type="number" 
                                 name="chart_limit"
                                 label="Chart Size"
+                                variant="filled"
                                 value={this.state.chart_limit}
                                 onChange={this.handleInputChange}></TextField>
                         </Grid>

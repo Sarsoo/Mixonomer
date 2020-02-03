@@ -22,14 +22,34 @@ cp -r spotfm/spotfm $stage_dir/
 
 cd $stage_dir
 
-echo '>> building css'
-sass --style=compressed src/scss/style.scss build/style.css
-
-echo '>> building javascript'
-npm run build
-
-echo '>> deploying'
 gcloud config set project sarsooxyz
-gcloud app deploy
+
+echo '>>> Target?'
+echo ''
+echo '(0) > api'
+echo '(1) > update_tag'
+read deploy_target
+
+
+case "$deploy_target" in
+        0)
+            echo '>> building css'
+            sass --style=compressed src/scss/style.scss build/style.css
+
+            echo '>> building javascript'
+            npm run build
+
+            echo '>> deploying'
+            gcloud app deploy
+            ;;
+
+        1)
+            echo '>> deploying update_tag'
+            gcloud functions deploy update_tag
+            ;;
+
+esac
+
+
 
 
