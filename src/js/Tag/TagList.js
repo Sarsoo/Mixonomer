@@ -95,9 +95,14 @@ function TagCard(props){
         <Grid item xs>
             <Card>
                 <CardContent>
-                    <Typography variant="h5" component="h2">
+                    <Typography variant="h4" component="h2">
                     { props.tag.name }
                     </Typography>
+                    {'count' in props.tag && 
+                        <Typography variant="h6" style={{color: "#b3b3b3"}}>
+                            { props.tag.count }
+                        </Typography>
+                    }
                 </CardContent>
                 <CardActions>
                     <ButtonGroup

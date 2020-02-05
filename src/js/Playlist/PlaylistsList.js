@@ -138,7 +138,7 @@ function PlaylistCard(props){
         <Grid item xs>
             <Card>
                 <CardContent>
-                    <Typography variant="h5" component="h2">
+                    <Typography variant="h4" component="h2">
                     { props.playlist.name }
                     </Typography>
                 </CardContent>
