@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 const axios = require('axios');
 
-import { Card, Button, CircularProgress, CardActions, CardContent, FormControl, InputLabel, Select, Typography, Grid, TextField } from '@material-ui/core';
+import { Card, Button, CircularProgress, CardActions, CardContent, FormControl, InputLabel, Select, Typography, Grid, TextField, MenuItem } from '@material-ui/core';
 import { Delete } from '@material-ui/icons';
 import { makeStyles } from '@material-ui/core/styles';
 
@@ -282,10 +282,9 @@ class View extends Component{
                             </Grid>
                         }
                         <Grid item xs={12} sm={this.state.addType != 'artists' ? 2 : 4} md={this.state.addType != 'artists' ? 2 : 4}>
-                            <FormControl>
+                            <FormControl variant="filled">
                                 <InputLabel htmlFor="addType">Type</InputLabel>
                                 <Select
-                                    native
                                     value={this.state.addType}
                                     onChange={this.handleInputChange}
                                     inputProps={{
@@ -293,9 +292,9 @@ class View extends Component{
                                         id: "addType",
                                     }}
                                     >
-                                    <option value="artists">Artist</option>
-                                    <option value="albums">Album</option>
-                                    <option value="tracks">Track</option>
+                                    <MenuItem value="artists">Artist</MenuItem>
+                                    <MenuItem value="albums">Album</MenuItem>
+                                    <MenuItem value="tracks">Track</MenuItem>
                                     </Select>
                             </FormControl>
                         </Grid>

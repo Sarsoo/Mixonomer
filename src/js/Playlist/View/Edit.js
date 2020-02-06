@@ -2,7 +2,7 @@ import React, { Component } from "react";
 const axios = require('axios');
 
 import { Card, Button, CircularProgress, FormControl, TextField, InputLabel, Select, Checkbox, FormControlLabel, 
-    CardActions, CardContent, Typography, Grid } from '@material-ui/core';
+    CardActions, CardContent, Typography, Grid, MenuItem } from '@material-ui/core';
 import { Delete } from '@material-ui/icons';
 import { makeStyles } from '@material-ui/core/styles';
 
@@ -478,6 +478,7 @@ export class Edit extends Component{
                                 labelPlacement="bottom"
                                 label="Library Tracks"/>
                         </Grid>
+                        { this.state.include_recommendations == true &&
                         <Grid item xs={12}>
                             <TextField type="number" 
                                     name="recommendation_sample"
@@ -486,7 +487,7 @@ export class Edit extends Component{
                                     value={this.state.recommendation_sample}
                                     onChange={this.handleInputChange}></TextField>
                         </Grid>
-
+                        }
                         { this.state.type == 'fmchart' &&
                         <Grid item xs={12}>
                             <TextField type="number" 
@@ -502,7 +503,6 @@ export class Edit extends Component{
                             <FormControl variant="filled">
                                 <InputLabel htmlFor="chart_range">Chart Range</InputLabel>
                                 <Select
-                                native
                                 value={this.state.chart_range}
                                 onChange={this.handleInputChange}
                                 inputProps={{
@@ -510,12 +510,12 @@ export class Edit extends Component{
                                     id: "chart_range",
                                 }}
                                 >
-                                    <option value="WEEK">7 Day</option>
-                                    <option value="MONTH">30 Day</option>
-                                    <option value="QUARTER">90 Day</option>
-                                    <option value="HALFYEAR">180 Day</option>
-                                    <option value="YEAR">365 Day</option>
-                                    <option value="OVERALL">Overall</option>
+                                    <MenuItem value="WEEK">7 Day</MenuItem>
+                                    <MenuItem value="MONTH">30 Day</MenuItem>
+                                    <MenuItem value="QUARTER">90 Day</MenuItem>
+                                    <MenuItem value="HALFYEAR">180 Day</MenuItem>
+                                    <MenuItem value="YEAR">365 Day</MenuItem>
+                                    <MenuItem value="OVERALL">Overall</MenuItem>
                                     </Select>
                             </FormControl>
                         </Grid>
@@ -552,7 +552,6 @@ export class Edit extends Component{
                             <FormControl variant="filled">
                                 <InputLabel htmlFor="type-select">Type</InputLabel>
                                 <Select
-                                native
                                 value={this.state.type}
                                 onChange={this.handleInputChange}
                                 inputProps={{
@@ -560,9 +559,9 @@ export class Edit extends Component{
                                     id: 'type-select',
                                 }}
                                 >
-                                    <option value="default">Default</option>
-                                    <option value="recents">Recents</option>
-                                    <option value="fmchart">Last.fm Chart</option>
+                                    <MenuItem value="default">Default</MenuItem>
+                                    <MenuItem value="recents">Recents</MenuItem>
+                                    <MenuItem value="fmchart">Last.fm Chart</MenuItem>
                                 </Select>
                             </FormControl>
                         </Grid>

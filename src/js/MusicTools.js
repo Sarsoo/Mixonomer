@@ -7,7 +7,7 @@ import showMessage from "./Toast.js"
 
 import GlobalTheme from './Theme.js';
 
-import { Typography } from '@material-ui/core';
+import { Typography, CircularProgress } from '@material-ui/core';
 import { ThemeProvider } from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
@@ -171,7 +171,7 @@ class MusicTools extends Component {
 }
 
 function LoadingMessage(props) {
-    return <ThemeProvider theme={GlobalTheme}><Typography variant="h5" component="h2" className="ui-text center-text">Loading...</Typography></ThemeProvider>;
+    return <CircularProgress/>;
 }
 
 export default MusicTools;
