@@ -3,6 +3,7 @@ from flask import Blueprint, request, jsonify
 import os
 import json
 import logging
+from datetime import datetime
 
 from google.cloud import firestore
 
@@ -117,7 +118,8 @@ def playlist(username=None):
                 'recommendation_sample': playlist_recommendation_sample if playlist_recommendation_sample is not None else 10,
                 'uri': None,
                 'shuffle': playlist_shuffle if playlist_shuffle is not None else False,
-                'type': playlist_type if playlist_type is not None else 'default'
+                'type': playlist_type if playlist_type is not None else 'default',
+                'last_updated': datetime.utcnow()
             }
 
             if user_ref.get().to_dict()['spotify_linked']:

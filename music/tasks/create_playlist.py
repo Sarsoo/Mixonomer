@@ -10,7 +10,7 @@ logger = logging.getLogger(__name__)
 
 
 def create_playlist(username, name):
-    logger.info(f'creating {username} / {name}')
+    logger.info(f'creating spotify playlist for {username} / {name}')
 
     user = database.get_user(username)
     if user is not None:
@@ -22,8 +22,8 @@ def create_playlist(username, name):
             return playlist
         else:
             logger.error(f'no response received {username} / {name}')
-            return None
+            return
 
     else:
         logger.error(f'{username} not found')
-        return None
+        return

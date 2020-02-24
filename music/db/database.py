@@ -217,6 +217,8 @@ def parse_playlist_reference(username, playlist_ref=None, playlist_snapshot=None
                         description_overwrite=playlist_dict.get('description_overwrite'),
                         description_suffix=playlist_dict.get('description_suffix'),
 
+                        last_updated=playlist_dict.get('last_updated'),
+
                         lastfm_stat_count=playlist_dict.get('lastfm_stat_count', 0),
                         lastfm_stat_album_count=playlist_dict.get('lastfm_stat_album_count', 0),
                         lastfm_stat_artist_count=playlist_dict.get('lastfm_stat_artist_count', 0),
@@ -246,6 +248,8 @@ def parse_playlist_reference(username, playlist_ref=None, playlist_snapshot=None
 
                                description_overwrite=playlist_dict.get('description_overwrite'),
                                description_suffix=playlist_dict.get('description_suffix'),
+
+                               last_updated=playlist_dict.get('last_updated'),
 
                                lastfm_stat_count=playlist_dict.get('lastfm_stat_count', 0),
                                lastfm_stat_album_count=playlist_dict.get('lastfm_stat_album_count', 0),
@@ -280,6 +284,8 @@ def parse_playlist_reference(username, playlist_ref=None, playlist_snapshot=None
 
                                    description_overwrite=playlist_dict.get('description_overwrite'),
                                    description_suffix=playlist_dict.get('description_suffix'),
+
+                                   last_updated=playlist_dict.get('last_updated'),
 
                                    lastfm_stat_count=playlist_dict.get('lastfm_stat_count', 0),
                                    lastfm_stat_album_count=playlist_dict.get('lastfm_stat_album_count', 0),

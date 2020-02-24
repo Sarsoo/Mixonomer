@@ -22,76 +22,82 @@ logger = logging.getLogger(__name__)
 
 
 def run_user_playlist(username, playlist_name):
+    """Generate and upadate a user's playlist"""
     user = database.get_user(username)
 
     logger.info(f'running {username} / {playlist_name}')
 
-    if user:
+    # PRE-RUN CHECKS
+    if user is None:
+        logger.critical(f'{username} not found')
+        return
 
-        playlist = database.get_playlist(username=username, name=playlist_name)
+    playlist = database.get_playlist(username=username, name=playlist_name)
 
-        if playlist is not None:
+    if playlist is None:
+        logger.critical(f'playlist not found ({username}/{playlist_name})')
+        return
 
-            if playlist.uri is None:
-                logger.critical(f'no playlist id to populate ({username}/{playlist_name})')
-                return None
+    if playlist.uri is None:
+        logger.critical(f'no playlist id to populate ({username}/{playlist_name})')
+        return
 
-            net = database.get_authed_spotify_network(username)
+    # END CHECKS
 
-            engine = PlaylistEngine(net)
+    net = database.get_authed_spotify_network(username)
+    engine = PlaylistEngine(net)
+    part_generator = PartGenerator(user=user)
 
-            if isinstance(playlist, LastFMChartPlaylist) and user.lastfm_username is not None:
-                engine.sources.append(ChartSource(spotnet=net, fmnet=database.get_authed_lastfm_network(user.username)))
+    spotify_playlist_names = part_generator.get_recursive_parts(playlist.name)
 
-            processors = [DeduplicateByID()]
+    processors = [DeduplicateByID()]
+    params = [
+        PlaylistSource.Params(names=spotify_playlist_names)
+    ]
 
-            if not isinstance(playlist, LastFMChartPlaylist):
-                if playlist.shuffle is True:
-                    processors.append(Shuffle())
-                else:
-                    processors.append(SortReleaseDate(reverse=True))
+    # OPTIONS
+    if playlist.include_recommendations:
+        params.append(RecommendationSource.Params(recommendation_limit=playlist.recommendation_sample))
 
-            part_generator = PartGenerator(user=user)
-            submit_parts = part_generator.get_recursive_parts(playlist.name)
+    if playlist.include_library_tracks:
+        params.append(LibraryTrackSource.Params())
+    # END OPTIONS
 
-            params = [
-                PlaylistSource.Params(names=submit_parts)
-            ]
-
-            if playlist.include_recommendations:
-                params.append(RecommendationSource.Params(recommendation_limit=playlist.recommendation_sample))
-
-            if playlist.include_library_tracks:
-                params.append(LibraryTrackSource.Params())
-
-            if isinstance(playlist, LastFMChartPlaylist):
-                params.append(ChartSource.Params(chart_range=playlist.chart_range, limit=playlist.chart_limit))
-
-            if isinstance(playlist, RecentsPlaylist):
-                boundary_date = datetime.datetime.now(datetime.timezone.utc) - \
-                                datetime.timedelta(days=int(playlist.day_boundary))
-                tracks = engine.get_recent_playlist(params=params,
-                                                    processors=processors,
-                                                    boundary_date=boundary_date,
-                                                    add_this_month=playlist.add_this_month,
-                                                    add_last_month=playlist.add_last_month)
-            else:
-                tracks = engine.make_playlist(params=params,
-                                              processors=processors)
-
-            engine.execute_playlist(tracks, Uri(playlist.uri))
-
-            overwrite = playlist.description_overwrite
-            suffix = playlist.description_suffix
-
-            engine.change_description(sorted(submit_parts),
-                                      uri=Uri(playlist.uri),
-                                      overwrite=overwrite,
-                                      suffix=suffix)
-
+    if isinstance(playlist, LastFMChartPlaylist):
+        if user.lastfm_username is None:
+            logger.error(f'{username} has no associated last.fm username, chart source skipped')
         else:
-            logger.critical(f'playlist not found ({username}/{playlist_name})')
-            return None
+            engine.sources.append(ChartSource(spotnet=net, fmnet=database.get_authed_lastfm_network(user.username)))
+            params.append(ChartSource.Params(chart_range=playlist.chart_range, limit=playlist.chart_limit))
 
     else:
-        logger.critical(f'{username} not found')
+        # INCLUDE SORT METHOD (no sorting for last.fm chart playlist)
+        if playlist.shuffle is True:
+            processors.append(Shuffle())
+        else:
+            processors.append(SortReleaseDate(reverse=True))
+
+    # GENERATE TRACKS
+    if isinstance(playlist, RecentsPlaylist):
+        boundary_date = datetime.datetime.now(datetime.timezone.utc) - \
+                        datetime.timedelta(days=int(playlist.day_boundary))
+        tracks = engine.get_recent_playlist(params=params,
+                                            processors=processors,
+                                            boundary_date=boundary_date,
+                                            add_this_month=playlist.add_this_month,
+                                            add_last_month=playlist.add_last_month)
+    else:
+        tracks = engine.make_playlist(params=params,
+                                      processors=processors)
+
+    # NET OPS
+    engine.execute_playlist(tracks, Uri(playlist.uri))
+
+    overwrite = playlist.description_overwrite
+    suffix = playlist.description_suffix
+
+    engine.change_description(sorted(spotify_playlist_names),
+                              uri=Uri(playlist.uri),
+                              overwrite=overwrite,
+                              suffix=suffix)
+    playlist.last_updated = datetime.datetime.utcnow()

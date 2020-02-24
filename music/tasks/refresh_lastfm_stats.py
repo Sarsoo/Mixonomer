@@ -23,6 +23,14 @@ def refresh_lastfm_track_stats(username, playlist_name):
 
     playlist = database.get_playlist(username=username, name=playlist_name)
 
+    if playlist is None:
+        logger.critical(f'playlist {playlist_name} for {username} not found')
+        return
+
+    if playlist.uri is None:
+        logger.critical(f'playlist {playlist_name} for {username} has no spotify uri')
+        return
+
     spotify_playlist = spotnet.get_playlist(uri=Uri(playlist.uri))
     track_count = counter.count_playlist(playlist=spotify_playlist)
 
@@ -50,6 +58,14 @@ def refresh_lastfm_album_stats(username, playlist_name):
 
     playlist = database.get_playlist(username=username, name=playlist_name)
 
+    if playlist is None:
+        logger.critical(f'playlist {playlist_name} for {username} not found')
+        return
+
+    if playlist.uri is None:
+        logger.critical(f'playlist {playlist_name} for {username} has no spotify uri')
+        return
+
     spotify_playlist = spotnet.get_playlist(uri=Uri(playlist.uri))
     album_count = counter.count_playlist(playlist=spotify_playlist, query_album=True)
 
@@ -76,6 +92,14 @@ def refresh_lastfm_artist_stats(username, playlist_name):
     counter = Counter(fmnet=fmnet, spotnet=spotnet)
 
     playlist = database.get_playlist(username=username, name=playlist_name)
+
+    if playlist is None:
+        logger.critical(f'playlist {playlist_name} for {username} not found')
+        return
+
+    if playlist.uri is None:
+        logger.critical(f'playlist {playlist_name} for {username} has no spotify uri')
+        return
 
     spotify_playlist = spotnet.get_playlist(uri=Uri(playlist.uri))
     artist_count = counter.count_playlist(playlist=spotify_playlist, query_artist=True)

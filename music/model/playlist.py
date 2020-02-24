@@ -35,6 +35,8 @@ class Playlist:
                  description_overwrite: str = None,
                  description_suffix: str = None,
 
+                 last_updated: datetime = None,
+
                  lastfm_stat_count: int = None,
                  lastfm_stat_album_count: int = None,
                  lastfm_stat_artist_count: int = None,
@@ -61,6 +63,8 @@ class Playlist:
         self._sort = sort
         self._description_overwrite = description_overwrite
         self._description_suffix = description_suffix
+
+        self._last_updated = last_updated
 
         self._lastfm_stat_count = lastfm_stat_count
         self._lastfm_stat_album_count = lastfm_stat_album_count
@@ -89,6 +93,8 @@ class Playlist:
             'sort': self.sort.name,
             'description_overwrite': self.description_overwrite,
             'description_suffix': self.description_suffix,
+
+            'last_updated': self.last_updated,
 
             'lastfm_stat_count': self.lastfm_stat_count,
             'lastfm_stat_album_count': self.lastfm_stat_album_count,
@@ -195,6 +201,15 @@ class Playlist:
         self._description_suffix = value
 
     @property
+    def last_updated(self):
+        return self._last_updated
+
+    @last_updated.setter
+    def last_updated(self, value):
+        database.update_playlist(self.username, self.name, {'last_updated': value})
+        self._last_updated = value
+
+    @property
     def lastfm_stat_count(self):
         return self._lastfm_stat_count
 
@@ -279,6 +294,8 @@ class RecentsPlaylist(Playlist):
                  description_overwrite: str = None,
                  description_suffix: str = None,
 
+                 last_updated: datetime = None,
+
                  lastfm_stat_count: int = None,
                  lastfm_stat_album_count: int = None,
                  lastfm_stat_artist_count: int = None,
@@ -310,6 +327,8 @@ class RecentsPlaylist(Playlist):
 
                          description_overwrite=description_overwrite,
                          description_suffix=description_suffix,
+
+                         last_updated=last_updated,
 
                          lastfm_stat_count=lastfm_stat_count,
                          lastfm_stat_album_count=lastfm_stat_album_count,
@@ -388,6 +407,8 @@ class LastFMChartPlaylist(Playlist):
                  description_overwrite: str = None,
                  description_suffix: str = None,
 
+                 last_updated: datetime = None,
+
                  lastfm_stat_count: int = None,
                  lastfm_stat_album_count: int = None,
                  lastfm_stat_artist_count: int = None,
@@ -415,6 +436,8 @@ class LastFMChartPlaylist(Playlist):
 
                          description_overwrite=description_overwrite,
                          description_suffix=description_suffix,
+
+                         last_updated=last_updated,
 
                          lastfm_stat_count=lastfm_stat_count,
                          lastfm_stat_album_count=lastfm_stat_album_count,
