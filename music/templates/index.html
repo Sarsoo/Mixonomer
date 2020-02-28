@@ -16,12 +16,20 @@
 
 	<div class="row">
 		<div class="{% if logged_in %}pad-12{% else %}pad-9{% endif %} card">
-			<h1>music tools</h1>
+			<h1 class="center-text">Music Tools</h1>
 
-			<p class="center-text">create "super-playlists" of smaller modular playlists</p>
+			<p class="center-text">A set of tools using Spotify and Last.fm to create smart playlists and calculate listening statistics</p>
+			<p class="center-text">Playlists are updated multiple times a day to keep tracks up to date</p>
+
+			<p class="center-text">Written in Python and Javascript, based on the <a href="https://github.com/Sarsoo/spotframework">spotframework</a> and <a href="https://github.com/Sarsoo/pyfmframework">fmframework</a> libraries</p>
+
+			<div style="padding:10px">
+				<a class="button" style="padding:15px;width:49%" href="https://github.com/Sarsoo/Music-Tools">View Source</a>
+				<a class="button" style="padding:15px;width:49%" href="https://github.com/Sarsoo/Music-Tools-iOS">iOS Client Source</a>
+			</div>
 
 			{% if logged_in %}
-				<a class="button full-width" href="/app">launch</a>
+				<a class="button full-width" href="/app">Launch</a>
 			{% endif %}
 		</div>
 
@@ -30,5 +38,49 @@
 		{% block form %}{% endblock %}
 		
 		{% endif %}
+	</div>
+	<div class="row">
+		<h1>Smart Playlists</h1>
+	</div>
+	<div class="row center-text">
+		<div class="pad-6 card">
+			<h1 class="center-text">Sources</h1>
+			<p>Create smart Spotify playlists pulling tracks from</p>
+			<ul style="text-align:left" >
+				<li style="padding:10px">Spotify Playlists</li>
+				<li style="padding:10px">Spotify Library Tracks</li>
+				<li style="padding:10px">Music Tools Playlists</li>
+			</ul> 
+		</div>
+		<div class="pad-6 card">
+			<h1 class="center-text">Currents</h1>
+			<p>Currents are mix playlists acting as the a snapshot of what you've been listening to recently</p>
+			<p>Include date filtering on playlist sources for recently added tracks</p>
+			<p>Optionally search for and include "monthly" playlists for the last two months when named e.g february 20</p>
+		</div>
+	</div>
+	<div class="row center-text">
+		<div class="pad-6 card">
+			<h1 class="center-text">Last.fm Charts</h1>
+			<p>Create playlists including Last.fm track charts of varying length and time range</p>
+		</div>
+		<div class="pad-6 card">
+			<h1 class="center-text">Recommendations</h1>
+			<p>Include Spotify recommendations based on the other tracks</p>
+		</div>
+		
+	</div>
+	<div class="row">
+		<h1>Tags</h1>
+	</div>
+	<div class="row center-text">
+		<div class="pad-6 card">
+			<h1 class="center-text">Last.fm Integration</h1>
+			<p>Create groups of entries for scrobble summing and listening stats</p>
+		</div>
+		<div class="pad-6 card">
+			<h1 class="center-text">Visualise Data</h1>
+			<p>Present listening trends with pie charts</p>
+		</div>
 	</div>
 {% endblock %}

@@ -3,15 +3,13 @@
 {% block form %}
 
 	<div class="pad-3 card">
-		<h1 class="sectiontitle">register</h1>
-
 		<form name="register" action="/auth/register" method="POST" onsubmit="return handleRegister()">
-			<p class="center-text">username<br><input type="text" name="username" class="full-width"></p>
-			<p class="center-text">password<br><input type="password" name="password" class="full-width"></p>
-			<p class="center-text">password again<br><input type="password" name="password_again" class="full-width"></p>
+			<p class="center-text">Username<br><input type="text" name="username" class="full-width"></p>
+			<p class="center-text">Password<br><input type="password" name="password" class="full-width"></p>
+			<p class="center-text">Password again<br><input type="password" name="password_again" class="full-width"></p>
 			<p id="status" style="display: none; color: red" class="center-text"></p>
 
-			<button class="button full-width" onclick="handleRegister()" type="submit">register</button>
+			<button class="button full-width" onclick="handleRegister()" type="submit">Register</button>
 
 		</form>
 		<script src="{{ url_for('static', filename='js/register.bundle.js') }}"></script>

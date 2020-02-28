@@ -560,7 +560,7 @@ export class Edit extends Component{
                                 }}
                                 >
                                     <MenuItem value="default">Default</MenuItem>
-                                    <MenuItem value="recents">Recents</MenuItem>
+                                    <MenuItem value="recents">Currents</MenuItem>
                                     <MenuItem value="fmchart">Last.fm Chart</MenuItem>
                                 </Select>
                             </FormControl>

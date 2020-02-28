@@ -137,7 +137,7 @@ class MusicTools extends Component {
                                     <ListItemText primary="Admin" />
                                 </ListItem>
                             }
-                            <ListItem button key="logout" component={Link} to='/auth/logout'>
+                            <ListItem button key="logout" onClick={(e) => { window.location.href = '/auth/logout' }}>
                                 <ListItemIcon><KeyboardBackspace /></ListItemIcon>
                                 <ListItemText primary="Logout" />
                             </ListItem>

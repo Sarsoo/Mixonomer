@@ -26,12 +26,17 @@ class NewPlaylist extends Component {
         switch(value){
             case 'default':
                 this.setState({
-                    description: 'Merge playlists as-is with deduplication by spotify id'
+                    description: 'Merge playlists as-is with deduplication by Spotify id'
                 })
                 break;
             case 'recents':
                 this.setState({
-                    description: "Select songs from playlists which have been added since a variable number of days"
+                    description: "Filter added playlists for recently added tracks, optionally add monthly playlists"
+                })
+                break;
+            case 'fmchart':
+                this.setState({
+                    description: "Include Last.fm track chart data with varying time ranges"
                 })
                 break;
         }
@@ -104,7 +109,7 @@ class NewPlaylist extends Component {
                                 className="full-width"
                                 >
                                     <option value="default">Default</option>
-                                    <option value="recents">Recents</option>
+                                    <option value="recents">Currents</option>
                                     <option value="fmchart">Last.fm Chart</option>
                                 </Select>
                             </FormControl>
