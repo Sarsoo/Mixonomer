@@ -6,7 +6,7 @@ import logging
 from spotframework.engine.playlistengine import PlaylistEngine, PlaylistSource, RecommendationSource, LibraryTrackSource
 from spotframework.engine.processor.shuffle import Shuffle
 from spotframework.engine.processor.sort import SortReleaseDate
-from spotframework.engine.processor.deduplicate import DeduplicateByID
+from spotframework.engine.processor.deduplicate import DeduplicateByName
 
 from spotframework.model.uri import Uri
 
@@ -50,7 +50,7 @@ def run_user_playlist(username, playlist_name):
 
     spotify_playlist_names = part_generator.get_recursive_parts(playlist.name)
 
-    processors = [DeduplicateByID()]
+    processors = [DeduplicateByName()]
     params = [
         PlaylistSource.Params(names=spotify_playlist_names)
     ]
