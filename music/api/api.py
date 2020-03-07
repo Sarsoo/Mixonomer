@@ -444,3 +444,26 @@ def run_users_cron():
 
     execute_all_user_playlists()
     return jsonify({'status': 'success'}), 200
+
+
+@blueprint.route('/playlist/image', methods=['GET'])
+@login_or_basic_auth
+def image(username=None):
+
+    name = request.args.get('name', None)
+
+    if name is None:
+        return jsonify({'error': "no name provided"}), 400
+
+    _playlist = database.get_playlist(name=name, username=username)
+    if _playlist is None:
+        return jsonify({'error': "playlist not found"}), 404
+
+    net = database.get_authed_spotify_network(username=username)
+
+    spotify_playlist = net.get_playlist(uri_string=_playlist.uri)
+
+    if spotify_playlist is None:
+        return jsonify({'error': "no spotify playlist returned"}), 404
+
+    return jsonify({'images': spotify_playlist.images, 'status': 'success'}), 200
