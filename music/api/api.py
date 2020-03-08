@@ -119,7 +119,17 @@ def playlist(username=None):
                 'uri': None,
                 'shuffle': playlist_shuffle if playlist_shuffle is not None else False,
                 'type': playlist_type if playlist_type is not None else 'default',
-                'last_updated': datetime.utcnow()
+                'last_updated': datetime.utcnow(),
+
+                'lastfm_stat_count': 0,
+                'lastfm_stat_album_count': 0,
+                'lastfm_stat_artist_count': 0,
+
+                'lastfm_stat_percent': 0,
+                'lastfm_stat_album_percent': 0,
+                'lastfm_stat_artist_percent': 0,
+
+                'lastfm_stat_last_refresh': datetime.utcnow(),
             }
 
             if user_ref.get().to_dict()['spotify_linked']:
