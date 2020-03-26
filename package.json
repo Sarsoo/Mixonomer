@@ -1,7 +1,7 @@
 {
-  "name": "spotify.sarsoo.xyz",
+  "name": "music-tools",
   "version": "1.0.0",
-  "description": "spotify playlist manager web app",
+  "description": "web app for spotify playlist management with last.fm integration",
   "private": true,
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
@@ -10,14 +10,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/Sarsoo/spotify-web.git"
+    "url": "git+https://github.com/Sarsoo/Music-Tools.git"
   },
   "author": "sarsoo",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/Sarsoo/spotify-web/issues"
+    "url": "https://github.com/Sarsoo/Music-Tools/issues"
   },
-  "homepage": "https://github.com/Sarsoo/spotify-web#readme",
+  "homepage": "https://github.com/Sarsoo/Music-Tools#readme",
   "dependencies": {
     "@material-ui/core": "^4.9.5",
     "@material-ui/icons": "^4.9.1",
@@ -29,14 +29,14 @@
   },
   "devDependencies": {
     "@babel/cli": "^7.8.4",
-    "@babel/core": "^7.8.6",
-    "@babel/preset-env": "^7.8.6",
-    "@babel/preset-react": "^7.8.3",
-    "babel-loader": "^8.0.6",
+    "@babel/core": "^7.9.0",
+    "@babel/preset-env": "^7.9.0",
+    "@babel/preset-react": "^7.9.4",
+    "babel-loader": "^8.1.0",
     "clean-webpack-plugin": "^3.0.0",
     "css-loader": "^3.4.2",
     "style-loader": "^0.23.1",
-    "webpack": "^4.41.6",
+    "webpack": "^4.42.1",
     "webpack-cli": "^3.3.11",
     "webpack-merge": "^4.2.2"
   }
