@@ -3,13 +3,11 @@ from flask import Blueprint, jsonify
 import logging
 from datetime import datetime
 
-from google.cloud import firestore
 from google.cloud import tasks_v2
 
 from music.api.decorators import login_or_basic_auth, admin_required
 
 blueprint = Blueprint('admin-api', __name__)
-db = firestore.Client()
 
 tasker = tasks_v2.CloudTasksClient()
 task_path = tasker.queue_path('sarsooxyz', 'europe-west2', 'spotify-executions')
@@ -20,7 +18,7 @@ logger = logging.getLogger(__name__)
 @blueprint.route('/tasks', methods=['GET'])
 @login_or_basic_auth
 @admin_required
-def get_tasks(username=None):
+def get_tasks(user=None):
 
     tasks = [i for i in tasker.list_tasks(task_path)]
 

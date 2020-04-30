@@ -21,7 +21,7 @@ logger = logging.getLogger(__name__)
 @login_or_basic_auth
 @spotify_link_required
 @lastfm_username_required
-def count(username=None):
+def count(user=None):
 
     uri = request.args.get('uri', None)
     playlist_name = request.args.get('playlist_name', None)
@@ -35,8 +35,8 @@ def count(username=None):
         except ValueError:
             return jsonify({'error': 'malformed uri provided'}), 401
 
-    spotnet = database.get_authed_spotify_network(username)
-    fmnet = database.get_authed_lastfm_network(username)
+    spotnet = database.get_authed_spotify_network(user)
+    fmnet = database.get_authed_lastfm_network(user)
     counter = Counter(fmnet=fmnet, spotnet=spotnet)
 
     if uri:
@@ -67,18 +67,18 @@ def count(username=None):
 @login_or_basic_auth
 @spotify_link_required
 @lastfm_username_required
-def playlist_refresh(username=None):
+def playlist_refresh(user=None):
 
     playlist_name = request.args.get('name', None)
 
     if playlist_name:
 
         if os.environ.get('DEPLOY_DESTINATION', None) == 'PROD':
-            create_refresh_playlist_task(username, playlist_name)
+            create_refresh_playlist_task(user.username, playlist_name)
         else:
-            refresh_lastfm_track_stats(username, playlist_name)
-            refresh_lastfm_album_stats(username, playlist_name)
-            refresh_lastfm_artist_stats(username, playlist_name)
+            refresh_lastfm_track_stats(user.username, playlist_name)
+            refresh_lastfm_album_stats(user.username, playlist_name)
+            refresh_lastfm_artist_stats(user.username, playlist_name)
 
         return jsonify({'message': 'execution requested', 'status': 'success'}), 200
 
@@ -135,7 +135,7 @@ def run_playlist_artist_task():
 @blueprint.route('/playlist/refresh/users', methods=['GET'])
 @login_or_basic_auth
 @admin_required
-def run_users(username=None):
+def run_users(user=None):
     execute_all_user_playlist_stats()
     return jsonify({'message': 'executed all users', 'status': 'success'}), 200
 
@@ -149,13 +149,12 @@ def run_users_task():
 
 @blueprint.route('/playlist/refresh/user', methods=['GET'])
 @login_or_basic_auth
-def run_user(username=None):
+def run_user(user=None):
 
-    db_user = database.get_user(username)
-    if db_user.type == db_user.Type.admin:
-        user_name = request.args.get('username', username)
+    if user.type == 'admin':
+        user_name = request.args.get('username', user.username)
     else:
-        user_name = username
+        user_name = user.username
 
     execute_user_playlist_stats(user_name)
 

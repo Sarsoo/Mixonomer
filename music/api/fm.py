@@ -13,9 +13,9 @@ logger = logging.getLogger(__name__)
 @blueprint.route('/today', methods=['GET'])
 @login_or_basic_auth
 @lastfm_username_required
-def daily_scrobbles(username=None):
+def daily_scrobbles(user=None):
 
-    net = database.get_authed_lastfm_network(username)
+    net = database.get_authed_lastfm_network(user)
 
     total = net.get_scrobble_count_from_date(input_date=date.today())
 

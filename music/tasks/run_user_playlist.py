@@ -14,7 +14,8 @@ from spotfm.engine.chart_source import ChartSource
 
 import music.db.database as database
 from music.db.part_generator import PartGenerator
-from music.model.playlist import RecentsPlaylist, LastFMChartPlaylist
+from music.model.user import User
+from music.model.playlist import Playlist
 
 db = firestore.Client()
 
@@ -23,7 +24,9 @@ logger = logging.getLogger(__name__)
 
 def run_user_playlist(username, playlist_name):
     """Generate and upadate a user's playlist"""
-    user = database.get_user(username)
+    user = User.collection.filter('username', '==', username.strip().lower()).get()
+    if user is None:
+        logger.error(f'user {username} not found')
 
     logger.info(f'running {username} / {playlist_name}')
 
@@ -32,7 +35,7 @@ def run_user_playlist(username, playlist_name):
         logger.critical(f'{username} not found')
         return
 
-    playlist = database.get_playlist(username=username, name=playlist_name)
+    playlist = Playlist.collection.parent(user.key).filter('name', '==', playlist_name).get()
 
     if playlist is None:
         logger.critical(f'playlist not found ({username}/{playlist_name})')
@@ -44,7 +47,7 @@ def run_user_playlist(username, playlist_name):
 
     # END CHECKS
 
-    net = database.get_authed_spotify_network(username)
+    net = database.get_authed_spotify_network(user)
     engine = PlaylistEngine(net)
     part_generator = PartGenerator(user=user)
 
@@ -63,11 +66,11 @@ def run_user_playlist(username, playlist_name):
         params.append(LibraryTrackSource.Params())
     # END OPTIONS
 
-    if isinstance(playlist, LastFMChartPlaylist):
+    if playlist.type == 'fmchart':
         if user.lastfm_username is None:
             logger.error(f'{username} has no associated last.fm username, chart source skipped')
         else:
-            engine.sources.append(ChartSource(spotnet=net, fmnet=database.get_authed_lastfm_network(user.username)))
+            engine.sources.append(ChartSource(spotnet=net, fmnet=database.get_authed_lastfm_network(user)))
             params.append(ChartSource.Params(chart_range=playlist.chart_range, limit=playlist.chart_limit))
 
     else:
@@ -78,7 +81,7 @@ def run_user_playlist(username, playlist_name):
             processors.append(SortReleaseDate(reverse=True))
 
     # GENERATE TRACKS
-    if isinstance(playlist, RecentsPlaylist):
+    if playlist.type == 'recents':
         boundary_date = datetime.datetime.now(datetime.timezone.utc) - \
                         datetime.timedelta(days=int(playlist.day_boundary))
         tracks = engine.get_recent_playlist(params=params,
@@ -101,3 +104,4 @@ def run_user_playlist(username, playlist_name):
                               overwrite=overwrite,
                               suffix=suffix)
     playlist.last_updated = datetime.datetime.utcnow()
+    playlist.update()

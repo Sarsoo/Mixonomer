@@ -3,7 +3,7 @@ import logging
 
 from flask import session, request, jsonify
 
-from music.db import database as database
+from music.model.user import User
 
 logger = logging.getLogger(__name__)
 
@@ -18,17 +18,24 @@ def is_logged_in():
 def is_basic_authed():
     if request.authorization:
         if request.authorization.get('username', None) and request.authorization.get('password', None):
-            if database.get_user(request.authorization.username).check_password(request.authorization.password):
-                return True
+            user = User.collection.filter('username', '==', request.authorization.username.strip().lower()).get()
+            if user is None:
+                return False, None
 
-    return False
+            if user.check_password(request.authorization.password):
+                return True, user
+            else:
+                return False, user
+
+    return False, None
 
 
 def login_required(func):
     @functools.wraps(func)
     def login_required_wrapper(*args, **kwargs):
         if is_logged_in():
-            return func(username=session['username'], *args, **kwargs)
+            user = User.collection.filter('username', '==', session['username'].strip().lower()).get()
+            return func(user=user, *args, **kwargs)
         else:
             logger.warning('user not logged in')
             return jsonify({'error': 'not logged in'}), 401
@@ -39,12 +46,15 @@ def login_or_basic_auth(func):
     @functools.wraps(func)
     def login_or_basic_auth_wrapper(*args, **kwargs):
         if is_logged_in():
-            return func(username=session['username'], *args, **kwargs)
-        elif is_basic_authed():
-            return func(username=request.authorization.username, *args, **kwargs)
+            user = User.collection.filter('username', '==', session['username'].strip().lower()).get()
+            return func(user=user, *args, **kwargs)
         else:
-            logger.warning('user not logged in')
-            return jsonify({'error': 'not logged in'}), 401
+            check, user = is_basic_authed()
+            if check:
+                return func(user=user, *args, **kwargs)
+            else:
+                logger.warning('user not logged in')
+                return jsonify({'error': 'not logged in'}), 401
 
     return login_or_basic_auth_wrapper
 
@@ -52,10 +62,10 @@ def login_or_basic_auth(func):
 def admin_required(func):
     @functools.wraps(func)
     def admin_required_wrapper(*args, **kwargs):
-        db_user = database.get_user(kwargs.get('username'))
+        db_user = kwargs.get('user')
 
         if db_user is not None:
-            if db_user.user_type == db_user.Type.admin:
+            if db_user.type == 'admin':
                 return func(*args, **kwargs)
             else:
                 logger.warning(f'{db_user.username} not authorized')
@@ -70,7 +80,7 @@ def admin_required(func):
 def spotify_link_required(func):
     @functools.wraps(func)
     def spotify_link_required_wrapper(*args, **kwargs):
-        db_user = database.get_user(kwargs.get('username'))
+        db_user = kwargs.get('user')
 
         if db_user is not None:
             if db_user.spotify_linked:
@@ -88,7 +98,7 @@ def spotify_link_required(func):
 def lastfm_username_required(func):
     @functools.wraps(func)
     def lastfm_username_required_wrapper(*args, **kwargs):
-        db_user = database.get_user(kwargs.get('username'))
+        db_user = kwargs.get('user')
 
         if db_user is not None:
             if db_user.lastfm_username and len(db_user.lastfm_username) > 0:

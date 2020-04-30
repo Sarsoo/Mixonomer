@@ -1,13 +1,14 @@
-import music.db.database as database
+from music.model.user import User
+from music.model.playlist import Playlist
 
-playlists = database.get_user_playlists('andy')
+user = User.collection.filter('username', '==', 'andy').get()
 
 name = input('enter playlist name: ')
-
-playlist = next((i for i in playlists if i.name == name), None)
+playlist = Playlist.collection.parent(user.key).filter('name', '==', name).get()
 
 if playlist is not None:
     new_name = input('enter new name: ')
-    playlist.update_database({'name': new_name})
+    playlist.name = new_name
+    playlist.update()
 else:
     print('playlist not found')

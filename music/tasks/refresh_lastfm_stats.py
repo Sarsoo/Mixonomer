@@ -4,6 +4,8 @@ import logging
 from datetime import datetime
 
 import music.db.database as database
+from music.model.user import User
+from music.model.playlist import Playlist
 
 from spotfm.maths.counter import Counter
 from spotframework.model.uri import Uri
@@ -17,11 +19,15 @@ def refresh_lastfm_track_stats(username, playlist_name):
 
     logger.info(f'refreshing {playlist_name} stats for {username}')
 
-    fmnet = database.get_authed_lastfm_network(username=username)
-    spotnet = database.get_authed_spotify_network(username=username)
+    user = User.collection.filter('username', '==', username.strip().lower()).get()
+    if user is None:
+        logger.error(f'user {username} not found')
+
+    fmnet = database.get_authed_lastfm_network(user)
+    spotnet = database.get_authed_spotify_network(user)
     counter = Counter(fmnet=fmnet, spotnet=spotnet)
 
-    playlist = database.get_playlist(username=username, name=playlist_name)
+    playlist = Playlist.collection.parent(user.key).filter('name', '==', playlist_name).get()
 
     if playlist is None:
         logger.critical(f'playlist {playlist_name} for {username} not found')
@@ -40,23 +46,26 @@ def refresh_lastfm_track_stats(username, playlist_name):
     else:
         percent = 0
 
-    playlist.update_database({
-        'lastfm_stat_count': track_count,
-        'lastfm_stat_percent': percent,
+    playlist.lastfm_stat_count = track_count
+    playlist.lastfm_stat_percent = percent
+    playlist.lastfm_stat_last_refresh = datetime.utcnow()
 
-        'lastfm_stat_last_refresh': datetime.utcnow()
-    })
+    playlist.update()
 
 
 def refresh_lastfm_album_stats(username, playlist_name):
 
     logger.info(f'refreshing {playlist_name} stats for {username}')
 
-    fmnet = database.get_authed_lastfm_network(username=username)
-    spotnet = database.get_authed_spotify_network(username=username)
+    user = User.collection.filter('username', '==', username.strip().lower()).get()
+    if user is None:
+        logger.error(f'user {username} not found')
+
+    fmnet = database.get_authed_lastfm_network(user)
+    spotnet = database.get_authed_spotify_network(user)
     counter = Counter(fmnet=fmnet, spotnet=spotnet)
 
-    playlist = database.get_playlist(username=username, name=playlist_name)
+    playlist = Playlist.collection.parent(user.key).filter('name', '==', playlist_name).get()
 
     if playlist is None:
         logger.critical(f'playlist {playlist_name} for {username} not found')
@@ -75,23 +84,26 @@ def refresh_lastfm_album_stats(username, playlist_name):
     else:
         album_percent = 0
 
-    playlist.update_database({
-        'lastfm_stat_album_count': album_count,
-        'lastfm_stat_album_percent': album_percent,
+    playlist.lastfm_stat_album_count = album_count
+    playlist.lastfm_stat_album_percent = album_percent
+    playlist.lastfm_stat_last_refresh = datetime.utcnow()
 
-        'lastfm_stat_last_refresh': datetime.utcnow()
-    })
+    playlist.update()
 
 
 def refresh_lastfm_artist_stats(username, playlist_name):
 
     logger.info(f'refreshing {playlist_name} stats for {username}')
 
-    fmnet = database.get_authed_lastfm_network(username=username)
-    spotnet = database.get_authed_spotify_network(username=username)
+    user = User.collection.filter('username', '==', username.strip().lower()).get()
+    if user is None:
+        logger.error(f'user {username} not found')
+
+    fmnet = database.get_authed_lastfm_network(user)
+    spotnet = database.get_authed_spotify_network(user)
     counter = Counter(fmnet=fmnet, spotnet=spotnet)
 
-    playlist = database.get_playlist(username=username, name=playlist_name)
+    playlist = Playlist.collection.parent(user.key).filter('name', '==', playlist_name).get()
 
     if playlist is None:
         logger.critical(f'playlist {playlist_name} for {username} not found')
@@ -110,9 +122,8 @@ def refresh_lastfm_artist_stats(username, playlist_name):
     else:
         artist_percent = 0
 
-    playlist.update_database({
-        'lastfm_stat_artist_count': artist_count,
-        'lastfm_stat_artist_percent': artist_percent,
+    playlist.lastfm_stat_artist_count = artist_count
+    playlist.lastfm_stat_artist_percent = artist_percent
+    playlist.lastfm_stat_last_refresh = datetime.utcnow()
 
-        'lastfm_stat_last_refresh': datetime.utcnow()
-    })
+    playlist.update()

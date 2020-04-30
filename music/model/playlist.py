@@ -1,11 +1,7 @@
-from typing import List
 from enum import Enum
-from datetime import datetime
-from google.cloud.firestore import DocumentReference
 
-from fmframework.net.network import Network
-
-import music.db.database as database
+from fireo.models import Model
+from fireo.fields import TextField, BooleanField, DateTime, NumberField, ListField
 
 
 class Sort(Enum):
@@ -14,466 +10,52 @@ class Sort(Enum):
     release_date = 3
 
 
-class Playlist:
-    def __init__(self,
-                 uri: str,
-                 name: str,
-                 username: str,
+class Playlist(Model):
+    class Meta:
+        collection_name = 'playlists'
 
-                 db_ref: DocumentReference,
+    uri = TextField()
+    name = TextField(required=True)
+    type = TextField(required=True)
 
-                 include_recommendations: bool,
-                 recommendation_sample: int,
-                 include_library_tracks: bool,
+    include_recommendations = BooleanField(default=False)
+    recommendation_sample = NumberField(default=10)
+    include_library_tracks = BooleanField(default=False)
 
-                 parts: List[str],
-                 playlist_references: List[DocumentReference],
-                 shuffle: bool,
+    parts = ListField(default=[])
+    playlist_references = ListField(default=[])
+    shuffle = BooleanField(default=False)
 
-                 sort: Sort = None,
+    sort = TextField(default='release_date')
+    description_overwrite = TextField()
+    description_suffix = TextField()
 
-                 description_overwrite: str = None,
-                 description_suffix: str = None,
+    last_updated = DateTime()
 
-                 last_updated: datetime = None,
+    lastfm_stat_count = NumberField(default=0)
+    lastfm_stat_album_count = NumberField(default=0)
+    lastfm_stat_artist_count = NumberField(default=0)
 
-                 lastfm_stat_count: int = None,
-                 lastfm_stat_album_count: int = None,
-                 lastfm_stat_artist_count: int = None,
+    lastfm_stat_percent = NumberField(default=0)
+    lastfm_stat_album_percent = NumberField(default=0)
+    lastfm_stat_artist_percent = NumberField(default=0)
 
-                 lastfm_stat_percent: int = None,
-                 lastfm_stat_album_percent: int = None,
-                 lastfm_stat_artist_percent: int = None,
+    lastfm_stat_last_refresh = DateTime()
 
-                 lastfm_stat_last_refresh: datetime = None):
-        self._uri = uri
-        self.name = name
-        self.username = username
+    add_last_month = BooleanField(default=False)
+    add_this_month = BooleanField(default=False)
+    day_boundary = NumberField(default=21)
 
-        self.db_ref = db_ref
-
-        self._include_recommendations = include_recommendations
-        self._recommendation_sample = recommendation_sample
-        self._include_library_tracks = include_library_tracks
-
-        self._parts = parts
-        self._playlist_references = playlist_references
-        self._shuffle = shuffle
-
-        self._sort = sort
-        self._description_overwrite = description_overwrite
-        self._description_suffix = description_suffix
-
-        self._last_updated = last_updated
-
-        self._lastfm_stat_count = lastfm_stat_count
-        self._lastfm_stat_album_count = lastfm_stat_album_count
-        self._lastfm_stat_artist_count = lastfm_stat_artist_count
-
-        self._lastfm_stat_percent = lastfm_stat_percent
-        self._lastfm_stat_album_percent = lastfm_stat_album_percent
-        self._lastfm_stat_artist_percent = lastfm_stat_artist_percent
-
-        self._lastfm_stat_last_refresh = lastfm_stat_last_refresh
+    chart_range = TextField(default='1month')
+    chart_limit = NumberField(default=50)
 
     def to_dict(self):
-        return {
-            'uri': self.uri,
-            'name': self.name,
-            'type': 'default',
+        to_return = super().to_dict()
 
-            'include_recommendations': self.include_recommendations,
-            'recommendation_sample': self.recommendation_sample,
-            'include_library_tracks': self.include_library_tracks,
+        to_return["playlist_references"] = [i.get().to_dict().get('name') for i in to_return['playlist_references']]
 
-            'parts': self.parts,
-            'playlist_references': [i.get().to_dict().get('name') for i in self.playlist_references],
-            'shuffle': self.shuffle,
+        # remove unnecessary and sensitive fields
+        to_return.pop('id', None)
+        to_return.pop('key', None)
 
-            'sort': self.sort.name,
-            'description_overwrite': self.description_overwrite,
-            'description_suffix': self.description_suffix,
-
-            'last_updated': self.last_updated,
-
-            'lastfm_stat_count': self.lastfm_stat_count,
-            'lastfm_stat_album_count': self.lastfm_stat_album_count,
-            'lastfm_stat_artist_count': self.lastfm_stat_artist_count,
-
-            'lastfm_stat_percent': self.lastfm_stat_percent,
-            'lastfm_stat_album_percent': self.lastfm_stat_album_percent,
-            'lastfm_stat_artist_percent': self.lastfm_stat_artist_percent,
-
-            'lastfm_stat_last_refresh': self.lastfm_stat_last_refresh
-        }
-
-    def update_database(self, updates):
-        database.update_playlist(username=self.username, name=self.name, updates=updates)
-
-    @property
-    def uri(self):
-        return self._uri
-
-    @uri.setter
-    def uri(self, value):
-        database.update_playlist(self.username, self.name, {'uri': value})
-        self._uri = value
-
-    @property
-    def include_recommendations(self):
-        return self._include_recommendations
-
-    @include_recommendations.setter
-    def include_recommendations(self, value):
-        database.update_playlist(self.username, self.name, {'include_recommendations': value})
-        self._include_recommendations = value
-
-    @property
-    def recommendation_sample(self):
-        return self._recommendation_sample
-
-    @recommendation_sample.setter
-    def recommendation_sample(self, value):
-        database.update_playlist(self.username, self.name, {'recommendation_sample': value})
-        self._recommendation_sample = value
-
-    @property
-    def include_library_tracks(self):
-        return self._include_library_tracks
-
-    @include_library_tracks.setter
-    def include_library_tracks(self, value):
-        database.update_playlist(self.username, self.name, {'include_library_tracks': value})
-        self._include_library_tracks = value
-
-    @property
-    def parts(self):
-        return self._parts
-
-    @parts.setter
-    def parts(self, value):
-        database.update_playlist(self.username, self.name, {'parts': value})
-        self._parts = value
-
-    @property
-    def playlist_references(self):
-        return self._playlist_references
-
-    @playlist_references.setter
-    def playlist_references(self, value):
-        database.update_playlist(self.username, self.name, {'playlist_references': value})
-        self._playlist_references = value
-
-    @property
-    def shuffle(self):
-        return self._shuffle
-
-    @shuffle.setter
-    def shuffle(self, value):
-        database.update_playlist(self.username, self.name, {'shuffle': value})
-        self._shuffle = value
-
-    @property
-    def sort(self):
-        return self._sort
-
-    @sort.setter
-    def sort(self, value):
-        database.update_playlist(self.username, self.name, {'sort': value.name})
-        self._sort = value
-
-    @property
-    def description_overwrite(self):
-        return self._description_overwrite
-
-    @description_overwrite.setter
-    def description_overwrite(self, value):
-        database.update_playlist(self.username, self.name, {'description_overwrite': value})
-        self._description_overwrite = value
-
-    @property
-    def description_suffix(self):
-        return self._description_suffix
-
-    @description_suffix.setter
-    def description_suffix(self, value):
-        database.update_playlist(self.username, self.name, {'description_suffix': value})
-        self._description_suffix = value
-
-    @property
-    def last_updated(self):
-        return self._last_updated
-
-    @last_updated.setter
-    def last_updated(self, value):
-        database.update_playlist(self.username, self.name, {'last_updated': value})
-        self._last_updated = value
-
-    @property
-    def lastfm_stat_count(self):
-        return self._lastfm_stat_count
-
-    @lastfm_stat_count.setter
-    def lastfm_stat_count(self, value):
-        database.update_playlist(self.username, self.name, {'lastfm_stat_count': value})
-        self._lastfm_stat_count = value
-
-    @property
-    def lastfm_stat_album_count(self):
-        return self._lastfm_stat_album_count
-
-    @lastfm_stat_album_count.setter
-    def lastfm_stat_album_count(self, value):
-        database.update_playlist(self.username, self.name, {'lastfm_stat_album_count': value})
-        self._lastfm_stat_album_count = value
-
-    @property
-    def lastfm_stat_artist_count(self):
-        return self._lastfm_stat_artist_count
-
-    @lastfm_stat_artist_count.setter
-    def lastfm_stat_artist_count(self, value):
-        database.update_playlist(self.username, self.name, {'lastfm_stat_artist_count': value})
-        self._lastfm_stat_artist_count = value
-
-    @property
-    def lastfm_stat_percent(self):
-        return self._lastfm_stat_percent
-
-    @lastfm_stat_percent.setter
-    def lastfm_stat_percent(self, value):
-        database.update_playlist(self.username, self.name, {'lastfm_stat_percent': value})
-        self._lastfm_stat_percent = value
-
-    @property
-    def lastfm_stat_album_percent(self):
-        return self._lastfm_stat_album_percent
-
-    @lastfm_stat_album_percent.setter
-    def lastfm_stat_album_percent(self, value):
-        database.update_playlist(self.username, self.name, {'lastfm_stat_album_percent': value})
-        self._lastfm_stat_album_percent = value
-
-    @property
-    def lastfm_stat_artist_percent(self):
-        return self._lastfm_stat_artist_percent
-
-    @lastfm_stat_artist_percent.setter
-    def lastfm_stat_artist_percent(self, value):
-        database.update_playlist(self.username, self.name, {'lastfm_stat_artist_percent': value})
-        self._lastfm_stat_artist_percent = value
-
-    @property
-    def lastfm_stat_last_refresh(self):
-        return self._lastfm_stat_last_refresh
-
-    @lastfm_stat_last_refresh.setter
-    def lastfm_stat_last_refresh(self, value):
-        database.update_playlist(self.username, self.name, {'lastfm_stat_last_refresh': value})
-        self._lastfm_stat_last_refresh = value
-
-
-class RecentsPlaylist(Playlist):
-    def __init__(self,
-                 uri: str,
-                 name: str,
-                 username: str,
-
-                 db_ref: DocumentReference,
-
-                 include_recommendations: bool,
-                 recommendation_sample: int,
-                 include_library_tracks: bool,
-
-                 parts: List[str],
-                 playlist_references: List[DocumentReference],
-                 shuffle: bool,
-
-                 sort: Sort = None,
-
-                 description_overwrite: str = None,
-                 description_suffix: str = None,
-
-                 last_updated: datetime = None,
-
-                 lastfm_stat_count: int = None,
-                 lastfm_stat_album_count: int = None,
-                 lastfm_stat_artist_count: int = None,
-
-                 lastfm_stat_percent: int = None,
-                 lastfm_stat_album_percent: int = None,
-                 lastfm_stat_artist_percent: int = None,
-
-                 lastfm_stat_last_refresh: datetime = None,
-
-                 add_last_month: bool = False,
-                 add_this_month: bool = False,
-                 day_boundary: int = 7):
-        super().__init__(uri=uri,
-                         name=name,
-                         username=username,
-
-                         db_ref=db_ref,
-
-                         include_recommendations=include_recommendations,
-                         recommendation_sample=recommendation_sample,
-                         include_library_tracks=include_library_tracks,
-
-                         parts=parts,
-                         playlist_references=playlist_references,
-                         shuffle=shuffle,
-
-                         sort=sort,
-
-                         description_overwrite=description_overwrite,
-                         description_suffix=description_suffix,
-
-                         last_updated=last_updated,
-
-                         lastfm_stat_count=lastfm_stat_count,
-                         lastfm_stat_album_count=lastfm_stat_album_count,
-                         lastfm_stat_artist_count=lastfm_stat_artist_count,
-
-                         lastfm_stat_percent=lastfm_stat_percent,
-                         lastfm_stat_album_percent=lastfm_stat_album_percent,
-                         lastfm_stat_artist_percent=lastfm_stat_artist_percent,
-
-                         lastfm_stat_last_refresh=lastfm_stat_last_refresh)
-        self._add_last_month = add_last_month
-        self._add_this_month = add_this_month
-        self._day_boundary = day_boundary
-
-    def to_dict(self):
-        response = super().to_dict()
-        response.update({
-            'add_last_month': self.add_last_month,
-            'add_this_month': self.add_this_month,
-            'day_boundary': self.day_boundary,
-            'type': 'recents'
-        })
-        return response
-
-    @property
-    def add_last_month(self):
-        return self._add_last_month
-
-    @add_last_month.setter
-    def add_last_month(self, value):
-        database.update_playlist(self.username, self.name, {'add_last_month': value})
-        self._add_last_month = value
-
-    @property
-    def add_this_month(self):
-        return self._add_this_month
-
-    @add_this_month.setter
-    def add_this_month(self, value):
-        database.update_playlist(self.username, self.name, {'add_this_month': value})
-        self._add_this_month = value
-
-    @property
-    def day_boundary(self):
-        return self._day_boundary
-
-    @day_boundary.setter
-    def day_boundary(self, value):
-        database.update_playlist(self.username, self.name, {'day_boundary': value})
-        self._day_boundary = value
-
-
-class LastFMChartPlaylist(Playlist):
-    def __init__(self,
-                 uri: str,
-                 name: str,
-                 username: str,
-
-                 chart_range: Network.Range,
-
-                 db_ref: DocumentReference,
-
-
-                 include_recommendations: bool,
-                 recommendation_sample: int,
-                 include_library_tracks: bool,
-
-                 parts: List[str],
-                 playlist_references: List[DocumentReference],
-                 shuffle: bool,
-
-                 chart_limit: int = 50,
-
-                 sort: Sort = None,
-
-                 description_overwrite: str = None,
-                 description_suffix: str = None,
-
-                 last_updated: datetime = None,
-
-                 lastfm_stat_count: int = None,
-                 lastfm_stat_album_count: int = None,
-                 lastfm_stat_artist_count: int = None,
-
-                 lastfm_stat_percent: int = None,
-                 lastfm_stat_album_percent: int = None,
-                 lastfm_stat_artist_percent: int = None,
-
-                 lastfm_stat_last_refresh: datetime = None):
-        super().__init__(uri=uri,
-                         name=name,
-                         username=username,
-
-                         db_ref=db_ref,
-
-                         include_recommendations=include_recommendations,
-                         recommendation_sample=recommendation_sample,
-                         include_library_tracks=include_library_tracks,
-
-                         parts=parts,
-                         playlist_references=playlist_references,
-                         shuffle=shuffle,
-
-                         sort=sort,
-
-                         description_overwrite=description_overwrite,
-                         description_suffix=description_suffix,
-
-                         last_updated=last_updated,
-
-                         lastfm_stat_count=lastfm_stat_count,
-                         lastfm_stat_album_count=lastfm_stat_album_count,
-                         lastfm_stat_artist_count=lastfm_stat_artist_count,
-
-                         lastfm_stat_percent=lastfm_stat_percent,
-                         lastfm_stat_album_percent=lastfm_stat_album_percent,
-                         lastfm_stat_artist_percent=lastfm_stat_artist_percent,
-
-                         lastfm_stat_last_refresh=lastfm_stat_last_refresh)
-        self._chart_range = chart_range
-        self._chart_limit = chart_limit
-
-    def to_dict(self):
-        response = super().to_dict()
-        response.update({
-            'chart_limit': self.chart_limit,
-            'chart_range': self.chart_range.name,
-            'type': 'fmchart'
-        })
-        return response
-
-    @property
-    def chart_range(self):
-        return self._chart_range
-
-    @chart_range.setter
-    def chart_range(self, value):
-        database.update_playlist(self.username, self.name, {'chart_range': value.name})
-        self._chart_range = value
-
-    @property
-    def chart_limit(self):
-        return self._chart_limit
-
-    @chart_limit.setter
-    def chart_limit(self, value):
-        database.update_playlist(self.username, self.name, {'chart_limit': value})
-        self._chart_limit = value
+        return to_return

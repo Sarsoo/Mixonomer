@@ -10,6 +10,9 @@ from music.db import database as database
 from music.tasks.run_user_playlist import run_user_playlist
 from music.tasks.refresh_lastfm_stats import refresh_lastfm_track_stats
 
+from music.model.user import User
+from music.model.playlist import Playlist
+
 tasker = tasks_v2.CloudTasksClient()
 task_path = tasker.queue_path('sarsooxyz', 'europe-west2', 'spotify-executions')
 
@@ -21,7 +24,7 @@ def execute_all_user_playlists():
     seconds_delay = 0
     logger.info('running')
 
-    for iter_user in database.get_users():
+    for iter_user in User.collection.fetch():
 
         if iter_user.spotify_linked and not iter_user.locked:
 
@@ -45,14 +48,18 @@ def execute_all_user_playlists():
 
 
 def execute_user_playlists(username):
+    user = User.collection.filter('username', '==', username.strip().lower()).get()
 
-    playlists = database.get_user_playlists(username)
+    if user is None:
+        logger.error(f'user {username} not found')
+
+    playlists = Playlist.collection.parent(user.key).fetch()
 
     seconds_delay = 0
     logger.info(f'running {username}')
 
     for iterate_playlist in playlists:
-        if iterate_playlist.uri:
+        if iterate_playlist.uri is not None:
 
             if os.environ.get('DEPLOY_DESTINATION', None) == 'PROD':
                 create_run_user_playlist_task(username, iterate_playlist.name, seconds_delay)
@@ -139,7 +146,7 @@ def execute_all_user_playlist_stats():
     seconds_delay = 0
     logger.info('running')
 
-    for iter_user in database.get_users():
+    for iter_user in User.collection.fetch():
 
         if iter_user.spotify_linked and iter_user.lastfm_username and \
                 len(iter_user.lastfm_username) > 0 and not iter_user.locked:
@@ -157,15 +164,18 @@ def execute_all_user_playlist_stats():
 
 def execute_user_playlist_stats(username):
 
-    playlists = database.get_user_playlists(username)
-    user = database.get_user(username)
+    user = User.collection.filter('username', '==', username.strip().lower()).get()
+    if user is None:
+        logger.error(f'user {username} not found')
+
+    playlists = Playlist.collection.parent(user.key).fetch()
 
     seconds_delay = 0
     logger.info(f'running {username}')
 
     if user.lastfm_username and len(user.lastfm_username) > 0:
         for playlist in playlists:
-            if playlist.uri:
+            if playlist.uri is not None:
 
                 if os.environ.get('DEPLOY_DESTINATION', None) == 'PROD':
                     create_refresh_playlist_task(username, playlist.name, seconds_delay)

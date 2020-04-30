@@ -2,9 +2,10 @@ from flask import Blueprint, jsonify, request
 
 import logging
 
-import music.db.database as database
 from music.api.decorators import login_or_basic_auth
 from music.cloud.function import update_tag
+
+from music.model.tag import Tag
 
 blueprint = Blueprint('task', __name__)
 logger = logging.getLogger(__name__)
@@ -12,30 +13,30 @@ logger = logging.getLogger(__name__)
 
 @blueprint.route('/tag', methods=['GET'])
 @login_or_basic_auth
-def tags(username=None):
-    logger.info(f'retrieving tags for {username}')
+def tags(user=None):
+    logger.info(f'retrieving tags for {user.username}')
     return jsonify({
-        'tags': [i.to_dict() for i in database.get_user_tags(username)]
+        'tags': [i.to_dict() for i in Tag.collection.parent(user.key).fetch()]
     }), 200
 
 
 @blueprint.route('/tag/<tag_id>', methods=['GET', 'PUT', 'POST', "DELETE"])
 @login_or_basic_auth
-def tag(tag_id, username=None):
+def tag_route(tag_id, user=None):
     if request.method == 'GET':
-        return get_tag(tag_id, username)
+        return get_tag(tag_id, user)
     elif request.method == 'PUT':
-        return put_tag(tag_id, username)
+        return put_tag(tag_id, user)
     elif request.method == 'POST':
-        return post_tag(tag_id, username)
+        return post_tag(tag_id, user)
     elif request.method == 'DELETE':
-        return delete_tag(tag_id, username)
+        return delete_tag(tag_id, user)
 
 
-def get_tag(tag_id, username):
-    logger.info(f'retriving {tag_id} for {username}')
+def get_tag(tag_id, user):
+    logger.info(f'retriving {tag_id} for {user.username}')
 
-    db_tag = database.get_tag(username=username, tag_id=tag_id)
+    db_tag = Tag.collection.parent(user.key).filter('tag_id', '==', tag_id).get()
     if db_tag is not None:
         return jsonify({
             'tag': db_tag.to_dict()
@@ -44,10 +45,10 @@ def get_tag(tag_id, username):
         return jsonify({"error": 'tag not found'}), 404
 
 
-def put_tag(tag_id, username):
-    logger.info(f'updating {tag_id} for {username}')
+def put_tag(tag_id, user):
+    logger.info(f'updating {tag_id} for {user.username}')
 
-    db_tag = database.get_tag(username=username, tag_id=tag_id)
+    db_tag = Tag.collection.parent(user.key).filter('tag_id', '==', tag_id).get()
 
     if db_tag is None:
         return jsonify({"error": 'tag not found'}), 404
@@ -92,34 +93,38 @@ def put_tag(tag_id, username):
         db_tag.artists = artists
 
     if update_required:
-        update_tag(username=username, tag_id=tag_id)
+        update_tag(username=user.username, tag_id=tag_id)
 
+    db_tag.update()
     return jsonify({"message": 'tag updated', "status": "success"}), 200
 
 
-def post_tag(tag_id, username):
-    logger.info(f'creating {tag_id} for {username}')
+def post_tag(tag_id, user):
+    logger.info(f'creating {tag_id} for {user.username}')
 
     tag_id = tag_id.replace(' ', '_')
 
-    database.create_tag(username=username, tag_id=tag_id)
+    tag = Tag(parent=user.key)
+    tag.tag_id = tag_id
+    tag.name = tag_id
+    tag.username = user.username
+    tag.save()
+
     return jsonify({"message": 'tag added', "status": "success"}), 201
 
 
-def delete_tag(tag_id, username):
-    logger.info(f'deleting {tag_id} for {username}')
+def delete_tag(tag_id, user):
+    logger.info(f'deleting {tag_id} for {user.username}')
 
-    response = database.delete_tag(username=username, tag_id=tag_id)
+    db_tag = Tag.collection.parent(user.key).filter('tag_id', '==', tag_id).get()
+    Tag.collection.parent(user.key).delete(key=db_tag.key)
 
-    if response is not None:
-        return jsonify({"message": 'tag deleted', "status": "success"}), 201
-    else:
-        return jsonify({"error": 'tag not deleted'}), 400
+    return jsonify({"message": 'tag deleted', "status": "success"}), 201
 
 
 @blueprint.route('/tag/<tag_id>/update', methods=['GET'])
 @login_or_basic_auth
-def tag_refresh(tag_id, username=None):
-    logger.info(f'updating {tag_id} tag for {username}')
-    update_tag(username=username, tag_id=tag_id)
+def tag_refresh(tag_id, user=None):
+    logger.info(f'updating {tag_id} tag for {user.username}')
+    update_tag(username=user.username, tag_id=tag_id)
     return jsonify({"message": 'tag updated', "status": "success"}), 200

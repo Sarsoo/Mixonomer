@@ -9,21 +9,19 @@ db = firestore.Client()
 logger = logging.getLogger(__name__)
 
 
-def create_playlist(username, name):
-    logger.info(f'creating spotify playlist for {username} / {name}')
+def create_playlist(user, name):
+    logger.info(f'creating spotify playlist for {user.username} / {name}')
 
-    user = database.get_user(username)
     if user is not None:
-        net = database.get_authed_spotify_network(username)
+        net = database.get_authed_spotify_network(user)
 
         playlist = net.create_playlist(net.user.username, name)
 
         if playlist is not None:
             return playlist
         else:
-            logger.error(f'no response received {username} / {name}')
+            logger.error(f'no response received {user.username} / {name}')
             return
 
     else:
-        logger.error(f'{username} not found')
-        return
+        logger.error(f'{user.username} not provided')

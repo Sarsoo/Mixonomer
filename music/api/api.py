@@ -1,11 +1,11 @@
 from flask import Blueprint, request, jsonify
+from google.cloud import firestore
+from werkzeug.security import generate_password_hash
 
 import os
 import json
 import logging
 from datetime import datetime
-
-from google.cloud import firestore
 
 from music.api.decorators import login_required, login_or_basic_auth, admin_required, gae_cron, cloud_task
 from music.cloud.tasks import execute_all_user_playlists, execute_user_playlists, create_run_user_playlist_task, \
@@ -13,46 +13,43 @@ from music.cloud.tasks import execute_all_user_playlists, execute_user_playlists
 from music.tasks.run_user_playlist import run_user_playlist as run_user_playlist
 from music.tasks.play_user_playlist import play_user_playlist as play_user_playlist
 
+from music.model.user import User
+from music.model.playlist import Playlist
+
 import music.db.database as database
 
 blueprint = Blueprint('api', __name__)
 db = firestore.Client()
-
 logger = logging.getLogger(__name__)
 
 
 @blueprint.route('/playlists', methods=['GET'])
 @login_or_basic_auth
-def get_playlists(username=None):
+def get_playlists(user=None):
+    assert user is not None
     return jsonify({
-        'playlists':  [i.to_dict() for i in database.get_user_playlists(username)]
+        'playlists':  [i.to_dict() for i in Playlist.collection.parent(user.key).fetch()]
     }), 200
 
 
 @blueprint.route('/playlist', methods=['GET', 'POST', 'PUT', 'DELETE'])
 @login_or_basic_auth
-def playlist(username=None):
-
-    user_playlists = database.get_user_playlists(username)
-
-    user_ref = database.get_user(username).db_ref
-    playlists = user_ref.collection(u'playlists')
+def playlist_route(user=None):
 
     if request.method == 'GET' or request.method == 'DELETE':
         playlist_name = request.args.get('name', None)
 
         if playlist_name:
+            playlist = Playlist.collection.parent(user.key).filter('name', '==', playlist_name).get()
 
-            queried_playlist = next((i for i in user_playlists if i.name == playlist_name), None)
-
-            if queried_playlist is None:
-                return jsonify({'error': 'no playlist found'}), 404
+            if playlist is None:
+                return jsonify({'error': f'playlist {playlist_name} not found'}), 404
 
             if request.method == "GET":
-                return jsonify(queried_playlist.to_dict()), 200
+                return jsonify(playlist.to_dict()), 200
 
             elif request.method == 'DELETE':
-                database.delete_playlist(username=username, name=playlist_name)
+                Playlist.collection.parent(user.key).delete(key=playlist.key)
                 return jsonify({"message": 'playlist deleted', "status": "success"}), 200
 
         else:
@@ -75,9 +72,9 @@ def playlist(username=None):
             if request_json['playlist_references'] != -1:
                 for i in request_json['playlist_references']:
 
-                    updating_playlist = database.get_playlist(username=username, name=i)
+                    updating_playlist = Playlist.collection.parent(user.key).filter('name', '==', i).get()
                     if updating_playlist is not None:
-                        playlist_references.append(updating_playlist.db_ref)
+                        playlist_references.append(db.document(updating_playlist.key))
                     else:
                         return jsonify({"message": f'managed playlist {i} not found', "status": "error"}), 400
 
@@ -100,168 +97,143 @@ def playlist(username=None):
         playlist_chart_range = request_json.get('chart_range', None)
         playlist_chart_limit = request_json.get('chart_limit', None)
 
-        queried_playlist = [i for i in playlists.where(u'name', u'==', playlist_name).stream()]
+        playlist = Playlist.collection.parent(user.key).filter('name', '==', playlist_name).get()
 
         if request.method == 'PUT':
 
-            if len(queried_playlist) != 0:
+            if playlist is not None:
                 return jsonify({'error': 'playlist already exists'}), 400
 
             from music.tasks.create_playlist import create_playlist as create_playlist
 
-            to_add = {
-                'name': playlist_name,
-                'parts': playlist_parts if playlist_parts is not None else [],
-                'playlist_references': playlist_references if playlist_references is not None else [],
-                'include_library_tracks': playlist_library_tracks if playlist_library_tracks is not None else False,
-                'include_recommendations': playlist_recommendation if playlist_recommendation is not None else False,
-                'recommendation_sample': playlist_recommendation_sample if playlist_recommendation_sample is not None else 10,
-                'uri': None,
-                'shuffle': playlist_shuffle if playlist_shuffle is not None else False,
-                'type': playlist_type if playlist_type is not None else 'default',
-                'last_updated': datetime.utcnow(),
+            new_db_playlist = Playlist(parent=user.key)
 
-                'lastfm_stat_count': 0,
-                'lastfm_stat_album_count': 0,
-                'lastfm_stat_artist_count': 0,
+            new_db_playlist.name = playlist_name
+            new_db_playlist.parts = playlist_parts
+            new_db_playlist.playlist_references = playlist_references
 
-                'lastfm_stat_percent': 0,
-                'lastfm_stat_album_percent': 0,
-                'lastfm_stat_artist_percent': 0,
+            new_db_playlist.include_library_tracks = playlist_library_tracks
+            new_db_playlist.include_recommendations = playlist_recommendation
+            new_db_playlist.recommendation_sample = playlist_recommendation_sample
 
-                'lastfm_stat_last_refresh': datetime.utcnow(),
-            }
+            new_db_playlist.shuffle = playlist_shuffle
 
-            if user_ref.get().to_dict()['spotify_linked']:
-                new_playlist = create_playlist(username, playlist_name)
-                to_add['uri'] = str(new_playlist.uri) if new_playlist is not None else None
+            new_db_playlist.type = playlist_type
+            new_db_playlist.last_updated = datetime.utcnow()
+            new_db_playlist.lastfm_stat_last_refresh = datetime.utcnow()
 
-            if playlist_type == 'recents':
-                to_add['day_boundary'] = playlist_day_boundary if playlist_day_boundary is not None else 21
-                to_add['add_this_month'] = playlist_add_this_month if playlist_add_this_month is not None else False
-                to_add['add_last_month'] = playlist_add_last_month if playlist_add_last_month is not None else False
+            new_db_playlist.day_boundary = playlist_day_boundary
+            new_db_playlist.add_this_month = playlist_add_this_month
+            new_db_playlist.add_last_month = playlist_add_last_month
 
-            if playlist_type == 'fmchart':
-                to_add['chart_range'] = playlist_chart_range
-                to_add['chart_limit'] = playlist_chart_limit if playlist_chart_limit is not None else 50
+            new_db_playlist.chart_range = playlist_chart_range
+            new_db_playlist.chart_limit = playlist_chart_limit
 
-            playlists.document().set(to_add)
-            logger.info(f'added {username} / {playlist_name}')
+            if user.spotify_linked:
+                new_playlist = create_playlist(user, playlist_name)
+                new_db_playlist.uri = str(new_playlist.uri)
+
+            new_db_playlist.save()
+            logger.info(f'added {user.username} / {playlist_name}')
 
             return jsonify({"message": 'playlist added', "status": "success"}), 201
 
         elif request.method == 'POST':
 
-            if len(queried_playlist) == 0:
+            if playlist is None:
                 return jsonify({'error': "playlist doesn't exist"}), 400
 
-            if len(queried_playlist) > 1:
-                return jsonify({'error': "multiple playlists exist"}), 500
-
-            updating_playlist = database.get_playlist(username=username, name=playlist_name)
-
-            dic = {}
+            updating_playlist = Playlist.collection.parent(user.key).filter('name', '==', playlist_name).get()
 
             if playlist_parts is not None:
                 if playlist_parts == -1:
-                    dic['parts'] = []
+                    updating_playlist.parts = []
                 else:
-                    dic['parts'] = playlist_parts
+                    updating_playlist.parts = playlist_parts
 
             if playlist_references is not None:
                 if playlist_references == -1:
-                    dic['playlist_references'] = []
+                    updating_playlist.playlist_references = []
                 else:
-                    dic['playlist_references'] = playlist_references
+                    updating_playlist.playlist_references = playlist_references
 
             if playlist_uri is not None:
-                dic['uri'] = playlist_uri
+                updating_playlist.uri = playlist_uri
 
             if playlist_shuffle is not None:
-                dic['shuffle'] = playlist_shuffle
+                updating_playlist.shuffle = playlist_shuffle
 
             if playlist_day_boundary is not None:
-                dic['day_boundary'] = playlist_day_boundary
+                updating_playlist.day_boundary = playlist_day_boundary
 
             if playlist_add_this_month is not None:
-                dic['add_this_month'] = playlist_add_this_month
+                updating_playlist.add_this_month = playlist_add_this_month
 
             if playlist_add_last_month is not None:
-                dic['add_last_month'] = playlist_add_last_month
+                updating_playlist.add_last_month = playlist_add_last_month
 
             if playlist_library_tracks is not None:
-                dic['include_library_tracks'] = playlist_library_tracks
+                updating_playlist.include_library_tracks = playlist_library_tracks
 
             if playlist_recommendation is not None:
-                dic['include_recommendations'] = playlist_recommendation
+                updating_playlist.include_recommendations = playlist_recommendation
 
             if playlist_recommendation_sample is not None:
-                dic['recommendation_sample'] = playlist_recommendation_sample
+                updating_playlist.recommendation_sample = playlist_recommendation_sample
 
             if playlist_chart_range is not None:
-                dic['chart_range'] = playlist_chart_range
+                updating_playlist.chart_range = playlist_chart_range
 
             if playlist_chart_limit is not None:
-                dic['chart_limit'] = playlist_chart_limit
+                updating_playlist.chart_limit = playlist_chart_limit
 
             if playlist_type is not None:
-                dic['type'] = playlist_type
+                # TODO check acceptable value
+                updating_playlist.type = playlist_type
 
-                if playlist_type == 'fmchart':
-                    dic['chart_range'] = 'YEAR'
-                    dic['chart_limit'] = 50
-
-            if len(dic) == 0:
-                logger.warning(f'no changes to make for {username} / {playlist_name}')
-                return jsonify({"message": 'no changes to make', "status": "error"}), 400
-
-            updating_playlist.update_database(dic)
-            logger.info(f'updated {username} / {playlist_name}')
+            updating_playlist.update()
+            logger.info(f'updated {user.username} / {playlist_name}')
 
             return jsonify({"message": 'playlist updated', "status": "success"}), 200
 
 
 @blueprint.route('/user', methods=['GET', 'POST'])
 @login_or_basic_auth
-def user(username=None):
+def user_route(user=None):
+    assert user is not None
 
     if request.method == 'GET':
+        return jsonify(user.to_dict()), 200
 
-        database_user = database.get_user(username)
-        return jsonify(database_user.to_dict()), 200
-
-    else:
-
-        db_user = database.get_user(username)
-
-        if db_user.user_type != db_user.Type.admin:
-            return jsonify({'status': 'error', 'message': 'unauthorized'}), 401
-
+    else:  # POST
         request_json = request.get_json()
 
         if 'username' in request_json:
-            username = request_json['username']
+            if request_json['username'].strip().lower() != user.username:
+                if user.type != "admin":
+                    return jsonify({'status': 'error', 'message': 'unauthorized'}), 401
 
-        actionable_user = database.get_user(username)
+                user = User.collection.filter('username', '==', request_json['username'].strip().lower()).get()
 
         if 'locked' in request_json:
-            logger.info(f'updating lock {username} / {request_json["locked"]}')
-            actionable_user.locked = request_json['locked']
+            if user.type == "admin":
+                logger.info(f'updating lock {user.username} / {request_json["locked"]}')
+                user.locked = request_json['locked']
 
         if 'spotify_linked' in request_json:
-            logger.info(f'deauthing {username}')
+            logger.info(f'deauthing {user.username}')
             if request_json['spotify_linked'] is False:
-                actionable_user.update_database({
-                    'access_token': None,
-                    'refresh_token': None,
-                    'spotify_linked': False
-                })
+                user.access_token = None
+                user.refresh_token = None
+                user.spotify_linked = False
 
         if 'lastfm_username' in request_json:
-            logger.info(f'updating lastfm username {username} -> {request_json["lastfm_username"]}')
-            actionable_user.lastfm_username = request_json['lastfm_username']
+            logger.info(f'updating lastfm username {user.username} -> {request_json["lastfm_username"]}')
+            user.lastfm_username = request_json['lastfm_username']
 
-        logger.info(f'updated {username}')
+        user.update()
+
+        logger.info(f'updated {user.username}')
 
         return jsonify({'message': 'account updated', 'status': 'succeeded'}), 200
 
@@ -269,16 +241,15 @@ def user(username=None):
 @blueprint.route('/users', methods=['GET'])
 @login_or_basic_auth
 @admin_required
-def users(username=None):
+def users(user=None):
     return jsonify({
-        'accounts': [i.to_dict() for i in database.get_users()]
+        'accounts': [i.to_dict() for i in User.collection.fetch()]
     }), 200
 
 
 @blueprint.route('/user/password', methods=['POST'])
 @login_required
-def change_password(username=None):
-
+def change_password(user=None):
     request_json = request.get_json()
 
     if 'new_password' in request_json and 'current_password' in request_json:
@@ -289,14 +260,14 @@ def change_password(username=None):
         if len(request_json['new_password']) > 30:
             return jsonify({"error": 'password too long'}), 400
 
-        db_user = database.get_user(username)
-        if db_user.check_password(request_json['current_password']):
-            db_user.password = request_json['new_password']
-            logger.info(f'password udpated {username}')
+        if user.check_password(request_json['current_password']):
+            user.password = generate_password_hash(request_json['new_password'])
+            user.update()
+            logger.info(f'password udpated {user.username}')
 
             return jsonify({"message": 'password changed', "status": "success"}), 200
         else:
-            logger.warning(f"incorrect password {username}")
+            logger.warning(f"incorrect password {user.username}")
             return jsonify({'error': 'wrong password provided'}), 401
 
     else:
@@ -305,7 +276,7 @@ def change_password(username=None):
 
 @blueprint.route('/playlist/play', methods=['POST'])
 @login_or_basic_auth
-def play_playlist(username=None):
+def play_playlist(user=None):
 
     request_json = request.get_json()
 
@@ -321,12 +292,12 @@ def play_playlist(username=None):
 
     request_device_name = request_json.get('device_name', None)
 
-    logger.info(f'playing {username}')
+    logger.info(f'playing {user.username}')
 
     if (request_parts and len(request_parts) > 0) or (request_playlists and len(request_playlists) > 0):
 
         if os.environ.get('DEPLOY_DESTINATION', None) == 'PROD':
-            create_play_user_playlist_task(username,
+            create_play_user_playlist_task(user.username,
                                            parts=request_parts,
                                            playlist_type=request_playlist_type,
                                            playlists=request_playlists,
@@ -338,7 +309,7 @@ def play_playlist(username=None):
                                            add_last_month=request_add_last_month,
                                            device_name=request_device_name)
         else:
-            play_user_playlist(username,
+            play_user_playlist(user.username,
                                parts=request_parts,
                                playlist_type=request_playlist_type,
                                playlists=request_playlists,
@@ -352,7 +323,7 @@ def play_playlist(username=None):
 
         return jsonify({'message': 'execution requested', 'status': 'success'}), 200
     else:
-        logger.error(f'no playlists/parts {username}')
+        logger.error(f'no playlists/parts {user.username}')
         return jsonify({'error': 'insufficient playlist sources'}), 400
 
 
@@ -381,16 +352,16 @@ def play_playlist_task():
 
 @blueprint.route('/playlist/run', methods=['GET'])
 @login_or_basic_auth
-def run_playlist(username=None):
+def run_playlist(user=None):
 
     playlist_name = request.args.get('name', None)
 
     if playlist_name:
 
         if os.environ.get('DEPLOY_DESTINATION', None) == 'PROD':
-            create_run_user_playlist_task(username, playlist_name)
+            create_run_user_playlist_task(user.username, playlist_name)
         else:
-            run_user_playlist(username, playlist_name)
+            run_user_playlist(user.username, playlist_name)
 
         return jsonify({'message': 'execution requested', 'status': 'success'}), 200
 
@@ -416,13 +387,12 @@ def run_playlist_task():
 
 @blueprint.route('/playlist/run/user', methods=['GET'])
 @login_or_basic_auth
-def run_user(username=None):
+def run_user(user=None):
 
-    db_user = database.get_user(username)
-    if db_user.user_type == db_user.Type.admin:
-        user_name = request.args.get('username', username)
+    if user.type == 'admin':
+        user_name = request.args.get('username', user.username)
     else:
-        user_name = username
+        user_name = user.username
 
     execute_user_playlists(user_name)
 
@@ -442,7 +412,7 @@ def run_user_task():
 @blueprint.route('/playlist/run/users', methods=['GET'])
 @login_or_basic_auth
 @admin_required
-def run_users(username=None):
+def run_users(user=None):
 
     execute_all_user_playlists()
     return jsonify({'message': 'executed all users', 'status': 'success'}), 200
@@ -458,18 +428,18 @@ def run_users_cron():
 
 @blueprint.route('/playlist/image', methods=['GET'])
 @login_or_basic_auth
-def image(username=None):
+def image(user=None):
 
     name = request.args.get('name', None)
 
     if name is None:
         return jsonify({'error': "no name provided"}), 400
 
-    _playlist = database.get_playlist(name=name, username=username)
+    _playlist = Playlist.collection.parent(user.key).filter('name', '==', name).get()
     if _playlist is None:
         return jsonify({'error': "playlist not found"}), 404
 
-    net = database.get_authed_spotify_network(username=username)
+    net = database.get_authed_spotify_network(user)
 
     spotify_playlist = net.get_playlist(uri_string=_playlist.uri)
 

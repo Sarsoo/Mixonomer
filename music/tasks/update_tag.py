@@ -2,6 +2,8 @@ import logging
 from datetime import datetime
 
 import music.db.database as database
+from music.model.user import User
+from music.model.tag import Tag
 
 logger = logging.getLogger(__name__)
 
@@ -9,19 +11,20 @@ logger = logging.getLogger(__name__)
 def update_tag(username, tag_id):
     logger.info(f'updating {username} / {tag_id}')
 
-    tag = database.get_tag(username=username, tag_id=tag_id)
+    user = User.collection.filter('username', '==', username.strip().lower()).get()
+    if user is None:
+        logger.error(f'user {username} not found')
+    tag = Tag.collection.parent(user.key).filter('tag_id', '==', tag_id).get()
 
     if tag is None:
         logger.error(f'{tag_id} for {username} not found')
         return
 
-    user = database.get_user(username)
-
     if user.lastfm_username is None or len(user.lastfm_username) == 0:
         logger.error(f'{username} has no last.fm username')
         return
 
-    net = database.get_authed_lastfm_network(username=username)
+    net = database.get_authed_lastfm_network(user)
 
     tag_count = 0
     user_scrobbles = net.get_user_scrobble_count()
@@ -60,13 +63,13 @@ def update_tag(username, tag_id):
 
         tracks.append(track)
 
-    tag.update_database({
-        'tracks': tracks,
-        'albums': albums,
-        'artists': artists,
+    tag.tracks = tracks
+    tag.albums = albums
+    tag.artists = artists
 
-        'total_user_scrobbles': user_scrobbles,
-        'count': tag_count,
-        'proportion': (tag_count / user_scrobbles) * 100,
-        'last_updated': datetime.utcnow()
-    })
+    tag.total_user_scrobbles = user_scrobbles
+    tag.count = tag_count
+    tag.proportion = (tag_count / user_scrobbles) * 100
+    tag.last_updated = datetime.utcnow()
+
+    tag.update()

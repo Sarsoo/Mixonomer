@@ -1,14 +1,13 @@
 from flask import Blueprint, session, flash, request, redirect, url_for, render_template
 from google.cloud import firestore
-from werkzeug.security import check_password_hash, generate_password_hash
+from werkzeug.security import generate_password_hash
+from music.model.user import User
 
 import urllib
 import datetime
 import logging
 from base64 import b64encode
 import requests
-
-import music.db.database as database
 
 blueprint = Blueprint('authapi', __name__)
 
@@ -31,8 +30,7 @@ def login():
             flash('malformed request')
             return redirect(url_for('index'))
 
-        username = username.lower()
-        user = database.get_user(username)
+        user = User.collection.filter('username', '==', username.strip().lower()).get()
 
         if user is None:
             flash('user not found')
@@ -45,6 +43,7 @@ def login():
                 return redirect(url_for('index'))
 
             user.last_login = datetime.datetime.utcnow()
+            user.update()
 
             logger.info(f'success {username}')
             session['username'] = username
@@ -91,12 +90,17 @@ def register():
             flash('password mismatch')
             return redirect('authapi.register')
 
-        if username in [i.to_dict()['username'] for i in
-                        db.collection(u'spotify_users').where(u'username', u'==', username).stream()]:
+        if username in [i.username for i in
+                        User.collection.fetch()]:
             flash('username already registered')
             return redirect('authapi.register')
 
-        database.create_user(username=username, password=password)
+        user = User()
+        user.username = username
+        user.password = generate_password_hash(password)
+        user.last_login = datetime.utcnow()
+
+        user.save()
 
         logger.info(f'new user {username}')
         session['username'] = username
@@ -150,15 +154,15 @@ def token():
 
                 resp = req.json()
 
-                user = database.get_user(session['username'])
+                user = User.collection.filter('username', '==', session['username'].strip().lower()).get()
 
-                user.update_database({
-                    'access_token': resp['access_token'],
-                    'refresh_token': resp['refresh_token'],
-                    'last_refreshed': datetime.datetime.now(datetime.timezone.utc),
-                    'token_expiry': resp['expires_in'],
-                    'spotify_linked': True
-                })
+                user.access_token = resp['access_token']
+                user.refresh_token = resp['refresh_token']
+                user.last_refreshed = datetime.datetime.now(datetime.timezone.utc)
+                user.token_expiry = resp['expires_in']
+                user.spotify_linked = True
+
+                user.update()
 
             else:
                 flash('http error on token request')
@@ -174,15 +178,15 @@ def deauth():
 
     if 'username' in session:
 
-        user = database.get_user(session['username'])
+        user = User.collection.filter('username', '==', session['username'].strip().lower()).get()
 
-        user.update_database({
-            'access_token': None,
-            'refresh_token': None,
-            'last_refreshed': datetime.datetime.now(datetime.timezone.utc),
-            'token_expiry': None,
-            'spotify_linked': False
-        })
+        user.access_token = None
+        user.refresh_token = None
+        user.last_refreshed = datetime.datetime.now(datetime.timezone.utc)
+        user.token_expiry = None
+        user.spotify_linked = False
+
+        user.update()
 
         return redirect('/app/settings/spotify')
 

@@ -1,5 +1,3 @@
-from google.cloud import firestore
-
 import datetime
 import logging
 
@@ -11,8 +9,7 @@ from spotframework.engine.processor.deduplicate import DeduplicateByID
 from spotframework.player.player import Player
 import music.db.database as database
 from music.db.part_generator import PartGenerator
-
-db = firestore.Client()
+from music.model.user import User
 
 logger = logging.getLogger(__name__)
 
@@ -29,7 +26,11 @@ def play_user_playlist(username,
                        add_last_month=False,
                        device_name=None):
 
-    user = database.get_user(username)
+    user = User.collection.filter('username', '==', username.strip().lower()).get()
+
+    if user is None:
+        logger.error(f'user {username} not found')
+        return
 
     logger.info(f'playing for {username}')
 
@@ -51,7 +52,7 @@ def play_user_playlist(username,
         logger.critical(f'no playlists to use for creation ({username})')
         return None
 
-    net = database.get_authed_spotify_network(username)
+    net = database.get_authed_spotify_network(user)
 
     device = None
     if device_name:
