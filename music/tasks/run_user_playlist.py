@@ -7,10 +7,11 @@ from spotframework.engine.playlistengine import PlaylistEngine, PlaylistSource, 
 from spotframework.engine.processor.shuffle import Shuffle
 from spotframework.engine.processor.sort import SortReleaseDate
 from spotframework.engine.processor.deduplicate import DeduplicateByName
-
 from spotframework.model.uri import Uri
 
 from spotfm.engine.chart_source import ChartSource
+
+from fmframework.net.network import Network
 
 import music.db.database as database
 from music.db.part_generator import PartGenerator
@@ -70,8 +71,16 @@ def run_user_playlist(username, playlist_name):
         if user.lastfm_username is None:
             logger.error(f'{username} has no associated last.fm username, chart source skipped')
         else:
+
+            chart_range = Network.Range.MONTH
+            try:
+                chart_range = Network.Range[playlist.chart_range]
+            except KeyError:
+                logger.error(f'invalid last.fm chart range found for '
+                             f'{playlist_name}/{username} {playlist.chart_range}, defaulting to 1 month')
+
             engine.sources.append(ChartSource(spotnet=net, fmnet=database.get_authed_lastfm_network(user)))
-            params.append(ChartSource.Params(chart_range=playlist.chart_range, limit=playlist.chart_limit))
+            params.append(ChartSource.Params(chart_range=chart_range, limit=playlist.chart_limit))
 
     else:
         # INCLUDE SORT METHOD (no sorting for last.fm chart playlist)
