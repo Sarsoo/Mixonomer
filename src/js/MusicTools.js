@@ -141,7 +141,7 @@ class MusicTools extends Component {
                                 <ListItemIcon><KeyboardBackspace /></ListItemIcon>
                                 <ListItemText primary="Logout" />
                             </ListItem>
-                            <ListItem button key="sarsoo.xyz" component={Link} to='https://sarsoo.xyz'>
+                            <ListItem button key="sarsoo.xyz" onClick={(e) => { window.location.href = 'https://sarsoo.xyz' }}>
                                 <ListItemIcon><ExitToApp /></ListItemIcon>
                                 <ListItemText primary="sarsoo.xyz" />
                             </ListItem>

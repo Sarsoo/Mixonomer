@@ -34,10 +34,6 @@ def play_user_playlist(username,
 
     logger.info(f'playing for {username}')
 
-    if user is None:
-        logger.critical(f'{username} not found')
-        return
-
     if parts is None and playlists is None:
         logger.critical(f'no playlists to use for creation ({username})')
         return None

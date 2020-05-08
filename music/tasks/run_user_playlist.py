@@ -26,15 +26,13 @@ logger = logging.getLogger(__name__)
 def run_user_playlist(username, playlist_name):
     """Generate and upadate a user's playlist"""
     user = User.collection.filter('username', '==', username.strip().lower()).get()
-    if user is None:
-        logger.error(f'user {username} not found')
-
-    logger.info(f'running {username} / {playlist_name}')
 
     # PRE-RUN CHECKS
     if user is None:
-        logger.critical(f'{username} not found')
+        logger.error(f'user {username} not found')
         return
+
+    logger.info(f'running {username} / {playlist_name}')
 
     playlist = Playlist.collection.parent(user.key).filter('name', '==', playlist_name).get()
 
@@ -49,6 +47,11 @@ def run_user_playlist(username, playlist_name):
     # END CHECKS
 
     net = database.get_authed_spotify_network(user)
+
+    if net is None:
+        logger.error(f'no spotify network returned for {username}')
+        return
+
     engine = PlaylistEngine(net)
     part_generator = PartGenerator(user=user)
 

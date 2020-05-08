@@ -1,9 +1,11 @@
 from flask import Blueprint, jsonify, request
 
 import logging
+import os
 
 from music.api.decorators import login_or_basic_auth
-from music.cloud.function import update_tag
+from music.cloud.function import update_tag as serverless_update_tag
+from music.tasks.update_tag import update_tag
 
 from music.model.tag import Tag
 
@@ -56,53 +58,62 @@ def put_tag(tag_id, user):
     request_json = request.get_json()
 
     if request_json.get('name'):
-        db_tag.name = request_json['name']
+        db_tag.name = request_json['name'].strip()
 
     update_required = False
 
-    tracks = []
     if request_json.get('tracks') is not None:
         update_required = True
-        for track in request_json['tracks']:
-            if track.get('name') and track.get('artist'):
-                tracks.append({
-                    'name': track['name'],
-                    'artist': track['artist']
-                })
-        db_tag.tracks = tracks
+        db_tag.tracks = [
+            {
+                'name': track['name'].strip(),
+                'artist': track['artist'].strip()
+            }
+            for track in request_json['tracks']
+            if track.get('name') and track.get('artist')
+        ]
 
-    albums = []
     if request_json.get('albums') is not None:
         update_required = True
-        for album in request_json['albums']:
-            if album.get('name') and album.get('artist'):
-                albums.append({
-                    'name': album['name'],
-                    'artist': album['artist']
-                })
-        db_tag.albums = albums
+        db_tag.albums = [
+            {
+                'name': album['name'].strip(),
+                'artist': album['artist'].strip()
+            }
+            for album in request_json['albums']
+            if album.get('name') and album.get('artist')
+        ]
 
-    artists = []
     if request_json.get('artists') is not None:
         update_required = True
-        for artist in request_json['artists']:
-            if artist.get('name'):
-                artists.append({
-                    'name': artist['name']
-                })
-        db_tag.artists = artists
-
-    if update_required:
-        update_tag(username=user.username, tag_id=tag_id)
+        db_tag.artists = [
+            {
+                'name': artist['name'].strip()
+            }
+            for artist in request_json['artists']
+            if artist.get('name')
+        ]
 
     db_tag.update()
+
+    if update_required:
+        # queue serverless refresh
+        if os.environ.get('DEPLOY_DESTINATION', None) == 'PROD':
+            serverless_update_tag(username=user.username, tag_id=tag_id)
+        else:
+            update_tag(username=user.username, tag_id=tag_id)
+
     return jsonify({"message": 'tag updated', "status": "success"}), 200
 
 
 def post_tag(tag_id, user):
     logger.info(f'creating {tag_id} for {user.username}')
 
-    tag_id = tag_id.replace(' ', '_')
+    tag_id = tag_id.replace(' ', '_').strip()
+
+    existing_ids = [i.tag_id for i in Tag.collection.parent(user.key).fetch()]
+    while tag_id in existing_ids:
+        tag_id += '1'
 
     tag = Tag(parent=user.key)
     tag.tag_id = tag_id
@@ -126,5 +137,10 @@ def delete_tag(tag_id, user):
 @login_or_basic_auth
 def tag_refresh(tag_id, user=None):
     logger.info(f'updating {tag_id} tag for {user.username}')
-    update_tag(username=user.username, tag_id=tag_id)
+
+    if os.environ.get('DEPLOY_DESTINATION', None) == 'PROD':
+        serverless_update_tag(username=user.username, tag_id=tag_id)
+    else:
+        update_tag(username=user.username, tag_id=tag_id)
+
     return jsonify({"message": 'tag updated', "status": "success"}), 200

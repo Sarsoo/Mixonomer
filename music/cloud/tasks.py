@@ -20,6 +20,7 @@ logger = logging.getLogger(__name__)
 
 
 def execute_all_user_playlists():
+    """Create user playlist refresh task for all users"""
 
     seconds_delay = 0
     logger.info('running')
@@ -48,10 +49,13 @@ def execute_all_user_playlists():
 
 
 def execute_user_playlists(username):
+    """Refresh all playlists for given user, environment dependent"""
+
     user = User.collection.filter('username', '==', username.strip().lower()).get()
 
     if user is None:
         logger.error(f'user {username} not found')
+        return
 
     playlists = Playlist.collection.parent(user.key).fetch()
 
@@ -70,6 +74,7 @@ def execute_user_playlists(username):
 
 
 def create_run_user_playlist_task(username, playlist_name, delay=0):
+    """Create tasks for a users given playlist"""
 
     task = {
         'app_engine_http_request': {  # Specify the type of request.
@@ -108,6 +113,8 @@ def create_play_user_playlist_task(username,
                                    add_last_month=False,
                                    delay=0,
                                    device_name=None):
+    """Create tasks for a users given scratch playlist"""
+
     task = {
         'app_engine_http_request': {  # Specify the type of request.
             'http_method': 'POST',
@@ -142,6 +149,7 @@ def create_play_user_playlist_task(username,
 
 
 def execute_all_user_playlist_stats():
+    """"Create user playlist stats refresh task for all users"""
 
     seconds_delay = 0
     logger.info('running')
@@ -163,15 +171,17 @@ def execute_all_user_playlist_stats():
 
 
 def execute_user_playlist_stats(username):
+    """Refresh all playlist stats for given user, environment dependent"""
 
     user = User.collection.filter('username', '==', username.strip().lower()).get()
     if user is None:
         logger.error(f'user {username} not found')
+        return
 
     playlists = Playlist.collection.parent(user.key).fetch()
 
     seconds_delay = 0
-    logger.info(f'running {username}')
+    logger.info(f'running stats for {username}')
 
     if user.lastfm_username and len(user.lastfm_username) > 0:
         for playlist in playlists:
@@ -188,6 +198,7 @@ def execute_user_playlist_stats(username):
 
 
 def create_refresh_user_task(username, delay=0):
+    """Create user playlist stats refresh task"""
 
     task = {
         'app_engine_http_request': {  # Specify the type of request.
@@ -209,6 +220,7 @@ def create_refresh_user_task(username, delay=0):
 
 
 def create_refresh_playlist_task(username, playlist_name, delay=0):
+    """Create user playlist stats refresh tasks"""
 
     track_task = {
         'app_engine_http_request': {  # Specify the type of request.

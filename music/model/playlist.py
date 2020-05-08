@@ -46,7 +46,7 @@ class Playlist(Model):
     add_this_month = BooleanField(default=False)
     day_boundary = NumberField(default=21)
 
-    chart_range = TextField(default='1month')
+    chart_range = TextField(default='MONTH')
     chart_limit = NumberField(default=50)
 
     def to_dict(self):

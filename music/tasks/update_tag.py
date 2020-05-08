@@ -14,6 +14,8 @@ def update_tag(username, tag_id):
     user = User.collection.filter('username', '==', username.strip().lower()).get()
     if user is None:
         logger.error(f'user {username} not found')
+        return
+
     tag = Tag.collection.parent(user.key).filter('tag_id', '==', tag_id).get()
 
     if tag is None:
@@ -25,6 +27,10 @@ def update_tag(username, tag_id):
         return
 
     net = database.get_authed_lastfm_network(user)
+
+    if net is None:
+        logger.error(f'no last.fm network returned for {username}')
+        return
 
     tag_count = 0
     user_scrobbles = net.get_user_scrobble_count()
