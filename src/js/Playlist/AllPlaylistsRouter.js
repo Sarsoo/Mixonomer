@@ -3,7 +3,6 @@ import { Route, Switch } from "react-router-dom";
 
 import PlaylistsView from "./PlaylistsList.js"
 import NewPlaylist from "./New.js";
-import ScratchView from  "./ScratchView.js";
 
 class Playlists extends Component {
     render(){
@@ -12,7 +11,6 @@ class Playlists extends Component {
                 <Switch>
                     <Route exact path={`${this.props.match.url}/`} component={PlaylistsView} />
                     <Route path={`${this.props.match.url}/new`} component={NewPlaylist} />
-                    <Route path={`${this.props.match.url}/play`} component={ScratchView} />
                 </Switch>
             </div>
         );

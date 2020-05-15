@@ -5,7 +5,7 @@ import os
 
 from music.api.decorators import admin_required, login_or_basic_auth, lastfm_username_required, spotify_link_required, cloud_task, gae_cron
 import music.db.database as database
-from music.cloud.tasks import execute_all_user_playlist_stats, execute_user_playlist_stats, create_refresh_playlist_task
+from music.cloud.tasks import refresh_all_user_playlist_stats, refresh_user_playlist_stats, refresh_playlist_task
 from music.tasks.refresh_lastfm_stats import refresh_lastfm_track_stats, \
     refresh_lastfm_album_stats, \
     refresh_lastfm_artist_stats
@@ -74,7 +74,7 @@ def playlist_refresh(user=None):
     if playlist_name:
 
         if os.environ.get('DEPLOY_DESTINATION', None) == 'PROD':
-            create_refresh_playlist_task(user.username, playlist_name)
+            refresh_playlist_task(user.username, playlist_name)
         else:
             refresh_lastfm_track_stats(user.username, playlist_name)
             refresh_lastfm_album_stats(user.username, playlist_name)
@@ -136,14 +136,14 @@ def run_playlist_artist_task():
 @login_or_basic_auth
 @admin_required
 def run_users(user=None):
-    execute_all_user_playlist_stats()
+    refresh_all_user_playlist_stats()
     return jsonify({'message': 'executed all users', 'status': 'success'}), 200
 
 
 @blueprint.route('/playlist/refresh/users/cron', methods=['GET'])
 @gae_cron
 def run_users_task():
-    execute_all_user_playlist_stats()
+    refresh_all_user_playlist_stats()
     return jsonify({'status': 'success'}), 200
 
 
@@ -156,7 +156,7 @@ def run_user(user=None):
     else:
         user_name = user.username
 
-    execute_user_playlist_stats(user_name)
+    refresh_user_playlist_stats(user_name)
 
     return jsonify({'message': 'executed user', 'status': 'success'}), 200
 
@@ -167,5 +167,5 @@ def run_user_task():
 
     payload = request.get_data(as_text=True)
     if payload:
-        execute_user_playlist_stats(payload)
+        refresh_user_playlist_stats(payload)
         return jsonify({'message': 'executed user', 'status': 'success'}), 200

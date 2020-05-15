@@ -2,9 +2,11 @@ from flask import Blueprint, jsonify, request
 
 import logging
 import os
+import json
 
-from music.api.decorators import login_or_basic_auth
+from music.api.decorators import login_or_basic_auth, gae_cron, cloud_task
 from music.cloud.function import update_tag as serverless_update_tag
+from music.cloud.tasks import update_all_user_tags
 from music.tasks.update_tag import update_tag
 
 from music.model.tag import Tag
@@ -60,10 +62,7 @@ def put_tag(tag_id, user):
     if request_json.get('name'):
         db_tag.name = request_json['name'].strip()
 
-    update_required = False
-
     if request_json.get('tracks') is not None:
-        update_required = True
         db_tag.tracks = [
             {
                 'name': track['name'].strip(),
@@ -74,7 +73,6 @@ def put_tag(tag_id, user):
         ]
 
     if request_json.get('albums') is not None:
-        update_required = True
         db_tag.albums = [
             {
                 'name': album['name'].strip(),
@@ -85,7 +83,6 @@ def put_tag(tag_id, user):
         ]
 
     if request_json.get('artists') is not None:
-        update_required = True
         db_tag.artists = [
             {
                 'name': artist['name'].strip()
@@ -95,13 +92,6 @@ def put_tag(tag_id, user):
         ]
 
     db_tag.update()
-
-    if update_required:
-        # queue serverless refresh
-        if os.environ.get('DEPLOY_DESTINATION', None) == 'PROD':
-            serverless_update_tag(username=user.username, tag_id=tag_id)
-        else:
-            update_tag(username=user.username, tag_id=tag_id)
 
     return jsonify({"message": 'tag updated', "status": "success"}), 200
 
@@ -113,7 +103,7 @@ def post_tag(tag_id, user):
 
     existing_ids = [i.tag_id for i in Tag.collection.parent(user.key).fetch()]
     while tag_id in existing_ids:
-        tag_id += '1'
+        tag_id += '_'
 
     tag = Tag(parent=user.key)
     tag.tag_id = tag_id
@@ -144,3 +134,26 @@ def tag_refresh(tag_id, user=None):
         update_tag(username=user.username, tag_id=tag_id)
 
     return jsonify({"message": 'tag updated', "status": "success"}), 200
+
+
+@blueprint.route('/tag/update/task', methods=['POST'])
+@cloud_task
+def run_tag_task():
+
+    payload = request.get_data(as_text=True)
+    if payload:
+        payload = json.loads(payload)
+
+        logger.info(f'running {payload["username"]} / {payload["tag_id"]}')
+
+        serverless_update_tag(username=payload['username'], tag_id=payload['tag_id'])
+
+        return jsonify({'message': 'executed playlist', 'status': 'success'}), 200
+
+
+@blueprint.route('/tag/update/users/cron', methods=['GET'])
+@gae_cron
+def run_tags_cron():
+
+    update_all_user_tags()
+    return jsonify({'status': 'success'}), 200

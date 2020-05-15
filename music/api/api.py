@@ -8,10 +8,8 @@ import logging
 from datetime import datetime
 
 from music.api.decorators import login_required, login_or_basic_auth, admin_required, gae_cron, cloud_task
-from music.cloud.tasks import execute_all_user_playlists, execute_user_playlists, create_run_user_playlist_task, \
-    create_play_user_playlist_task
+from music.cloud.tasks import update_all_user_playlists, update_playlists, run_user_playlist_task
 from music.tasks.run_user_playlist import run_user_playlist as run_user_playlist
-from music.tasks.play_user_playlist import play_user_playlist as play_user_playlist
 
 from music.model.user import User
 from music.model.playlist import Playlist
@@ -25,7 +23,7 @@ logger = logging.getLogger(__name__)
 
 @blueprint.route('/playlists', methods=['GET'])
 @login_or_basic_auth
-def get_playlists(user=None):
+def all_playlists_route(user=None):
     assert user is not None
     return jsonify({
         'playlists':  [i.to_dict() for i in Playlist.collection.parent(user.key).fetch()]
@@ -188,8 +186,9 @@ def playlist_route(user=None):
                 updating_playlist.chart_limit = playlist_chart_limit
 
             if playlist_type is not None:
-                # TODO check acceptable value
-                updating_playlist.type = playlist_type
+                playlist_type = playlist_type.strip().lower()
+                if playlist_type in ['default', 'recents', 'fmchart']:
+                    updating_playlist.type = playlist_type
 
             updating_playlist.update()
             logger.info(f'updated {user.username} / {playlist_name}')
@@ -241,7 +240,7 @@ def user_route(user=None):
 @blueprint.route('/users', methods=['GET'])
 @login_or_basic_auth
 @admin_required
-def users(user=None):
+def all_users_route(user=None):
     return jsonify({
         'accounts': [i.to_dict() for i in User.collection.fetch()]
     }), 200
@@ -274,82 +273,6 @@ def change_password(user=None):
         return jsonify({'error': 'malformed request, no old_password/new_password'}), 400
 
 
-@blueprint.route('/playlist/play', methods=['POST'])
-@login_or_basic_auth
-def play_playlist(user=None):
-
-    request_json = request.get_json()
-
-    request_parts = request_json.get('parts', None)
-    request_playlist_type = request_json.get('playlist_type', 'default')
-    request_playlists = request_json.get('playlists', None)
-    request_shuffle = request_json.get('shuffle', False)
-    request_include_recommendations = request_json.get('include_recommendations', True)
-    request_recommendation_sample = request_json.get('recommendation_sample', 10)
-    request_day_boundary = request_json.get('day_boundary', 10)
-    request_add_this_month = request_json.get('add_this_month', False)
-    request_add_last_month = request_json.get('add_last_month', False)
-
-    request_device_name = request_json.get('device_name', None)
-
-    logger.info(f'playing {user.username}')
-
-    if (request_parts and len(request_parts) > 0) or (request_playlists and len(request_playlists) > 0):
-
-        if os.environ.get('DEPLOY_DESTINATION', None) == 'PROD':
-            create_play_user_playlist_task(user.username,
-                                           parts=request_parts,
-                                           playlist_type=request_playlist_type,
-                                           playlists=request_playlists,
-                                           shuffle=request_shuffle,
-                                           include_recommendations=request_include_recommendations,
-                                           recommendation_sample=request_recommendation_sample,
-                                           day_boundary=request_day_boundary,
-                                           add_this_month=request_add_this_month,
-                                           add_last_month=request_add_last_month,
-                                           device_name=request_device_name)
-        else:
-            play_user_playlist(user.username,
-                               parts=request_parts,
-                               playlist_type=request_playlist_type,
-                               playlists=request_playlists,
-                               shuffle=request_shuffle,
-                               include_recommendations=request_include_recommendations,
-                               recommendation_sample=request_recommendation_sample,
-                               day_boundary=request_day_boundary,
-                               add_this_month=request_add_this_month,
-                               add_last_month=request_add_last_month,
-                               device_name=request_device_name)
-
-        return jsonify({'message': 'execution requested', 'status': 'success'}), 200
-    else:
-        logger.error(f'no playlists/parts {user.username}')
-        return jsonify({'error': 'insufficient playlist sources'}), 400
-
-
-@blueprint.route('/playlist/play/task', methods=['POST'])
-@cloud_task
-def play_playlist_task():
-    payload = request.get_data(as_text=True)
-    if payload:
-        payload = json.loads(payload)
-        logger.info(f'playing {payload["username"]}')
-
-        play_user_playlist(payload['username'],
-                           parts=payload['parts'],
-                           playlist_type=payload['playlist_type'],
-                           playlists=payload['playlists'],
-                           shuffle=payload['shuffle'],
-                           include_recommendations=payload['include_recommendations'],
-                           recommendation_sample=payload['recommendation_sample'],
-                           day_boundary=payload['day_boundary'],
-                           add_this_month=payload['add_this_month'],
-                           add_last_month=payload['add_last_month'],
-                           device_name=payload['device_name'])
-
-        return jsonify({'message': 'executed playlist', 'status': 'success'}), 200
-
-
 @blueprint.route('/playlist/run', methods=['GET'])
 @login_or_basic_auth
 def run_playlist(user=None):
@@ -359,7 +282,7 @@ def run_playlist(user=None):
     if playlist_name:
 
         if os.environ.get('DEPLOY_DESTINATION', None) == 'PROD':
-            create_run_user_playlist_task(user.username, playlist_name)
+            run_user_playlist_task(user.username, playlist_name)
         else:
             run_user_playlist(user.username, playlist_name)
 
@@ -394,7 +317,7 @@ def run_user(user=None):
     else:
         user_name = user.username
 
-    execute_user_playlists(user_name)
+    update_playlists(user_name)
 
     return jsonify({'message': 'executed user', 'status': 'success'}), 200
 
@@ -405,7 +328,7 @@ def run_user_task():
 
     payload = request.get_data(as_text=True)
     if payload:
-        execute_user_playlists(payload)
+        update_playlists(payload)
         return jsonify({'message': 'executed user', 'status': 'success'}), 200
 
 
@@ -414,7 +337,7 @@ def run_user_task():
 @admin_required
 def run_users(user=None):
 
-    execute_all_user_playlists()
+    update_all_user_playlists()
     return jsonify({'message': 'executed all users', 'status': 'success'}), 200
 
 
@@ -422,7 +345,7 @@ def run_users(user=None):
 @gae_cron
 def run_users_cron():
 
-    execute_all_user_playlists()
+    update_all_user_playlists()
     return jsonify({'status': 'success'}), 200
 
 
