@@ -42,8 +42,11 @@ def get_authed_spotify_network(user):
                                     access_token=user.access_token)
             user_obj.on_refresh.append(refresh_token_database_callback)
 
-            if user.last_refreshed + timedelta(seconds=user.token_expiry - 1) \
-                    < datetime.now(timezone.utc):
+            if user.last_refreshed is not None and user.token_expiry is not None:
+                if user.last_refreshed + timedelta(seconds=user.token_expiry - 1) \
+                        < datetime.now(timezone.utc):
+                    user_obj.refresh_access_token()
+            else:
                 user_obj.refresh_access_token()
 
             user_obj.refresh_info()
@@ -51,15 +54,15 @@ def get_authed_spotify_network(user):
         else:
             logger.error('user spotify not linked')
     else:
-        logger.error(f'user {user.username} not found')
+        logger.error(f'no user provided')
 
 
 def get_authed_lastfm_network(user):
-    if user:
+    if user is not None:
         if user.lastfm_username:
             fm_keys = db.document('key/fm').get().to_dict()
             return FmNetwork(username=user.lastfm_username, api_key=fm_keys['clientid'])
         else:
             logger.error(f'{user.username} has no last.fm username')
     else:
-        logger.error(f'user {user.username} not found')
+        logger.error(f'no user provided')
