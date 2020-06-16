@@ -378,7 +378,7 @@ function StatsCard (props) {
                             <Typography variant="h1" color="textPrimary" className={classes.root}>= { props.count }</Typography>
                         </Grid>
                         <Grid item xs={12}>
-                            <Typography variant="h4" color="textSecondary" className={classes.root}>{ Math.round(props.proportion) }%</Typography>
+                            <Typography variant="h4" color="textSecondary" className={classes.root}>{ props.proportion.toFixed(2) }%</Typography>
                         </Grid>
                     </Grid>
                 </CardContent>

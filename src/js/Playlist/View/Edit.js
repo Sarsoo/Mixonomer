@@ -530,7 +530,6 @@ export class Edit extends Component{
                                 onChange={this.handleInputChange} />
                         </Grid>
                         }
-                        { this.state.type == 'recents' &&
                         <Grid item xs={12}>
                             <FormControlLabel
                                 control={
@@ -547,7 +546,6 @@ export class Edit extends Component{
                                 labelPlacement="bottom"
                             />
                         </Grid>
-                        }
                         <Grid item xs={12}>
                             <FormControl variant="filled">
                                 <InputLabel htmlFor="type-select">Type</InputLabel>
