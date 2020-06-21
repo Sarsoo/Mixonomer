@@ -5,9 +5,8 @@ import logging
 from music.api.decorators import login_or_basic_auth, spotify_link_required
 import music.db.database as database
 
-from spotframework.model.track import SpotifyTrack
+from spotframework.model.track import TrackFull, Context
 from spotframework.model.uri import Uri
-from spotframework.model.service import Context
 from spotframework.player.player import Player
 
 blueprint = Blueprint('player_api', __name__)
@@ -57,13 +56,13 @@ def play(user=None):
     elif 'tracks' in request_json:
         try:
             uris = [Uri(i) for i in request_json['tracks']]
-            uris = [SpotifyTrack.wrap(uri=i) for i in uris if i.object_type == Uri.ObjectType.track]
 
+            # TODO check uri object type
             if len(uris) > 0:
                 net = database.get_authed_spotify_network(user)
 
                 player = Player(net)
-                player.play(tracks=uris, device_name=request_json.get('device_name', None))
+                player.play(uris=uris, device_name=request_json.get('device_name', None))
 
                 logger.info(f'played tracks')
                 return jsonify({'message': 'played', 'status': 'success'}), 200

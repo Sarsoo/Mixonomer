@@ -20,7 +20,7 @@ logger = logging.getLogger(__name__)
 @admin_required
 def get_tasks(user=None):
 
-    tasks = [i for i in tasker.list_tasks(task_path)]
+    tasks = list(tasker.list_tasks(task_path))
 
     urls = {}
     for task in tasks:

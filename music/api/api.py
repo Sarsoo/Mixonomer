@@ -9,7 +9,7 @@ from datetime import datetime
 
 from music.api.decorators import login_required, login_or_basic_auth, admin_required, gae_cron, cloud_task
 from music.cloud.tasks import update_all_user_playlists, update_playlists, run_user_playlist_task
-from music.tasks.run_user_playlist import run_user_playlist as run_user_playlist
+from music.tasks.run_user_playlist import run_user_playlist
 
 from music.model.user import User
 from music.model.playlist import Playlist
@@ -102,7 +102,7 @@ def playlist_route(user=None):
             if playlist is not None:
                 return jsonify({'error': 'playlist already exists'}), 400
 
-            from music.tasks.create_playlist import create_playlist as create_playlist
+            from music.tasks.create_playlist import create_playlist
 
             new_db_playlist = Playlist(parent=user.key)
 

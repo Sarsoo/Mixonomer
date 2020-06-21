@@ -4,7 +4,7 @@ import random
 
 import spotframework.util.monthstrings as monthstrings
 from spotframework.model.uri import Uri
-from spotframework.filter import remove_local
+from spotframework.filter import remove_local, get_track_objects
 from spotframework.filter.added import added_after
 from spotframework.filter.sort import sort_by_release_date
 from spotframework.filter.deduplicate import deduplicate_by_name
@@ -132,12 +132,16 @@ def run_user_playlist(username, playlist_name):
 
     # RECOMMENDATIONS
     if playlist.include_recommendations:
-        recommendations = net.get_recommendations(tracks=[i.uri.object_id for i
-                                                          in random.sample(playlist_tracks, k=min(5, len(playlist_tracks)))
+        recommendations = net.get_recommendations(tracks=[i.uri.object_id for i, j
+                                                          in zip(*get_track_objects(
+                                                                random.sample(playlist_tracks,
+                                                                              k=min(5, len(playlist_tracks))
+                                                                              )
+                                                                ))
                                                           if i.uri.object_type == Uri.ObjectType.track],
                                                   response_limit=playlist.recommendation_sample)
-        if recommendations and len(recommendations) > 0:
-            playlist_tracks += recommendations
+        if recommendations and len(recommendations.tracks) > 0:
+            playlist_tracks += recommendations.tracks
         else:
             logger.error(f'error getting recommendations {username} / {playlist_name}')
 
@@ -145,7 +149,8 @@ def run_user_playlist(username, playlist_name):
     playlist_tracks = deduplicate_by_name(playlist_tracks)
 
     # EXECUTE
-    resp = net.replace_playlist_tracks(uri_string=playlist.uri, uris=[i.uri for i in playlist_tracks])
+    resp = net.replace_playlist_tracks(uri_string=playlist.uri, uris=[i.uri for i, j
+                                                                      in zip(*get_track_objects(playlist_tracks))])
     if resp:
         if playlist.description_overwrite:
             string = playlist.description_overwrite

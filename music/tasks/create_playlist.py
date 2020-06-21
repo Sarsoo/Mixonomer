@@ -10,12 +10,12 @@ logger = logging.getLogger(__name__)
 
 
 def create_playlist(user, name):
-    logger.info(f'creating spotify playlist for {user.username} / {name}')
 
     if user is None:
-        logger.error(f'{user.username} not provided')
+        logger.error(f'username not provided')
         return
 
+    logger.info(f'creating spotify playlist for {user.username} / {name}')
     net = database.get_authed_spotify_network(user)
 
     playlist = net.create_playlist(net.user.username, name)
