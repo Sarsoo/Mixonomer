@@ -12,6 +12,7 @@ from music.tasks.refresh_lastfm_stats import refresh_lastfm_track_stats, \
 
 from spotfm.maths.counter import Counter
 from spotframework.model.uri import Uri
+from spotframework.net.network import SpotifyNetworkException
 
 blueprint = Blueprint('spotfm-api', __name__)
 logger = logging.getLogger(__name__)
@@ -48,18 +49,20 @@ def count(user=None):
             'last.fm_username': fmnet.username
         }), 200
     elif playlist_name:
+        try:
+            playlists = spotnet.get_playlists()
+            playlist = next((i for i in playlists if i.name == playlist_name), None)
 
-        playlists = spotnet.get_playlists()
-        playlist = next((i for i in playlists if i.name == playlist_name), None)
-
-        if playlist is not None:
-            playlist_count = counter.count_playlist(playlist=playlist)
-            return jsonify({
-                "count": playlist_count,
-                'playlist_name': playlist_name,
-                'last.fm_username': fmnet.username
-            }), 200
-        else:
+            if playlist is not None:
+                playlist_count = counter.count_playlist(playlist=playlist)
+                return jsonify({
+                    "count": playlist_count,
+                    'playlist_name': playlist_name,
+                    'last.fm_username': fmnet.username
+                }), 200
+            else:
+                return jsonify({'error': f'playlist {playlist_name} not found'}), 404
+        except SpotifyNetworkException:
             return jsonify({'error': f'playlist {playlist_name} not found'}), 404
 
 

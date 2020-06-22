@@ -9,6 +9,7 @@ from music.model.playlist import Playlist
 
 from spotfm.maths.counter import Counter
 from spotframework.model.uri import Uri
+from spotframework.net.network import SpotifyNetworkException
 
 db = firestore.Client()
 
@@ -37,7 +38,11 @@ def refresh_lastfm_track_stats(username, playlist_name):
         logger.critical(f'playlist {playlist_name} for {username} has no spotify uri')
         return
 
-    spotify_playlist = spotnet.get_playlist(uri=Uri(playlist.uri))
+    try:
+        spotify_playlist = spotnet.get_playlist(uri=Uri(playlist.uri))
+    except SpotifyNetworkException as e:
+        logger.error(f'error retrieving spotify playlist {username} / {playlist_name} - {e}')
+        return
     track_count = counter.count_playlist(playlist=spotify_playlist)
 
     user_count = fmnet.get_user_scrobble_count()
@@ -75,7 +80,11 @@ def refresh_lastfm_album_stats(username, playlist_name):
         logger.critical(f'playlist {playlist_name} for {username} has no spotify uri')
         return
 
-    spotify_playlist = spotnet.get_playlist(uri=Uri(playlist.uri))
+    try:
+        spotify_playlist = spotnet.get_playlist(uri=Uri(playlist.uri))
+    except SpotifyNetworkException as e:
+        logger.error(f'error retrieving spotify playlist {username} / {playlist_name} - {e}')
+        return
     album_count = counter.count_playlist(playlist=spotify_playlist, query_album=True)
 
     user_count = fmnet.get_user_scrobble_count()
@@ -113,7 +122,11 @@ def refresh_lastfm_artist_stats(username, playlist_name):
         logger.critical(f'playlist {playlist_name} for {username} has no spotify uri')
         return
 
-    spotify_playlist = spotnet.get_playlist(uri=Uri(playlist.uri))
+    try:
+        spotify_playlist = spotnet.get_playlist(uri=Uri(playlist.uri))
+    except SpotifyNetworkException as e:
+        logger.error(f'error retrieving spotify playlist {username} / {playlist_name} - {e}')
+        return
     artist_count = counter.count_playlist(playlist=spotify_playlist, query_artist=True)
 
     user_count = fmnet.get_user_scrobble_count()

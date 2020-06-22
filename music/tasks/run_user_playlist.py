@@ -8,6 +8,7 @@ from spotframework.filter import remove_local, get_track_objects
 from spotframework.filter.added import added_after
 from spotframework.filter.sort import sort_by_release_date
 from spotframework.filter.deduplicate import deduplicate_by_name
+from spotframework.net.network import SpotifyNetworkException
 
 from fmframework.net.network import Network
 from spotfm.charts.chart import get_chart_of_spotify_tracks
@@ -49,7 +50,11 @@ def run_user_playlist(username, playlist_name):
         logger.error(f'no spotify network returned for {username} / {playlist_name}')
         return
 
-    user_playlists = net.get_user_playlists()
+    try:
+        user_playlists = net.get_user_playlists()
+    except SpotifyNetworkException as e:
+        logger.error(f'error occured while retrieving playlists {username} / {playlist_name} - {e}')
+        return
 
     part_generator = PartGenerator(user=user)
     part_names = part_generator.get_recursive_parts(playlist.name)
@@ -66,11 +71,14 @@ def run_user_playlist(username, playlist_name):
         try:  # attempt to cast to uri
             uri = Uri(part_name)
 
-            _tracks = net.get_playlist_tracks(uri=uri)
-            if _tracks and len(_tracks) > 0:
-                playlist_tracks += _tracks
-            else:
-                logger.warning(f'no tracks returned for {uri} {username} / {playlist_name}')
+            try:
+                _tracks = net.get_playlist_tracks(uri=uri)
+                if _tracks and len(_tracks) > 0:
+                    playlist_tracks += _tracks
+                else:
+                    logger.warning(f'no tracks returned for {uri} {username} / {playlist_name}')
+            except SpotifyNetworkException as e:
+                logger.error(f'error occured while retrieving {uri} {username} / {playlist_name} - {e}')
 
         except ValueError:  # is a playlist name
             part_playlist = next((i for i in user_playlists if i.name == part_name), None)
@@ -78,21 +86,27 @@ def run_user_playlist(username, playlist_name):
                 logger.warning(f'playlist {part_name} not found {username} / {playlist_name}')
                 continue
 
-            part_playlist_tracks = net.get_playlist_tracks(uri=part_playlist.uri)
-            if part_playlist_tracks and len(part_playlist_tracks) > 0:
-                playlist_tracks += part_playlist_tracks
-            else:
-                logger.warning(f'no tracks returned for {part_playlist.name} {username} / {playlist_name}')
+            try:
+                part_playlist_tracks = net.get_playlist_tracks(uri=part_playlist.uri)
+                if part_playlist_tracks and len(part_playlist_tracks) > 0:
+                    playlist_tracks += part_playlist_tracks
+                else:
+                    logger.warning(f'no tracks returned for {part_playlist.name} {username} / {playlist_name}')
+            except SpotifyNetworkException as e:
+                logger.error(f'error occured while retrieving {part_name} {username} / {playlist_name} - {e}')
 
     playlist_tracks = remove_local(playlist_tracks)
 
     # LIBRARY
     if playlist.include_library_tracks:
-        library_tracks = net.get_library_tracks()
-        if library_tracks and len(library_tracks) > 0:
-            playlist_tracks += library_tracks
-        else:
-            logger.error(f'error getting library tracks {username} / {playlist_name}')
+        try:
+            library_tracks = net.get_library_tracks()
+            if library_tracks and len(library_tracks) > 0:
+                playlist_tracks += library_tracks
+            else:
+                logger.error(f'error getting library tracks {username} / {playlist_name}')
+        except SpotifyNetworkException as e:
+            logger.error(f'error occured while retrieving library tracks {username} / {playlist_name} - {e}')
 
     # PLAYLIST TYPE SPECIFIC
     if playlist.type == 'recents':
@@ -132,26 +146,30 @@ def run_user_playlist(username, playlist_name):
 
     # RECOMMENDATIONS
     if playlist.include_recommendations:
-        recommendations = net.get_recommendations(tracks=[i.uri.object_id for i, j
-                                                          in zip(*get_track_objects(
-                                                                random.sample(playlist_tracks,
-                                                                              k=min(5, len(playlist_tracks))
-                                                                              )
-                                                                ))
-                                                          if i.uri.object_type == Uri.ObjectType.track],
-                                                  response_limit=playlist.recommendation_sample)
-        if recommendations and len(recommendations.tracks) > 0:
-            playlist_tracks += recommendations.tracks
-        else:
-            logger.error(f'error getting recommendations {username} / {playlist_name}')
+        try:
+            recommendations = net.get_recommendations(tracks=[i.uri.object_id for i, j
+                                                              in zip(*get_track_objects(
+                                                                    random.sample(playlist_tracks,
+                                                                                  k=min(5, len(playlist_tracks))
+                                                                                  )
+                                                                    ))
+                                                              if i.uri.object_type == Uri.ObjectType.track],
+                                                      response_limit=playlist.recommendation_sample)
+            if recommendations and len(recommendations.tracks) > 0:
+                playlist_tracks += recommendations.tracks
+            else:
+                logger.error(f'error getting recommendations {username} / {playlist_name}')
+        except SpotifyNetworkException as e:
+            logger.error(f'error occured while generating recommendations {username} / {playlist_name} - {e}')
 
     # DEDUPLICATE
     playlist_tracks = deduplicate_by_name(playlist_tracks)
 
     # EXECUTE
-    resp = net.replace_playlist_tracks(uri_string=playlist.uri, uris=[i.uri for i, j
-                                                                      in zip(*get_track_objects(playlist_tracks))])
-    if resp:
+    try:
+        net.replace_playlist_tracks(uri_string=playlist.uri, uris=[i.uri for i, j
+                                                                   in zip(*get_track_objects(playlist_tracks))])
+
         if playlist.description_overwrite:
             string = playlist.description_overwrite
         else:
@@ -164,11 +182,13 @@ def run_user_playlist(username, playlist_name):
             logger.error(f'no string generated {username} / {playlist_name}')
             return None
 
-        resp = net.change_playlist_details(Uri(playlist.uri), description=string)
-        if resp is None:
-            logger.error(f'error changing description {username} / {playlist_name}')
-    else:
-        logger.error(f'error executing {username} / {playlist_name}')
+        try:
+            net.change_playlist_details(Uri(playlist.uri), description=string)
+        except SpotifyNetworkException as e:
+            logger.error(f'error changing description for {username} / {playlist_name} - {e}')
+
+    except SpotifyNetworkException as e:
+        logger.error(f'error executing {username} / {playlist_name} - {e}')
 
     playlist.last_updated = datetime.datetime.utcnow()
     playlist.update()

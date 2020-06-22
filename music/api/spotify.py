@@ -14,7 +14,7 @@ logger = logging.getLogger(__name__)
 @blueprint.route('/sort', methods=['POST'])
 @login_or_basic_auth
 @spotify_link_required
-def play(user=None):
+def sort(user=None):
     request_json = request.get_json()
 
     net = database.get_authed_spotify_network(user)

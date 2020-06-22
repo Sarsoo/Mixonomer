@@ -5,7 +5,8 @@ import logging
 from music.api.decorators import login_or_basic_auth, spotify_link_required
 import music.db.database as database
 
-from spotframework.model.track import TrackFull, Context
+from spotframework.net.network import SpotifyNetworkException
+from spotframework.model.track import Context
 from spotframework.model.uri import Uri
 from spotframework.player.player import Player
 
@@ -39,8 +40,8 @@ def play(user=None):
             return jsonify({'error': "malformed uri provided"}), 400
     elif 'playlist_name' in request_json:
         net = database.get_authed_spotify_network(user)
-        playlists = net.get_playlists()
-        if playlists is not None:
+        try:
+            playlists = net.get_playlists()
             playlist_to_play = next((i for i in playlists if i.name == request_json['playlist_name']), None)
 
             if playlist_to_play is not None:
@@ -51,8 +52,9 @@ def play(user=None):
                 return jsonify({'message': 'played', 'status': 'success'}), 200
             else:
                 return jsonify({'error': f"playlist {request_json['playlist_name']} not found"}), 404
-        else:
+        except SpotifyNetworkException:
             return jsonify({'error': "playlists not returned"}), 400
+
     elif 'tracks' in request_json:
         try:
             uris = [Uri(i) for i in request_json['tracks']]

@@ -2,7 +2,7 @@ from google.cloud import firestore
 import logging
 from datetime import timedelta, datetime, timezone
 
-from spotframework.net.network import Network as SpotifyNetwork
+from spotframework.net.network import Network as SpotifyNetwork, SpotifyNetworkException
 from fmframework.net.network import Network as FmNetwork
 from music.db.user import DatabaseUser
 from music.model.user import User
@@ -42,15 +42,21 @@ def get_authed_spotify_network(user):
                                     access_token=user.access_token)
             user_obj.on_refresh.append(refresh_token_database_callback)
 
+            net = SpotifyNetwork(user_obj)
+
             if user.last_refreshed is not None and user.token_expiry is not None:
                 if user.last_refreshed + timedelta(seconds=user.token_expiry - 1) \
                         < datetime.now(timezone.utc):
-                    user_obj.refresh_access_token()
+                    net.refresh_access_token()
             else:
-                user_obj.refresh_access_token()
+                net.refresh_access_token()
 
-            user_obj.refresh_info()
-            return SpotifyNetwork(user_obj)
+            try:
+                net.refresh_user_info()
+            except SpotifyNetworkException as e:
+                logger.error(f'error refreshing user info for {user.username} = {e}')
+
+            return net
         else:
             logger.error('user spotify not linked')
     else:

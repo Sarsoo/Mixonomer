@@ -16,6 +16,8 @@ from music.model.playlist import Playlist
 
 import music.db.database as database
 
+from spotframework.net.network import SpotifyNetworkException
+
 blueprint = Blueprint('api', __name__)
 db = firestore.Client()
 logger = logging.getLogger(__name__)
@@ -352,7 +354,6 @@ def run_users_cron():
 @blueprint.route('/playlist/image', methods=['GET'])
 @login_or_basic_auth
 def image(user=None):
-
     name = request.args.get('name', None)
 
     if name is None:
@@ -364,9 +365,7 @@ def image(user=None):
 
     net = database.get_authed_spotify_network(user)
 
-    spotify_playlist = net.get_playlist(uri_string=_playlist.uri)
-
-    if spotify_playlist is None:
-        return jsonify({'error': "no spotify playlist returned"}), 404
-
-    return jsonify({'images': spotify_playlist.images, 'status': 'success'}), 200
+    try:
+        return jsonify({'images': net.get_playlist(uri_string=_playlist.uri).images, 'status': 'success'}), 200
+    except SpotifyNetworkException as e:
+        return jsonify({'error': f"spotify error occured: {e.http_code}"}), 404

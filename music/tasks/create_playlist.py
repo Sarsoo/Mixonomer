@@ -3,6 +3,7 @@ from google.cloud import firestore
 import logging
 
 import music.db.database as database
+from spotframework.net.network import SpotifyNetworkException
 
 db = firestore.Client()
 
@@ -18,10 +19,8 @@ def create_playlist(user, name):
     logger.info(f'creating spotify playlist for {user.username} / {name}')
     net = database.get_authed_spotify_network(user)
 
-    playlist = net.create_playlist(net.user.username, name)
-
-    if playlist is not None:
-        return playlist
-    else:
-        logger.error(f'no response received {user.username} / {name}')
+    try:
+        return net.create_playlist(net.user.user.display_name, name)
+    except SpotifyNetworkException as e:
+        logger.error(f'error ocurred {user.username} / {name} - {e}')
         return
