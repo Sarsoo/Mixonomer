@@ -5,6 +5,8 @@ import music.db.database as database
 from music.model.user import User
 from music.model.tag import Tag
 
+from fmframework.net.network import LastFMNetworkException
+
 logger = logging.getLogger(__name__)
 
 
@@ -33,39 +35,52 @@ def update_tag(username, tag_id):
         return
 
     tag_count = 0
-    user_scrobbles = net.get_user_scrobble_count()
+    try:
+        user_scrobbles = net.get_user_scrobble_count()
+    except LastFMNetworkException as e:
+        logger.error(f'error retrieving scrobble count - {e}')
+        user_scrobbles = 0
 
     artists = []
     for artist in tag.artists:
-        net_artist = net.get_artist(name=artist['name'])
+        try:
+            net_artist = net.get_artist(name=artist['name'])
 
-        if net_artist is not None:
-            artist['count'] = net_artist.user_scrobbles
-            tag_count += net_artist.user_scrobbles
+            if net_artist is not None:
+                artist['count'] = net_artist.user_scrobbles
+                tag_count += net_artist.user_scrobbles
+        except LastFMNetworkException as e:
+            logger.error(f'error during artist retrieval - {e}')
 
         artists.append(artist)
 
     albums = []
     for album in tag.albums:
-        net_album = net.get_album(name=album['name'], artist=album['artist'])
+        try:
+            net_album = net.get_album(name=album['name'], artist=album['artist'])
 
-        if net_album is not None:
-            album['count'] = net_album.user_scrobbles
+            if net_album is not None:
+                album['count'] = net_album.user_scrobbles
 
-            if album['artist'].lower() not in [i.lower() for i in [j['name'] for j in artists]]:
-                tag_count += net_album.user_scrobbles
+                if album['artist'].lower() not in [i.lower() for i in [j['name'] for j in artists]]:
+                    tag_count += net_album.user_scrobbles
+        except LastFMNetworkException as e:
+            logger.error(f'error during album retrieval - {e}')
 
         albums.append(album)
 
     tracks = []
     for track in tag.tracks:
-        net_track = net.get_track(name=track['name'], artist=track['artist'])
+        try:
+            net_track = net.get_track(name=track['name'], artist=track['artist'])
 
-        if net_track is not None:
-            track['count'] = net_track.user_scrobbles
+            if net_track is not None:
+                track['count'] = net_track.user_scrobbles
 
-            if track['artist'].lower() not in [i.lower() for i in [j['name'] for j in artists]]:
-                tag_count += net_track.user_scrobbles
+                if track['artist'].lower() not in [i.lower() for i in [j['name'] for j in artists]]:
+                    tag_count += net_track.user_scrobbles
+        except LastFMNetworkException as e:
+            logger.error(f'error during track retrieval - {e}')
 
         tracks.append(track)
 

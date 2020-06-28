@@ -11,6 +11,8 @@ from spotfm.maths.counter import Counter
 from spotframework.model.uri import Uri
 from spotframework.net.network import SpotifyNetworkException
 
+from fmframework.net.network import LastFMNetworkException
+
 db = firestore.Client()
 
 logger = logging.getLogger(__name__)
@@ -45,10 +47,14 @@ def refresh_lastfm_track_stats(username, playlist_name):
         return
     track_count = counter.count_playlist(playlist=spotify_playlist)
 
-    user_count = fmnet.get_user_scrobble_count()
-    if user_count > 0:
-        percent = round((track_count * 100) / user_count, 2)
-    else:
+    try:
+        user_count = fmnet.get_user_scrobble_count()
+        if user_count > 0:
+            percent = round((track_count * 100) / user_count, 2)
+        else:
+            percent = 0
+    except LastFMNetworkException as e:
+        logger.error(f'error while retrieving user scrobble count - {e}')
         percent = 0
 
     playlist.lastfm_stat_count = track_count
@@ -87,10 +93,14 @@ def refresh_lastfm_album_stats(username, playlist_name):
         return
     album_count = counter.count_playlist(playlist=spotify_playlist, query_album=True)
 
-    user_count = fmnet.get_user_scrobble_count()
-    if user_count > 0:
-        album_percent = round((album_count * 100) / user_count, 2)
-    else:
+    try:
+        user_count = fmnet.get_user_scrobble_count()
+        if user_count > 0:
+            album_percent = round((album_count * 100) / user_count, 2)
+        else:
+            album_percent = 0
+    except LastFMNetworkException as e:
+        logger.error(f'error while retrieving user scrobble count - {e}')
         album_percent = 0
 
     playlist.lastfm_stat_album_count = album_count
@@ -129,10 +139,14 @@ def refresh_lastfm_artist_stats(username, playlist_name):
         return
     artist_count = counter.count_playlist(playlist=spotify_playlist, query_artist=True)
 
-    user_count = fmnet.get_user_scrobble_count()
-    if user_count > 0:
-        artist_percent = round((artist_count * 100) / user_count, 2)
-    else:
+    try:
+        user_count = fmnet.get_user_scrobble_count()
+        if user_count > 0:
+            artist_percent = round((artist_count * 100) / user_count, 2)
+        else:
+            artist_percent = 0
+    except LastFMNetworkException as e:
+        logger.error(f'error while retrieving user scrobble count - {e}')
         artist_percent = 0
 
     playlist.lastfm_stat_artist_count = artist_count
