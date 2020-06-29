@@ -309,6 +309,8 @@ def run_playlist_task():
 
         return jsonify({'message': 'executed playlist', 'status': 'success'}), 200
 
+    logger.critical('no payload provided')
+
 
 @blueprint.route('/playlist/run/user', methods=['GET'])
 @login_or_basic_auth

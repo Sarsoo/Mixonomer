@@ -76,21 +76,12 @@ export class Edit extends Component{
         this.handleAddPart = this.handleAddPart.bind(this);
         this.handleAddReference = this.handleAddReference.bind(this);
         this.handleInputChange = this.handleInputChange.bind(this);
+        this.handleCheckChange = this.handleCheckChange.bind(this);
         this.handleRemovePart = this.handleRemovePart.bind(this);
         this.handleRemoveReference = this.handleRemoveReference.bind(this);
 
         this.handleRun = this.handleRun.bind(this);
-
-        this.handleShuffleChange = this.handleShuffleChange.bind(this);
-
-        this.handleIncludeLibraryTracksChange = this.handleIncludeLibraryTracksChange.bind(this);
-
-        this.handleIncludeRecommendationsChange = this.handleIncludeRecommendationsChange.bind(this);
-        this.handleThisMonthChange = this.handleThisMonthChange.bind(this);
-        this.handleLastMonthChange = this.handleLastMonthChange.bind(this);
-
-        this.handleChartLimitChange = this.handleChartLimitChange.bind(this);
-        this.handleChartRangeChange = this.handleChartRangeChange.bind(this);
+        this.makeNetworkUpdate = this.makeNetworkUpdate.bind(this);
     }
 
     componentDidMount(){
@@ -143,137 +134,59 @@ export class Edit extends Component{
             [event.target.name]: event.target.value
         });
 
-        if(event.target.name == 'day_boundary'){
-            this.handleDayBoundaryChange(event.target.value);
-        }
-        if(event.target.name == 'recommendation_sample'){
-            this.handleRecommendationsSampleChange(event.target.value);
-        }
-        if(event.target.name == 'type'){
-            this.handleTypeChange(event.target.value);
-        }
-        if(event.target.name == 'chart_range'){
-            this.handleChartRangeChange(event.target.value);
-        }
-        if(event.target.name == 'chart_limit'){
-            this.handleChartLimitChange(event.target.value);
+        switch(event.target.name){
+            case 'day_boundary':
+                if(event.target.value == ''){
+                    event.target.value = 0;
+                    this.setState({
+                        day_boundary: 0
+                    });
+                }
+                this.makeNetworkUpdate({day_boundary: parseInt(event.target.value)});
+                break;
+            case 'recommendation_sample':
+                if(event.target.value == ''){
+                    event.target.value = 0;
+                    this.setState({
+                        recommendation_sample: 0
+                    });
+                }
+                this.makeNetworkUpdate({recommendation_sample: parseInt(event.target.value)});
+                break;
+            case 'chart_limit':
+                this.makeNetworkUpdate({chart_limit: parseInt(event.target.value)});
+                break;
+            case 'newPlaylistName':
+            case 'newReferenceName':
+                break;    
+            default:
+                this.makeNetworkUpdate({[event.target.name]: event.target.value});
         }
     }
 
-    handleDayBoundaryChange(boundary) {
-        if(boundary == ''){
-            boundary = 0;
-            this.setState({
-                day_boundary: 0
-            });
-        }
-        axios.post('/api/playlist', {
-            name: this.state.name,
-            day_boundary: parseInt(boundary)
-        }).catch((error) => {
-            showMessage(`Error Updating Boundary Value (${error.response.status})`);
-        });
-    }
-    
-    handleRecommendationsSampleChange(sample){
-        if(sample == ''){
-            sample = 0;
-            this.setState({
-                recommendation_sample: 0
-            });
-        }
-        axios.post('/api/playlist', {
-            name: this.state.name,
-            recommendation_sample: parseInt(sample)
-        }).catch((error) => {
-            showMessage(`Error Updating Rec. Sample Value (${error.response.status})`);
-        });
-    }
-
-    handleTypeChange(sample){
-        axios.post('/api/playlist', {
-            name: this.state.name,
-            type: sample
-        }).catch((error) => {
-            showMessage(`Error Updating Type (${error.response.status})`);
-        });
-    }
-
-    handleShuffleChange(event) {
+    handleCheckChange(event){
+        
         this.setState({
-            shuffle: event.target.checked
+            [event.target.name]: event.target.checked
         });
-        axios.post('/api/playlist', {
-            name: this.state.name,
-            shuffle: event.target.checked
-        }).catch((error) => {
-            showMessage(`Error Updating Shuffle Value (${error.response.status})`);
-        });
+
+        switch(event.target.name){
+            default:
+                this.makeNetworkUpdate({[event.target.name]: event.target.checked});
+        }
     }
 
-    handleThisMonthChange(event) {
-        this.setState({
-            add_this_month: event.target.checked
-        });
-        axios.post('/api/playlist', {
-            name: this.state.name,
-            add_this_month: event.target.checked
-        }).catch((error) => {
-            showMessage(`Error Updating Add This Month (${error.response.status})`);
-        });
-    }
-
-    handleLastMonthChange(event) {
-        this.setState({
-            add_last_month: event.target.checked
-        });
-        axios.post('/api/playlist', {
-            name: this.state.name,
-            add_last_month: event.target.checked
-        }).catch((error) => {
-            showMessage(`Error Updating Add Last Month (${error.response.status})`);
-        });
-    }
-
-    handleIncludeRecommendationsChange(event) {
-        this.setState({
-            include_recommendations: event.target.checked
-        });
-        axios.post('/api/playlist', {
-            name: this.state.name,
-            include_recommendations: event.target.checked
-        }).catch((error) => {
-            showMessage(`Error Updating Rec. Value (${error.response.status})`);
-        });
-    }
-
-    handleIncludeLibraryTracksChange(event) {
-        this.setState({
-            include_library_tracks: event.target.checked
-        });
-        axios.post('/api/playlist', {
-            name: this.state.name,
-            include_library_tracks: event.target.checked
-        }).catch((error) => {
-            showMessage(`Error Updating Library Tracks (${error.response.status})`);
-        });
-    }
-
-    handleChartRangeChange(value) {
-        axios.post('/api/playlist', {
-            name: this.state.name,
-            chart_range: value
-        }).catch((error) => {
-            showMessage(`Error Updating Chart Range (${error.response.status})`);
-        });
-    }
-
-    handleChartLimitChange(value) {
-        axios.post('/api/playlist', {
-            name: this.state.name,
-            chart_limit: parseInt(value)
-        }).catch((error) => {
-            showMessage(`Error Updating Limit (${error.response.status})`);
+    makeNetworkUpdate(changes){
+        let payload = {
+            name: this.state.name
+        }
+        for(var key in changes){
+            if(changes.hasOwnProperty(key)){
+                payload[key] = changes[key];
+            }
+        }
+        axios.post('/api/playlist', payload).catch((error) => {
+            showMessage(`Error updating ${Object.keys(changes).join(", ")} (${error.response.status})`);
         });
     }
 
@@ -297,12 +210,8 @@ export class Edit extends Component{
                     parts: parts,
                     newPlaylistName: ''
                 });
-                axios.post('/api/playlist', {
-                    name: this.state.name,
-                    parts: parts
-                }).catch((error) => {
-                    showMessage(`Error Adding Part (${error.response.status})`);
-                });
+
+                this.makeNetworkUpdate({parts: parts});
             }else{
                 showMessage('Playlist Already Added');  
             }
@@ -334,12 +243,8 @@ export class Edit extends Component{
                     playlist_references: playlist_references,
                     newReferenceName: filteredPlaylists.length > 0 ? filteredPlaylists[0].name : ''
                 });
-                axios.post('/api/playlist', {
-                    name: this.state.name,
-                    playlist_references: playlist_references
-                }).catch((error) => {
-                    showMessage(`Error Adding Reference (${error.response.status})`);
-                });
+                
+                this.makeNetworkUpdate({playlist_references: playlist_references});
 
             }else{
                 showMessage('Playlist Already Added');  
@@ -361,12 +266,7 @@ export class Edit extends Component{
             parts = -1;
         }
 
-        axios.post('/api/playlist', {
-            name: this.state.name,
-            parts: parts
-        }).catch((error) => {
-            showMessage(`Error Removing Part (${error.response.status})`);
-        });
+        this.makeNetworkUpdate({parts: parts});
     }
 
     handleRemoveReference(id, event){
@@ -380,12 +280,7 @@ export class Edit extends Component{
             playlist_references = -1;
         }
 
-        axios.post('/api/playlist', {
-            name: this.state.name,
-            playlist_references: playlist_references
-        }).catch((error) => {
-            showMessage(`Error Removing Reference (${error.response.status})`);
-        });
+        this.makeNetworkUpdate({playlist_references: playlist_references});
     }
 
     handleRun(event){
@@ -461,19 +356,19 @@ export class Edit extends Component{
                         <Grid item xs={12}>
                             <FormControlLabel
                                 control={
-                                <Checkbox color="primary" checked={this.state.shuffle} onChange={this.handleShuffleChange} />
+                                <Checkbox color="primary" name="shuffle" checked={this.state.shuffle} onChange={this.handleCheckChange} />
                                 }
                                 labelPlacement="bottom"
                                 label="Shuffle"/>
                             <FormControlLabel
                                 control={
-                                <Checkbox color="primary" checked={this.state.include_recommendations} onChange={this.handleIncludeRecommendationsChange} />
+                                <Checkbox color="primary" checked={this.state.include_recommendations} name="include_recommendations" onChange={this.handleCheckChange} />
                                 }
                                 labelPlacement="bottom"
                                 label="Recommendations"/>
                             <FormControlLabel
                                 control={
-                                <Checkbox color="primary" checked={this.state.include_library_tracks} onChange={this.handleIncludeLibraryTracksChange} />
+                                <Checkbox color="primary" checked={this.state.include_library_tracks} name="include_library_tracks" onChange={this.handleCheckChange} />
                                 }
                                 labelPlacement="bottom"
                                 label="Library Tracks"/>
@@ -533,14 +428,14 @@ export class Edit extends Component{
                         <Grid item xs={12}>
                             <FormControlLabel
                                 control={
-                                <Checkbox color="primary" checked={this.state.add_this_month} onChange={this.handleThisMonthChange} />
+                                <Checkbox color="primary" checked={this.state.add_this_month} name="add_this_month" onChange={this.handleCheckChange} />
                                 }
                                 label="This Month"
                                 labelPlacement="bottom"
                             />
                             <FormControlLabel
                                 control={
-                                <Checkbox color="primary" checked={this.state.add_last_month} onChange={this.handleLastMonthChange} />
+                                <Checkbox color="primary" checked={this.state.add_last_month} name="add_last_month" onChange={this.handleCheckChange} />
                                 }
                                 label="Last Month"
                                 labelPlacement="bottom"
