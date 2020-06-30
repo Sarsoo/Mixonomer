@@ -1,46 +1,55 @@
 from flask import Flask, render_template, redirect, session, flash, url_for
-from google.cloud import firestore
 
+import logging
 import os
 
 from music.auth import auth_blueprint
 from music.api import api_blueprint, player_blueprint, fm_blueprint, \
     spotfm_blueprint, spotify_blueprint, admin_blueprint, tag_blueprint
+from music.model.config import Config
 
-db = firestore.Client()
-
-app = Flask(__name__, static_folder=os.path.join(os.path.dirname(__file__), '..', 'build'), template_folder="templates")
-app.secret_key = db.collection(u'spotify').document(u'config').get().to_dict()['secret_key']
-app.register_blueprint(auth_blueprint, url_prefix='/auth')
-app.register_blueprint(api_blueprint, url_prefix='/api')
-app.register_blueprint(player_blueprint, url_prefix='/api/player')
-app.register_blueprint(fm_blueprint, url_prefix='/api/fm')
-app.register_blueprint(spotfm_blueprint, url_prefix='/api/spotfm')
-app.register_blueprint(spotify_blueprint, url_prefix='/api/spotify')
-app.register_blueprint(admin_blueprint, url_prefix='/api/admin')
-app.register_blueprint(tag_blueprint, url_prefix='/api')
+logger = logging.getLogger(__name__)
 
 
-@app.route('/')
-def index():
+def create_app():
+    app = Flask(__name__, static_folder=os.path.join(os.path.dirname(__file__), '..', 'build'), template_folder="templates")
 
-    if 'username' in session:
-        logged_in = True
-        return redirect(url_for('app_route'))
+    config = Config.collection.get("config/music-tools")
+    if config is not None:
+        app.secret_key = config.secret_key
     else:
-        logged_in = False
+        logger.error('no config returned, skipping secret key')
 
-    return render_template('login.html', logged_in=logged_in)
+    app.register_blueprint(auth_blueprint, url_prefix='/auth')
+    app.register_blueprint(api_blueprint, url_prefix='/api')
+    app.register_blueprint(player_blueprint, url_prefix='/api/player')
+    app.register_blueprint(fm_blueprint, url_prefix='/api/fm')
+    app.register_blueprint(spotfm_blueprint, url_prefix='/api/spotfm')
+    app.register_blueprint(spotify_blueprint, url_prefix='/api/spotify')
+    app.register_blueprint(admin_blueprint, url_prefix='/api/admin')
+    app.register_blueprint(tag_blueprint, url_prefix='/api')
 
+    @app.route('/')
+    def index():
 
-@app.route('/app', defaults={'path': ''})
-@app.route('/app/<path:path>')
-def app_route(path):
+        if 'username' in session:
+            logged_in = True
+            return redirect(url_for('app_route'))
+        else:
+            logged_in = False
 
-    if 'username' not in session:
-        flash('please log in')
-        return redirect(url_for('index'))
+        return render_template('login.html', logged_in=logged_in)
 
-    return render_template('app.html')
+    @app.route('/app', defaults={'path': ''})
+    @app.route('/app/<path:path>')
+    def app_route(path):
+
+        if 'username' not in session:
+            flash('please log in')
+            return redirect(url_for('index'))
+
+        return render_template('app.html')
+
+    return app
 
 # [END gae_python37_app]

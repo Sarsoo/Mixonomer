@@ -1,11 +1,7 @@
-from google.cloud import firestore
-
 import logging
 
 import music.db.database as database
 from spotframework.net.network import SpotifyNetworkException
-
-db = firestore.Client()
 
 logger = logging.getLogger(__name__)
 

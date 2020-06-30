@@ -1,5 +1,3 @@
-from .music import app
-
 import logging
 import os
 

@@ -1,13 +1,12 @@
-from google.cloud import firestore
+from dataclasses import dataclass
 import logging
 from datetime import timedelta, datetime, timezone
 
 from spotframework.net.network import Network as SpotifyNetwork, SpotifyNetworkException
+from spotframework.net.user import NetworkUser
 from fmframework.net.network import Network as FmNetwork
-from music.db.user import DatabaseUser
 from music.model.user import User
-
-db = firestore.Client()
+from music.model.config import Config
 
 logger = logging.getLogger(__name__)
 
@@ -33,10 +32,10 @@ def refresh_token_database_callback(user):
 def get_authed_spotify_network(user):
     if user is not None:
         if user.spotify_linked:
-            spotify_keys = db.document('key/spotify').get().to_dict()
+            config = Config.collection.get("config/music-tools")
 
-            user_obj = DatabaseUser(client_id=spotify_keys['clientid'],
-                                    client_secret=spotify_keys['clientsecret'],
+            user_obj = DatabaseUser(client_id=config.spotify_client_id,
+                                    client_secret=config.spotify_client_secret,
                                     refresh_token=user.refresh_token,
                                     user_id=user.username,
                                     access_token=user.access_token)
@@ -66,9 +65,15 @@ def get_authed_spotify_network(user):
 def get_authed_lastfm_network(user):
     if user is not None:
         if user.lastfm_username:
-            fm_keys = db.document('key/fm').get().to_dict()
-            return FmNetwork(username=user.lastfm_username, api_key=fm_keys['clientid'])
+            config = Config.collection.get("config/music-tools")
+            return FmNetwork(username=user.lastfm_username, api_key=config.last_fm_client_id)
         else:
             logger.error(f'{user.username} has no last.fm username')
     else:
         logger.error(f'no user provided')
+
+
+@dataclass
+class DatabaseUser(NetworkUser):
+    """adding music tools username to spotframework network user"""
+    user_id: str = None

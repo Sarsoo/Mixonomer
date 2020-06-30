@@ -1,7 +1,7 @@
 from flask import Blueprint, session, flash, request, redirect, url_for, render_template
-from google.cloud import firestore
 from werkzeug.security import generate_password_hash
 from music.model.user import User
+from music.model.config import Config
 
 import urllib
 import datetime
@@ -10,8 +10,6 @@ from base64 import b64encode
 import requests
 
 blueprint = Blueprint('authapi', __name__)
-
-db = firestore.Client()
 
 logger = logging.getLogger(__name__)
 
@@ -98,7 +96,7 @@ def register():
         user = User()
         user.username = username
         user.password = generate_password_hash(password)
-        user.last_login = datetime.utcnow()
+        user.last_login = datetime.datetime.utcnow()
 
         user.save()
 
@@ -112,10 +110,10 @@ def auth():
 
     if 'username' in session:
 
-        client_id = db.document('key/spotify').get().to_dict()['clientid']
+        config = Config.collection.get("config/music-tools")
         params = urllib.parse.urlencode(
             {
-                'client_id': client_id,
+                'client_id': config.spotify_client_id,
                 'response_type': 'code',
                 'scope': 'playlist-modify-public playlist-modify-private playlist-read-private user-read-playback-state user-modify-playback-state user-library-read',
                 'redirect_uri': 'https://music.sarsoo.xyz/auth/spotify/token'
@@ -137,9 +135,11 @@ def token():
             flash('authorization failed')
             return redirect('app_route')
         else:
-            app_credentials = db.document('key/spotify').get().to_dict()
+            config = Config.collection.get("config/music-tools")
 
-            idsecret = b64encode(bytes(app_credentials['clientid'] + ':' + app_credentials['clientsecret'], "utf-8")).decode("ascii")
+            idsecret = b64encode(
+                bytes(config.spotify_client_id + ':' + config.spotify_client_secret, "utf-8")
+            ).decode("ascii")
             headers = {'Authorization': 'Basic %s' % idsecret}
 
             data = {

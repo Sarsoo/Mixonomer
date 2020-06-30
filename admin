@@ -1,0 +1,110 @@
+#!/usr/bin/env python3
+import shutil
+import os
+import sys
+from cmd import Cmd
+
+stage_dir = '_playlist-manager'
+scss_rel_path = os.path.join('src', 'scss', 'style.scss')
+css_rel_path = os.path.join('build', 'style.css')
+
+
+class Admin(Cmd):
+    intro = 'Music Tools Admin... ? for help'
+    prompt = '> '
+
+    def prepare_stage(self):
+        print('>> backing up a directory')
+        os.chdir('..')
+
+        print('>> deleting old deployment stage')
+        shutil.rmtree(stage_dir, ignore_errors=True)
+
+        print('>> copying main source')
+        shutil.copytree('playlist-manager', stage_dir)
+
+        for dependency in ['spotframework', 'fmframework', 'spotfm']:
+            print(f'>> injecting {dependency}')
+            shutil.copytree(
+                os.path.join(dependency, dependency),
+                os.path.join(stage_dir, dependency)
+            )
+
+        os.chdir(stage_dir)
+        os.system('gcloud config set project sarsooxyz')
+
+    def prepare_frontend(self):
+        print('>> building css')
+        os.system(f'sass --style=compressed {scss_rel_path} {css_rel_path}')
+
+        print('>> building javascript')
+        os.system('npm run build')
+
+    def prepare_main(self, path):
+        print('>> preparing main.py')
+        shutil.copy(f'main.{path}.py', 'main.py')
+
+    def deploy_function(self, name, timeout: int = 60):
+        os.system(f'gcloud functions deploy {name} '
+                  f'--runtime=python38 '
+                  f'--set-env-vars DEPLOY_DESTINATION=PROD '
+                  f'--timeout={timeout}s')
+
+    def do_api(self, args):
+        self.prepare_stage()
+        self.prepare_frontend()
+        self.prepare_main('api')
+
+        print('>> deploying')
+        os.system('gcloud app deploy')
+
+    def do_tag(self, args):
+        self.prepare_stage()
+        self.prepare_main('update_tag')
+
+        print('>> deploying')
+        self.deploy_function('update_tag')
+
+    def do_playlist(self, args):
+        self.prepare_stage()
+        self.prepare_main('run_playlist')
+
+        print('>> deploying')
+        self.deploy_function('run_user_playlist')
+
+    def do_exit(self, args):
+        exit(0)
+
+    def do_sass(self, args):
+        os.system(f'sass --style=compressed {scss_rel_path} {css_rel_path}')
+
+    def do_watchsass(self, args):
+        os.system(f'sass --style=compressed --watch {scss_rel_path} {css_rel_path}')
+
+    def do_rename(self, args):
+        from music.model.user import User
+        from music.model.playlist import Playlist
+
+        username = input('enter username: ')
+        user = User.collection.filter('username', '==', username).get()
+
+        if user is None:
+            print('>> user not found')
+
+        name = input('enter playlist name: ')
+        playlist = Playlist.collection.parent(user.key).filter('name', '==', name).get()
+
+        if playlist is None:
+            print('>> playlist not found')
+
+        new_name = input('enter new name: ')
+        playlist.name = new_name
+        playlist.update()
+
+
+if __name__ == '__main__':
+    console = Admin()
+    if len(sys.argv) > 1:
+        console.onecmd(' '.join(sys.argv[1:]))
+    else:
+        console.cmdloop()

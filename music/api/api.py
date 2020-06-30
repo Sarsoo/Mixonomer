@@ -8,7 +8,8 @@ import logging
 from datetime import datetime
 
 from music.api.decorators import login_required, login_or_basic_auth, admin_required, gae_cron, cloud_task
-from music.cloud.tasks import update_all_user_playlists, update_playlists, run_user_playlist_task
+from music.cloud import queue_run_user_playlist, offload_or_run_user_playlist
+from music.cloud.tasks import update_all_user_playlists, update_playlists
 from music.tasks.run_user_playlist import run_user_playlist
 
 from music.model.user import User
@@ -284,9 +285,9 @@ def run_playlist(user=None):
     if playlist_name:
 
         if os.environ.get('DEPLOY_DESTINATION', None) == 'PROD':
-            run_user_playlist_task(user.username, playlist_name)
+            queue_run_user_playlist(user.username, playlist_name)  # pass to either cloud tasks or functions
         else:
-            run_user_playlist(user.username, playlist_name)
+            run_user_playlist(user.username, playlist_name)  # update synchronously
 
         return jsonify({'message': 'execution requested', 'status': 'success'}), 200
 
@@ -297,7 +298,7 @@ def run_playlist(user=None):
 
 @blueprint.route('/playlist/run/task', methods=['POST'])
 @cloud_task
-def run_playlist_task():
+def run_playlist_task():  # receives cloud tasks request for update
 
     payload = request.get_data(as_text=True)
     if payload:
@@ -305,7 +306,7 @@ def run_playlist_task():
 
         logger.info(f'running {payload["username"]} / {payload["name"]}')
 
-        run_user_playlist(payload['username'], payload['name'])
+        offload_or_run_user_playlist(payload['username'], payload['name'])  # check whether offloading to cloud function
 
         return jsonify({'message': 'executed playlist', 'status': 'success'}), 200
 

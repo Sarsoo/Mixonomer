@@ -1,5 +1,3 @@
-from google.cloud import firestore
-
 import logging
 from datetime import datetime
 
@@ -12,8 +10,6 @@ from spotframework.model.uri import Uri
 from spotframework.net.network import SpotifyNetworkException
 
 from fmframework.net.network import LastFMNetworkException
-
-db = firestore.Client()
 
 logger = logging.getLogger(__name__)
 
