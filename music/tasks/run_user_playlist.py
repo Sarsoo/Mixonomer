@@ -52,8 +52,8 @@ def run_user_playlist(username, playlist_name):
 
     try:
         user_playlists = net.get_user_playlists()
-    except SpotifyNetworkException as e:
-        logger.error(f'error occured while retrieving playlists {username} / {playlist_name} - {e}')
+    except SpotifyNetworkException:
+        logger.exception(f'error occured while retrieving playlists {username} / {playlist_name}')
         return
 
     part_generator = PartGenerator(user=user)
@@ -77,8 +77,8 @@ def run_user_playlist(username, playlist_name):
                     playlist_tracks += _tracks
                 else:
                     logger.warning(f'no tracks returned for {uri} {username} / {playlist_name}')
-            except SpotifyNetworkException as e:
-                logger.error(f'error occured while retrieving {uri} {username} / {playlist_name} - {e}')
+            except SpotifyNetworkException:
+                logger.exception(f'error occured while retrieving {uri} {username} / {playlist_name}')
 
         except ValueError:  # is a playlist name
             part_playlist = next((i for i in user_playlists if i.name == part_name), None)
@@ -92,8 +92,8 @@ def run_user_playlist(username, playlist_name):
                     playlist_tracks += part_playlist_tracks
                 else:
                     logger.warning(f'no tracks returned for {part_playlist.name} {username} / {playlist_name}')
-            except SpotifyNetworkException as e:
-                logger.error(f'error occured while retrieving {part_name} {username} / {playlist_name} - {e}')
+            except SpotifyNetworkException:
+                logger.exception(f'error occured while retrieving {part_name} {username} / {playlist_name}')
 
     playlist_tracks = remove_local(playlist_tracks)
 
@@ -105,8 +105,8 @@ def run_user_playlist(username, playlist_name):
                 playlist_tracks += library_tracks
             else:
                 logger.error(f'error getting library tracks {username} / {playlist_name}')
-        except SpotifyNetworkException as e:
-            logger.error(f'error occured while retrieving library tracks {username} / {playlist_name} - {e}')
+        except SpotifyNetworkException:
+            logger.exception(f'error occured while retrieving library tracks {username} / {playlist_name}')
 
     # PLAYLIST TYPE SPECIFIC
     if playlist.type == 'recents':
@@ -159,8 +159,8 @@ def run_user_playlist(username, playlist_name):
                 playlist_tracks += recommendations.tracks
             else:
                 logger.error(f'error getting recommendations {username} / {playlist_name}')
-        except SpotifyNetworkException as e:
-            logger.error(f'error occured while generating recommendations {username} / {playlist_name} - {e}')
+        except SpotifyNetworkException:
+            logger.exception(f'error occured while generating recommendations {username} / {playlist_name}')
 
     # DEDUPLICATE
     playlist_tracks = deduplicate_by_name(playlist_tracks)
@@ -184,11 +184,11 @@ def run_user_playlist(username, playlist_name):
 
         try:
             net.change_playlist_details(Uri(playlist.uri), description=string)
-        except SpotifyNetworkException as e:
-            logger.error(f'error changing description for {username} / {playlist_name} - {e}')
+        except SpotifyNetworkException:
+            logger.exception(f'error changing description for {username} / {playlist_name}')
 
-    except SpotifyNetworkException as e:
-        logger.error(f'error executing {username} / {playlist_name} - {e}')
+    except SpotifyNetworkException:
+        logger.exception(f'error executing {username} / {playlist_name}')
 
     playlist.last_updated = datetime.datetime.utcnow()
     playlist.update()

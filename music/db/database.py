@@ -52,8 +52,8 @@ def get_authed_spotify_network(user):
 
             try:
                 net.refresh_user_info()
-            except SpotifyNetworkException as e:
-                logger.error(f'error refreshing user info for {user.username} = {e}')
+            except SpotifyNetworkException:
+                logger.exception(f'error refreshing user info for {user.username}')
 
             return net
         else:

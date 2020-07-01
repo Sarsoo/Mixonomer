@@ -17,6 +17,6 @@ def create_playlist(user, name):
 
     try:
         return net.create_playlist(net.user.user.display_name, name)
-    except SpotifyNetworkException as e:
-        logger.error(f'error ocurred {user.username} / {name} - {e}')
+    except SpotifyNetworkException:
+        logger.exception(f'error ocurred {user.username} / {name}')
         return

@@ -37,8 +37,8 @@ def update_tag(username, tag_id):
     tag_count = 0
     try:
         user_scrobbles = net.get_user_scrobble_count()
-    except LastFMNetworkException as e:
-        logger.error(f'error retrieving scrobble count - {e}')
+    except LastFMNetworkException:
+        logger.exception(f'error retrieving scrobble count {username} / {tag_id}')
         user_scrobbles = 0
 
     artists = []
@@ -49,8 +49,8 @@ def update_tag(username, tag_id):
             if net_artist is not None:
                 artist['count'] = net_artist.user_scrobbles
                 tag_count += net_artist.user_scrobbles
-        except LastFMNetworkException as e:
-            logger.error(f'error during artist retrieval - {e}')
+        except LastFMNetworkException:
+            logger.exception(f'error during artist retrieval {username} / {tag_id}')
 
         artists.append(artist)
 
@@ -64,8 +64,8 @@ def update_tag(username, tag_id):
 
                 if album['artist'].lower() not in [i.lower() for i in [j['name'] for j in artists]]:
                     tag_count += net_album.user_scrobbles
-        except LastFMNetworkException as e:
-            logger.error(f'error during album retrieval - {e}')
+        except LastFMNetworkException:
+            logger.exception(f'error during album retrieval {username} / {tag_id}')
 
         albums.append(album)
 
@@ -79,8 +79,8 @@ def update_tag(username, tag_id):
 
                 if track['artist'].lower() not in [i.lower() for i in [j['name'] for j in artists]]:
                     tag_count += net_track.user_scrobbles
-        except LastFMNetworkException as e:
-            logger.error(f'error during track retrieval - {e}')
+        except LastFMNetworkException:
+            logger.exception(f'error during track retrieval {username} / {tag_id}')
 
         tracks.append(track)
 

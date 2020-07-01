@@ -38,8 +38,8 @@ def refresh_lastfm_track_stats(username, playlist_name):
 
     try:
         spotify_playlist = spotnet.get_playlist(uri=Uri(playlist.uri))
-    except SpotifyNetworkException as e:
-        logger.error(f'error retrieving spotify playlist {username} / {playlist_name} - {e}')
+    except SpotifyNetworkException:
+        logger.exception(f'error retrieving spotify playlist {username} / {playlist_name}')
         return
     track_count = counter.count_playlist(playlist=spotify_playlist)
 
@@ -49,8 +49,8 @@ def refresh_lastfm_track_stats(username, playlist_name):
             percent = round((track_count * 100) / user_count, 2)
         else:
             percent = 0
-    except LastFMNetworkException as e:
-        logger.error(f'error while retrieving user scrobble count - {e}')
+    except LastFMNetworkException:
+        logger.exception(f'error while retrieving user scrobble count {username} / {playlist_name}')
         percent = 0
 
     playlist.lastfm_stat_count = track_count
@@ -84,8 +84,8 @@ def refresh_lastfm_album_stats(username, playlist_name):
 
     try:
         spotify_playlist = spotnet.get_playlist(uri=Uri(playlist.uri))
-    except SpotifyNetworkException as e:
-        logger.error(f'error retrieving spotify playlist {username} / {playlist_name} - {e}')
+    except SpotifyNetworkException:
+        logger.exception(f'error retrieving spotify playlist {username} / {playlist_name}')
         return
     album_count = counter.count_playlist(playlist=spotify_playlist, query_album=True)
 
@@ -95,8 +95,8 @@ def refresh_lastfm_album_stats(username, playlist_name):
             album_percent = round((album_count * 100) / user_count, 2)
         else:
             album_percent = 0
-    except LastFMNetworkException as e:
-        logger.error(f'error while retrieving user scrobble count - {e}')
+    except LastFMNetworkException:
+        logger.exception(f'error while retrieving user scrobble count {username} / {playlist_name}')
         album_percent = 0
 
     playlist.lastfm_stat_album_count = album_count
@@ -130,8 +130,8 @@ def refresh_lastfm_artist_stats(username, playlist_name):
 
     try:
         spotify_playlist = spotnet.get_playlist(uri=Uri(playlist.uri))
-    except SpotifyNetworkException as e:
-        logger.error(f'error retrieving spotify playlist {username} / {playlist_name} - {e}')
+    except SpotifyNetworkException:
+        logger.exception(f'error retrieving spotify playlist {username} / {playlist_name}')
         return
     artist_count = counter.count_playlist(playlist=spotify_playlist, query_artist=True)
 
@@ -141,8 +141,8 @@ def refresh_lastfm_artist_stats(username, playlist_name):
             artist_percent = round((artist_count * 100) / user_count, 2)
         else:
             artist_percent = 0
-    except LastFMNetworkException as e:
-        logger.error(f'error while retrieving user scrobble count - {e}')
+    except LastFMNetworkException:
+        logger.exception(f'error while retrieving user scrobble count {username} / {playlist_name}')
         artist_percent = 0
 
     playlist.lastfm_stat_artist_count = artist_count

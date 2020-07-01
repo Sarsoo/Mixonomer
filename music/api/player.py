@@ -53,6 +53,7 @@ def play(user=None):
             else:
                 return jsonify({'error': f"playlist {request_json['playlist_name']} not found"}), 404
         except SpotifyNetworkException:
+            logger.exception(f'error occured during {user.username} playlists retrieval')
             return jsonify({'error': "playlists not returned"}), 400
 
     elif 'tracks' in request_json:

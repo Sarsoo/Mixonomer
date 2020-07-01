@@ -63,6 +63,7 @@ def count(user=None):
             else:
                 return jsonify({'error': f'playlist {playlist_name} not found'}), 404
         except SpotifyNetworkException:
+            logger.exception(f'error occured during {user.username} playlists retrieval')
             return jsonify({'error': f'playlist {playlist_name} not found'}), 404
 
 
