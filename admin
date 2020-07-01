@@ -8,6 +8,8 @@ stage_dir = '_playlist-manager'
 scss_rel_path = os.path.join('src', 'scss', 'style.scss')
 css_rel_path = os.path.join('build', 'style.css')
 
+folders_to_ignore = ['venv', 'docs', '.git', '.idea', 'node_modules']
+
 
 class Admin(Cmd):
     intro = 'Music Tools Admin... ? for help'
@@ -21,7 +23,11 @@ class Admin(Cmd):
         shutil.rmtree(stage_dir, ignore_errors=True)
 
         print('>> copying main source')
-        shutil.copytree('playlist-manager', stage_dir)
+        shutil.copytree('playlist-manager',
+                        stage_dir,
+                        ignore=lambda path, contents:
+                            contents if any(i in path.split('/') for i in folders_to_ignore) else []
+                        )
 
         for dependency in ['spotframework', 'fmframework', 'spotfm']:
             print(f'>> injecting {dependency}')
@@ -51,8 +57,9 @@ class Admin(Cmd):
                   f'--timeout={timeout}s')
 
     def do_api(self, args):
-        self.prepare_stage()
         self.prepare_frontend()
+
+        self.prepare_stage()
         self.prepare_main('api')
 
         print('>> deploying')
