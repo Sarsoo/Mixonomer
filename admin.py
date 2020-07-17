@@ -1,12 +1,13 @@
 #!/usr/bin/env python3
 import shutil
 import os
+from pathlib import Path
 import sys
 from cmd import Cmd
 
 stage_dir = '_playlist-manager'
-scss_rel_path = os.path.join('src', 'scss', 'style.scss')
-css_rel_path = os.path.join('build', 'style.css')
+scss_rel_path = Path('src', 'scss', 'style.scss')
+css_rel_path = Path('build', 'style.css')
 
 folders_to_ignore = ['venv', 'docs', '.git', '.idea', 'node_modules']
 
@@ -17,23 +18,23 @@ class Admin(Cmd):
 
     def prepare_stage(self):
         print('>> backing up a directory')
-        os.chdir('..')
+        os.chdir(Path(__file__).parent.parent)
 
         print('>> deleting old deployment stage')
         shutil.rmtree(stage_dir, ignore_errors=True)
 
         print('>> copying main source')
-        shutil.copytree('playlist-manager',
+        shutil.copytree('playlist-manager' if Path('playlist-manager').exists() else 'Music-Tools',
                         stage_dir,
                         ignore=lambda path, contents:
-                            contents if any(i in path.split('/') for i in folders_to_ignore) else []
+                            contents if any(i in Path(path).parts for i in folders_to_ignore) else []
                         )
 
         for dependency in ['spotframework', 'fmframework', 'spotfm']:
             print(f'>> injecting {dependency}')
             shutil.copytree(
-                os.path.join(dependency, dependency),
-                os.path.join(stage_dir, dependency)
+                Path(dependency, dependency),
+                Path(stage_dir, dependency)
             )
 
         os.chdir(stage_dir)
@@ -50,11 +51,29 @@ class Admin(Cmd):
         print('>> preparing main.py')
         shutil.copy(f'main.{path}.py', 'main.py')
 
-    def deploy_function(self, name, timeout: int = 60):
+    def deploy_function(self, name, timeout: int = 60, region='europe-west2'):
         os.system(f'gcloud functions deploy {name} '
-                  f'--runtime=python38 '
-                  f'--set-env-vars DEPLOY_DESTINATION=PROD '
+                  f'--region {region} '
+                  '--runtime=python38 '
+                  f'--trigger-topic {name} '
+                  '--set-env-vars DEPLOY_DESTINATION=PROD '
                   f'--timeout={timeout}s')
+
+    def do_all(self, args):
+        self.prepare_frontend()
+        self.prepare_stage()
+
+        self.prepare_main('api')
+        print('>> deploying api')
+        os.system('gcloud app deploy')
+
+        self.prepare_main('update_tag')
+        print('>> deploying tag function')
+        self.deploy_function('update_tag')
+
+        self.prepare_main('run_playlist')
+        print('>> deploying playlist function')
+        self.deploy_function('run_user_playlist')
 
     def do_api(self, args):
         self.prepare_frontend()

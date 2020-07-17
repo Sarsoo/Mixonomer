@@ -23,8 +23,6 @@ Jinja2==2.11.2
 lazy-object-proxy==1.4.3
 MarkupSafe==1.1.1
 mccabe==0.6.1
-numpy==1.19.0
-opencv-python==4.2.0.34
 pathtools==0.1.2
 protobuf==3.12.2
 pyasn1==0.4.8
