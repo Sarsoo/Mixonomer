@@ -18,7 +18,7 @@ class Admin(Cmd):
 
     def prepare_stage(self):
         print('>> backing up a directory')
-        os.chdir(Path(__file__).parent.parent)
+        os.chdir(Path(__file__).absolute().parent.parent)
 
         print('>> deleting old deployment stage')
         shutil.rmtree(stage_dir, ignore_errors=True)
