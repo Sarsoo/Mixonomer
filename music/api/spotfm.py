@@ -3,7 +3,8 @@ import logging
 import json
 import os
 
-from music.api.decorators import admin_required, login_or_basic_auth, lastfm_username_required, spotify_link_required, cloud_task, gae_cron
+from music.api.decorators import admin_required, login_or_basic_auth, lastfm_username_required, \
+    spotify_link_required, cloud_task, gae_cron, validate_args
 import music.db.database as database
 from music.cloud.tasks import refresh_all_user_playlist_stats, refresh_user_playlist_stats, refresh_playlist_task
 from music.tasks.refresh_lastfm_stats import refresh_lastfm_track_stats, \
@@ -71,24 +72,19 @@ def count(user=None):
 @login_or_basic_auth
 @spotify_link_required
 @lastfm_username_required
+@validate_args(('name', str))
 def playlist_refresh(user=None):
 
-    playlist_name = request.args.get('name', None)
+    playlist_name = request.args['name']
 
-    if playlist_name:
-
-        if os.environ.get('DEPLOY_DESTINATION', None) == 'PROD':
-            refresh_playlist_task(user.username, playlist_name)
-        else:
-            refresh_lastfm_track_stats(user.username, playlist_name)
-            refresh_lastfm_album_stats(user.username, playlist_name)
-            refresh_lastfm_artist_stats(user.username, playlist_name)
-
-        return jsonify({'message': 'execution requested', 'status': 'success'}), 200
-
+    if os.environ.get('DEPLOY_DESTINATION', None) == 'PROD':
+        refresh_playlist_task(user.username, playlist_name)
     else:
-        logger.warning('no playlist requested')
-        return jsonify({"error": 'no name requested'}), 400
+        refresh_lastfm_track_stats(user.username, playlist_name)
+        refresh_lastfm_album_stats(user.username, playlist_name)
+        refresh_lastfm_artist_stats(user.username, playlist_name)
+
+    return jsonify({'message': 'execution requested', 'status': 'success'}), 200
 
 
 @blueprint.route('/playlist/refresh/task/track', methods=['POST'])

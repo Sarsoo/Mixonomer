@@ -2,7 +2,7 @@ from flask import Blueprint, request, jsonify
 
 import logging
 
-from music.api.decorators import login_or_basic_auth, spotify_link_required
+from music.api.decorators import login_or_basic_auth, spotify_link_required, validate_json
 import music.db.database as database
 
 from spotframework.net.network import SpotifyNetworkException
@@ -91,39 +91,29 @@ def next_track(user=None):
 @blueprint.route('/shuffle', methods=['POST'])
 @login_or_basic_auth
 @spotify_link_required
+@validate_json(('state', bool))
 def shuffle(user=None):
     request_json = request.get_json()
 
-    if 'state' in request_json:
-        if isinstance(request_json['state'], bool):
-            net = database.get_authed_spotify_network(user)
-            player = Player(net)
+    net = database.get_authed_spotify_network(user)
+    player = Player(net)
 
-            player.shuffle(state=request_json['state'])
-            return jsonify({'message': f'shuffle set to {request_json["state"]}', 'status': 'success'}), 200
-        else:
-            return jsonify({'error': "state not a boolean"}), 400
-    else:
-        return jsonify({'error': "no state provided"}), 400
+    player.shuffle(state=request_json['state'])
+    return jsonify({'message': f'shuffle set to {request_json["state"]}', 'status': 'success'}), 200
 
 
 @blueprint.route('/volume', methods=['POST'])
 @login_or_basic_auth
 @spotify_link_required
+@validate_json(('volume', int))
 def volume(user=None):
     request_json = request.get_json()
 
-    if 'volume' in request_json:
-        if isinstance(request_json['volume'], int):
-            if 0 <= request_json['volume'] <= 100:
-                net = database.get_authed_spotify_network(user)
-                player = Player(net)
+    if 0 <= request_json['volume'] <= 100:
+        net = database.get_authed_spotify_network(user)
+        player = Player(net)
 
-                player.volume(value=request_json['volume'])
-                return jsonify({'message': f'volume set to {request_json["volume"]}', 'status': 'success'}), 200
-            else:
-                return jsonify({'error': "volume must be between 0 and 100"}), 400
-        else:
-            return jsonify({'error': "volume not a integer"}), 400
+        player.volume(value=request_json['volume'])
+        return jsonify({'message': f'volume set to {request_json["volume"]}', 'status': 'success'}), 200
     else:
-        return jsonify({'error': "no volume provided"}), 400
+        return jsonify({'error': "volume must be between 0 and 100"}), 400

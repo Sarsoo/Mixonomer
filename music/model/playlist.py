@@ -49,6 +49,29 @@ class Playlist(Model):
     chart_range = TextField(default='MONTH')
     chart_limit = NumberField(default=50)
 
+    mutable_keys = [
+        'type',
+
+        'include_recommendations',
+        'recommendation_sample',
+        'include_library_tracks',
+
+        'parts',
+        'playlist_references',
+        'shuffle',
+
+        'sort',
+        'description_overwrite',
+        'description_suffix',
+
+        'add_last_month',
+        'add_this_month',
+        'day_boundary',
+
+        'chart_range',
+        'chart_limit'
+    ]
+
     def to_dict(self):
         to_return = super().to_dict()
 

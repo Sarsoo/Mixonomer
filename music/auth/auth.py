@@ -3,7 +3,7 @@ from werkzeug.security import generate_password_hash
 from music.model.user import User
 from music.model.config import Config
 
-import urllib
+from urllib.parse import urlencode, urlunparse
 import datetime
 import logging
 from base64 import b64encode
@@ -111,16 +111,17 @@ def auth():
     if 'username' in session:
 
         config = Config.collection.get("config/music-tools")
-        params = urllib.parse.urlencode(
+        params = urlencode(
             {
                 'client_id': config.spotify_client_id,
                 'response_type': 'code',
-                'scope': 'playlist-modify-public playlist-modify-private playlist-read-private user-read-playback-state user-modify-playback-state user-library-read',
+                'scope': 'playlist-modify-public playlist-modify-private playlist-read-private '
+                         'user-read-playback-state user-modify-playback-state user-library-read',
                 'redirect_uri': 'https://music.sarsoo.xyz/auth/spotify/token'
             }
         )
 
-        return redirect(urllib.parse.urlunparse(['https', 'accounts.spotify.com', 'authorize', '', params, '']))
+        return redirect(urlunparse(['https', 'accounts.spotify.com', 'authorize', '', params, '']))
 
     return redirect(url_for('index'))
 
