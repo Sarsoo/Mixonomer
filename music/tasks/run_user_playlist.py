@@ -167,8 +167,8 @@ def run_user_playlist(username, playlist_name):
 
     # EXECUTE
     try:
-        net.replace_playlist_tracks(uri_string=playlist.uri, uris=[i.uri for i, j
-                                                                   in zip(*get_track_objects(playlist_tracks))])
+        net.replace_playlist_tracks(uri=playlist.uri, uris=[i.uri for i, j
+                                                            in zip(*get_track_objects(playlist_tracks))])
 
         if playlist.description_overwrite:
             string = playlist.description_overwrite
@@ -183,7 +183,7 @@ def run_user_playlist(username, playlist_name):
             return None
 
         try:
-            net.change_playlist_details(Uri(playlist.uri), description=string)
+            net.change_playlist_details(uri=playlist.uri, description=string)
         except SpotifyNetworkException:
             logger.exception(f'error changing description for {username} / {playlist_name}')
 

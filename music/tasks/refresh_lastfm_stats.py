@@ -6,7 +6,6 @@ from music.model.user import User
 from music.model.playlist import Playlist
 
 from spotfm.maths.counter import Counter
-from spotframework.model.uri import Uri
 from spotframework.net.network import SpotifyNetworkException
 
 from fmframework.net.network import LastFMNetworkException
@@ -37,7 +36,7 @@ def refresh_lastfm_track_stats(username, playlist_name):
         return
 
     try:
-        spotify_playlist = spotnet.get_playlist(uri=Uri(playlist.uri))
+        spotify_playlist = spotnet.get_playlist(uri=playlist.uri)
     except SpotifyNetworkException:
         logger.exception(f'error retrieving spotify playlist {username} / {playlist_name}')
         return
@@ -83,7 +82,7 @@ def refresh_lastfm_album_stats(username, playlist_name):
         return
 
     try:
-        spotify_playlist = spotnet.get_playlist(uri=Uri(playlist.uri))
+        spotify_playlist = spotnet.get_playlist(uri=playlist.uri)
     except SpotifyNetworkException:
         logger.exception(f'error retrieving spotify playlist {username} / {playlist_name}')
         return
@@ -129,7 +128,7 @@ def refresh_lastfm_artist_stats(username, playlist_name):
         return
 
     try:
-        spotify_playlist = spotnet.get_playlist(uri=Uri(playlist.uri))
+        spotify_playlist = spotnet.get_playlist(uri=playlist.uri)
     except SpotifyNetworkException:
         logger.exception(f'error retrieving spotify playlist {username} / {playlist_name}')
         return
