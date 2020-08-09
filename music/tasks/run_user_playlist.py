@@ -11,7 +11,7 @@ from spotframework.filter.deduplicate import deduplicate_by_name
 from spotframework.net.network import SpotifyNetworkException
 
 from fmframework.net.network import Network
-from spotfm.charts.chart import get_chart_of_spotify_tracks
+from spotfm.chart import get_chart_of_spotify_tracks
 
 import music.db.database as database
 from music.db.part_generator import PartGenerator
