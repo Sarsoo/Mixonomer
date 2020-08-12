@@ -17,7 +17,7 @@ def daily_scrobbles(user=None):
 
     net = database.get_authed_lastfm_network(user)
 
-    total = net.get_scrobble_count_from_date(input_date=date.today())
+    total = net.count_scrobbles_from_date(input_date=date.today())
 
     return jsonify({
         'username': net.username,

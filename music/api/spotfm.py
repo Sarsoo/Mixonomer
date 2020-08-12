@@ -51,7 +51,7 @@ def count(user=None):
         }), 200
     elif playlist_name:
         try:
-            playlists = spotnet.get_playlists()
+            playlists = spotnet.playlists()
             playlist = next((i for i in playlists if i.name == playlist_name), None)
 
             if playlist is not None:

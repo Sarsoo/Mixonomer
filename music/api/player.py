@@ -41,7 +41,7 @@ def play(user=None):
     elif 'playlist_name' in request_json:
         net = database.get_authed_spotify_network(user)
         try:
-            playlists = net.get_playlists()
+            playlists = net.playlists()
             playlist_to_play = next((i for i in playlists if i.name == request_json['playlist_name']), None)
 
             if playlist_to_play is not None:

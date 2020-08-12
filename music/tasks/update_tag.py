@@ -36,7 +36,7 @@ def update_tag(username, tag_id):
 
     tag_count = 0
     try:
-        user_scrobbles = net.get_user_scrobble_count()
+        user_scrobbles = net.user_scrobble_count()
     except LastFMNetworkException:
         logger.exception(f'error retrieving scrobble count {username} / {tag_id}')
         user_scrobbles = 0
@@ -44,7 +44,7 @@ def update_tag(username, tag_id):
     artists = []
     for artist in tag.artists:
         try:
-            net_artist = net.get_artist(name=artist['name'])
+            net_artist = net.artist(name=artist['name'])
 
             if net_artist is not None:
                 artist['count'] = net_artist.user_scrobbles
@@ -57,7 +57,7 @@ def update_tag(username, tag_id):
     albums = []
     for album in tag.albums:
         try:
-            net_album = net.get_album(name=album['name'], artist=album['artist'])
+            net_album = net.album(name=album['name'], artist=album['artist'])
 
             if net_album is not None:
                 album['count'] = net_album.user_scrobbles
@@ -72,7 +72,7 @@ def update_tag(username, tag_id):
     tracks = []
     for track in tag.tracks:
         try:
-            net_track = net.get_track(name=track['name'], artist=track['artist'])
+            net_track = net.track(name=track['name'], artist=track['artist'])
 
             if net_track is not None:
                 track['count'] = net_track.user_scrobbles

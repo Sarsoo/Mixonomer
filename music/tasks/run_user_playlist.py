@@ -11,7 +11,7 @@ from spotframework.filter.deduplicate import deduplicate_by_name
 from spotframework.net.network import SpotifyNetworkException
 
 from fmframework.net.network import Network
-from spotfm.chart import get_chart_of_spotify_tracks
+from spotfm.chart import map_lastfm_track_chart_to_spotify
 
 import music.db.database as database
 from music.db.part_generator import PartGenerator
@@ -51,7 +51,7 @@ def run_user_playlist(username, playlist_name):
         return
 
     try:
-        user_playlists = net.get_user_playlists()
+        user_playlists = net.user_playlists()
     except SpotifyNetworkException:
         logger.exception(f'error occured while retrieving playlists {username} / {playlist_name}')
         return
@@ -70,15 +70,7 @@ def run_user_playlist(username, playlist_name):
     for part_name in part_names:
         try:  # attempt to cast to uri
             uri = Uri(part_name)
-
-            try:
-                _tracks = net.get_playlist_tracks(uri=uri)
-                if _tracks and len(_tracks) > 0:
-                    playlist_tracks += _tracks
-                else:
-                    logger.warning(f'no tracks returned for {uri} {username} / {playlist_name}')
-            except SpotifyNetworkException:
-                logger.exception(f'error occured while retrieving {uri} {username} / {playlist_name}')
+            log_name = uri
 
         except ValueError:  # is a playlist name
             part_playlist = next((i for i in user_playlists if i.name == part_name), None)
@@ -86,21 +78,24 @@ def run_user_playlist(username, playlist_name):
                 logger.warning(f'playlist {part_name} not found {username} / {playlist_name}')
                 continue
 
-            try:
-                part_playlist_tracks = net.get_playlist_tracks(uri=part_playlist.uri)
-                if part_playlist_tracks and len(part_playlist_tracks) > 0:
-                    playlist_tracks += part_playlist_tracks
-                else:
-                    logger.warning(f'no tracks returned for {part_playlist.name} {username} / {playlist_name}')
-            except SpotifyNetworkException:
-                logger.exception(f'error occured while retrieving {part_name} {username} / {playlist_name}')
+            uri = part_playlist.uri
+            log_name = part_playlist.name
 
-    playlist_tracks = remove_local(playlist_tracks)
+        try:
+            _tracks = net.playlist_tracks(uri=uri)
+            if _tracks and len(_tracks) > 0:
+                playlist_tracks += _tracks
+            else:
+                logger.warning(f'no tracks returned for {log_name} {username} / {playlist_name}')
+        except SpotifyNetworkException:
+            logger.exception(f'error occured while retrieving {log_name} {username} / {playlist_name}')
+
+    playlist_tracks = list(remove_local(playlist_tracks))
 
     # LIBRARY
     if playlist.include_library_tracks:
         try:
-            library_tracks = net.get_library_tracks()
+            library_tracks = net.saved_tracks()
             if library_tracks and len(library_tracks) > 0:
                 playlist_tracks += library_tracks
             else:
@@ -112,7 +107,7 @@ def run_user_playlist(username, playlist_name):
     if playlist.type == 'recents':
         boundary_date = datetime.datetime.now(datetime.timezone.utc) - \
                         datetime.timedelta(days=int(playlist.day_boundary))
-        playlist_tracks = added_after(playlist_tracks, boundary_date)
+        playlist_tracks = list(added_after(playlist_tracks, boundary_date))
     elif playlist.type == 'fmchart':
         if user.lastfm_username is None:
             logger.error(f'no associated last.fm username, chart source skipped {username} / {playlist_name}')
@@ -126,10 +121,10 @@ def run_user_playlist(username, playlist_name):
 
             fmnet = database.get_authed_lastfm_network(user)
             if fmnet is not None:
-                chart_tracks = get_chart_of_spotify_tracks(spotnet=net,
-                                                           fmnet=fmnet,
-                                                           period=chart_range,
-                                                           limit=playlist.chart_limit)
+                chart_tracks = map_lastfm_track_chart_to_spotify(spotnet=net,
+                                                                 fmnet=fmnet,
+                                                                 period=chart_range,
+                                                                 limit=playlist.chart_limit)
 
                 if chart_tracks is not None and len(chart_tracks) > 0:
                     playlist_tracks += chart_tracks
@@ -147,14 +142,14 @@ def run_user_playlist(username, playlist_name):
     # RECOMMENDATIONS
     if playlist.include_recommendations:
         try:
-            recommendations = net.get_recommendations(tracks=[i.uri.object_id for i, j
-                                                              in zip(*get_track_objects(
-                                                                    random.sample(playlist_tracks,
-                                                                                  k=min(5, len(playlist_tracks))
-                                                                                  )
-                                                                    ))
-                                                              if i.uri.object_type == Uri.ObjectType.track],
-                                                      response_limit=playlist.recommendation_sample)
+            recommendations = net.recommendations(tracks=[i.uri.object_id for i, j
+                                                          in get_track_objects(
+                                                                random.sample(playlist_tracks,
+                                                                      k=min(5, len(playlist_tracks))
+                                                                      )
+                                                                )
+                                                          if i.uri.object_type == Uri.ObjectType.track],
+                                                  response_limit=playlist.recommendation_sample)
             if recommendations and len(recommendations.tracks) > 0:
                 playlist_tracks += recommendations.tracks
             else:
@@ -167,8 +162,7 @@ def run_user_playlist(username, playlist_name):
 
     # EXECUTE
     try:
-        net.replace_playlist_tracks(uri=playlist.uri, uris=[i.uri for i, j
-                                                            in zip(*get_track_objects(playlist_tracks))])
+        net.replace_playlist_tracks(uri=playlist.uri, uris=[i.uri for i, j in get_track_objects(playlist_tracks)])
 
         if playlist.description_overwrite:
             string = playlist.description_overwrite

@@ -309,7 +309,7 @@ def image(user=None):
     net = database.get_authed_spotify_network(user)
 
     try:
-        return jsonify({'images': net.get_playlist(uri=_playlist.uri).images, 'status': 'success'}), 200
+        return jsonify({'images': net.playlist(uri=_playlist.uri).images, 'status': 'success'}), 200
     except SpotifyNetworkException as e:
         logger.exception(f'error occured during {_playlist.name} / {user.username} playlist retrieval')
         return jsonify({'error': f"spotify error occured: {e.http_code}"}), 404
