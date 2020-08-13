@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 const axios = require('axios');
 
-import { Card, Button, CircularProgress, CardActions, CardContent, FormControl, InputLabel, Select, Typography, Grid, TextField, MenuItem, FormControlLabel, Checkbox } from '@material-ui/core';
+import { Card, Button, CircularProgress, CardActions, CardContent, FormControl, InputLabel, Select, Typography, Grid, TextField, MenuItem, FormControlLabel, Switch } from '@material-ui/core';
 import { Delete } from '@material-ui/icons';
 import { makeStyles } from '@material-ui/core/styles';
 
@@ -325,7 +325,7 @@ class View extends Component{
                         <Grid item xs={12}>
                             <FormControlLabel
                                 control={
-                                <Checkbox color="primary" checked={this.state.tag.time_objects} name="time_objects" onChange={this.handleCheckChange} />
+                                <Switch color="primary" checked={this.state.tag.time_objects} name="time_objects" onChange={this.handleCheckChange} />
                                 }
                                 label="Time Tag"
                                 labelPlacement="bottom"

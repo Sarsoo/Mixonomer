@@ -4,7 +4,7 @@ import json
 import os
 
 from music.api.decorators import admin_required, login_or_basic_auth, lastfm_username_required, \
-    spotify_link_required, cloud_task, gae_cron, validate_args
+    spotify_link_required, cloud_task, validate_args
 import music.db.database as database
 from music.cloud.tasks import refresh_all_user_playlist_stats, refresh_user_playlist_stats, refresh_playlist_task
 from music.tasks.refresh_lastfm_stats import refresh_lastfm_track_stats, \
@@ -138,13 +138,6 @@ def run_playlist_artist_task():
 def run_users(user=None):
     refresh_all_user_playlist_stats()
     return jsonify({'message': 'executed all users', 'status': 'success'}), 200
-
-
-@blueprint.route('/playlist/refresh/users/cron', methods=['GET'])
-@gae_cron
-def run_users_task():
-    refresh_all_user_playlist_stats()
-    return jsonify({'status': 'success'}), 200
 
 
 @blueprint.route('/playlist/refresh/user', methods=['GET'])

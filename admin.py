@@ -5,7 +5,7 @@ from pathlib import Path
 import sys
 from cmd import Cmd
 
-stage_dir = '_playlist-manager'
+stage_dir = '.music-tools'
 scss_rel_path = Path('src', 'scss', 'style.scss')
 css_rel_path = Path('build', 'style.css')
 
@@ -97,6 +97,42 @@ class Admin(Cmd):
 
         print('>> deploying')
         self.deploy_function('run_user_playlist')
+
+    # all playlists cron job
+    def do_playlist_cron(self, args):
+        self.prepare_stage()
+        self.prepare_main('cron')
+
+        print('>> deploying')
+        self.deploy_function('run_all_playlists')
+
+    # all stats refresh cron job
+    def do_playlist_stats(self, args):
+        self.prepare_stage()
+        self.prepare_main('cron')
+
+        print('>> deploying')
+        self.deploy_function('run_all_playlist_stats')
+
+    # all tags cron job
+    def do_tags_cron(self, args):
+        self.prepare_stage()
+        self.prepare_main('cron')
+
+        print('>> deploying')
+        self.deploy_function('run_all_tags')
+
+    # redeploy all cron job functions
+    def do_all_cron(self, args):
+        self.prepare_stage()
+        self.prepare_main('cron')
+
+        print('>> deploying playlists')
+        self.deploy_function('run_all_playlists')
+        print('>> deploying stats')
+        self.deploy_function('run_all_playlist_stats')
+        print('>> deploying tags')
+        self.deploy_function('run_all_tags')
 
     def do_exit(self, args):
         exit(0)

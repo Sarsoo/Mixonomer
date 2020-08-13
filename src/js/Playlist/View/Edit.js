@@ -1,8 +1,8 @@
 import React, { Component } from "react";
 const axios = require('axios');
 
-import { Card, Button, CircularProgress, FormControl, TextField, InputLabel, Select, Checkbox, FormControlLabel, 
-    CardActions, CardContent, Typography, Grid, MenuItem } from '@material-ui/core';
+import { Card, Button, CircularProgress, FormControl, TextField, InputLabel, Select, FormControlLabel, 
+    CardActions, CardContent, Typography, Grid, MenuItem, Switch } from '@material-ui/core';
 import { Delete } from '@material-ui/icons';
 import { makeStyles } from '@material-ui/core/styles';
 
@@ -356,19 +356,19 @@ export class Edit extends Component{
                         <Grid item xs={12}>
                             <FormControlLabel
                                 control={
-                                <Checkbox color="primary" name="shuffle" checked={this.state.shuffle} onChange={this.handleCheckChange} />
+                                <Switch color="primary" name="shuffle" checked={this.state.shuffle} onChange={this.handleCheckChange} />
                                 }
                                 labelPlacement="bottom"
                                 label="Shuffle"/>
                             <FormControlLabel
                                 control={
-                                <Checkbox color="primary" checked={this.state.include_recommendations} name="include_recommendations" onChange={this.handleCheckChange} />
+                                <Switch color="primary" checked={this.state.include_recommendations} name="include_recommendations" onChange={this.handleCheckChange} />
                                 }
                                 labelPlacement="bottom"
                                 label="Recommendations"/>
                             <FormControlLabel
                                 control={
-                                <Checkbox color="primary" checked={this.state.include_library_tracks} name="include_library_tracks" onChange={this.handleCheckChange} />
+                                <Switch color="primary" checked={this.state.include_library_tracks} name="include_library_tracks" onChange={this.handleCheckChange} />
                                 }
                                 labelPlacement="bottom"
                                 label="Library Tracks"/>
@@ -428,14 +428,14 @@ export class Edit extends Component{
                         <Grid item xs={12}>
                             <FormControlLabel
                                 control={
-                                <Checkbox color="primary" checked={this.state.add_this_month} name="add_this_month" onChange={this.handleCheckChange} />
+                                <Switch color="primary" checked={this.state.add_this_month} name="add_this_month" onChange={this.handleCheckChange} />
                                 }
                                 label="This Month"
                                 labelPlacement="bottom"
                             />
                             <FormControlLabel
                                 control={
-                                <Checkbox color="primary" checked={this.state.add_last_month} name="add_last_month" onChange={this.handleCheckChange} />
+                                <Switch color="primary" checked={this.state.add_last_month} name="add_last_month" onChange={this.handleCheckChange} />
                                 }
                                 label="Last Month"
                                 labelPlacement="bottom"
@@ -474,6 +474,7 @@ export class Edit extends Component{
 
 function ReferenceEntry(props) {
     return <option value={props.name}>{props.name}</option>;
+    // return <MenuItem value={props.name}>{props.name}</MenuItem>;
 }
 
 function ListBlock(props) {

@@ -8,7 +8,7 @@ import logging
 from datetime import datetime
 
 from music.api.decorators import login_required, login_or_basic_auth, \
-    admin_required, gae_cron, cloud_task, validate_json, validate_args
+    admin_required, cloud_task, validate_json, validate_args, spotify_link_required
 from music.cloud import queue_run_user_playlist, offload_or_run_user_playlist
 from music.cloud.tasks import update_all_user_playlists, update_playlists
 
@@ -289,16 +289,9 @@ def run_users(user=None):
     return jsonify({'message': 'executed all users', 'status': 'success'}), 200
 
 
-@blueprint.route('/playlist/run/users/cron', methods=['GET'])
-@gae_cron
-def run_users_cron():
-
-    update_all_user_playlists()
-    return jsonify({'status': 'success'}), 200
-
-
 @blueprint.route('/playlist/image', methods=['GET'])
 @login_or_basic_auth
+@spotify_link_required
 @validate_args(('name', str))
 def image(user=None):
 

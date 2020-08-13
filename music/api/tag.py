@@ -4,9 +4,8 @@ import logging
 import os
 import json
 
-from music.api.decorators import login_or_basic_auth, gae_cron, cloud_task
+from music.api.decorators import login_or_basic_auth, cloud_task
 from music.cloud.function import update_tag as serverless_update_tag
-from music.cloud.tasks import update_all_user_tags
 from music.tasks.update_tag import update_tag
 
 from music.model.tag import Tag
@@ -152,11 +151,3 @@ def run_tag_task():
         serverless_update_tag(username=payload['username'], tag_id=payload['tag_id'])
 
         return jsonify({'message': 'executed playlist', 'status': 'success'}), 200
-
-
-@blueprint.route('/tag/update/users/cron', methods=['GET'])
-@gae_cron
-def run_tags_cron():
-
-    update_all_user_tags()
-    return jsonify({'status': 'success'}), 200
