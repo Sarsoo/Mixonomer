@@ -1,5 +1,5 @@
 from fireo.models import Model
-from fireo.fields import TextField, DateTime, NumberField, ListField
+from fireo.fields import TextField, DateTime, NumberField, ListField, BooleanField
 
 
 class Tag(Model):
@@ -19,6 +19,10 @@ class Tag(Model):
     total_user_scrobbles = NumberField(default=0)
 
     last_updated = DateTime()
+
+    time_objects = BooleanField(default=False)
+    total_time = TextField(default='00:00:00')
+    total_time_ms = NumberField(default=0)
 
     def to_dict(self):
         to_return = super().to_dict()

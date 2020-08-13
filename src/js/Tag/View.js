@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 const axios = require('axios');
 
-import { Card, Button, CircularProgress, CardActions, CardContent, FormControl, InputLabel, Select, Typography, Grid, TextField, MenuItem } from '@material-ui/core';
+import { Card, Button, CircularProgress, CardActions, CardContent, FormControl, InputLabel, Select, Typography, Grid, TextField, MenuItem, FormControlLabel, Checkbox } from '@material-ui/core';
 import { Delete } from '@material-ui/icons';
 import { makeStyles } from '@material-ui/core/styles';
 
@@ -41,25 +41,28 @@ class View extends Component{
         this.handleRun = this.handleRun.bind(this);
         this.handleRemoveObj = this.handleRemoveObj.bind(this);
 
+        this.handleCheckChange = this.handleCheckChange.bind(this);
+        this.makeNetworkUpdate = this.makeNetworkUpdate.bind(this);
+
         this.handleAdd = this.handleAdd.bind(this);
         this.handleChangeAddType = this.handleChangeAddType.bind(this);
     }
 
     componentDidMount(){
         this.getTag();
-        var intervalId = setInterval(() => {this.getTag(false)}, 5000);
-        var timeoutId = setTimeout(() => {clearInterval(this.state.intervalId)}, 300000);
+        // var intervalId = setInterval(() => {this.getTag(false)}, 5000);
+        // var timeoutId = setTimeout(() => {clearInterval(this.state.intervalId)}, 300000);
 
-        this.setState({
-            intervalId: intervalId,
-            timeoutId: timeoutId
-        });
+        // this.setState({
+        //     intervalId: intervalId,
+        //     timeoutId: timeoutId
+        // });
     }
 
-    componentWillUnmount(){
-        clearInterval(this.state.intervalId);
-        clearTimeout(this.state.timeoutId);
-    }
+    // componentWillUnmount(){
+    //     clearInterval(this.state.intervalId);
+    //     clearTimeout(this.state.timeoutId);
+    // }
 
     getTag(error_toast = true){
         axios.get(`/api/tag/${ this.state.tag_id }`)
@@ -103,6 +106,24 @@ class View extends Component{
             [event.target.name]: event.target.value
         });
 
+    }
+
+    handleCheckChange(event){
+        let payload = {...this.state.tag};
+        payload[event.target.name] = event.target.checked;
+        
+        this.setState({tag: payload});
+
+        switch(event.target.name){
+            default:
+                this.makeNetworkUpdate({[event.target.name]: event.target.checked});
+        }
+    }
+
+    makeNetworkUpdate(changes){
+        axios.put(`/api/tag/${this.state.tag_id}`, changes).catch((error) => {
+            showMessage(`Error updating ${Object.keys(changes).join(", ")} (${error.response.status})`);
+        });
     }
 
     handleRun(event){
@@ -256,13 +277,13 @@ class View extends Component{
                     <Grid container spacing={5}>
                         
                         { this.state.tag.artists.length > 0 && <Grid item xs={12} ><Typography color="textSecondary" variant="h4">Artists</Typography></Grid> }
-                        { this.state.tag.artists.length > 0 && <ListBlock handler={this.handleRemoveObj} list={this.state.tag.artists} addType="artists"/> }
+                        { this.state.tag.artists.length > 0 && <ListBlock handler={this.handleRemoveObj} list={this.state.tag.artists} addType="artists" showTime={this.state.tag.time_objects}/> }
 
                         { this.state.tag.albums.length > 0 && <Grid item xs={12} ><Typography color="textSecondary" variant="h4">Albums</Typography></Grid> }
-                        { this.state.tag.albums.length > 0 && <ListBlock handler={this.handleRemoveObj} list={this.state.tag.albums} addType="albums"/> }
+                        { this.state.tag.albums.length > 0 && <ListBlock handler={this.handleRemoveObj} list={this.state.tag.albums} addType="albums" showTime={this.state.tag.time_objects}/> }
 
                         { this.state.tag.tracks.length > 0 && <Grid item xs={12} ><Typography color="textSecondary" variant="h4">Tracks</Typography></Grid> }
-                        { this.state.tag.tracks.length > 0 && <ListBlock handler={this.handleRemoveObj} list={this.state.tag.tracks} addType="tracks"/> }
+                        { this.state.tag.tracks.length > 0 && <ListBlock handler={this.handleRemoveObj} list={this.state.tag.tracks} addType="tracks" showTime={this.state.tag.time_objects}/> }
                         <Grid item xs={12} sm={this.state.addType != 'artists' ? 3 : 4} md={this.state.addType != 'artists' ? 3 : 4}>
                             <TextField
                                 name="name"
@@ -301,7 +322,16 @@ class View extends Component{
                         <Grid item xs={12} sm={this.state.addType != 'artists' ? 3 : 4} md={this.state.addType != 'artists' ? 3 : 4}>
                             <Button variant="contained" onClick={this.handleAdd} className="full-width">Add</Button>
                         </Grid>
-                        <StatsCard count={this.state.tag.count} proportion={this.state.tag.proportion}></StatsCard>
+                        <Grid item xs={12}>
+                            <FormControlLabel
+                                control={
+                                <Checkbox color="primary" checked={this.state.tag.time_objects} name="time_objects" onChange={this.handleCheckChange} />
+                                }
+                                label="Time Tag"
+                                labelPlacement="bottom"
+                            />
+                        </Grid>
+                        <StatsCard count={this.state.tag.count} proportion={this.state.tag.proportion} showTime={this.state.tag.time_objects} time={this.state.tag.total_time}></StatsCard>
                         <Grid item xs={12}>
                             <PieChart data={data}/>
                         </Grid>
@@ -331,7 +361,7 @@ function ListBlock(props) {
                 alignItems="flex-start"
                 style={{padding: '24px'}}>
                     {props.list.map((music_obj) => <BlockGridItem music_obj={ music_obj } key={ music_obj.name } 
-                                                        handler={ props.handler } addType={ props.addType }/>)}
+                                                        handler={ props.handler } addType={ props.addType } showTime={ props.showTime }/>)}
             </Grid>
 }
 
@@ -352,7 +382,12 @@ function BlockGridItem (props) {
                         }
                         { 'count' in props.music_obj &&
                             <Grid item xs={8}>
-                                <Typography variant="h4" color="textPrimary" className={classes.root}>{ props.music_obj.count }</Typography>
+                                <Typography variant="h4" color="textPrimary" className={classes.root}>📈 { props.music_obj.count }</Typography>
+                            </Grid>
+                        }
+                        { 'time' in props.music_obj && props.showTime &&
+                            <Grid item xs={8}>
+                                <Typography variant="body1" color="textSecondary" className={classes.root}>🕒 { props.music_obj.time }</Typography>
                             </Grid>
                         }
                     </Grid>
@@ -375,11 +410,16 @@ function StatsCard (props) {
                 <CardContent>
                     <Grid container spacing={10}>
                         <Grid item xs={12}>
-                            <Typography variant="h1" color="textPrimary" className={classes.root}>= { props.count }</Typography>
+                            <Typography variant="h1" color="textPrimary" className={classes.root}>📈 { props.count }</Typography>
                         </Grid>
                         <Grid item xs={12}>
                             <Typography variant="h4" color="textSecondary" className={classes.root}>{ props.proportion.toFixed(2) }%</Typography>
                         </Grid>
+                        {props.showTime &&
+                            <Grid item xs={12}>
+                                <Typography variant="h4" color="textSecondary" className={classes.root}>🕒 { props.time }</Typography>
+                            </Grid>
+                        }
                     </Grid>
                 </CardContent>
             </Card>

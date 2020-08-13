@@ -7,6 +7,8 @@ from music.model.tag import Tag
 
 from fmframework.net.network import LastFMNetworkException
 
+from spotfm.timer import time, seconds_to_time_str
+
 logger = logging.getLogger(__name__)
 
 
@@ -29,26 +31,48 @@ def update_tag(username, tag_id):
         return
 
     net = database.get_authed_lastfm_network(user)
-
     if net is None:
-        logger.error(f'no last.fm network returned for {username}')
+        logger.error(f'no last.fm network returned for {username} / {tag_id}')
         return
 
-    tag_count = 0
+    if tag.time_objects:
+        if user.spotify_linked:
+            spotnet = database.get_authed_spotify_network(user)
+        else:
+            logger.warning(f'timing objects requested but no spotify linked {username} / {tag_id}')
+
+    tag.count = 0
+    tag.total_time_ms = 0
+
     try:
         user_scrobbles = net.user_scrobble_count()
     except LastFMNetworkException:
         logger.exception(f'error retrieving scrobble count {username} / {tag_id}')
-        user_scrobbles = 0
+        user_scrobbles = 1
 
     artists = []
     for artist in tag.artists:
         try:
-            net_artist = net.artist(name=artist['name'])
+            if tag.time_objects and user.spotify_linked:
+                total_ms, timed_tracks = time(spotnet=spotnet, fmnet=net,
+                                              artist=artist['name'], username=user.lastfm_username,
+                                              return_tracks=True)
+                scrobbles = sum(i[0].user_scrobbles for i in timed_tracks)
 
-            if net_artist is not None:
-                artist['count'] = net_artist.user_scrobbles
-                tag_count += net_artist.user_scrobbles
+                artist['time_ms'] = total_ms
+                artist['time'] = seconds_to_time_str(milliseconds=total_ms)
+                tag.total_time_ms += total_ms
+
+            else:
+                net_artist = net.artist(name=artist['name'])
+
+                if net_artist is not None:
+                    scrobbles = net_artist.user_scrobbles
+                else:
+                    scrobbles = 0
+
+            artist['count'] = scrobbles
+            tag.count += scrobbles
         except LastFMNetworkException:
             logger.exception(f'error during artist retrieval {username} / {tag_id}')
 
@@ -57,13 +81,28 @@ def update_tag(username, tag_id):
     albums = []
     for album in tag.albums:
         try:
-            net_album = net.album(name=album['name'], artist=album['artist'])
+            if tag.time_objects and user.spotify_linked:
+                total_ms, timed_tracks = time(spotnet=spotnet, fmnet=net,
+                                              album=album['name'], artist=album['artist'],
+                                              username=user.lastfm_username, return_tracks=True)
+                scrobbles = sum(i[0].user_scrobbles for i in timed_tracks)
 
-            if net_album is not None:
-                album['count'] = net_album.user_scrobbles
+                album['time_ms'] = total_ms
+                album['time'] = seconds_to_time_str(milliseconds=total_ms)
+                tag.total_time_ms += total_ms
 
-                if album['artist'].lower() not in [i.lower() for i in [j['name'] for j in artists]]:
-                    tag_count += net_album.user_scrobbles
+            else:
+                net_album = net.album(name=album['name'], artist=album['artist'])
+
+                if net_album is not None:
+                    scrobbles = net_album.user_scrobbles
+                else:
+                    scrobbles = 0
+
+            album['count'] = scrobbles
+
+            if album['artist'].lower() not in [i.lower() for i in [j['name'] for j in artists]]:
+                tag.count += scrobbles
         except LastFMNetworkException:
             logger.exception(f'error during album retrieval {username} / {tag_id}')
 
@@ -72,13 +111,28 @@ def update_tag(username, tag_id):
     tracks = []
     for track in tag.tracks:
         try:
-            net_track = net.track(name=track['name'], artist=track['artist'])
+            if tag.time_objects and user.spotify_linked:
+                total_ms, timed_tracks = time(spotnet=spotnet, fmnet=net,
+                                              track=track['name'], artist=track['artist'],
+                                              username=user.lastfm_username, return_tracks=True)
+                scrobbles = sum(i[0].user_scrobbles for i in timed_tracks)
 
-            if net_track is not None:
-                track['count'] = net_track.user_scrobbles
+                track['time_ms'] = total_ms
+                track['time'] = seconds_to_time_str(milliseconds=total_ms)
+                tag.total_time_ms += total_ms
 
-                if track['artist'].lower() not in [i.lower() for i in [j['name'] for j in artists]]:
-                    tag_count += net_track.user_scrobbles
+            else:
+                net_track = net.track(name=track['name'], artist=track['artist'])
+
+                if net_track is not None:
+                    scrobbles = net_track.user_scrobbles
+                else:
+                    scrobbles = 0
+
+            track['count'] = scrobbles
+
+            if track['artist'].lower() not in [i.lower() for i in [j['name'] for j in artists]]:
+                tag.count += scrobbles
         except LastFMNetworkException:
             logger.exception(f'error during track retrieval {username} / {tag_id}')
 
@@ -88,9 +142,9 @@ def update_tag(username, tag_id):
     tag.albums = albums
     tag.artists = artists
 
+    tag.total_time = seconds_to_time_str(milliseconds=tag.total_time_ms)
     tag.total_user_scrobbles = user_scrobbles
-    tag.count = tag_count
-    tag.proportion = (tag_count / user_scrobbles) * 100
+    tag.proportion = (tag.count / user_scrobbles) * 100
     tag.last_updated = datetime.utcnow()
 
     tag.update()

@@ -38,7 +38,7 @@ def tag_route(tag_id, user=None):
 
 
 def get_tag(tag_id, user):
-    logger.info(f'retriving {tag_id} for {user.username}')
+    logger.info(f'retrieving {tag_id} for {user.username}')
 
     db_tag = Tag.collection.parent(user.key).filter('tag_id', '==', tag_id).get()
     if db_tag is not None:
@@ -61,6 +61,9 @@ def put_tag(tag_id, user):
 
     if request_json.get('name'):
         db_tag.name = request_json['name'].strip()
+
+    if request_json.get('time_objects') is not None:
+        db_tag.time_objects = request_json['time_objects']
 
     if request_json.get('tracks') is not None:
         db_tag.tracks = [
