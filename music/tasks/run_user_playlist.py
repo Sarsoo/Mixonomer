@@ -51,7 +51,7 @@ def run_user_playlist(username, playlist_name):
         return
 
     try:
-        user_playlists = net.user_playlists()
+        user_playlists = net.playlists()
     except SpotifyNetworkException:
         logger.exception(f'error occured while retrieving playlists {username} / {playlist_name}')
         return
