@@ -16,7 +16,12 @@ class Admin(Cmd):
     intro = 'Music Tools Admin... ? for help'
     prompt = '> '
 
+    locals = ['spotframework', 'fmframework', 'spotfm']
+
     def prepare_stage(self):
+        print('>> freezing dependencies')
+        self.export_filtered_dependencies()
+
         print('>> backing up a directory')
         os.chdir(Path(__file__).absolute().parent.parent)
 
@@ -30,7 +35,7 @@ class Admin(Cmd):
                             contents if any(i in Path(path).parts for i in folders_to_ignore) else []
                         )
 
-        for dependency in ['spotframework', 'fmframework', 'spotfm']:
+        for dependency in Admin.locals:
             print(f'>> injecting {dependency}')
             shutil.copytree(
                 Path(dependency, dependency),
@@ -162,6 +167,25 @@ class Admin(Cmd):
         new_name = input('enter new name: ')
         playlist.name = new_name
         playlist.update()
+
+    def do_depend(self, args):
+        return os.popen('poetry export -f requirements.txt --output requirements.txt').read()
+
+    def do_filt_depend(self, args):
+        self.export_filtered_dependencies()
+
+    def export_filtered_dependencies(self):
+        string = os.popen('poetry export -f requirements.txt').read()
+
+        depend = string.split('\n')
+        
+        filtered = [i for i in depend if not any(i.startswith(local) for local in Admin.locals)]
+        filtered = [i for i in filtered if '==' in i]
+        filtered = [i[:-2] for i in filtered] # get rid of space and slash at end of line
+        filtered = [i.split(';')[0] for i in filtered]
+
+        with open('requirements.txt', 'w') as f:
+            f.write("\n".join(filtered))
 
 
 if __name__ == '__main__':
