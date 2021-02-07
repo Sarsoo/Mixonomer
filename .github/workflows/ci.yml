@@ -69,10 +69,10 @@ jobs:
           python-version: 3.8
 
       # PYTHON for dependency export only, not installing
-      - name: Install Poetry 3.8
+      - name: Install Poetry 1.1.4
         uses: abatilo/actions-poetry@v2.1.0
         with:
-          poetry-version: 3.8
+          poetry-version: 1.1.4
       
       # JS setup
       - name: Install Node 14
