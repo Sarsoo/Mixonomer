@@ -1,7 +1,7 @@
 [Music Tools](https://music.sarsoo.xyz)
 ==================
 
-![Python Tests](https://github.com/sarsoo/music-tools/workflows/Tests/badge.svg)
+![Python Tests](https://github.com/sarsoo/music-tools/workflows/test%20and%20deploy/badge.svg)
 
 Set of utility tools for Spotify and Last.fm. 
 Built on my other libraries for Spotify ([spotframework](https://github.com/Sarsoo/spotframework)), Last.fm ([fmframework](https://github.com/Sarsoo/pyfmframework)) and interfacing utility tools for the two ([spotfm](https://github.com/Sarsoo/pyfmframework)). Currently running on a suite of Google Cloud Platform services. An iOS client is currently under development [here](https://github.com/Sarsoo/Music-Tools-iOS).
