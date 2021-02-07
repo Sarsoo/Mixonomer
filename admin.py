@@ -23,28 +23,29 @@ class Admin(Cmd):
         print('>> freezing dependencies')
         self.export_filtered_dependencies()
 
-        print('>> backing up a directory')
-        os.chdir(Path(__file__).absolute().parent.parent)
+        # Now done via online repos, not static injection
+        # print('>> backing up a directory')
+        # os.chdir(Path(__file__).absolute().parent.parent)
 
-        print('>> deleting old deployment stage')
-        shutil.rmtree(stage_dir, ignore_errors=True)
+        # print('>> deleting old deployment stage')
+        # shutil.rmtree(stage_dir, ignore_errors=True)
 
-        print('>> copying main source')
-        shutil.copytree('playlist-manager' if Path('playlist-manager').exists() else 'Music-Tools',
-                        stage_dir,
-                        ignore=lambda path, contents:
-                            contents if any(i in Path(path).parts for i in folders_to_ignore) else []
-                        )
+        # print('>> copying main source')
+        # shutil.copytree('playlist-manager' if Path('playlist-manager').exists() else 'Music-Tools',
+        #                 stage_dir,
+        #                 ignore=lambda path, contents:
+        #                     contents if any(i in Path(path).parts for i in folders_to_ignore) else []
+        #                 )
 
-        for dependency in Admin.locals:
-            print(f'>> injecting {dependency}')
-            shutil.copytree(
-                Path(dependency, dependency),
-                Path(stage_dir, dependency)
-            )
+        # for dependency in Admin.locals:
+        #     print(f'>> injecting {dependency}')
+        #     shutil.copytree(
+        #         Path(dependency, dependency),
+        #         Path(stage_dir, dependency)
+        #     )
 
-        os.chdir(stage_dir)
-        os.system('gcloud config set project sarsooxyz')
+        # os.chdir(stage_dir)
+        # os.system('gcloud config set project sarsooxyz')
 
     def prepare_frontend(self):
         print('>> building css')
@@ -176,14 +177,14 @@ class Admin(Cmd):
         self.export_filtered_dependencies()
 
     def export_filtered_dependencies(self):
-        string = os.popen('poetry export -f requirements.txt').read()
+        string = os.popen('poetry export -f requirements.txt --without-hashes').read()
 
         depend = string.split('\n')
         
-        filtered = [i for i in depend if not any(i.startswith(local) for local in Admin.locals)]
-        filtered = [i for i in filtered if '==' in i]
-        filtered = [i[:-2] for i in filtered] # get rid of space and slash at end of line
-        filtered = [i.split(';')[0] for i in filtered]
+        # filtered = [i for i in depend if not any(i.startswith(local) for local in Admin.locals)]
+        # filtered = [i for i in filtered if '==' in i]
+        # filtered = [i[:-2] for i in filtered] # get rid of space and slash at end of line
+        filtered = [i.split(';')[0] for i in depend]
 
         with open('requirements.txt', 'w') as f:
             f.write("\n".join(filtered))

@@ -1,5 +1,6 @@
 scratch.py
 service.json
+requirements.txt
 
 *~*
 *#
@@ -12,7 +13,7 @@ node_modules/
 *$py.class
 
 .idea
-.vscode
+launch.json
 
 # C extensions
 *.so
