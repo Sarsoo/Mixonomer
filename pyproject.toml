@@ -6,9 +6,6 @@ authors = ["andy <andy@sarsoo.xyz>"]
 readme = "README.md"
 homepage = "https://music.sarsoo.xyz/"
 repository = "https://github.com/Sarsoo/Music-Tools"
-packages = [
-    { include = "service.json" },
-]
 
 [tool.poetry.scripts]
 backend-dev = 'music.music:start'
