@@ -12,6 +12,7 @@ packages = [
 
 [tool.poetry.scripts]
 backend-dev = 'music.music:start'
+test = 'admin:test'
 
 [tool.poetry.dependencies]
 python = "^3.8"
@@ -23,9 +24,9 @@ google-cloud-pubsub = "^1.6.0"
 google-cloud-tasks = "^1.5.0"
 requests = "^2.24.0"
 
-spotframework = { path = "../spotframework" }
-fmframework = { path = "../fmframework" }
-spotfm = { path = "../spotfm" }
+spotframework = { git = "https://github.com/Sarsoo/spotframework.git" }
+fmframework = { git = "https://github.com/Sarsoo/pyfmframework.git" }
+spotfm = { git = "https://github.com/Sarsoo/spotfm.git" }
 
 [tool.poetry.dev-dependencies]
 pylint = "2.5.3"

@@ -3,6 +3,7 @@ import shutil
 import os
 from pathlib import Path
 import sys
+import subprocess
 from cmd import Cmd
 
 stage_dir = '.music-tools'
@@ -187,6 +188,11 @@ class Admin(Cmd):
         with open('requirements.txt', 'w') as f:
             f.write("\n".join(filtered))
 
+def test():
+    os.environ['GOOGLE_APPLICATION_CREDENTIALS'] = 'service.json'
+    subprocess.run(
+            ['python', '-u', '-m', 'unittest', 'discover', "-s", "tests"]
+        )
 
 if __name__ == '__main__':
     console = Admin()
