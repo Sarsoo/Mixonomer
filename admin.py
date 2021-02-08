@@ -49,7 +49,6 @@ class Admin(Cmd):
 
     def prepare_frontend(self):
         print('>> building css')
-        print(f'sass --style=compressed {scss_rel_path} {css_rel_path}')
         subprocess.check_call(['sass', '--style=compressed', str(scss_rel_path), str(css_rel_path)], shell=True)
 
         print('>> building javascript')
@@ -71,7 +70,7 @@ class Admin(Cmd):
         )
 
     def do_all(self, args):
-        self.prepare_frontend()
+        # self.prepare_frontend()
         self.prepare_stage()
 
         self.prepare_main('api')
