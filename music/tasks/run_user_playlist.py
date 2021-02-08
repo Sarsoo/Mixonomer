@@ -21,40 +21,51 @@ from music.model.playlist import Playlist
 logger = logging.getLogger(__name__)
 
 
-def run_user_playlist(username, playlist_name):
+def run_user_playlist(user, playlist, spotnet=None, fmnet=None):
     """Generate and upadate a user's playlist"""
-    user = User.collection.filter('username', '==', username.strip().lower()).get()
 
     # PRE-RUN CHECKS
+
+    if isinstance(user, str):
+        username = user
+        user = User.collection.filter('username', '==', username.strip().lower()).get()
+    else:
+        username = user.username
+
     if user is None:
-        logger.error(f'user not found {username} / {playlist_name}')
-        return
+        logger.error(f'user {username} not found')
+        raise NameError(f'User {username} not found')
 
-    logger.info(f'running {username} / {playlist_name}')
-
-    playlist = Playlist.collection.parent(user.key).filter('name', '==', playlist_name).get()
-
+    if isinstance(playlist, str):
+        playlist_name = playlist
+        playlist = Playlist.collection.parent(user.key).filter('name', '==', playlist_name).get()
+    else:
+        playlist_name = playlist.name
+    
     if playlist is None:
         logger.critical(f'playlist not found {username} / {playlist_name}')
-        return
+        raise NameError(f'Playlist {playlist_name} not found for {username}')
 
     if playlist.uri is None:
         logger.critical(f'no playlist id to populate {username} / {playlist_name}')
-        return
+        raise AttributeError(f'No URI for {playlist_name} ({username})')
 
     # END CHECKS
 
-    net = database.get_authed_spotify_network(user)
+    logger.info(f'running {username} / {playlist_name}')
 
-    if net is None:
+    if spotnet is None:
+        spotnet = database.get_authed_spotify_network(user)
+
+    if spotnet is None:
         logger.error(f'no spotify network returned for {username} / {playlist_name}')
-        return
+        raise NameError(f'No Spotify network returned ({username} / {playlist_name})')
 
     try:
-        user_playlists = net.playlists()
-    except SpotifyNetworkException:
+        user_playlists = spotnet.playlists()
+    except SpotifyNetworkException as e:
         logger.exception(f'error occured while retrieving playlists {username} / {playlist_name}')
-        return
+        raise e
 
     part_generator = PartGenerator(user=user)
     part_names = part_generator.get_recursive_parts(playlist.name)
@@ -82,7 +93,7 @@ def run_user_playlist(username, playlist_name):
             log_name = part_playlist.name
 
         try:
-            _tracks = net.playlist_tracks(uri=uri)
+            _tracks = spotnet.playlist_tracks(uri=uri)
             if _tracks and len(_tracks) > 0:
                 playlist_tracks += _tracks
             else:
@@ -95,7 +106,7 @@ def run_user_playlist(username, playlist_name):
     # LIBRARY
     if playlist.include_library_tracks:
         try:
-            library_tracks = net.saved_tracks()
+            library_tracks = spotnet.saved_tracks()
             if library_tracks and len(library_tracks) > 0:
                 playlist_tracks += library_tracks
             else:
@@ -118,10 +129,12 @@ def run_user_playlist(username, playlist_name):
             except KeyError:
                 logger.error(f'invalid last.fm chart range found {playlist.chart_range}, '
                              f'defaulting to 1 month {username} / {playlist_name}')
+            
+            if fmnet is None:
+                fmnet = database.get_authed_lastfm_network(user)
 
-            fmnet = database.get_authed_lastfm_network(user)
             if fmnet is not None:
-                chart_tracks = map_lastfm_track_chart_to_spotify(spotnet=net,
+                chart_tracks = map_lastfm_track_chart_to_spotify(spotnet=spotnet,
                                                                  fmnet=fmnet,
                                                                  period=chart_range,
                                                                  limit=playlist.chart_limit)
@@ -142,7 +155,7 @@ def run_user_playlist(username, playlist_name):
     # RECOMMENDATIONS
     if playlist.include_recommendations:
         try:
-            recommendations = net.recommendations(tracks=[i.uri.object_id for i, j
+            recommendations = spotnet.recommendations(tracks=[i.uri.object_id for i, j
                                                           in get_track_objects(
                                                                 random.sample(playlist_tracks,
                                                                       k=min(5, len(playlist_tracks))
@@ -162,7 +175,7 @@ def run_user_playlist(username, playlist_name):
 
     # EXECUTE
     try:
-        net.replace_playlist_tracks(uri=playlist.uri, uris=[i.uri for i, j in get_track_objects(playlist_tracks)])
+        spotnet.replace_playlist_tracks(uri=playlist.uri, uris=[i.uri for i, j in get_track_objects(playlist_tracks)])
 
         if playlist.description_overwrite:
             string = playlist.description_overwrite
@@ -177,7 +190,7 @@ def run_user_playlist(username, playlist_name):
             return None
 
         try:
-            net.change_playlist_details(uri=playlist.uri, description=string)
+            spotnet.change_playlist_details(uri=playlist.uri, description=string)
         except SpotifyNetworkException:
             logger.exception(f'error changing description for {username} / {playlist_name}')
 

@@ -7,7 +7,7 @@ def update_tag(event, context):
         if 'username' in event['attributes'] and 'tag_id' in event['attributes']:
 
             from music.tasks.update_tag import update_tag as do_update_tag
-            do_update_tag(username=event['attributes']['username'], tag_id=event['attributes']["tag_id"])
+            do_update_tag(user=event['attributes']['username'], tag=event['attributes']["tag_id"])
 
         else:
             logger.error('no parameters in event attributes')

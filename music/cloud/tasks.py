@@ -68,7 +68,7 @@ def update_playlists(username):
             if os.environ.get('DEPLOY_DESTINATION', None) == 'PROD':
                 run_user_playlist_task(username, iterate_playlist.name, seconds_delay)
             else:
-                run_user_playlist(username, iterate_playlist.name)
+                run_user_playlist(user, iterate_playlist)
 
             seconds_delay += 6
 

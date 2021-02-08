@@ -7,7 +7,7 @@ def run_user_playlist(event, context):
         if 'username' in event['attributes'] and 'name' in event['attributes']:
 
             from music.tasks.run_user_playlist import run_user_playlist as do_run_user_playlist
-            do_run_user_playlist(username=event['attributes']['username'], playlist_name=event['attributes']["name"])
+            do_run_user_playlist(user=event['attributes']['username'], playlist=event['attributes']["name"])
 
         else:
             logger.error('no parameters in event attributes')

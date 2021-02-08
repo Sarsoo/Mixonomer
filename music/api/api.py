@@ -234,7 +234,7 @@ def run_playlist(user=None):
     if os.environ.get('DEPLOY_DESTINATION', None) == 'PROD':
         queue_run_user_playlist(user.username, request.args['name'])  # pass to either cloud tasks or functions
     else:
-        run_user_playlist(user.username, request.args['name'])  # update synchronously
+        run_user_playlist(user, request.args['name'])  # update synchronously
 
     return jsonify({'message': 'execution requested', 'status': 'success'}), 200
 

@@ -37,7 +37,7 @@ def offload_or_run_user_playlist(username: str, playlist_name: str):
         run_user_playlist_function(username=username, playlist_name=playlist_name)
 
     if config.playlist_cloud_operating_mode == 'task':
-        run_now(username=username, playlist_name=playlist_name)
+        run_now(user=username, playlist=playlist_name)
 
     elif config.playlist_cloud_operating_mode == 'function':
         logger.debug(f'offloading {username} / {playlist_name} to cloud function')

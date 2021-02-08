@@ -133,7 +133,7 @@ def tag_refresh(tag_id, user=None):
     if os.environ.get('DEPLOY_DESTINATION', None) == 'PROD':
         serverless_update_tag(username=user.username, tag_id=tag_id)
     else:
-        update_tag(username=user.username, tag_id=tag_id)
+        update_tag(user=user, tag=tag_id)
 
     return jsonify({"message": 'tag updated', "status": "success"}), 200
 
