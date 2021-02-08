@@ -45,28 +45,27 @@ class Admin(Cmd):
         #     )
 
         # os.chdir(stage_dir)
-        subprocess.check_call(['gcloud', 'config', 'set', 'project', 'sarsooxyz'], shell=True)
+        subprocess.check_call('gcloud config set project sarsooxyz', shell=True)
 
     def prepare_frontend(self):
         print('>> building css')
-        subprocess.check_call(['sass', '--style=compressed', str(scss_rel_path), str(css_rel_path)], shell=True)
+        subprocess.check_call(f'sass --style=compressed {str(scss_rel_path)} {str(css_rel_path)}', shell=True)
 
         print('>> building javascript')
-        subprocess.check_call(['npm', 'run', 'build'], shell=True)
+        subprocess.check_call('npm run build', shell=True)
 
     def prepare_main(self, path):
         print('>> preparing main.py')
         shutil.copy(f'main.{path}.py', 'main.py')
 
     def deploy_function(self, name, timeout: int = 60, region='europe-west2'):
-        subprocess.check_call([
-            'gcloud', 'functions', 'deploy', name,
-            '--region', region,
-            '--runtime=python38',
-            '--trigger-topic', name,
-            '--set-env-vars', 'DEPLOY_DESTINATION=PROD',
-            f'--timeout={timeout}s'
-            ], shell=True
+        subprocess.check_call(
+            f'gcloud functions deploy {name} '
+            f'--region {region} '
+            '--runtime=python38 '
+            f'--trigger-topic {name} '
+            '--set-env-vars DEPLOY_DESTINATION=PROD '
+            f'--timeout={timeout}s', shell=True
         )
 
     def do_all(self, args):
@@ -75,7 +74,7 @@ class Admin(Cmd):
 
         self.prepare_main('api')
         print('>> deploying api')
-        subprocess.check_call(['gcloud', 'app', 'deploy'], shell=True)
+        subprocess.check_call('gcloud app deploy', shell=True)
 
         self.prepare_main('update_tag')
         print('>> deploying tag function')
@@ -92,7 +91,7 @@ class Admin(Cmd):
         self.prepare_main('api')
 
         print('>> deploying')
-        subprocess.check_call(['gcloud', 'app', 'deploy'], shell=True)
+        subprocess.check_call('gcloud app deploy', shell=True)
 
     def do_tag(self, args):
         self.prepare_stage()
@@ -148,10 +147,10 @@ class Admin(Cmd):
         exit(0)
 
     def do_sass(self, args):
-        subprocess.check_call(['sass', '--style=compressed', str(scss_rel_path), str(css_rel_path)], shell=True)
+        subprocess.check_call(f'sass --style=compressed {str(scss_rel_path)} {str(css_rel_path)}', shell=True)
 
     def do_watchsass(self, args):
-        subprocess.check_call(['sass', '--style=compressed', '--watch', str(scss_rel_path), str(css_rel_path)], shell=True)
+        subprocess.check_call(f'sass --style=compressed --watch {str(scss_rel_path)} {str(css_rel_path)}', shell=True)
 
     def do_rename(self, args):
         from music.model.user import User
@@ -174,13 +173,13 @@ class Admin(Cmd):
         playlist.update()
 
     def do_depend(self, args):
-        return subprocess.check_output(['poetry', 'export', '-f', 'requirements.txt', '--output', 'requirements.txt'], shell=True, text=True)
+        return subprocess.check_output('poetry export -f requirements.txt --output requirements.txt', shell=True, text=True)
 
     def do_filt_depend(self, args):
         self.export_filtered_dependencies()
 
     def export_filtered_dependencies(self):
-        string = subprocess.check_output(['poetry', 'export', '-f', 'requirements.txt', '--without-hashes'], shell=True, text=True)
+        string = subprocess.check_output('poetry export -f requirements.txt --without-hashes', shell=True, text=True)
 
         depend = string.split('\n')
         
@@ -194,9 +193,7 @@ class Admin(Cmd):
 
 def test():
     os.environ['GOOGLE_APPLICATION_CREDENTIALS'] = 'service.json'
-    subprocess.check_call(
-            ['python', '-u', '-m', 'unittest', 'discover', "-s", "tests"], shell=True
-        )
+    subprocess.check_call("python -u -m unittest discover -s tests", shell=True)
 
 if __name__ == '__main__':
     console = Admin()
