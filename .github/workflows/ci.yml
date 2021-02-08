@@ -80,13 +80,6 @@ jobs:
         with:
           node-version: 14
 
-      # JS for compiling scss
-      - name: Compile Sass
-        uses: gha-utilities/sass-build@v0.3.5
-        with:
-          source: src/scss/style.scss
-          destination: build/style.css
-
       # JS install from lock.json 
       - name: Install Node Packages
         run: npm ci
@@ -94,6 +87,13 @@ jobs:
       # JS will be built again, for flagging errors
       - name: Compile front-end
         run: npm run build --if-present
+
+      # JS for compiling scss
+      - name: Compile Sass
+        uses: gha-utilities/sass-build@v0.3.5
+        with:
+          source: src/scss/style.scss
+          destination: build/style.css
 
       # DEPLOY for setting up cloud API
       - name: Set up Cloud SDK
