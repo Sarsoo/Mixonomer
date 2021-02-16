@@ -16,7 +16,7 @@ jobs:
       matrix:
         python-version: [3.8]
         poetry-version: [1.1.4]
-        # node: [ '10', '12', '14' ]
+        node: [14]
         os: [ubuntu-20.04, windows-latest]
     runs-on: ${{ matrix.os }}
     steps:
@@ -51,15 +51,19 @@ jobs:
         run: poetry run python -m unittest discover -s tests
 
       # JS setup for testing
-      # - name: Install Node ${{ matrix.node }}
-      #   uses: actions/setup-node@v2
-      #   with:
-      #     node-version: ${{ matrix.node }}
+      - name: Install Node ${{ matrix.node }}
+        uses: actions/setup-node@v2
+        with:
+          node-version: ${{ matrix.node }}
 
       # JS install from lock.json
-      # - name: Install Node Packages
-      #   run: npm ci
+      - name: Install Node Packages
+        run: npm ci
       
+      # JS build for checking errors
+      - name: Compile Front-end
+        run: npm run build --if-present
+
       # JS tests
       # - name: Run JavaScript Tests
       #   run: npm test
@@ -81,6 +85,10 @@ jobs:
         uses: abatilo/actions-poetry@v2.1.0
         with:
           poetry-version: 1.1.4
+
+      # PYTHON Export Poetry dependencies as requirements.txt
+      - name: Export Poetry Dependencies
+        run: python admin.py pydepend
       
       # JS setup
       - name: Install Node 14
@@ -93,7 +101,7 @@ jobs:
         run: npm ci
 
       # JS will be built again, for flagging errors
-      - name: Compile front-end
+      - name: Compile Front-end
         run: npm run build --if-present
 
       # JS for compiling scss
@@ -111,10 +119,34 @@ jobs:
           service_account_key: ${{ secrets.GCP_SA_KEY }}
           export_default_credentials: true
 
-      # DEPLOY for deploying app engine API and main functions
-      - name: Deploy API & Main Functions
-        run: python admin.py all
+      # DEPLOY set project
+      - name: Set GCP Project
+        run: python admin.py set_project
 
-      # DEPLOY for deploying cron functions
-      - name: Deploy Cron Functions
-        run: python admin.py all_cron
+      # DEPLOY app engine service, -nb for skipping compile
+      - name: Deploy App Engine Service
+        run: python admin.py app -nb
+
+      ### MAIN FUNCTIONS
+
+      # DEPLOY update_tag function
+      - name: Deploy update_tag Function
+        run: python admin.py tag
+
+      # DEPLOY run_user_playlist function
+      - name: Deploy run_user_playlist Function
+        run: python admin.py playlist
+
+      ### CRON FUNCTIONS
+
+      # DEPLOY run_all_playlists function
+      - name: Deploy run_all_playlists Function
+        run: python admin.py playlist_cron
+
+      # DEPLOY run_all_playlist_stats function
+      - name: Deploy run_all_playlist_stats Function
+        run: python admin.py playlist_stats_cron
+
+      # DEPLOY run_all_tags function
+      - name: Deploy run_all_tags Function
+        run: python admin.py tags_cron
