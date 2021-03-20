@@ -1,13 +1,5 @@
 name: test and deploy
-on:
-  # Trigger the workflow on push or pull request,
-  # but only for the master branch
-  push:
-    branches:
-      - master
-  pull_request:
-    branches:
-      - master
+on: [push, pull_request]
 
 jobs:
   build:
@@ -71,6 +63,7 @@ jobs:
   deploy:
     runs-on: ubuntu-20.04
     needs: build # for ignoring bad builds
+    if: github.event_name == 'push' && github.ref == 'refs/heads/master'
     steps:
       - uses: actions/checkout@v2 # get source
 
