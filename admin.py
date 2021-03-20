@@ -245,6 +245,10 @@ def test():
     os.environ['GOOGLE_APPLICATION_CREDENTIALS'] = 'service.json'
     subprocess.check_call("python -u -m unittest discover -s tests", shell=True)
 
+def run():
+    os.environ['GOOGLE_APPLICATION_CREDENTIALS'] = 'service.json'
+    subprocess.check_call("python main.api.py", shell=True)
+
 if __name__ == '__main__':
     console = Admin()
     if len(sys.argv) > 1:

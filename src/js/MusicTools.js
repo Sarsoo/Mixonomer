@@ -27,7 +27,6 @@ import { Build, PieChart, QueueMusic, ExitToApp, AccountCircle, KeyboardBackspac
 const axios = require('axios');
 
 const LazyIndex = React.lazy(() => import("./Index/Index"))
-const LazyMaths = React.lazy(() => import("./Maths/MathsRouter"))
 const LazyPlaylists = React.lazy(() => import("./Playlist/AllPlaylistsRouter"))
 const LazyPlaylistView = React.lazy(() => import("./Playlist/View/PlaylistRouter"))
 const LazySettings = React.lazy(() => import("./Settings/SettingsRouter"))
@@ -123,10 +122,6 @@ class MusicTools extends Component {
                                 <ListItemIcon><GroupWork /></ListItemIcon>
                                 <ListItemText primary="Tags" />
                             </ListItem>
-                            <ListItem button key="maths" component={Link} to='/app/maths/count'>
-                                <ListItemIcon><PieChart /></ListItemIcon>
-                                <ListItemText primary="Maths" />
-                            </ListItem>
                             <ListItem button key="settings" component={Link} to='/app/settings/password'>
                                 <ListItemIcon><Build /></ListItemIcon>
                                 <ListItemText primary="Settings" />
@@ -155,7 +150,6 @@ class MusicTools extends Component {
                                 <Route path="/app/playlists" component={LazyPlaylists} />
                                 <Route path="/app/tags" component={LazyTags} />
                                 <Route path="/app/tag/:tag_id" component={LazyTag} />
-                                <Route path="/app/maths" component={LazyMaths} />
                                 <Route path="/app/settings" component={LazySettings} />
                                 { this.state.type == 'admin' && <Route path="/app/admin" component={LazyAdmin} /> }
                                 <Route path='/app/playlist/:name' component={LazyPlaylistView} />
