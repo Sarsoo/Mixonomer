@@ -305,6 +305,7 @@ export class Edit extends Component{
     render(){
 
         var date = new Date();
+        console.log("hello from edit");
 
         const table = (
             <div style={{maxWidth: '1000px', margin: 'auto', marginTop: '20px'}}>

@@ -9,6 +9,7 @@ repository = "https://github.com/Sarsoo/Music-Tools"
 
 [tool.poetry.scripts]
 test = 'admin:test'
+start = 'admin:run'
 
 [tool.poetry.dependencies]
 python = "^3.8"
