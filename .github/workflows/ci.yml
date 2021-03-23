@@ -92,7 +92,7 @@ jobs:
           export_default_credentials: true # <=== need to run through modules later generating docs
 
       - name: Generate Documentation
-        run: sphinx-build docs public -b html
+        run: poetry run sphinx-build docs public -b html
 
       - name: Deploy To Pages
         uses: peaceiris/actions-gh-pages@v3
