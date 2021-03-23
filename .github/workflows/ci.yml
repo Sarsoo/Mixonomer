@@ -60,7 +60,7 @@ jobs:
       # - name: Run JavaScript Tests
       #   run: npm test
 
-  generate docs:
+  documentation:
     runs-on: ubuntu-20.04
     needs: build # for ignoring bad builds
     if: github.event_name == 'push' && github.ref == 'refs/heads/master'
