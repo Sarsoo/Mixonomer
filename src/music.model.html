@@ -1,0 +1,588 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>music.model package &#8212; Music Tools  documentation</title>
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/alabaster.css" type="text/css" />
+    <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="music.tasks package" href="music.tasks.html" />
+    <link rel="prev" title="music.db package" href="music.db.html" />
+   
+  <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <div class="section" id="music-model-package">
+<h1>music.model package<a class="headerlink" href="#music-model-package" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="module-music.model.config">
+<span id="music-model-config-module"></span><h2>music.model.config module<a class="headerlink" href="#module-music.model.config" title="Permalink to this headline">¶</a></h2>
+<dl class="py class">
+<dt id="music.model.config.Config">
+<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">music.model.config.</span></code><code class="sig-name descname"><span class="pre">Config</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#music.model.config.Config" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">fireo.models.model.Model</span></code></p>
+<dl class="py class">
+<dt id="music.model.config.Config.Meta">
+<em class="property"><span class="pre">class</span> </em><code class="sig-name descname"><span class="pre">Meta</span></code><a class="headerlink" href="#music.model.config.Config.Meta" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="py attribute">
+<dt id="music.model.config.Config.Meta.collection_name">
+<code class="sig-name descname"><span class="pre">collection_name</span></code><em class="property"> <span class="pre">=</span> <span class="pre">'config'</span></em><a class="headerlink" href="#music.model.config.Config.Meta.collection_name" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="music.model.config.Config.collection">
+<code class="sig-name descname"><span class="pre">collection</span></code><em class="property"><span class="pre">:</span> <span class="pre">fireo.managers.managers.Manager</span></em><em class="property"> <span class="pre">=</span> <span class="pre">&lt;fireo.managers.managers.Manager</span> <span class="pre">object&gt;</span></em><a class="headerlink" href="#music.model.config.Config.collection" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="music.model.config.Config.collection_name">
+<code class="sig-name descname"><span class="pre">collection_name</span></code><em class="property"> <span class="pre">=</span> <span class="pre">'config'</span></em><a class="headerlink" href="#music.model.config.Config.collection_name" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="music.model.config.Config.last_fm_client_id">
+<code class="sig-name descname"><span class="pre">last_fm_client_id</span></code><em class="property"> <span class="pre">=</span> <span class="pre">None</span></em><a class="headerlink" href="#music.model.config.Config.last_fm_client_id" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="music.model.config.Config.playlist_cloud_operating_mode">
+<code class="sig-name descname"><span class="pre">playlist_cloud_operating_mode</span></code><em class="property"> <span class="pre">=</span> <span class="pre">None</span></em><a class="headerlink" href="#music.model.config.Config.playlist_cloud_operating_mode" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="music.model.config.Config.secret_key">
+<code class="sig-name descname"><span class="pre">secret_key</span></code><em class="property"> <span class="pre">=</span> <span class="pre">None</span></em><a class="headerlink" href="#music.model.config.Config.secret_key" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="music.model.config.Config.spotify_client_id">
+<code class="sig-name descname"><span class="pre">spotify_client_id</span></code><em class="property"> <span class="pre">=</span> <span class="pre">None</span></em><a class="headerlink" href="#music.model.config.Config.spotify_client_id" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="music.model.config.Config.spotify_client_secret">
+<code class="sig-name descname"><span class="pre">spotify_client_secret</span></code><em class="property"> <span class="pre">=</span> <span class="pre">None</span></em><a class="headerlink" href="#music.model.config.Config.spotify_client_secret" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-music.model.playlist">
+<span id="music-model-playlist-module"></span><h2>music.model.playlist module<a class="headerlink" href="#module-music.model.playlist" title="Permalink to this headline">¶</a></h2>
+<dl class="py class">
+<dt id="music.model.playlist.Playlist">
+<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">music.model.playlist.</span></code><code class="sig-name descname"><span class="pre">Playlist</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#music.model.playlist.Playlist" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">fireo.models.model.Model</span></code></p>
+<p>Smart playlist</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>Model</strong> (<em>[</em><em>type</em><em>]</em>) – [description]</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>[description]</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>[type]</p>
+</dd>
+</dl>
+<dl class="py class">
+<dt id="music.model.playlist.Playlist.Meta">
+<em class="property"><span class="pre">class</span> </em><code class="sig-name descname"><span class="pre">Meta</span></code><a class="headerlink" href="#music.model.playlist.Playlist.Meta" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="py attribute">
+<dt id="music.model.playlist.Playlist.Meta.collection_name">
+<code class="sig-name descname"><span class="pre">collection_name</span></code><em class="property"> <span class="pre">=</span> <span class="pre">'playlists'</span></em><a class="headerlink" href="#music.model.playlist.Playlist.Meta.collection_name" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="music.model.playlist.Playlist.add_last_month">
+<code class="sig-name descname"><span class="pre">add_last_month</span></code><em class="property"> <span class="pre">=</span> <span class="pre">None</span></em><a class="headerlink" href="#music.model.playlist.Playlist.add_last_month" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="music.model.playlist.Playlist.add_this_month">
+<code class="sig-name descname"><span class="pre">add_this_month</span></code><em class="property"> <span class="pre">=</span> <span class="pre">None</span></em><a class="headerlink" href="#music.model.playlist.Playlist.add_this_month" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="music.model.playlist.Playlist.chart_limit">
+<code class="sig-name descname"><span class="pre">chart_limit</span></code><em class="property"> <span class="pre">=</span> <span class="pre">None</span></em><a class="headerlink" href="#music.model.playlist.Playlist.chart_limit" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="music.model.playlist.Playlist.chart_range">
+<code class="sig-name descname"><span class="pre">chart_range</span></code><em class="property"> <span class="pre">=</span> <span class="pre">None</span></em><a class="headerlink" href="#music.model.playlist.Playlist.chart_range" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="music.model.playlist.Playlist.collection">
+<code class="sig-name descname"><span class="pre">collection</span></code><em class="property"><span class="pre">:</span> <span class="pre">fireo.managers.managers.Manager</span></em><em class="property"> <span class="pre">=</span> <span class="pre">&lt;fireo.managers.managers.Manager</span> <span class="pre">object&gt;</span></em><a class="headerlink" href="#music.model.playlist.Playlist.collection" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="music.model.playlist.Playlist.collection_name">
+<code class="sig-name descname"><span class="pre">collection_name</span></code><em class="property"> <span class="pre">=</span> <span class="pre">'playlists'</span></em><a class="headerlink" href="#music.model.playlist.Playlist.collection_name" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="music.model.playlist.Playlist.day_boundary">
+<code class="sig-name descname"><span class="pre">day_boundary</span></code><em class="property"> <span class="pre">=</span> <span class="pre">None</span></em><a class="headerlink" href="#music.model.playlist.Playlist.day_boundary" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="music.model.playlist.Playlist.description_overwrite">
+<code class="sig-name descname"><span class="pre">description_overwrite</span></code><em class="property"> <span class="pre">=</span> <span class="pre">None</span></em><a class="headerlink" href="#music.model.playlist.Playlist.description_overwrite" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="music.model.playlist.Playlist.description_suffix">
+<code class="sig-name descname"><span class="pre">description_suffix</span></code><em class="property"> <span class="pre">=</span> <span class="pre">None</span></em><a class="headerlink" href="#music.model.playlist.Playlist.description_suffix" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="music.model.playlist.Playlist.include_library_tracks">
+<code class="sig-name descname"><span class="pre">include_library_tracks</span></code><em class="property"> <span class="pre">=</span> <span class="pre">None</span></em><a class="headerlink" href="#music.model.playlist.Playlist.include_library_tracks" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="music.model.playlist.Playlist.include_recommendations">
+<code class="sig-name descname"><span class="pre">include_recommendations</span></code><em class="property"> <span class="pre">=</span> <span class="pre">None</span></em><a class="headerlink" href="#music.model.playlist.Playlist.include_recommendations" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="music.model.playlist.Playlist.last_updated">
+<code class="sig-name descname"><span class="pre">last_updated</span></code><em class="property"> <span class="pre">=</span> <span class="pre">None</span></em><a class="headerlink" href="#music.model.playlist.Playlist.last_updated" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="music.model.playlist.Playlist.lastfm_stat_album_count">
+<code class="sig-name descname"><span class="pre">lastfm_stat_album_count</span></code><em class="property"> <span class="pre">=</span> <span class="pre">None</span></em><a class="headerlink" href="#music.model.playlist.Playlist.lastfm_stat_album_count" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="music.model.playlist.Playlist.lastfm_stat_album_percent">
+<code class="sig-name descname"><span class="pre">lastfm_stat_album_percent</span></code><em class="property"> <span class="pre">=</span> <span class="pre">None</span></em><a class="headerlink" href="#music.model.playlist.Playlist.lastfm_stat_album_percent" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="music.model.playlist.Playlist.lastfm_stat_artist_count">
+<code class="sig-name descname"><span class="pre">lastfm_stat_artist_count</span></code><em class="property"> <span class="pre">=</span> <span class="pre">None</span></em><a class="headerlink" href="#music.model.playlist.Playlist.lastfm_stat_artist_count" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="music.model.playlist.Playlist.lastfm_stat_artist_percent">
+<code class="sig-name descname"><span class="pre">lastfm_stat_artist_percent</span></code><em class="property"> <span class="pre">=</span> <span class="pre">None</span></em><a class="headerlink" href="#music.model.playlist.Playlist.lastfm_stat_artist_percent" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="music.model.playlist.Playlist.lastfm_stat_count">
+<code class="sig-name descname"><span class="pre">lastfm_stat_count</span></code><em class="property"> <span class="pre">=</span> <span class="pre">None</span></em><a class="headerlink" href="#music.model.playlist.Playlist.lastfm_stat_count" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="music.model.playlist.Playlist.lastfm_stat_last_refresh">
+<code class="sig-name descname"><span class="pre">lastfm_stat_last_refresh</span></code><em class="property"> <span class="pre">=</span> <span class="pre">None</span></em><a class="headerlink" href="#music.model.playlist.Playlist.lastfm_stat_last_refresh" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="music.model.playlist.Playlist.lastfm_stat_percent">
+<code class="sig-name descname"><span class="pre">lastfm_stat_percent</span></code><em class="property"> <span class="pre">=</span> <span class="pre">None</span></em><a class="headerlink" href="#music.model.playlist.Playlist.lastfm_stat_percent" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="music.model.playlist.Playlist.mutable_keys">
+<code class="sig-name descname"><span class="pre">mutable_keys</span></code><em class="property"> <span class="pre">=</span> <span class="pre">['type',</span> <span class="pre">'include_recommendations',</span> <span class="pre">'recommendation_sample',</span> <span class="pre">'include_library_tracks',</span> <span class="pre">'parts',</span> <span class="pre">'playlist_references',</span> <span class="pre">'shuffle',</span> <span class="pre">'sort',</span> <span class="pre">'description_overwrite',</span> <span class="pre">'description_suffix',</span> <span class="pre">'add_last_month',</span> <span class="pre">'add_this_month',</span> <span class="pre">'day_boundary',</span> <span class="pre">'chart_range',</span> <span class="pre">'chart_limit']</span></em><a class="headerlink" href="#music.model.playlist.Playlist.mutable_keys" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="music.model.playlist.Playlist.name">
+<code class="sig-name descname"><span class="pre">name</span></code><em class="property"> <span class="pre">=</span> <span class="pre">None</span></em><a class="headerlink" href="#music.model.playlist.Playlist.name" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="music.model.playlist.Playlist.parts">
+<code class="sig-name descname"><span class="pre">parts</span></code><em class="property"> <span class="pre">=</span> <span class="pre">None</span></em><a class="headerlink" href="#music.model.playlist.Playlist.parts" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="music.model.playlist.Playlist.playlist_references">
+<code class="sig-name descname"><span class="pre">playlist_references</span></code><em class="property"> <span class="pre">=</span> <span class="pre">None</span></em><a class="headerlink" href="#music.model.playlist.Playlist.playlist_references" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="music.model.playlist.Playlist.recommendation_sample">
+<code class="sig-name descname"><span class="pre">recommendation_sample</span></code><em class="property"> <span class="pre">=</span> <span class="pre">None</span></em><a class="headerlink" href="#music.model.playlist.Playlist.recommendation_sample" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="music.model.playlist.Playlist.shuffle">
+<code class="sig-name descname"><span class="pre">shuffle</span></code><em class="property"> <span class="pre">=</span> <span class="pre">None</span></em><a class="headerlink" href="#music.model.playlist.Playlist.shuffle" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="music.model.playlist.Playlist.sort">
+<code class="sig-name descname"><span class="pre">sort</span></code><em class="property"> <span class="pre">=</span> <span class="pre">None</span></em><a class="headerlink" href="#music.model.playlist.Playlist.sort" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="music.model.playlist.Playlist.to_dict">
+<code class="sig-name descname"><span class="pre">to_dict</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#music.model.playlist.Playlist.to_dict" title="Permalink to this definition">¶</a></dt>
+<dd><p>Convert model into dict</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="music.model.playlist.Playlist.type">
+<code class="sig-name descname"><span class="pre">type</span></code><em class="property"> <span class="pre">=</span> <span class="pre">None</span></em><a class="headerlink" href="#music.model.playlist.Playlist.type" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="music.model.playlist.Playlist.uri">
+<code class="sig-name descname"><span class="pre">uri</span></code><em class="property"> <span class="pre">=</span> <span class="pre">None</span></em><a class="headerlink" href="#music.model.playlist.Playlist.uri" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="music.model.playlist.Sort">
+<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">music.model.playlist.</span></code><code class="sig-name descname"><span class="pre">Sort</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#music.model.playlist.Sort" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">enum.Enum</span></code></p>
+<p>An enumeration.</p>
+<dl class="py attribute">
+<dt id="music.model.playlist.Sort.default">
+<code class="sig-name descname"><span class="pre">default</span></code><em class="property"> <span class="pre">=</span> <span class="pre">1</span></em><a class="headerlink" href="#music.model.playlist.Sort.default" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="music.model.playlist.Sort.release_date">
+<code class="sig-name descname"><span class="pre">release_date</span></code><em class="property"> <span class="pre">=</span> <span class="pre">3</span></em><a class="headerlink" href="#music.model.playlist.Sort.release_date" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="music.model.playlist.Sort.shuffle">
+<code class="sig-name descname"><span class="pre">shuffle</span></code><em class="property"> <span class="pre">=</span> <span class="pre">2</span></em><a class="headerlink" href="#music.model.playlist.Sort.shuffle" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-music.model.tag">
+<span id="music-model-tag-module"></span><h2>music.model.tag module<a class="headerlink" href="#module-music.model.tag" title="Permalink to this headline">¶</a></h2>
+<dl class="py class">
+<dt id="music.model.tag.Tag">
+<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">music.model.tag.</span></code><code class="sig-name descname"><span class="pre">Tag</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#music.model.tag.Tag" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">fireo.models.model.Model</span></code></p>
+<dl class="py class">
+<dt id="music.model.tag.Tag.Meta">
+<em class="property"><span class="pre">class</span> </em><code class="sig-name descname"><span class="pre">Meta</span></code><a class="headerlink" href="#music.model.tag.Tag.Meta" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="py attribute">
+<dt id="music.model.tag.Tag.Meta.collection_name">
+<code class="sig-name descname"><span class="pre">collection_name</span></code><em class="property"> <span class="pre">=</span> <span class="pre">'tags'</span></em><a class="headerlink" href="#music.model.tag.Tag.Meta.collection_name" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="music.model.tag.Tag.albums">
+<code class="sig-name descname"><span class="pre">albums</span></code><em class="property"> <span class="pre">=</span> <span class="pre">None</span></em><a class="headerlink" href="#music.model.tag.Tag.albums" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="music.model.tag.Tag.artists">
+<code class="sig-name descname"><span class="pre">artists</span></code><em class="property"> <span class="pre">=</span> <span class="pre">None</span></em><a class="headerlink" href="#music.model.tag.Tag.artists" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="music.model.tag.Tag.collection">
+<code class="sig-name descname"><span class="pre">collection</span></code><em class="property"><span class="pre">:</span> <span class="pre">fireo.managers.managers.Manager</span></em><em class="property"> <span class="pre">=</span> <span class="pre">&lt;fireo.managers.managers.Manager</span> <span class="pre">object&gt;</span></em><a class="headerlink" href="#music.model.tag.Tag.collection" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="music.model.tag.Tag.collection_name">
+<code class="sig-name descname"><span class="pre">collection_name</span></code><em class="property"> <span class="pre">=</span> <span class="pre">'tags'</span></em><a class="headerlink" href="#music.model.tag.Tag.collection_name" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="music.model.tag.Tag.count">
+<code class="sig-name descname"><span class="pre">count</span></code><em class="property"> <span class="pre">=</span> <span class="pre">None</span></em><a class="headerlink" href="#music.model.tag.Tag.count" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="music.model.tag.Tag.last_updated">
+<code class="sig-name descname"><span class="pre">last_updated</span></code><em class="property"> <span class="pre">=</span> <span class="pre">None</span></em><a class="headerlink" href="#music.model.tag.Tag.last_updated" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="music.model.tag.Tag.name">
+<code class="sig-name descname"><span class="pre">name</span></code><em class="property"> <span class="pre">=</span> <span class="pre">None</span></em><a class="headerlink" href="#music.model.tag.Tag.name" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="music.model.tag.Tag.proportion">
+<code class="sig-name descname"><span class="pre">proportion</span></code><em class="property"> <span class="pre">=</span> <span class="pre">None</span></em><a class="headerlink" href="#music.model.tag.Tag.proportion" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="music.model.tag.Tag.tag_id">
+<code class="sig-name descname"><span class="pre">tag_id</span></code><em class="property"> <span class="pre">=</span> <span class="pre">None</span></em><a class="headerlink" href="#music.model.tag.Tag.tag_id" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="music.model.tag.Tag.time_objects">
+<code class="sig-name descname"><span class="pre">time_objects</span></code><em class="property"> <span class="pre">=</span> <span class="pre">None</span></em><a class="headerlink" href="#music.model.tag.Tag.time_objects" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="music.model.tag.Tag.to_dict">
+<code class="sig-name descname"><span class="pre">to_dict</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#music.model.tag.Tag.to_dict" title="Permalink to this definition">¶</a></dt>
+<dd><p>Convert model into dict</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="music.model.tag.Tag.total_time">
+<code class="sig-name descname"><span class="pre">total_time</span></code><em class="property"> <span class="pre">=</span> <span class="pre">None</span></em><a class="headerlink" href="#music.model.tag.Tag.total_time" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="music.model.tag.Tag.total_time_ms">
+<code class="sig-name descname"><span class="pre">total_time_ms</span></code><em class="property"> <span class="pre">=</span> <span class="pre">None</span></em><a class="headerlink" href="#music.model.tag.Tag.total_time_ms" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="music.model.tag.Tag.total_user_scrobbles">
+<code class="sig-name descname"><span class="pre">total_user_scrobbles</span></code><em class="property"> <span class="pre">=</span> <span class="pre">None</span></em><a class="headerlink" href="#music.model.tag.Tag.total_user_scrobbles" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="music.model.tag.Tag.tracks">
+<code class="sig-name descname"><span class="pre">tracks</span></code><em class="property"> <span class="pre">=</span> <span class="pre">None</span></em><a class="headerlink" href="#music.model.tag.Tag.tracks" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="music.model.tag.Tag.username">
+<code class="sig-name descname"><span class="pre">username</span></code><em class="property"> <span class="pre">=</span> <span class="pre">None</span></em><a class="headerlink" href="#music.model.tag.Tag.username" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-music.model.user">
+<span id="music-model-user-module"></span><h2>music.model.user module<a class="headerlink" href="#module-music.model.user" title="Permalink to this headline">¶</a></h2>
+<dl class="py class">
+<dt id="music.model.user.User">
+<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">music.model.user.</span></code><code class="sig-name descname"><span class="pre">User</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#music.model.user.User" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">fireo.models.model.Model</span></code></p>
+<dl class="py class">
+<dt id="music.model.user.User.Meta">
+<em class="property"><span class="pre">class</span> </em><code class="sig-name descname"><span class="pre">Meta</span></code><a class="headerlink" href="#music.model.user.User.Meta" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="py attribute">
+<dt id="music.model.user.User.Meta.collection_name">
+<code class="sig-name descname"><span class="pre">collection_name</span></code><em class="property"> <span class="pre">=</span> <span class="pre">'spotify_users'</span></em><a class="headerlink" href="#music.model.user.User.Meta.collection_name" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="music.model.user.User.access_token">
+<code class="sig-name descname"><span class="pre">access_token</span></code><em class="property"> <span class="pre">=</span> <span class="pre">None</span></em><a class="headerlink" href="#music.model.user.User.access_token" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="music.model.user.User.check_password">
+<code class="sig-name descname"><span class="pre">check_password</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">password</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#music.model.user.User.check_password" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="music.model.user.User.collection">
+<code class="sig-name descname"><span class="pre">collection</span></code><em class="property"><span class="pre">:</span> <span class="pre">fireo.managers.managers.Manager</span></em><em class="property"> <span class="pre">=</span> <span class="pre">&lt;fireo.managers.managers.Manager</span> <span class="pre">object&gt;</span></em><a class="headerlink" href="#music.model.user.User.collection" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="music.model.user.User.collection_name">
+<code class="sig-name descname"><span class="pre">collection_name</span></code><em class="property"> <span class="pre">=</span> <span class="pre">'spotify_users'</span></em><a class="headerlink" href="#music.model.user.User.collection_name" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="music.model.user.User.email">
+<code class="sig-name descname"><span class="pre">email</span></code><em class="property"> <span class="pre">=</span> <span class="pre">None</span></em><a class="headerlink" href="#music.model.user.User.email" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="music.model.user.User.last_login">
+<code class="sig-name descname"><span class="pre">last_login</span></code><em class="property"> <span class="pre">=</span> <span class="pre">None</span></em><a class="headerlink" href="#music.model.user.User.last_login" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="music.model.user.User.last_refreshed">
+<code class="sig-name descname"><span class="pre">last_refreshed</span></code><em class="property"> <span class="pre">=</span> <span class="pre">None</span></em><a class="headerlink" href="#music.model.user.User.last_refreshed" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="music.model.user.User.lastfm_username">
+<code class="sig-name descname"><span class="pre">lastfm_username</span></code><em class="property"> <span class="pre">=</span> <span class="pre">None</span></em><a class="headerlink" href="#music.model.user.User.lastfm_username" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="music.model.user.User.locked">
+<code class="sig-name descname"><span class="pre">locked</span></code><em class="property"> <span class="pre">=</span> <span class="pre">None</span></em><a class="headerlink" href="#music.model.user.User.locked" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="music.model.user.User.password">
+<code class="sig-name descname"><span class="pre">password</span></code><em class="property"> <span class="pre">=</span> <span class="pre">None</span></em><a class="headerlink" href="#music.model.user.User.password" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="music.model.user.User.refresh_token">
+<code class="sig-name descname"><span class="pre">refresh_token</span></code><em class="property"> <span class="pre">=</span> <span class="pre">None</span></em><a class="headerlink" href="#music.model.user.User.refresh_token" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="music.model.user.User.spotify_linked">
+<code class="sig-name descname"><span class="pre">spotify_linked</span></code><em class="property"> <span class="pre">=</span> <span class="pre">None</span></em><a class="headerlink" href="#music.model.user.User.spotify_linked" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="music.model.user.User.to_dict">
+<code class="sig-name descname"><span class="pre">to_dict</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#music.model.user.User.to_dict" title="Permalink to this definition">¶</a></dt>
+<dd><p>Convert model into dict</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="music.model.user.User.token_expiry">
+<code class="sig-name descname"><span class="pre">token_expiry</span></code><em class="property"> <span class="pre">=</span> <span class="pre">None</span></em><a class="headerlink" href="#music.model.user.User.token_expiry" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="music.model.user.User.type">
+<code class="sig-name descname"><span class="pre">type</span></code><em class="property"> <span class="pre">=</span> <span class="pre">None</span></em><a class="headerlink" href="#music.model.user.User.type" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="music.model.user.User.username">
+<code class="sig-name descname"><span class="pre">username</span></code><em class="property"> <span class="pre">=</span> <span class="pre">None</span></em><a class="headerlink" href="#music.model.user.User.username" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="music.model.user.User.validated">
+<code class="sig-name descname"><span class="pre">validated</span></code><em class="property"> <span class="pre">=</span> <span class="pre">None</span></em><a class="headerlink" href="#music.model.user.User.validated" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-music.model">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-music.model" title="Permalink to this headline">¶</a></h2>
+<p>ORM layer containing the data model</p>
+</div>
+</div>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../index.html">Music Tools</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<p class="caption"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="modules.html">Modules</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="music.html">music package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="music.api.html">music.api package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="music.auth.html">music.auth package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="music.cloud.html">music.cloud package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="music.db.html">music.db package</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">music.model package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="music.tasks.html">music.tasks package</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../index.html">Documentation overview</a><ul>
+  <li><a href="modules.html">music</a><ul>
+  <li><a href="music.html">music package</a><ul>
+      <li>Previous: <a href="music.db.html" title="previous chapter">music.db package</a></li>
+      <li>Next: <a href="music.tasks.html" title="next chapter">music.tasks package</a></li>
+  </ul></li>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2021, Sarsoo.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 3.5.3</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+      |
+      <a href="../_sources/src/music.model.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

@@ -1,8 +1,0 @@
-dispatch:
-  # Default service serves the typical web resources and all static resources.
-  #- url: "sarsoo.xyz/*"
-  #  service: default
-
-  - url: "music.sarsoo.xyz/*"
-    service: spotify
-

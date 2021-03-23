@@ -1,0 +1,397 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>music.api package &#8212; Music Tools  documentation</title>
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/alabaster.css" type="text/css" />
+    <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="music.auth package" href="music.auth.html" />
+    <link rel="prev" title="music package" href="music.html" />
+   
+  <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <div class="section" id="music-api-package">
+<h1>music.api package<a class="headerlink" href="#music-api-package" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="module-music.api.admin">
+<span id="music-api-admin-module"></span><h2>music.api.admin module<a class="headerlink" href="#module-music.api.admin" title="Permalink to this headline">¶</a></h2>
+<dl class="py function">
+<dt id="music.api.admin.get_tasks">
+<code class="sig-prename descclassname"><span class="pre">music.api.admin.</span></code><code class="sig-name descname"><span class="pre">get_tasks</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">user</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#music.api.admin.get_tasks" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+<div class="section" id="module-music.api.api">
+<span id="music-api-api-module"></span><h2>music.api.api module<a class="headerlink" href="#module-music.api.api" title="Permalink to this headline">¶</a></h2>
+<dl class="py function">
+<dt id="music.api.api.all_playlists_route">
+<code class="sig-prename descclassname"><span class="pre">music.api.api.</span></code><code class="sig-name descname"><span class="pre">all_playlists_route</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">user</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#music.api.api.all_playlists_route" title="Permalink to this definition">¶</a></dt>
+<dd><p>Retrieve all playlists for a given user</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>user</strong> (<em>[</em><em>type</em><em>]</em><em>, </em><em>optional</em>) – [description]. Defaults to None.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>All playlists for given user</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>HTTP Response</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="music.api.api.all_users_route">
+<code class="sig-prename descclassname"><span class="pre">music.api.api.</span></code><code class="sig-name descname"><span class="pre">all_users_route</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">user</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#music.api.api.all_users_route" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt id="music.api.api.change_password">
+<code class="sig-prename descclassname"><span class="pre">music.api.api.</span></code><code class="sig-name descname"><span class="pre">change_password</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">user</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#music.api.api.change_password" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt id="music.api.api.image">
+<code class="sig-prename descclassname"><span class="pre">music.api.api.</span></code><code class="sig-name descname"><span class="pre">image</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">user</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#music.api.api.image" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt id="music.api.api.playlist_get_delete_route">
+<code class="sig-prename descclassname"><span class="pre">music.api.api.</span></code><code class="sig-name descname"><span class="pre">playlist_get_delete_route</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">user</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#music.api.api.playlist_get_delete_route" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt id="music.api.api.playlist_post_put_route">
+<code class="sig-prename descclassname"><span class="pre">music.api.api.</span></code><code class="sig-name descname"><span class="pre">playlist_post_put_route</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">user</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#music.api.api.playlist_post_put_route" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt id="music.api.api.run_playlist">
+<code class="sig-prename descclassname"><span class="pre">music.api.api.</span></code><code class="sig-name descname"><span class="pre">run_playlist</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">user</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#music.api.api.run_playlist" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt id="music.api.api.run_playlist_task">
+<code class="sig-prename descclassname"><span class="pre">music.api.api.</span></code><code class="sig-name descname"><span class="pre">run_playlist_task</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#music.api.api.run_playlist_task" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt id="music.api.api.run_user">
+<code class="sig-prename descclassname"><span class="pre">music.api.api.</span></code><code class="sig-name descname"><span class="pre">run_user</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">user</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#music.api.api.run_user" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt id="music.api.api.run_user_task">
+<code class="sig-prename descclassname"><span class="pre">music.api.api.</span></code><code class="sig-name descname"><span class="pre">run_user_task</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#music.api.api.run_user_task" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt id="music.api.api.run_users">
+<code class="sig-prename descclassname"><span class="pre">music.api.api.</span></code><code class="sig-name descname"><span class="pre">run_users</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">user</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#music.api.api.run_users" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt id="music.api.api.user_route">
+<code class="sig-prename descclassname"><span class="pre">music.api.api.</span></code><code class="sig-name descname"><span class="pre">user_route</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">user</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#music.api.api.user_route" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+<div class="section" id="module-music.api.decorators">
+<span id="music-api-decorators-module"></span><h2>music.api.decorators module<a class="headerlink" href="#module-music.api.decorators" title="Permalink to this headline">¶</a></h2>
+<dl class="py function">
+<dt id="music.api.decorators.admin_required">
+<code class="sig-prename descclassname"><span class="pre">music.api.decorators.</span></code><code class="sig-name descname"><span class="pre">admin_required</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">func</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#music.api.decorators.admin_required" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt id="music.api.decorators.check_dict">
+<code class="sig-prename descclassname"><span class="pre">music.api.decorators.</span></code><code class="sig-name descname"><span class="pre">check_dict</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">request_params</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">expected_args</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">func</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#music.api.decorators.check_dict" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt id="music.api.decorators.cloud_task">
+<code class="sig-prename descclassname"><span class="pre">music.api.decorators.</span></code><code class="sig-name descname"><span class="pre">cloud_task</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">func</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#music.api.decorators.cloud_task" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt id="music.api.decorators.gae_cron">
+<code class="sig-prename descclassname"><span class="pre">music.api.decorators.</span></code><code class="sig-name descname"><span class="pre">gae_cron</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">func</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#music.api.decorators.gae_cron" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt id="music.api.decorators.is_basic_authed">
+<code class="sig-prename descclassname"><span class="pre">music.api.decorators.</span></code><code class="sig-name descname"><span class="pre">is_basic_authed</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#music.api.decorators.is_basic_authed" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt id="music.api.decorators.is_logged_in">
+<code class="sig-prename descclassname"><span class="pre">music.api.decorators.</span></code><code class="sig-name descname"><span class="pre">is_logged_in</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#music.api.decorators.is_logged_in" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt id="music.api.decorators.lastfm_username_required">
+<code class="sig-prename descclassname"><span class="pre">music.api.decorators.</span></code><code class="sig-name descname"><span class="pre">lastfm_username_required</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">func</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#music.api.decorators.lastfm_username_required" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt id="music.api.decorators.login_or_basic_auth">
+<code class="sig-prename descclassname"><span class="pre">music.api.decorators.</span></code><code class="sig-name descname"><span class="pre">login_or_basic_auth</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">func</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#music.api.decorators.login_or_basic_auth" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt id="music.api.decorators.login_required">
+<code class="sig-prename descclassname"><span class="pre">music.api.decorators.</span></code><code class="sig-name descname"><span class="pre">login_required</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">func</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#music.api.decorators.login_required" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt id="music.api.decorators.spotify_link_required">
+<code class="sig-prename descclassname"><span class="pre">music.api.decorators.</span></code><code class="sig-name descname"><span class="pre">spotify_link_required</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">func</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#music.api.decorators.spotify_link_required" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt id="music.api.decorators.validate_args">
+<code class="sig-prename descclassname"><span class="pre">music.api.decorators.</span></code><code class="sig-name descname"><span class="pre">validate_args</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">expected_args</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#music.api.decorators.validate_args" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt id="music.api.decorators.validate_json">
+<code class="sig-prename descclassname"><span class="pre">music.api.decorators.</span></code><code class="sig-name descname"><span class="pre">validate_json</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">expected_args</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#music.api.decorators.validate_json" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+<div class="section" id="module-music.api.fm">
+<span id="music-api-fm-module"></span><h2>music.api.fm module<a class="headerlink" href="#module-music.api.fm" title="Permalink to this headline">¶</a></h2>
+<dl class="py function">
+<dt id="music.api.fm.daily_scrobbles">
+<code class="sig-prename descclassname"><span class="pre">music.api.fm.</span></code><code class="sig-name descname"><span class="pre">daily_scrobbles</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">user</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#music.api.fm.daily_scrobbles" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+<div class="section" id="module-music.api.player">
+<span id="music-api-player-module"></span><h2>music.api.player module<a class="headerlink" href="#module-music.api.player" title="Permalink to this headline">¶</a></h2>
+<dl class="py function">
+<dt id="music.api.player.next_track">
+<code class="sig-prename descclassname"><span class="pre">music.api.player.</span></code><code class="sig-name descname"><span class="pre">next_track</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">user</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#music.api.player.next_track" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt id="music.api.player.play">
+<code class="sig-prename descclassname"><span class="pre">music.api.player.</span></code><code class="sig-name descname"><span class="pre">play</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">user</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#music.api.player.play" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt id="music.api.player.shuffle">
+<code class="sig-prename descclassname"><span class="pre">music.api.player.</span></code><code class="sig-name descname"><span class="pre">shuffle</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">user</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#music.api.player.shuffle" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt id="music.api.player.volume">
+<code class="sig-prename descclassname"><span class="pre">music.api.player.</span></code><code class="sig-name descname"><span class="pre">volume</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">user</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#music.api.player.volume" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+<div class="section" id="module-music.api.spotfm">
+<span id="music-api-spotfm-module"></span><h2>music.api.spotfm module<a class="headerlink" href="#module-music.api.spotfm" title="Permalink to this headline">¶</a></h2>
+<dl class="py function">
+<dt id="music.api.spotfm.count">
+<code class="sig-prename descclassname"><span class="pre">music.api.spotfm.</span></code><code class="sig-name descname"><span class="pre">count</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">user</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#music.api.spotfm.count" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt id="music.api.spotfm.playlist_refresh">
+<code class="sig-prename descclassname"><span class="pre">music.api.spotfm.</span></code><code class="sig-name descname"><span class="pre">playlist_refresh</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">user</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#music.api.spotfm.playlist_refresh" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt id="music.api.spotfm.run_playlist_album_task">
+<code class="sig-prename descclassname"><span class="pre">music.api.spotfm.</span></code><code class="sig-name descname"><span class="pre">run_playlist_album_task</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#music.api.spotfm.run_playlist_album_task" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt id="music.api.spotfm.run_playlist_artist_task">
+<code class="sig-prename descclassname"><span class="pre">music.api.spotfm.</span></code><code class="sig-name descname"><span class="pre">run_playlist_artist_task</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#music.api.spotfm.run_playlist_artist_task" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt id="music.api.spotfm.run_playlist_track_task">
+<code class="sig-prename descclassname"><span class="pre">music.api.spotfm.</span></code><code class="sig-name descname"><span class="pre">run_playlist_track_task</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#music.api.spotfm.run_playlist_track_task" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt id="music.api.spotfm.run_user">
+<code class="sig-prename descclassname"><span class="pre">music.api.spotfm.</span></code><code class="sig-name descname"><span class="pre">run_user</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">user</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#music.api.spotfm.run_user" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt id="music.api.spotfm.run_user_task">
+<code class="sig-prename descclassname"><span class="pre">music.api.spotfm.</span></code><code class="sig-name descname"><span class="pre">run_user_task</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#music.api.spotfm.run_user_task" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt id="music.api.spotfm.run_users">
+<code class="sig-prename descclassname"><span class="pre">music.api.spotfm.</span></code><code class="sig-name descname"><span class="pre">run_users</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">user</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#music.api.spotfm.run_users" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+<div class="section" id="module-music.api.spotify">
+<span id="music-api-spotify-module"></span><h2>music.api.spotify module<a class="headerlink" href="#module-music.api.spotify" title="Permalink to this headline">¶</a></h2>
+<dl class="py function">
+<dt id="music.api.spotify.sort">
+<code class="sig-prename descclassname"><span class="pre">music.api.spotify.</span></code><code class="sig-name descname"><span class="pre">sort</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">user</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#music.api.spotify.sort" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+<div class="section" id="module-music.api.tag">
+<span id="music-api-tag-module"></span><h2>music.api.tag module<a class="headerlink" href="#module-music.api.tag" title="Permalink to this headline">¶</a></h2>
+<dl class="py function">
+<dt id="music.api.tag.delete_tag">
+<code class="sig-prename descclassname"><span class="pre">music.api.tag.</span></code><code class="sig-name descname"><span class="pre">delete_tag</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tag_id</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">user</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#music.api.tag.delete_tag" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt id="music.api.tag.get_tag">
+<code class="sig-prename descclassname"><span class="pre">music.api.tag.</span></code><code class="sig-name descname"><span class="pre">get_tag</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tag_id</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">user</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#music.api.tag.get_tag" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt id="music.api.tag.post_tag">
+<code class="sig-prename descclassname"><span class="pre">music.api.tag.</span></code><code class="sig-name descname"><span class="pre">post_tag</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tag_id</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">user</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#music.api.tag.post_tag" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt id="music.api.tag.put_tag">
+<code class="sig-prename descclassname"><span class="pre">music.api.tag.</span></code><code class="sig-name descname"><span class="pre">put_tag</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tag_id</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">user</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#music.api.tag.put_tag" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt id="music.api.tag.run_tag_task">
+<code class="sig-prename descclassname"><span class="pre">music.api.tag.</span></code><code class="sig-name descname"><span class="pre">run_tag_task</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#music.api.tag.run_tag_task" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt id="music.api.tag.tag_refresh">
+<code class="sig-prename descclassname"><span class="pre">music.api.tag.</span></code><code class="sig-name descname"><span class="pre">tag_refresh</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tag_id</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">user</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#music.api.tag.tag_refresh" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt id="music.api.tag.tag_route">
+<code class="sig-prename descclassname"><span class="pre">music.api.tag.</span></code><code class="sig-name descname"><span class="pre">tag_route</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tag_id</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">user</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#music.api.tag.tag_route" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt id="music.api.tag.tags">
+<code class="sig-prename descclassname"><span class="pre">music.api.tag.</span></code><code class="sig-name descname"><span class="pre">tags</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">user</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#music.api.tag.tags" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+<div class="section" id="module-music.api">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-music.api" title="Permalink to this headline">¶</a></h2>
+<p>Flask blueprints for loading the app endpoints</p>
+</div>
+</div>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../index.html">Music Tools</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<p class="caption"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="modules.html">Modules</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="music.html">music package</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">music.api package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="music.auth.html">music.auth package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="music.cloud.html">music.cloud package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="music.db.html">music.db package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="music.model.html">music.model package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="music.tasks.html">music.tasks package</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../index.html">Documentation overview</a><ul>
+  <li><a href="modules.html">music</a><ul>
+  <li><a href="music.html">music package</a><ul>
+      <li>Previous: <a href="music.html" title="previous chapter">music package</a></li>
+      <li>Next: <a href="music.auth.html" title="next chapter">music.auth package</a></li>
+  </ul></li>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2021, Sarsoo.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 3.5.3</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+      |
+      <a href="../_sources/src/music.api.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>
