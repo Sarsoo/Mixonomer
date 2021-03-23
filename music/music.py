@@ -12,6 +12,12 @@ logger = logging.getLogger(__name__)
 
 
 def create_app():
+    """Generate and retrieve a ready-to-run flask app
+
+    Returns:
+        Flask App: Music Tools app
+    """
+
     app = Flask(__name__, static_folder=os.path.join(os.path.dirname(__file__), '..', 'build'), template_folder="templates")
 
     config = Config.collection.get("config/music-tools")

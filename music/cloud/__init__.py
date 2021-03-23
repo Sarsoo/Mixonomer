@@ -1,3 +1,6 @@
+"""Infrastucture code include handing off tasks to Cloud Tasks or Cloud Functions
+"""
+
 import logging
 
 from music.model.config import Config

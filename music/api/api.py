@@ -30,6 +30,15 @@ logger = logging.getLogger(__name__)
 @blueprint.route('/playlists', methods=['GET'])
 @login_or_basic_auth
 def all_playlists_route(user=None):
+    """Retrieve all playlists for a given user
+
+    Args:
+        user ([type], optional): [description]. Defaults to None.
+
+    Returns:
+        HTTP Response: All playlists for given user
+    """
+
     assert user is not None
     return jsonify({
         'playlists': [i.to_dict() for i in Playlist.collection.parent(user.key).fetch()]

@@ -26,7 +26,8 @@ fmframework = { git = "https://github.com/Sarsoo/pyfmframework.git" }
 spotfm = { git = "https://github.com/Sarsoo/spotfm.git" }
 
 [tool.poetry.dev-dependencies]
-pylint = "2.5.3"
+pylint = "^2.5.3"
+Sphinx = "^3.5.3"
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]

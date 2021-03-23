@@ -16,6 +16,11 @@ logger = logging.getLogger(__name__)
 
 @blueprint.route('/login', methods=['GET', 'POST'])
 def login():
+    """Login route allowing retrieval of HTML page and submission of results
+
+    Returns:
+        HTTP Response: Home page redirect for GET, login request on POST
+    """
 
     if request.method == 'POST':
 

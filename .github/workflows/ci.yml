@@ -60,6 +60,46 @@ jobs:
       # - name: Run JavaScript Tests
       #   run: npm test
 
+  generate docs:
+    runs-on: ubuntu-20.04
+    needs: build # for ignoring bad builds
+    if: github.event_name == 'push' && github.ref == 'refs/heads/master'
+    steps:
+      - uses: actions/checkout@v2 # get source
+
+      # PYTHON
+      - name: Install Python 3.8
+        uses: actions/setup-python@v2
+        with:
+          python-version: 3.8
+
+      # PYTHON for dependency export only, not installing
+      - name: Install Poetry 1.1.4
+        uses: abatilo/actions-poetry@v2.1.0
+        with:
+          poetry-version: 1.1.4
+
+      # PYTHON install dependencies
+      - name: Install Python Dependencies
+        run: poetry install
+
+      # DEPLOY for setting up cloud API
+      - name: Set up Cloud SDK
+        uses: google-github-actions/setup-gcloud@master
+        with:
+          project_id: ${{ secrets.GCP_PROJECT_ID }}
+          service_account_key: ${{ secrets.GCP_SA_KEY }}
+          export_default_credentials: true # <=== need to run through modules later generating docs
+
+      - name: Generate Documentation
+        run: sphinx-build docs public -b html
+
+      - name: Deploy To Pages
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./public
+
   deploy:
     runs-on: ubuntu-20.04
     needs: build # for ignoring bad builds

@@ -11,6 +11,14 @@ class Sort(Enum):
 
 
 class Playlist(Model):
+    """Smart playlist
+
+    Args:
+        Model ([type]): [description]
+
+    Returns:
+        [type]: [description]
+    """
     class Meta:
         collection_name = 'playlists'
 

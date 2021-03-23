@@ -1,3 +1,9 @@
+"""Root module containing Music Tools backend
+
+Top level module with functions for creating app with loaded blueprints and initialising the logging stack
+
+"""
+
 import logging
 import os
 
