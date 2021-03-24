@@ -5,7 +5,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>music.db package &#8212; Music Tools  documentation</title>
+    <title>music.db &#8212; Music Tools  documentation</title>
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" href="../_static/alabaster.css" type="text/css" />
     <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
@@ -14,8 +14,8 @@
     <script src="../_static/doctools.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="music.model package" href="music.model.html" />
-    <link rel="prev" title="music.cloud package" href="music.cloud.html" />
+    <link rel="next" title="music.model" href="music.model.html" />
+    <link rel="prev" title="music.cloud" href="music.cloud.html" />
    
   <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
   
@@ -32,10 +32,11 @@
 
           <div class="body" role="main">
             
-  <div class="section" id="music-db-package">
-<h1>music.db package<a class="headerlink" href="#music-db-package" title="Permalink to this headline">¶</a></h1>
-<div class="section" id="submodules">
-<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
+  <div class="section" id="music-db">
+<h1>music.db<a class="headerlink" href="#music-db" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="module-music.db">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-music.db" title="Permalink to this headline">¶</a></h2>
+<p>Database interfacing components aside from the music.model ORM layer</p>
 </div>
 <div class="section" id="module-music.db.database">
 <span id="music-db-database-module"></span><h2>music.db.database module<a class="headerlink" href="#module-music.db.database" title="Permalink to this headline">¶</a></h2>
@@ -43,7 +44,7 @@
 <dt id="music.db.database.DatabaseUser">
 <em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">music.db.database.</span></code><code class="sig-name descname"><span class="pre">DatabaseUser</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">client_id</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">client_secret</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">access_token</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">refresh_token</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">user_id</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#music.db.database.DatabaseUser" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">spotframework.net.user.NetworkUser</span></code></p>
-<p>adding music tools username to spotframework network user</p>
+<p>Adding Music Tools username to spotframework network user</p>
 <dl class="py attribute">
 <dt id="music.db.database.DatabaseUser.user_id">
 <code class="sig-name descname"><span class="pre">user_id</span></code><em class="property"><span class="pre">:</span> <span class="pre">str</span></em><em class="property"> <span class="pre">=</span> <span class="pre">None</span></em><a class="headerlink" href="#music.db.database.DatabaseUser.user_id" title="Permalink to this definition">¶</a></dt>
@@ -53,18 +54,49 @@
 
 <dl class="py function">
 <dt id="music.db.database.get_authed_lastfm_network">
-<code class="sig-prename descclassname"><span class="pre">music.db.database.</span></code><code class="sig-name descname"><span class="pre">get_authed_lastfm_network</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">user</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#music.db.database.get_authed_lastfm_network" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<code class="sig-prename descclassname"><span class="pre">music.db.database.</span></code><code class="sig-name descname"><span class="pre">get_authed_lastfm_network</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">user</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><a class="reference internal" href="music.model.html#music.model.user.User" title="music.model.user.User"><span class="pre">music.model.user.User</span></a></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">fmframework.net.network.Network</span><span class="p"><span class="pre">]</span></span><a class="headerlink" href="#music.db.database.get_authed_lastfm_network" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get an authenticated fmframework network for a given user</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>user</strong> (<a class="reference internal" href="music.model.html#music.model.user.User" title="music.model.user.User"><em>User</em></a>) – Subject user to retrieve a network for</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Authenticated fmframework network</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>Optional[FmNetwork]</p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py function">
 <dt id="music.db.database.get_authed_spotify_network">
-<code class="sig-prename descclassname"><span class="pre">music.db.database.</span></code><code class="sig-name descname"><span class="pre">get_authed_spotify_network</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">user</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#music.db.database.get_authed_spotify_network" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<code class="sig-prename descclassname"><span class="pre">music.db.database.</span></code><code class="sig-name descname"><span class="pre">get_authed_spotify_network</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">user</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><a class="reference internal" href="music.model.html#music.model.user.User" title="music.model.user.User"><span class="pre">music.model.user.User</span></a></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">spotframework.net.network.Network</span><span class="p"><span class="pre">]</span></span><a class="headerlink" href="#music.db.database.get_authed_spotify_network" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get an authenticated spotframework network for a given user</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>user</strong> (<a class="reference internal" href="music.model.html#music.model.user.User" title="music.model.user.User"><em>User</em></a>) – Subject user to retrieve a network for</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Authenticated spotframework network</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>Optional[SpotifyNetwork]</p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py function">
 <dt id="music.db.database.refresh_token_database_callback">
-<code class="sig-prename descclassname"><span class="pre">music.db.database.</span></code><code class="sig-name descname"><span class="pre">refresh_token_database_callback</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">user</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#music.db.database.refresh_token_database_callback" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<code class="sig-prename descclassname"><span class="pre">music.db.database.</span></code><code class="sig-name descname"><span class="pre">refresh_token_database_callback</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">user</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><a class="reference internal" href="music.model.html#music.model.user.User" title="music.model.user.User"><span class="pre">music.model.user.User</span></a></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">None</span><a class="headerlink" href="#music.db.database.refresh_token_database_callback" title="Permalink to this definition">¶</a></dt>
+<dd><p>Callback for handling when a spotframework network updates user credemtials</p>
+<p>Used to store newly authenticated credentials</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>user</strong> (<a class="reference internal" href="music.model.html#music.model.user.User" title="music.model.user.User"><em>User</em></a>) – Subject user</p>
+</dd>
+</dl>
+</dd></dl>
 
 </div>
 <div class="section" id="module-music.db.part_generator">
@@ -73,32 +105,54 @@
 <dt id="music.db.part_generator.PartGenerator">
 <em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">music.db.part_generator.</span></code><code class="sig-name descname"><span class="pre">PartGenerator</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">user</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="music.model.html#music.model.user.User" title="music.model.user.User"><span class="pre">music.model.user.User</span></a><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">username</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#music.db.part_generator.PartGenerator" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Resolve a playlists components from other referenced smart playlists</p>
 <dl class="py method">
 <dt id="music.db.part_generator.PartGenerator.get_recursive_parts">
-<code class="sig-name descname"><span class="pre">get_recursive_parts</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#music.db.part_generator.PartGenerator.get_recursive_parts" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<code class="sig-name descname"><span class="pre">get_recursive_parts</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><a class="headerlink" href="#music.db.part_generator.PartGenerator.get_recursive_parts" title="Permalink to this definition">¶</a></dt>
+<dd><p>Resolve and return a playlist’s component Spotify playlist names</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>name</strong> (<em>str</em>) – Subject smart playlist name</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Resolved list of component playlists</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>List[str]</p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py method">
 <dt id="music.db.part_generator.PartGenerator.process_reference_by_name">
-<code class="sig-name descname"><span class="pre">process_reference_by_name</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#music.db.part_generator.PartGenerator.process_reference_by_name" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<code class="sig-name descname"><span class="pre">process_reference_by_name</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">None</span><a class="headerlink" href="#music.db.part_generator.PartGenerator.process_reference_by_name" title="Permalink to this definition">¶</a></dt>
+<dd><p>Resolve a smart playlist by name, recurses into process_reference_by_reference</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>name</strong> (<em>str</em>) – Subject playlist name</p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py method">
 <dt id="music.db.part_generator.PartGenerator.process_reference_by_reference">
-<code class="sig-name descname"><span class="pre">process_reference_by_reference</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ref</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#music.db.part_generator.PartGenerator.process_reference_by_reference" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<code class="sig-name descname"><span class="pre">process_reference_by_reference</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ref</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">google.cloud.firestore_v1.document.DocumentReference</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#music.db.part_generator.PartGenerator.process_reference_by_reference" title="Permalink to this definition">¶</a></dt>
+<dd><p>Recursive resolution function for walking a playlist’s dependencies by DocumentReference</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>ref</strong> (<em>DocumentReference</em>) – Subject Firestore document for resolving</p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py method">
 <dt id="music.db.part_generator.PartGenerator.reset">
 <code class="sig-name descname"><span class="pre">reset</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#music.db.part_generator.PartGenerator.reset" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Reset internal state for resolved playlists</p>
+</dd></dl>
 
 </dd></dl>
 
-</div>
-<div class="section" id="module-music.db">
-<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-music.db" title="Permalink to this headline">¶</a></h2>
-<p>Database interfacing components aside from the music.model ORM layer</p>
 </div>
 </div>
 
@@ -122,13 +176,13 @@
 <p class="caption"><span class="caption-text">Contents:</span></p>
 <ul class="current">
 <li class="toctree-l1 current"><a class="reference internal" href="modules.html">Modules</a></li>
-<li class="toctree-l1 current"><a class="reference internal" href="music.html">music package</a></li>
-<li class="toctree-l1"><a class="reference internal" href="music.api.html">music.api package</a></li>
-<li class="toctree-l1"><a class="reference internal" href="music.auth.html">music.auth package</a></li>
-<li class="toctree-l1"><a class="reference internal" href="music.cloud.html">music.cloud package</a></li>
-<li class="toctree-l1 current"><a class="current reference internal" href="#">music.db package</a></li>
-<li class="toctree-l1"><a class="reference internal" href="music.model.html">music.model package</a></li>
-<li class="toctree-l1"><a class="reference internal" href="music.tasks.html">music.tasks package</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="music.html">music</a></li>
+<li class="toctree-l1"><a class="reference internal" href="music.api.html">music.api</a></li>
+<li class="toctree-l1"><a class="reference internal" href="music.auth.html">music.auth</a></li>
+<li class="toctree-l1"><a class="reference internal" href="music.cloud.html">music.cloud</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">music.db</a></li>
+<li class="toctree-l1"><a class="reference internal" href="music.model.html">music.model</a></li>
+<li class="toctree-l1"><a class="reference internal" href="music.tasks.html">music.tasks</a></li>
 </ul>
 
 <div class="relations">
@@ -136,9 +190,9 @@
 <ul>
   <li><a href="../index.html">Documentation overview</a><ul>
   <li><a href="modules.html">music</a><ul>
-  <li><a href="music.html">music package</a><ul>
-      <li>Previous: <a href="music.cloud.html" title="previous chapter">music.cloud package</a></li>
-      <li>Next: <a href="music.model.html" title="next chapter">music.model package</a></li>
+  <li><a href="music.html">music</a><ul>
+      <li>Previous: <a href="music.cloud.html" title="previous chapter">music.cloud</a></li>
+      <li>Next: <a href="music.model.html" title="next chapter">music.model</a></li>
   </ul></li>
   </ul></li>
   </ul></li>

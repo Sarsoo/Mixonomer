@@ -1,10 +1,15 @@
-music.model package
+music.model
 ===================
 
-Submodules
-----------
+Module contents
+---------------
 
-music.model.config module
+.. automodule:: music.model
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+model.config
 -------------------------
 
 .. automodule:: music.model.config
@@ -12,7 +17,7 @@ music.model.config module
    :undoc-members:
    :show-inheritance:
 
-music.model.playlist module
+model.playlist
 ---------------------------
 
 .. automodule:: music.model.playlist
@@ -20,7 +25,7 @@ music.model.playlist module
    :undoc-members:
    :show-inheritance:
 
-music.model.tag module
+model.tag
 ----------------------
 
 .. automodule:: music.model.tag
@@ -28,18 +33,10 @@ music.model.tag module
    :undoc-members:
    :show-inheritance:
 
-music.model.user module
+model.user
 -----------------------
 
 .. automodule:: music.model.user
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
-Module contents
----------------
-
-.. automodule:: music.model
    :members:
    :undoc-members:
    :show-inheritance:

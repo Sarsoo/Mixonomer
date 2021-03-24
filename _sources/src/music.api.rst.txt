@@ -1,10 +1,15 @@
-music.api package
+music.api
 =================
 
-Submodules
-----------
+Module contents
+---------------
 
-music.api.admin module
+.. automodule:: music.api
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+api.admin
 ----------------------
 
 .. automodule:: music.api.admin
@@ -12,7 +17,7 @@ music.api.admin module
    :undoc-members:
    :show-inheritance:
 
-music.api.api module
+api.api
 --------------------
 
 .. automodule:: music.api.api
@@ -20,7 +25,7 @@ music.api.api module
    :undoc-members:
    :show-inheritance:
 
-music.api.decorators module
+api.decorators
 ---------------------------
 
 .. automodule:: music.api.decorators
@@ -28,7 +33,7 @@ music.api.decorators module
    :undoc-members:
    :show-inheritance:
 
-music.api.fm module
+api.fm
 -------------------
 
 .. automodule:: music.api.fm
@@ -36,7 +41,7 @@ music.api.fm module
    :undoc-members:
    :show-inheritance:
 
-music.api.player module
+api.player
 -----------------------
 
 .. automodule:: music.api.player
@@ -44,7 +49,7 @@ music.api.player module
    :undoc-members:
    :show-inheritance:
 
-music.api.spotfm module
+api.spotfm
 -----------------------
 
 .. automodule:: music.api.spotfm
@@ -52,7 +57,7 @@ music.api.spotfm module
    :undoc-members:
    :show-inheritance:
 
-music.api.spotify module
+api.spotify
 ------------------------
 
 .. automodule:: music.api.spotify
@@ -60,18 +65,10 @@ music.api.spotify module
    :undoc-members:
    :show-inheritance:
 
-music.api.tag module
+api.tag
 --------------------
 
 .. automodule:: music.api.tag
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
-Module contents
----------------
-
-.. automodule:: music.api
    :members:
    :undoc-members:
    :show-inheritance:

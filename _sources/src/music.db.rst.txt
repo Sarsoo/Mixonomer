@@ -1,8 +1,13 @@
-music.db package
+music.db
 ================
 
-Submodules
-----------
+Module contents
+---------------
+
+.. automodule:: music.db
+   :members:
+   :undoc-members:
+   :show-inheritance:
 
 music.db.database module
 ------------------------
@@ -16,14 +21,6 @@ music.db.part\_generator module
 -------------------------------
 
 .. automodule:: music.db.part_generator
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
-Module contents
----------------
-
-.. automodule:: music.db
    :members:
    :undoc-members:
    :show-inheritance:

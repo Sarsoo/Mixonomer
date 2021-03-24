@@ -14,12 +14,16 @@ Music Tools
    src/music.model
    src/music.tasks
 
-Music Tools
--------------
+`Music Tools <https://music.sarsoo.xyz>`_
+----------------------------------------------
 
 .. image:: https://github.com/sarsoo/music-tools/workflows/test%20and%20deploy/badge.svg
 
-Music Tools is a web app for creating smart Spotify playlists.
+Music Tools is a web app for creating smart Spotify playlists. The app is based on `spotframework <https://github.com/Sarsoo/spotframework>`_ and `fmframework <https://github.com/Sarsoo/pyfmframework>`_ for interfacing with Spotify and Last.fm. The app is currently hosted on Google's Cloud Platform.
+
+The system is composed of a Flask web server with a Fireo ORM layer and longer tasks dispatched to Cloud Tasks or Functions.
+
+.. image:: Playlists.png
 
 
 Indices and tables
