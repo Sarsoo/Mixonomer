@@ -1,10 +1,15 @@
-music.cloud package
+music.cloud
 ===================
 
-Submodules
-----------
+Module contents
+---------------
 
-music.cloud.function module
+.. automodule:: music.cloud
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+cloud.function
 ---------------------------
 
 .. automodule:: music.cloud.function
@@ -12,18 +17,10 @@ music.cloud.function module
    :undoc-members:
    :show-inheritance:
 
-music.cloud.tasks module
+cloud.tasks
 ------------------------
 
 .. automodule:: music.cloud.tasks
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
-Module contents
----------------
-
-.. automodule:: music.cloud
    :members:
    :undoc-members:
    :show-inheritance:

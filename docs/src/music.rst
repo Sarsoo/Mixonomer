@@ -1,4 +1,4 @@
-music package
+music
 =============
 
 Subpackages
@@ -14,21 +14,18 @@ Subpackages
    music.model
    music.tasks
 
-Submodules
-----------
+Module contents
+---------------
+
+.. automodule:: music
+   :members:
+   :undoc-members:
+   :show-inheritance:
 
 music.music module
 ------------------
 
 .. automodule:: music.music
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
-Module contents
----------------
-
-.. automodule:: music
    :members:
    :undoc-members:
    :show-inheritance:

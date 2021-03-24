@@ -10,6 +10,7 @@ from spotframework.filter.sort import sort_by_release_date
 from spotframework.filter.deduplicate import deduplicate_by_name
 from spotframework.net.network import SpotifyNetworkException
 
+from spotframework.net.network import Network as SpotNetwork
 from fmframework.net.network import Network
 from spotfm.chart import map_lastfm_track_chart_to_spotify
 
@@ -21,8 +22,25 @@ from music.model.playlist import Playlist
 logger = logging.getLogger(__name__)
 
 
-def run_user_playlist(user, playlist, spotnet=None, fmnet=None):
-    """Generate and upadate a user's playlist"""
+def run_user_playlist(user: User, playlist: Playlist, spotnet: SpotNetwork = None, fmnet: Network = None) -> None:
+    """Generate and upadate a user's smart playlist
+
+    Args:
+        user (User): Subject user
+        playlist (Playlist): User's subject playlist
+        spotnet (SpotNetwork, optional): Spotframework network for Spotify operations. Defaults to None.
+        fmnet (Network, optional): Fmframework network for Last.fm operations. Defaults to None.
+
+    Raises:
+        NameError: No user provided
+        NameError: No playlist provided
+        AttributeError: Playlist has no URI
+        NameError: No spotframework network available
+        e: spotframework error when retrieving user playlists
+
+    Returns:
+        [type]: [description]
+    """
 
     # PRE-RUN CHECKS
 

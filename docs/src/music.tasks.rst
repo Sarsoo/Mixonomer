@@ -1,10 +1,15 @@
-music.tasks package
+music.tasks
 ===================
 
-Submodules
-----------
+Module contents
+---------------
 
-music.tasks.create\_playlist module
+.. automodule:: music.tasks
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+tasks.create\_playlist
 -----------------------------------
 
 .. automodule:: music.tasks.create_playlist
@@ -12,7 +17,7 @@ music.tasks.create\_playlist module
    :undoc-members:
    :show-inheritance:
 
-music.tasks.refresh\_lastfm\_stats module
+tasks.refresh\_lastfm\_stats
 -----------------------------------------
 
 .. automodule:: music.tasks.refresh_lastfm_stats
@@ -20,7 +25,7 @@ music.tasks.refresh\_lastfm\_stats module
    :undoc-members:
    :show-inheritance:
 
-music.tasks.run\_user\_playlist module
+tasks.run\_user\_playlist
 --------------------------------------
 
 .. automodule:: music.tasks.run_user_playlist
@@ -28,18 +33,10 @@ music.tasks.run\_user\_playlist module
    :undoc-members:
    :show-inheritance:
 
-music.tasks.update\_tag module
+tasks.update\_tag
 ------------------------------
 
 .. automodule:: music.tasks.update_tag
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
-Module contents
----------------
-
-.. automodule:: music.tasks
    :members:
    :undoc-members:
    :show-inheritance:

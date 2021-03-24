@@ -1,3 +1,6 @@
+"""Functions for creating GCP Cloud Tasks for long running operatings
+"""
+
 import datetime
 import json
 import os
@@ -48,8 +51,12 @@ def update_all_user_playlists():
             seconds_delay += 30
 
 
-def update_playlists(username):
-    """Refresh all playlists for given user, environment dependent"""
+def update_playlists(username: str):
+    """Refresh all playlists for given user, environment dependent
+
+    Args:
+        username (str): Subject user's username
+    """
 
     user = User.collection.filter('username', '==', username.strip().lower()).get()
 
@@ -73,8 +80,14 @@ def update_playlists(username):
             seconds_delay += 6
 
 
-def run_user_playlist_task(username, playlist_name, delay=0):
-    """Create tasks for a users given playlist"""
+def run_user_playlist_task(username: str, playlist_name: str, delay: int = 0):
+    """Create tasks for a users given playlist
+
+    Args:
+        username (str): Subject user's username
+        playlist_name (str): Subject playlist name
+        delay (int, optional): Seconds to delay execution by. Defaults to 0.
+    """
 
     task = {
         'app_engine_http_request': {  # Specify the type of request.
@@ -123,8 +136,12 @@ def refresh_all_user_playlist_stats():
             logger.debug(f'skipping {iter_user.username}')
 
 
-def refresh_user_playlist_stats(username):
-    """Refresh all playlist stats for given user, environment dependent"""
+def refresh_user_playlist_stats(username: str):
+    """Refresh all playlist stats for given user, environment dependent
+
+    Args:
+        username (str): Subject user's username
+    """
 
     user = User.collection.filter('username', '==', username.strip().lower()).get()
     if user is None:
@@ -150,8 +167,13 @@ def refresh_user_playlist_stats(username):
         logger.error('no last.fm username')
 
 
-def refresh_user_stats_task(username, delay=0):
-    """Create user playlist stats refresh task"""
+def refresh_user_stats_task(username: str, delay: int = 0):
+    """Create user playlist stats refresh task
+
+    Args:
+        username (str): Subject user's username
+        delay (int, optional): Seconds to delay execution by. Defaults to 0.
+    """
 
     task = {
         'app_engine_http_request': {  # Specify the type of request.
@@ -172,8 +194,14 @@ def refresh_user_stats_task(username, delay=0):
     tasker.create_task(task_path, task)
 
 
-def refresh_playlist_task(username, playlist_name, delay=0):
-    """Create user playlist stats refresh tasks"""
+def refresh_playlist_task(username: str, playlist_name: str, delay: int = 0):
+    """Create user playlist stats refresh tasks
+
+    Args:
+        username (str): Subject user's username
+        playlist_name (str): Subject playlist name
+        delay (int, optional): Seconds to delay execution by. Defaults to 0.
+    """
 
     track_task = {
         'app_engine_http_request': {  # Specify the type of request.
@@ -230,7 +258,7 @@ def refresh_playlist_task(username, playlist_name, delay=0):
 
 
 def update_all_user_tags():
-    """Create user tag refresh task sfor all users"""
+    """Create user tag refresh task for all users"""
 
     seconds_delay = 0
     logger.info('running')

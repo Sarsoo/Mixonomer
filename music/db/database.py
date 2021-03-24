@@ -1,6 +1,7 @@
 from dataclasses import dataclass
 import logging
 from datetime import timedelta, datetime, timezone
+from typing import Optional
 
 from spotframework.net.network import Network as SpotifyNetwork, SpotifyNetworkException
 from spotframework.net.user import NetworkUser
@@ -11,7 +12,15 @@ from music.model.config import Config
 logger = logging.getLogger(__name__)
 
 
-def refresh_token_database_callback(user):
+def refresh_token_database_callback(user: User) -> None:
+    """Callback for handling when a spotframework network updates user credemtials
+
+    Used to store newly authenticated credentials
+
+    Args:
+        user (User): Subject user
+    """
+
     if isinstance(user, DatabaseUser):
         user_obj = User.collection.filter('username', '==', user.user_id.strip().lower()).get()
         if user_obj is None:
@@ -29,7 +38,16 @@ def refresh_token_database_callback(user):
         logger.error('user has no attached id')
 
 
-def get_authed_spotify_network(user):
+def get_authed_spotify_network(user: User) -> Optional[SpotifyNetwork]:
+    """Get an authenticated spotframework network for a given user
+
+    Args:
+        user (User): Subject user to retrieve a network for
+
+    Returns:
+        Optional[SpotifyNetwork]: Authenticated spotframework network
+    """
+
     if user is not None:
         if user.spotify_linked:
             config = Config.collection.get("config/music-tools")
@@ -62,7 +80,16 @@ def get_authed_spotify_network(user):
         logger.error(f'no user provided')
 
 
-def get_authed_lastfm_network(user):
+def get_authed_lastfm_network(user: User) -> Optional[FmNetwork]:
+    """Get an authenticated fmframework network for a given user
+
+    Args:
+        user (User): Subject user to retrieve a network for
+
+    Returns:
+        Optional[FmNetwork]: Authenticated fmframework network
+    """
+
     if user is not None:
         if user.lastfm_username:
             config = Config.collection.get("config/music-tools")
@@ -75,5 +102,5 @@ def get_authed_lastfm_network(user):
 
 @dataclass
 class DatabaseUser(NetworkUser):
-    """adding music tools username to spotframework network user"""
+    """Adding Music Tools username to spotframework network user"""
     user_id: str = None
