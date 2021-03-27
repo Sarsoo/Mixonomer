@@ -9,7 +9,7 @@ Module contents
    :undoc-members:
    :show-inheritance:
 
-music.db.database module
+db.database
 ------------------------
 
 .. automodule:: music.db.database
@@ -17,7 +17,7 @@ music.db.database module
    :undoc-members:
    :show-inheritance:
 
-music.db.part\_generator module
+db.part\_generator
 -------------------------------
 
 .. automodule:: music.db.part_generator
