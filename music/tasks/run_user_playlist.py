@@ -80,7 +80,7 @@ def run_user_playlist(user: User, playlist: Playlist, spotnet: SpotNetwork = Non
         raise NameError(f'No Spotify network returned ({username} / {playlist_name})')
 
     try:
-        user_playlists = spotnet.playlists()
+        user_playlists = [(i.name, i.uri) for i in spotnet.playlists()]
     except SpotifyNetworkException as e:
         logger.exception(f'error occured while retrieving playlists {username} / {playlist_name}')
         raise e
@@ -102,16 +102,16 @@ def run_user_playlist(user: User, playlist: Playlist, spotnet: SpotNetwork = Non
             log_name = uri
 
         except ValueError:  # is a playlist name
-            part_playlist = next((i for i in user_playlists if i.name == part_name), None)
+            part_playlist = next((i for i in user_playlists if i[0] == part_name), None)
             if part_playlist is None:
                 logger.warning(f'playlist {part_name} not found {username} / {playlist_name}')
                 continue
 
-            uri = part_playlist.uri
-            log_name = part_playlist.name
+            uri = part_playlist[1]
+            log_name = part_playlist[0]
 
         try:
-            _tracks = spotnet.playlist_tracks(uri=uri)
+            _tracks = spotnet.playlist_tracks(uri=uri, reduced_mem=True)
             if _tracks and len(_tracks) > 0:
                 playlist_tracks += _tracks
             else:

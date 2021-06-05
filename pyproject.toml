@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "music"
-version = "1.0.0"
+version = "1.0.1"
 description = "Spotify smart playlist generator. Last.fm integration for listening statistics"
 authors = ["andy <andy@sarsoo.xyz>"]
 readme = "README.md"
