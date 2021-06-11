@@ -5,3 +5,4 @@ music
    :maxdepth: 4
 
    music
+   MusicTools

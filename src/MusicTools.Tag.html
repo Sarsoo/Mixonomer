@@ -1,0 +1,240 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17: http://docutils.sourceforge.net/" />
+
+    <title>Tag &#8212; Music Tools  documentation</title>
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/alabaster.css" type="text/css" />
+    <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="prev" title="Playlist" href="MusicTools.Playlist.html" />
+   
+  <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <section id="tag">
+<h1>Tag<a class="headerlink" href="#tag" title="Permalink to this headline">¶</a></h1>
+<section id="router">
+<h2>Router<a class="headerlink" href="#router" title="Permalink to this headline">¶</a></h2>
+<dl class="js class">
+<dt id="TagRouter">
+<em class="property"><span class="pre">class</span> </em><code class="sig-name descname"><span class="pre">TagRouter</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#TagRouter" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tag router for directing between tag list and new</p>
+</dd></dl>
+
+</section>
+<section id="tags-list">
+<h2>Tags List<a class="headerlink" href="#tags-list" title="Permalink to this headline">¶</a></h2>
+<dl class="js class">
+<dt id="TagList">
+<em class="property"><span class="pre">class</span> </em><code class="sig-name descname"><span class="pre">TagList</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="pre">props</span></em><span class="sig-paren">)</span><a class="headerlink" href="#TagList" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tag card list component</p>
+<dl class="js function">
+<dt id="TagList.getTags">
+<code class="sig-prename descclassname"><span class="pre">TagList.</span></code><code class="sig-name descname"><span class="pre">getTags</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#TagList.getTags" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get tags info from API</p>
+</dd></dl>
+
+<dl class="js function">
+<dt id="TagList.handleDeleteTag">
+<code class="sig-prename descclassname"><span class="pre">TagList.</span></code><code class="sig-name descname"><span class="pre">handleDeleteTag</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="pre">tag_id</span></em>, <em class="sig-param"><span class="pre">event</span></em><span class="sig-paren">)</span><a class="headerlink" href="#TagList.handleDeleteTag" title="Permalink to this definition">¶</a></dt>
+<dd><p>Make delete tag request of API</p>
+<dl class="field-list simple">
+<dt class="field-odd">Arguments</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>tag_id</strong> (<em>*</em>) – Tag ID</p></li>
+<li><p><strong>event</strong> (<em>*</em>) – Event Data</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="js function">
+<dt id="TagGrid">
+<code class="sig-name descname"><span class="pre">TagGrid</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="pre">props</span></em><span class="sig-paren">)</span><a class="headerlink" href="#TagGrid" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tag card grid component</p>
+<dl class="field-list simple">
+<dt class="field-odd">Arguments</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>props</strong> (<em>*</em>) – Properties</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Grid component</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="js function">
+<dt id="TagCard">
+<code class="sig-name descname"><span class="pre">TagCard</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="pre">props</span></em><span class="sig-paren">)</span><a class="headerlink" href="#TagCard" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tag card component</p>
+<dl class="field-list simple">
+<dt class="field-odd">Arguments</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>props</strong> (<em>*</em>) – Properties</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Card component</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="js function">
+<dt id="getTagLink">
+<code class="sig-name descname"><span class="pre">getTagLink</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="pre">tagName</span></em><span class="sig-paren">)</span><a class="headerlink" href="#getTagLink" title="Permalink to this definition">¶</a></dt>
+<dd><p>Map tag name to URL</p>
+<dl class="field-list simple">
+<dt class="field-odd">Arguments</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>tagName</strong> (<em>*</em>) – Subject tag name</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Tag URL</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="new-tag-card">
+<h2>New Tag Card<a class="headerlink" href="#new-tag-card" title="Permalink to this headline">¶</a></h2>
+<dl class="js class">
+<dt id="NewTag">
+<em class="property"><span class="pre">class</span> </em><code class="sig-name descname"><span class="pre">NewTag</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="pre">props</span></em><span class="sig-paren">)</span><a class="headerlink" href="#NewTag" title="Permalink to this definition">¶</a></dt>
+<dd><p>New tag card component</p>
+<dl class="js function">
+<dt id="NewTag.handleInputChange">
+<code class="sig-prename descclassname"><span class="pre">NewTag.</span></code><code class="sig-name descname"><span class="pre">handleInputChange</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="pre">event</span></em><span class="sig-paren">)</span><a class="headerlink" href="#NewTag.handleInputChange" title="Permalink to this definition">¶</a></dt>
+<dd><p>Handle tag id input box state changes</p>
+<dl class="field-list simple">
+<dt class="field-odd">Arguments</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>event</strong> (<em>*</em>) – </p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="js function">
+<dt id="NewTag.handleSubmit">
+<code class="sig-prename descclassname"><span class="pre">NewTag.</span></code><code class="sig-name descname"><span class="pre">handleSubmit</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="pre">event</span></em><span class="sig-paren">)</span><a class="headerlink" href="#NewTag.handleSubmit" title="Permalink to this definition">¶</a></dt>
+<dd><p>Validate input, make new tag API request</p>
+<dl class="field-list simple">
+<dt class="field-odd">Arguments</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>event</strong> (<em>*</em>) – </p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+</section>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../index.html">Music Tools</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<p><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="modules.html">Modules</a></li>
+<li class="toctree-l1"><a class="reference internal" href="music.html">music</a></li>
+<li class="toctree-l1"><a class="reference internal" href="music.api.html">music.api</a></li>
+<li class="toctree-l1"><a class="reference internal" href="music.auth.html">music.auth</a></li>
+<li class="toctree-l1"><a class="reference internal" href="music.cloud.html">music.cloud</a></li>
+<li class="toctree-l1"><a class="reference internal" href="music.db.html">music.db</a></li>
+<li class="toctree-l1"><a class="reference internal" href="music.model.html">music.model</a></li>
+<li class="toctree-l1"><a class="reference internal" href="music.tasks.html">music.tasks</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="MusicTools.html">Music Tools React</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../index.html">Documentation overview</a><ul>
+  <li><a href="modules.html">music</a><ul>
+  <li><a href="MusicTools.html">Music Tools React</a><ul>
+      <li>Previous: <a href="MusicTools.Playlist.html" title="previous chapter">Playlist</a></li>
+  </ul></li>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2021, Sarsoo.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 3.5.3</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+      |
+      <a href="../_sources/src/MusicTools.Tag.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

@@ -13,6 +13,7 @@ Music Tools
    src/music.db
    src/music.model
    src/music.tasks
+   src/MusicTools
 
 `Music Tools <https://music.sarsoo.xyz>`_
 ----------------------------------------------
