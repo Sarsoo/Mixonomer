@@ -17,6 +17,9 @@ const useStyles = makeStyles({
     },
   });
 
+/**
+ * Tag View card
+ */
 class View extends Component{
 
     constructor(props){
@@ -48,6 +51,9 @@ class View extends Component{
         this.handleChangeAddType = this.handleChangeAddType.bind(this);
     }
 
+    /**
+     * Get tag info from API on load
+     */
     componentDidMount(){
         this.getTag();
         // var intervalId = setInterval(() => {this.getTag(false)}, 5000);
@@ -64,6 +70,10 @@ class View extends Component{
     //     clearTimeout(this.state.timeoutId);
     // }
 
+    /**
+     * Get tag info from API
+     * @param {*} error_toast Whether to show toast on network error 
+     */
     getTag(error_toast = true){
         axios.get(`/api/tag/${ this.state.tag_id }`)
         .then( (response) => {
@@ -100,6 +110,10 @@ class View extends Component{
         });
     }
 
+    /**
+     * Handle input box state changes
+     * @param {*} event Event data
+     */
     handleInputChange(event){
         
         this.setState({
@@ -108,6 +122,10 @@ class View extends Component{
 
     }
 
+    /**
+     * Handle checkbox state changes, make network updates
+     * @param {*} event Event data
+     */
     handleCheckChange(event){
         let payload = {...this.state.tag};
         payload[event.target.name] = event.target.checked;
@@ -120,12 +138,20 @@ class View extends Component{
         }
     }
 
+    /**
+     * Put tag info changes to API
+     * @param {*} changes Dictionary of changes to submit
+     */
     makeNetworkUpdate(changes){
         axios.put(`/api/tag/${this.state.tag_id}`, changes).catch((error) => {
             showMessage(`Error updating ${Object.keys(changes).join(", ")} (${error.response.status})`);
         });
     }
 
+    /**
+     * Validate input and make tag refresh update of API
+     * @param {*} event 
+     */
     handleRun(event){
         axios.get('/api/user')
         .then((response) => {
@@ -145,6 +171,12 @@ class View extends Component{
         });
     }
 
+    /**
+     * Handle remove watched part
+     * @param {*} music_obj Subject object to remove
+     * @param {*} addType Object type (tracks/albums/artists)
+     * @param {*} event Event data
+     */
     handleRemoveObj(music_obj, addType, event){
         var startingItems = this.state.tag[addType].slice();
 
@@ -177,12 +209,20 @@ class View extends Component{
         });
     }
 
+    /**
+     * Handle adding type drop down change
+     * @param {*} type 
+     */
     handleChangeAddType(type){
         this.setState({
             addType: type
         })
     }
 
+    /**
+     * Validate input, make tag part add request of API
+     * @returns 
+     */
     handleAdd(){
 
         var addType = this.state.addType;
@@ -273,17 +313,27 @@ class View extends Component{
             <div style={{maxWidth: '1000px', margin: 'auto', marginTop: '20px'}}>
             <Card align="center">
                 <CardContent>
+
+                    {/* TAG NAME TITLE */}
                     <Typography variant="h2" color="textPrimary">{this.state.tag.name}</Typography>
                     <Grid container spacing={5}>
                         
+                        {/* ARTISTS TITLE */}
                         { this.state.tag.artists.length > 0 && <Grid item xs={12} ><Typography color="textSecondary" variant="h4">Artists</Typography></Grid> }
+                        {/* ARTIST CARDS */}
                         { this.state.tag.artists.length > 0 && <ListBlock handler={this.handleRemoveObj} list={this.state.tag.artists} addType="artists" showTime={this.state.tag.time_objects}/> }
 
+                        {/* ALBUMS TITLE */}
                         { this.state.tag.albums.length > 0 && <Grid item xs={12} ><Typography color="textSecondary" variant="h4">Albums</Typography></Grid> }
+                        {/* ALBUM CARDS */}
                         { this.state.tag.albums.length > 0 && <ListBlock handler={this.handleRemoveObj} list={this.state.tag.albums} addType="albums" showTime={this.state.tag.time_objects}/> }
 
+                        {/* TRACKS TITLE */}
                         { this.state.tag.tracks.length > 0 && <Grid item xs={12} ><Typography color="textSecondary" variant="h4">Tracks</Typography></Grid> }
+                        {/* TRACK CARDS */}
                         { this.state.tag.tracks.length > 0 && <ListBlock handler={this.handleRemoveObj} list={this.state.tag.tracks} addType="tracks" showTime={this.state.tag.time_objects}/> }
+
+                        {/* NAME TEXTBOX */}
                         <Grid item xs={12} sm={this.state.addType != 'artists' ? 3 : 4} md={this.state.addType != 'artists' ? 3 : 4}>
                             <TextField
                                 name="name"
@@ -292,16 +342,19 @@ class View extends Component{
                                 value={this.state.name}
                                 onChange={this.handleInputChange}></TextField>
                         </Grid>
+                        {/* ARTIST NAME TEXTBOX */}
                         { this.state.addType != 'artists' &&
                         <Grid item xs={12} sm={3} md={4}>
-                                <TextField
-                                    name="artist"
-                                    label="Artist"
-                                    variant="filled"
-                                    value={this.state.artist}
-                                    onChange={this.handleInputChange}></TextField>
-                            </Grid>
+                            <TextField
+                                name="artist"
+                                label="Artist"
+                                variant="filled"
+                                value={this.state.artist}
+                                onChange={this.handleInputChange}></TextField>
+                        </Grid>
                         }
+
+                        {/* ADD TYPE DROPDOWN */}
                         <Grid item xs={12} sm={this.state.addType != 'artists' ? 2 : 4} md={this.state.addType != 'artists' ? 2 : 4}>
                             <FormControl variant="filled">
                                 <InputLabel htmlFor="addType">Type</InputLabel>
@@ -319,9 +372,13 @@ class View extends Component{
                                     </Select>
                             </FormControl>
                         </Grid>
+
+                        {/* ADD BUTTON */}
                         <Grid item xs={12} sm={this.state.addType != 'artists' ? 3 : 4} md={this.state.addType != 'artists' ? 3 : 4}>
                             <Button variant="contained" onClick={this.handleAdd} className="full-width">Add</Button>
                         </Grid>
+
+                        {/* TIME CHECKBOX */}
                         <Grid item xs={12}>
                             <FormControlLabel
                                 control={
@@ -331,15 +388,22 @@ class View extends Component{
                                 labelPlacement="bottom"
                             />
                         </Grid>
+
+                        {/* STATS CARD */}
                         <StatsCard count={this.state.tag.count} proportion={this.state.tag.proportion} showTime={this.state.tag.time_objects} time={this.state.tag.total_time}></StatsCard>
+
+                        {/* PIE CHART */}
                         <Grid item xs={12}>
-                            <PieChart data={data}/>
+                            <PieChart data={data} padding={100}/>
                         </Grid>
+
+                        {/* BAR CHART */}
                         <Grid item xs={12}>
-                            <BarChart data={data} title='scrobbles'/>
+                            <BarChart data={data} title='scrobbles' indexAxis='y'/>
                         </Grid>
                     </Grid>
                 </CardContent>
+                {/* UPDATE BUTTON */}
                 <CardActions>
                     <Button onClick={this.handleRun} variant="contained" color="primary" className="full-width" >Update</Button>
                 </CardActions>
@@ -353,6 +417,11 @@ class View extends Component{
 
 export default View;
 
+/**
+ * Grid component for holding artist/album/track cards
+ * @param {*} props Properties
+ * @returns Grid component
+ */
 function ListBlock(props) {
     return <Grid container 
                 spacing={3} 
@@ -365,6 +434,11 @@ function ListBlock(props) {
             </Grid>
 }
 
+/**
+ * Track/album/artist card with time info and delete button
+ * @param {*} props Properties
+ * @returns Card component wrapped in grid cell
+ */
 function BlockGridItem (props) {
     const classes = useStyles();
     return (
@@ -372,19 +446,26 @@ function BlockGridItem (props) {
             <Card variant="outlined" className={classes.root}>
                 <CardContent>
                     <Grid>
+
+                        {/* NAME TITLE */}
                         <Grid item xs={12}>
                             <Typography variant="h4" color="textSecondary" className={classes.root}>{ props.music_obj.name }</Typography>
                         </Grid>
+
+                        {/* ARTIST NAME */}
                         { 'artist' in props.music_obj &&
                             <Grid item xs={12}>
                                 <Typography variant="body1" color="textSecondary" className={classes.root}>{ props.music_obj.artist }</Typography>
                             </Grid>
                         }
+
+                        {/* SCROBBLE COUNT */}
                         { 'count' in props.music_obj &&
                             <Grid item xs={8}>
                                 <Typography variant="h4" color="textPrimary" className={classes.root}>📈 { props.music_obj.count }</Typography>
                             </Grid>
                         }
+                        {/* TIME */}
                         { 'time' in props.music_obj && props.showTime &&
                             <Grid item xs={8}>
                                 <Typography variant="body1" color="textSecondary" className={classes.root}>🕒 { props.music_obj.time }</Typography>
@@ -392,6 +473,8 @@ function BlockGridItem (props) {
                         }
                     </Grid>
                 </CardContent>
+
+                {/* DELETE BUTTON */}
                 <CardActions>
                     <Button className="full-width" color="secondary" variant="contained" aria-label="delete" onClick={(e) => props.handler(props.music_obj, props.addType, e)} startIcon={<Delete />}>
                         Delete
@@ -402,6 +485,11 @@ function BlockGridItem (props) {
     );
 }
 
+/**
+ * Stats card component with total time and scrobbles
+ * @param {*} props Properties
+ * @returns Card component wrapped in grid cell
+ */
 function StatsCard (props) {
     const classes = useStyles();
     return (
@@ -409,12 +497,18 @@ function StatsCard (props) {
             <Card variant="outlined" className={classes.root}>
                 <CardContent>
                     <Grid container spacing={10}>
+                        
+                        {/* SCROBBLE COUNT */}
                         <Grid item xs={12}>
                             <Typography variant="h1" color="textPrimary" className={classes.root}>📈 { props.count }</Typography>
                         </Grid>
+
+                        {/* PERCENT */}
                         <Grid item xs={12}>
                             <Typography variant="h4" color="textSecondary" className={classes.root}>{ props.proportion.toFixed(2) }%</Typography>
                         </Grid>
+
+                        {/* TOTAL TIME */}
                         {props.showTime &&
                             <Grid item xs={12}>
                                 <Typography variant="h4" color="textSecondary" className={classes.root}>🕒 { props.time }</Typography>

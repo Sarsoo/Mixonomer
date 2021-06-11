@@ -7,6 +7,9 @@ import Lock from "./Lock.js";
 import Functions from "./Functions.js";
 import Tasks from "./Tasks.js";
 
+/**
+ * Admin router component for hosting cards
+ */
 class Admin extends Component {
 
     constructor(props){
@@ -17,6 +20,11 @@ class Admin extends Component {
         this.handleChange = this.handleChange.bind(this);
     }
 
+    /**
+     * Handle tab change event
+     * @param {*} e Event data
+     * @param {*} newValue New tab data
+     */
     handleChange(e, newValue){
         this.setState({
             tab: newValue
@@ -34,8 +42,13 @@ class Admin extends Component {
                     centered
                     width="50%"
                 >
+                    {/* LOCK CARD */}
                     <Tab label="Lock Accounts" component={Link} to={`${this.props.match.url}/lock`} />
+
+                    {/* FUNCTIONS CARD */}
                     <Tab label="Functions" component={Link} to={`${this.props.match.url}/functions`} />
+
+                    {/* RUNNING TASKS CARD */}
                     <Tab label="Tasks" component={Link} to={`${this.props.match.url}/tasks`} />
                 </Tabs>
             </Paper>

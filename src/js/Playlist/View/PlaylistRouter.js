@@ -6,6 +6,9 @@ import { Paper, Tabs, Tab} from '@material-ui/core';
 import {Edit} from "./Edit.js";
 import {Count} from "./Count.js";
 
+/**
+ * Playlist view structure with tabs for view/editing and statistics
+ */
 class View extends Component{
 
     constructor(props){
@@ -16,6 +19,11 @@ class View extends Component{
         this.handleChange = this.handleChange.bind(this);
     }
 
+    /**
+     * Handle tab change event
+     * @param {*} e Event args
+     * @param {*} newValue New tab object
+     */
     handleChange(e, newValue){
         this.setState({
             tab: newValue
@@ -33,12 +41,20 @@ class View extends Component{
                     centered
                     width="50%"
                 >
+
+                    {/* VIEW/EDIT */}
                     <Tab label="Edit" component={Link} to={`${this.props.match.url}/edit`} />
+
+                    {/* STATS */}
                     <Tab label="Count" component={Link} to={`${this.props.match.url}/count`} />
                 </Tabs>
             </Paper>
             <Switch>
+
+                {/* VIEW/EDIT */}
                 <Route path={`${this.props.match.url}/edit`} render={(props) => <Edit {...props} name={this.props.match.params.name}/>} />
+                
+                {/* STATS */}
                 <Route path={`${this.props.match.url}/count`} render={(props) => <Count {...props} name={this.props.match.params.name}/>} />
             </Switch>
             </div>

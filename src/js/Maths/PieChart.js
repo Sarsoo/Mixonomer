@@ -1,5 +1,15 @@
 import React, { Component } from "react";
-var Chart = require('chart.js');
+import { Chart, ArcElement, DoughnutController, Legend, Title, Tooltip } from 'chart.js';
+
+Chart.register(ArcElement, DoughnutController, Legend, Title, Tooltip);
+
+var pieColours = ['rgb(55, 61, 255)', //blue
+'rgb(255, 55, 61)', //red
+'rgb(7, 211, 4)', //green
+'rgb(228, 242, 31)', //yellow
+'rgb(31, 242, 221)', //light blue
+'rgb(242, 31, 235)', //pink
+'rgb(242, 164, 31)'];
 
 class PieChart extends Component {
 
@@ -20,36 +30,20 @@ class PieChart extends Component {
             }]
           },
           options: {
-              legend : {
-                  display : true,
-                  labels: {
-                    fontColor: 'white'
-                  }
+              plugins: {
+                legend : {
+                    display : true,
+                    labels: {
+                      color: 'white'
+                    }
+                }
+              },
+              layout: {
+                padding: this.props.padding
               },
               elements: {
                   arc : {
-                    backgroundColor: ['rgb(55, 61, 255)', //blue
-                      'rgb(255, 55, 61)', //red
-                      'rgb(7, 211, 4)', //green
-                      'rgb(228, 242, 31)', //yellow
-                      'rgb(31, 242, 221)', //light blue
-                      'rgb(242, 31, 235)', //pink
-                      'rgb(242, 164, 31)', //orange
-                      'rgb(55, 61, 255)', //blue
-                      'rgb(255, 55, 61)', //red
-                      'rgb(7, 211, 4)', //green
-                      'rgb(228, 242, 31)', //yellow
-                      'rgb(31, 242, 221)', //light blue
-                      'rgb(242, 31, 235)', //pink
-                      'rgb(242, 164, 31)', //orange
-                      'rgb(55, 61, 255)', //blue
-                      'rgb(255, 55, 61)', //red
-                      'rgb(7, 211, 4)', //green
-                      'rgb(228, 242, 31)', //yellow
-                      'rgb(31, 242, 221)', //light blue
-                      'rgb(242, 31, 235)', //pink
-                      'rgb(242, 164, 31)' //orange
-                    ],
+                    backgroundColor: [...pieColours, ...pieColours, ...pieColours],
                     borderWidth: 2,
                     borderColor: 'rgb(0, 0, 0)'
                   }

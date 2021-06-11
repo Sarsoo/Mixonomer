@@ -83,6 +83,20 @@ jobs:
       - name: Install Python Dependencies
         run: poetry install
 
+      # JS setup for jsdoc
+      - name: Install Node ${{ matrix.node }}
+        uses: actions/setup-node@v2
+        with:
+          node-version: ${{ matrix.node }}
+
+      # JS setup for jsdoc
+      - name: Install jsdoc
+        run: npm install jsdoc
+
+      # JS setup for jsdoc
+      - name: Add node_modules/.bin to PATH
+        run: echo "${GITHUB_WORKSPACE}/node_modules/.bin" >> $GITHUB_PATH
+
       # DEPLOY for setting up cloud API
       - name: Set up Cloud SDK
         uses: google-github-actions/setup-gcloud@master

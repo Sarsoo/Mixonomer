@@ -5,6 +5,9 @@ import { Card, Button, CardContent, CardActions, Typography } from "@material-ui
 
 import showMessage from "../Toast.js"
 
+/**
+ * Spotify account link settings card
+ */
 class SpotifyLink extends Component {
 
     constructor(props){
@@ -16,6 +19,9 @@ class SpotifyLink extends Component {
         this.getUserInfo();
     }
 
+    /**
+     * Get user info from API and set spotify link status to state
+     */
     getUserInfo(){
         axios.get('/api/user')
         .then((response) => {
@@ -33,10 +39,14 @@ class SpotifyLink extends Component {
         const table =  
             <div style={{maxWidth: '400px', margin: 'auto', marginTop: '20px'}}>
                 <Card align="center">
+
+                    {/* STATUS */}
                     <CardContent>
                         <Typography variant="h4" color="textPrimary">Admin Functions</Typography>
                         <Typography variant="body2" color="textSecondary">Status: { this.state.spotify_linked ? "Linked" : "Unlinked" }</Typography>
                     </CardContent>
+
+                    {/* STATE CHANGE BUTTON */}
                     <CardActions>
                         { this.state.spotify_linked ? <DeAuthButton /> : <AuthButton /> }
                     </CardActions>
@@ -49,10 +59,20 @@ class SpotifyLink extends Component {
     }
 }
 
+/**
+ * Authenticate Spotify account button component
+ * @param {*} props Properties
+ * @returns Button component
+ */
 function AuthButton(props) {
     return <Button component='a' variant="contained" className="full-width" href="/auth/spotify">Auth</Button>;
 }
 
+/**
+ * Deauthenticate Spotify account button component
+ * @param {*} props Properties
+ * @returns Button component
+ */
 function DeAuthButton(props) {
     return <Button component='a' variant="contained" className="full-width" href="/auth/spotify/deauth">De-Auth</Button>;
 }

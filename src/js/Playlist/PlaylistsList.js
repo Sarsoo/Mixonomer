@@ -7,8 +7,15 @@ const axios = require('axios');
 
 import showMessage from "../Toast.js"
 
+/**
+ * Top-level object for hosting playlist card grid with new/run all buttons
+ */
 class PlaylistsView extends Component {
 
+    /**
+     * Trigger loading playlist data during init
+     * @param {*} props Component properties 
+     */
     constructor(props){
         super(props);
         this.state = {
@@ -20,6 +27,9 @@ class PlaylistsView extends Component {
         this.handleRunAll = this.handleRunAll.bind(this);
     }
 
+    /**
+     * Get playlist data from API and set state with results
+     */
     getPlaylists(){
         var self = this;
         axios.get('/api/playlists')
@@ -43,6 +53,11 @@ class PlaylistsView extends Component {
         });
     }
 
+    /**
+     * Post run playlist action to API
+     * @param {*} name Playlist name to run 
+     * @param {*} event Event data
+     */
     handleRunPlaylist(name, event){
         axios.get('/api/user')
         .then((response) => {
@@ -62,6 +77,11 @@ class PlaylistsView extends Component {
         });
     }
 
+    /**
+     * Post delete playlist action to API
+     * @param {*} name Playlist name to delete
+     * @param {*} event Event data
+     */
     handleDeletePlaylist(name, event){
         axios.delete('/api/playlist', { params: { name: name } })
         .then((response) => {
@@ -72,6 +92,10 @@ class PlaylistsView extends Component {
         });
     }
 
+    /**
+     * Post run all playlists action to API
+     * @param {*} event Event data
+     */
     handleRunAll(event){
         axios.get('/api/user')
         .then((response) => {
@@ -93,6 +117,8 @@ class PlaylistsView extends Component {
 
     render() {
         
+        // Show spinning loading circle until loaded playlist data
+
         const grid =   <PlaylistGrid playlists={this.state.playlists} 
                             handleRunPlaylist={this.handleRunPlaylist} 
                             handleDeletePlaylist={this.handleDeletePlaylist}
@@ -102,6 +128,11 @@ class PlaylistsView extends Component {
     }
 }
 
+/**
+ * Playlist grid component for new/run all buttons and playlist cards
+ * @param {*} props Component properties
+ * @returns Grid component
+ */
 function PlaylistGrid(props){
     return (
         <Grid container 
@@ -110,6 +141,8 @@ function PlaylistGrid(props){
                 justify="flex-start"
                 alignItems="flex-start"
                 style={{padding: '24px'}}>
+
+            {/* BUTTON BLOCK (NEW/RUN ALL) */}
             <Grid item xs={12} sm={6} md={2}>
                 <ButtonGroup 
                     color="primary"
@@ -119,6 +152,8 @@ function PlaylistGrid(props){
                     <Button onClick={props.handleRunAll}>Run All</Button>
                 </ButtonGroup>
             </Grid>
+
+            {/* PLAYLIST CARDS */}
             { props.playlists.length == 0 ? (
                 <Grid item xs={12} sm={6} md={3}>
                     <Typography variant="h5" component="h2">No Playlists</Typography>
@@ -133,21 +168,36 @@ function PlaylistGrid(props){
     );
 }
 
+/**
+ * Playlist card component with view/run/delete buttons
+ * @param {*} props Component properties
+ * @returns Playlist card component
+ */
 function PlaylistCard(props){
     return (
         <Grid item xs>
             <Card>
+
+                {/* NAME TITLE */}
                 <CardContent>
                     <Typography variant="h4" component="h2">
                     { props.playlist.name }
                     </Typography>
                 </CardContent>
+
+                {/* BUTTONS */}
                 <CardActions>
                     <ButtonGroup 
                     color="primary" 
                     variant="contained">
+
+                        {/* VIEW */}
                         <Button component={Link} to={getPlaylistLink(props.playlist.name)}>View</Button>
+
+                        {/* RUN */}
                         <Button onClick={(e) => props.handleRunPlaylist(props.playlist.name, e)}>Run</Button>
+                        
+                        {/* DELETE */}
                         <Button onClick={(e) => props.handleDeletePlaylist(props.playlist.name, e)}>Delete</Button>
                     </ButtonGroup>
                 </CardActions>
@@ -156,6 +206,11 @@ function PlaylistCard(props){
     );
 }
 
+/**
+ * Get URL for playlist given name
+ * @param {*} playlistName Subject playlist name
+ * @returns URL string
+ */
 function getPlaylistLink(playlistName){
     return `/app/playlist/${playlistName}/edit`;
 }

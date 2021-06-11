@@ -5,6 +5,9 @@ import { Card, Button, CardContent, CardActions, Typography, TextField, Grid } f
 
 import showMessage from "../Toast.js"
 
+/**
+ * Last.fm username setting card
+ */
 class LastFM extends Component {
 
     constructor(props){
@@ -19,6 +22,9 @@ class LastFM extends Component {
         this.handleSubmit = this.handleSubmit.bind(this);
     }
 
+    /**
+     * Get user info from API, set current username to state
+     */
     getUserInfo(){
         axios.get('/api/user')
         .then((response) => {
@@ -39,12 +45,20 @@ class LastFM extends Component {
         });
     }
 
+    /**
+     * Handle input box state change
+     * @param {*} event Event data
+     */
     handleChange(event){
         this.setState({
             'lastfm_username': event.target.value
         });
     }
 
+    /**
+     * Handle submit button, post API change request
+     * @param {*} event Event data
+     */
     handleSubmit(event){
 
         var username = this.state.lastfm_username;
@@ -72,9 +86,13 @@ class LastFM extends Component {
                     <form onSubmit={this.handleSubmit}>
                         <CardContent>
                             <Grid container spacing={3}>
+
+                                {/* TITLE */}
                                 <Grid item className="full-width">
                                     <Typography variant="h4" color="textPrimary">Last.fm Username</Typography>
                                 </Grid>
+
+                                {/* USERNAME TEXTBOX */}
                                 <Grid item className="full-width">
                                     <TextField
                                         label="last.fm Username" 
@@ -86,6 +104,8 @@ class LastFM extends Component {
                                 </Grid>
                             </Grid>
                         </CardContent>
+
+                        {/* SUBMIT BUTTON */}
                         <CardActions>
                             <Button type="submit" variant="contained" className="full-width">Save</Button>
                         </CardActions>

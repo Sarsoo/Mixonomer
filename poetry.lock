@@ -387,6 +387,17 @@ python-versions = ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*"
 pyparsing = ">=2.0.2"
 
 [[package]]
+name = "parsimonious"
+version = "0.7.0"
+description = "(Soon to be) the fastest pure-Python PEG parser I could muster"
+category = "dev"
+optional = false
+python-versions = "*"
+
+[package.dependencies]
+six = "*"
+
+[[package]]
 name = "protobuf"
 version = "3.15.7"
 description = "Protocol Buffers"
@@ -541,6 +552,19 @@ sphinxcontrib-serializinghtml = "*"
 docs = ["sphinxcontrib-websupport"]
 lint = ["flake8 (>=3.5.0)", "isort", "mypy (>=0.800)", "docutils-stubs"]
 test = ["pytest", "pytest-cov", "html5lib", "cython", "typed-ast"]
+
+[[package]]
+name = "sphinx-js"
+version = "3.1.2"
+description = "Support for using Sphinx on JSDoc-documented JS code"
+category = "dev"
+optional = false
+python-versions = ">=3.7"
+
+[package.dependencies]
+Jinja2 = ">2.0,<3.0"
+parsimonious = ">=0.7.0,<0.8.0"
+Sphinx = ">=3.0.0"
 
 [[package]]
 name = "sphinxcontrib-applehelp"
@@ -707,7 +731,7 @@ python-versions = "*"
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.8"
-content-hash = "8331f6a2897615556a573dc92c00b403a8be64b3a45e4e1a6d1bfacb006c013e"
+content-hash = "51d1e9070adab3c839b4b1c50ebd1dc0366354d56f6c1a9485af6d4bb362959f"
 
 [metadata.files]
 alabaster = [
@@ -951,6 +975,9 @@ packaging = [
     {file = "packaging-20.9-py2.py3-none-any.whl", hash = "sha256:67714da7f7bc052e064859c05c595155bd1ee9f69f76557e21f051443c20947a"},
     {file = "packaging-20.9.tar.gz", hash = "sha256:5b327ac1320dc863dca72f4514ecc086f31186744b84a230374cc1fd776feae5"},
 ]
+parsimonious = [
+    {file = "parsimonious-0.7.0.tar.gz", hash = "sha256:396d424f64f834f9463e81ba79a331661507a21f1ed7b644f7f6a744006fd938"},
+]
 protobuf = [
     {file = "protobuf-3.15.7-cp27-cp27m-macosx_10_9_x86_64.whl", hash = "sha256:a14141d5c967362d2eedff8825d2b69cc36a5b3ed6b1f618557a04e58a3cf787"},
     {file = "protobuf-3.15.7-cp27-cp27mu-manylinux1_x86_64.whl", hash = "sha256:d54d78f621852ec4fdd1484d1263ca04d4bf5ffdf7abffdbb939e444b6ff3385"},
@@ -1042,6 +1069,10 @@ soupsieve = [
 sphinx = [
     {file = "Sphinx-3.5.3-py3-none-any.whl", hash = "sha256:3f01732296465648da43dec8fb40dc451ba79eb3e2cc5c6d79005fd98197107d"},
     {file = "Sphinx-3.5.3.tar.gz", hash = "sha256:ce9c228456131bab09a3d7d10ae58474de562a6f79abb3dc811ae401cf8c1abc"},
+]
+sphinx-js = [
+    {file = "sphinx-js-3.1.2.tar.gz", hash = "sha256:04fe0d2fec6d39b505d70500d0132cfa0efc834760c9598048c1a9dbbc175732"},
+    {file = "sphinx_js-3.1.2-py2.py3-none-any.whl", hash = "sha256:4503accb74ba3a15e0e59e20ec18b15be1932b2c8e8b82e03ace39a415899785"},
 ]
 sphinxcontrib-applehelp = [
     {file = "sphinxcontrib-applehelp-1.0.2.tar.gz", hash = "sha256:a072735ec80e7675e3f432fcae8610ecf509c5f1869d17e2eecff44389cdbc58"},

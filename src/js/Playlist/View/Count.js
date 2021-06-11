@@ -7,6 +7,9 @@ import showMessage from "../../Toast.js"
 
 const LazyPieChart = React.lazy(() => import("../../Maths/PieChart"))
 
+/**
+ * Playlist count tab for presenting listening stats 
+ */
 export class Count extends Component {
 
     constructor(props){
@@ -34,6 +37,9 @@ export class Count extends Component {
         this.updateStats = this.updateStats.bind(this);
     }
 
+    /**
+     * Get playlist info with stats from API and set state if user has Last.fm username
+     */
     getUserInfo(){
         axios.get(`/api/playlist?name=${ this.state.name }`)
         .then((response) => {
@@ -51,6 +57,9 @@ export class Count extends Component {
         });
     }
 
+    /**
+     * Make stats refresh request of API
+     */
     updateStats(){
         axios.get(`/api/spotfm/playlist/refresh?name=${ this.state.name }`)
         .then((response) => {
@@ -71,19 +80,29 @@ export class Count extends Component {
             <Card align="center">
                 <CardContent>
                     <Grid container>
+
+                        {/* SCROBBLE COUNT */}
                         <Grid item xs={12}>
                             <Typography variant="body2">Scrobble Count: <b>{this.state.playlist.lastfm_stat_count.toLocaleString()} / {this.state.playlist.lastfm_stat_percent}%</b></Typography>
                         </Grid>
+
+                        {/* ALBUM COUNT */}
                         <Grid item xs={12}>
                             <Typography variant="body2">Album Count: <b>{this.state.playlist.lastfm_stat_album_count.toLocaleString()} / {this.state.playlist.lastfm_stat_album_percent}%</b></Typography>
                         </Grid>
+
+                        {/* ARTIST COUNT */}
                         <Grid item xs={12}>
                             <Typography variant="body2">Artist Count: <b>{this.state.playlist.lastfm_stat_artist_count.toLocaleString()} / {this.state.playlist.lastfm_stat_artist_percent}%</b></Typography>
                         </Grid>
+
+                        {/* LAST UPDATED */}
                         <Grid item xs={12}>
                             <Typography variant="body2">Last Updated <b>{this.state.playlist.lastfm_stat_last_refresh.toLocaleString()}</b></Typography>
                         </Grid>
                         <React.Suspense fallback={<LoadingMessage/>}>
+
+                            {/* TRACK PIE */}
                             <Grid item xs={12} sm={12} md={4}>
                                 <LazyPieChart data={[{
                                     "label": `${this.state.playlist.name} Tracks`,
@@ -92,8 +111,11 @@ export class Count extends Component {
                                     "label": 'Other',
                                     "value": 100 - this.state.playlist.lastfm_stat_percent
                                 }]} 
-                                title={this.state.playlist.name}/>
+                                title={this.state.playlist.name}
+                                padding={50}/>
                             </Grid>
+
+                            {/* ALBUM PIE */}
                             <Grid item xs={12} sm={12} md={4}>
                             <LazyPieChart data={[{
                                 "label": `${this.state.playlist.name} Albums`,
@@ -102,8 +124,11 @@ export class Count extends Component {
                                 "label": 'Other',
                                 "value": 100 - this.state.playlist.lastfm_stat_album_percent
                             }]} 
-                            title={this.state.playlist.name}/>
+                            title={this.state.playlist.name}
+                            padding={50}/>
                             </Grid>
+
+                            {/* ARTIST PIE */}
                             <Grid item xs={12} sm={12} md={4}>
                                 <LazyPieChart data={[{
                                     "label": `${this.state.playlist.name} Artists`,
@@ -112,11 +137,14 @@ export class Count extends Component {
                                     "label": 'Other',
                                     "value": 100 - this.state.playlist.lastfm_stat_artist_percent
                                 }]} 
-                                title={this.state.playlist.name}/>
+                                title={this.state.playlist.name}
+                                padding={50}/>
                             </Grid>
                         </React.Suspense>
                     </Grid>
                 </CardContent>
+
+                {/* UPDATE BUTTON */}
                 <CardActions>
                     <Button variant="contained" color="primary" className="full-width" onClick={this.updateStats}>Update</Button>
                 </CardActions>

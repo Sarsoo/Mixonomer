@@ -13,6 +13,9 @@ const useStyles = makeStyles({
     },
   });
 
+/**
+ * Account lock card component
+ */
 class Lock extends Component {
 
     constructor(props){
@@ -27,6 +30,9 @@ class Lock extends Component {
         this.handleLock = this.handleLock.bind(this);
     }
 
+    /**
+     * Make user infor request of API
+     */
     getUserInfo(){
         axios.get('/api/users')
         .then((response) => {
@@ -40,6 +46,12 @@ class Lock extends Component {
         });
     }
 
+    /**
+     * Make lock request of API
+     * @param {*} event Event data
+     * @param {*} username Subject username
+     * @param {*} to_state Target lock state
+     */
     handleLock(event, username, to_state){
         axios.post('/api/user', {
             username: username,
@@ -60,8 +72,12 @@ class Lock extends Component {
             <div style={{maxWidth: '1000px', margin: 'auto', marginTop: '20px'}}>
                 <Card align="center">
                     <CardContent>
+
+                        {/* TITLE */}
                         <Typography variant="h4" color="textPrimary">Account Locks</Typography>
                         <Grid container spacing={3}>
+
+                            {/* ACCOUNT CARDS */}
                             { this.state.accounts.map((account) => <Row account={account} handler={this.handleLock}
                             key= {account.username}/>) }
                         </Grid>
@@ -72,16 +88,27 @@ class Lock extends Component {
     }
 }
 
+/**
+ * Grid of account cards with lock buttons
+ * @param {*} props 
+ * @returns 
+ */
 function Row(props){
     const classes = useStyles();
     return (
         <Grid item xs={12} sm={3} md={2}>
             <Card variant="outlined" className={classes.root}>
                 <CardContent>
+
+                    {/* USERNAME TITLE */}
                     <Typography variant="h5" color="textSecondary" className={classes.root}>{ props.account.username }</Typography>
+                    
+                    {/* LAST LOGIN */}
                     <Typography variant="body2" color="textSecondary" className={classes.root}>{ props.account.last_login }</Typography>
                 </CardContent>
                 <CardActions>
+
+                    {/* LOCK BUTTON */}
                     <Button className="full-width" color="secondary" variant="contained" aria-label="delete" onClick={(e) => props.handler(e, props.account.username, !props.account.locked)}>
                         {props.account.locked ? "Unlock" : "Lock"}
                     </Button>

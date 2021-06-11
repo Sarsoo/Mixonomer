@@ -46,6 +46,9 @@ const useStyles = makeStyles({
     },
   });
 
+/**
+ * Main view/edit card for playlists 
+ */
 export class Edit extends Component{
 
     constructor(props){
@@ -84,6 +87,9 @@ export class Edit extends Component{
         this.makeNetworkUpdate = this.makeNetworkUpdate.bind(this);
     }
 
+    /**
+     * Get playlist info and all playlists from API, sort and set state
+     */
     componentDidMount(){
         axios.all([this.getPlaylistInfo(), this.getPlaylists()])
         .then(axios.spread((info, playlists) => {
@@ -120,14 +126,26 @@ export class Edit extends Component{
         });
     }
 
+    /**
+     * Get API playlist info request 
+     * @returns Playlist info request
+     */
     getPlaylistInfo(){
         return axios.get(`/api/playlist?name=${ this.state.name }`);
     }    
 
+    /**
+     * Get API list of playlist infos request 
+     * @returns Playlists info request
+     */
     getPlaylists(){
         return axios.get(`/api/playlists`);
     }
 
+    /**
+     * Handle input box state changes, make API requests
+     * @param {*} event 
+     */
     handleInputChange(event){
         
         this.setState({
@@ -164,6 +182,10 @@ export class Edit extends Component{
         }
     }
 
+    /**
+     * Handle checkbox state changes, make API requests
+     * @param {*} event Event data
+     */
     handleCheckChange(event){
         
         this.setState({
@@ -176,6 +198,10 @@ export class Edit extends Component{
         }
     }
 
+    /**
+     * Send playlist info updates to API
+     * @param {*} changes Dictionary of changes to make 
+     */
     makeNetworkUpdate(changes){
         let payload = {
             name: this.state.name
@@ -190,6 +216,10 @@ export class Edit extends Component{
         });
     }
 
+    /**
+     * Handle adding new watched Spotify playlist name string 
+     * @param {*} event Event data
+     */
     handleAddPart(event){
         
         if(this.state.newPlaylistName.length != 0){
@@ -221,6 +251,10 @@ export class Edit extends Component{
         }
     }
 
+    /**
+     * Handle adding new watched music tools playlist reference 
+     * @param {*} event Event data
+     */
     handleAddReference(event){
 
         if(this.state.newReferenceName.length != 0){
@@ -255,6 +289,11 @@ export class Edit extends Component{
         }
     }
 
+    /**
+     * Handle removing watched Spotify playlist name string 
+     * @param {*} id Subject playlist name
+     * @param {*} event Event data
+     */
     handleRemovePart(id, event){
         var parts = this.state.parts;
         parts = parts.filter(e => e !== id);
@@ -269,6 +308,11 @@ export class Edit extends Component{
         this.makeNetworkUpdate({parts: parts});
     }
 
+    /**
+     * Handle removing watched music tools playlist reference
+     * @param {*} id Subject playlist name
+     * @param {*} event Event data
+     */
     handleRemoveReference(id, event){
         var playlist_references = this.state.playlist_references;
         playlist_references = playlist_references.filter(e => e !== id);
@@ -283,6 +327,10 @@ export class Edit extends Component{
         this.makeNetworkUpdate({playlist_references: playlist_references});
     }
 
+    /**
+     * Handle refreshing playlist action, checks for spotify link
+     * @param {*} event Event data
+     */
     handleRun(event){
         axios.get('/api/user')
         .then((response) => {
@@ -305,21 +353,29 @@ export class Edit extends Component{
     render(){
 
         var date = new Date();
-        console.log("hello from edit");
 
         const table = (
             <div style={{maxWidth: '1000px', margin: 'auto', marginTop: '20px'}}>
             <Card align="center">
                 <CardContent>
+
+                    {/* PLAYLIST NAME TITLE */}
                     <Typography variant="h2" color="textPrimary">{this.state.name}</Typography>
                     <Grid container spacing={5}>
                         
+                        {/* MANAGED PLAYLISTS TITLE */}
                         { this.state.playlist_references.length > 0 && <Grid item xs={12} ><Typography color="textSecondary" variant="h4">Managed</Typography></Grid> }
+                        {/* SMART PLAYLIST REFERENCES */}
                         { this.state.playlist_references.length > 0 && <ListBlock handler={this.handleRemoveReference} list={this.state.playlist_references}/> }
 
+                        {/* SPOTIFY PLALISTS TITLE */}
                         { this.state.parts.length > 0 && <Grid item xs={12} ><Typography color="textSecondary" variant="h4">Spotify</Typography></Grid> }
+                        {/* SPOTIFY PLAYLIST REFERENCES */}
                         { this.state.parts.length > 0 && <ListBlock handler={this.handleRemovePart} list={this.state.parts}/> }
+                        {/* SPOTIFY DESCRIPTION */}
                         <Grid item xs={12} ><Typography variant="body2" color="textSecondary">Spotify playlist can be the name of either your own created playlist or one you follow, names are case sensitive</Typography></Grid>
+
+                        {/* SPOTIFY PLAYLIST TEXTBOX */}
                         <Grid item xs={8} sm={8} md={3}>
                             <TextField
                                 name="newPlaylistName"
@@ -330,9 +386,12 @@ export class Edit extends Component{
                                
                             />
                         </Grid>
+                        {/* SPOTIFY ADD BUTTON */}
                         <Grid item xs={4} sm={4} md={3}>
                             <Button variant="contained" className="full-width" onClick={this.handleAddPart} style={{verticalAlign: 'middle'}}>Add</Button>
                         </Grid>
+
+                        {/* SMART PLAYLIST DROPDOWN */}
                         <Grid item xs={8} sm={8} md={3}>
                             <FormControl variant="filled" style={{verticalAlign: 'middle'}}>
                                 <InputLabel htmlFor="chart_range">Managed Playlist</InputLabel>
@@ -351,22 +410,31 @@ export class Edit extends Component{
                                 </Select>
                             </FormControl>
                         </Grid>
+                        {/* SMART ADD BUTTON */}
                         <Grid item xs={4} sm={4} md={3}>
                             <Button variant="contained" className="full-width" onClick={this.handleAddReference} style={{verticalAlign: 'middle'}}>Add</Button>
                         </Grid>
+
+                        {/* CHECKBOXES */}
                         <Grid item xs={12}>
+
+                            {/* SHUFFLE */}
                             <FormControlLabel
                                 control={
                                 <Switch color="primary" name="shuffle" checked={this.state.shuffle} onChange={this.handleCheckChange} />
                                 }
                                 labelPlacement="bottom"
                                 label="Shuffle"/>
+
+                            {/* RECOMMENDATIONS */}
                             <FormControlLabel
                                 control={
                                 <Switch color="primary" checked={this.state.include_recommendations} name="include_recommendations" onChange={this.handleCheckChange} />
                                 }
                                 labelPlacement="bottom"
                                 label="Recommendations"/>
+                            
+                            {/* LIBRARY TRACKS */}
                             <FormControlLabel
                                 control={
                                 <Switch color="primary" checked={this.state.include_library_tracks} name="include_library_tracks" onChange={this.handleCheckChange} />
@@ -374,6 +442,8 @@ export class Edit extends Component{
                                 labelPlacement="bottom"
                                 label="Library Tracks"/>
                         </Grid>
+
+                        {/* NUMBER OF RECOMMENDATIONS */}
                         { this.state.include_recommendations == true &&
                         <Grid item xs={12}>
                             <TextField type="number" 
@@ -384,6 +454,8 @@ export class Edit extends Component{
                                     onChange={this.handleInputChange}></TextField>
                         </Grid>
                         }
+
+                        {/* LAST.FM CHART LENGTH */}
                         { this.state.type == 'fmchart' &&
                         <Grid item xs={12}>
                             <TextField type="number" 
@@ -394,6 +466,8 @@ export class Edit extends Component{
                                 onChange={this.handleInputChange}></TextField>
                         </Grid>
                         }
+
+                        {/* LAST.FM CHART TIME RANGE */}
                         { this.state.type == 'fmchart' &&
                         <Grid item xs={12}>
                             <FormControl variant="filled">
@@ -416,6 +490,8 @@ export class Edit extends Component{
                             </FormControl>
                         </Grid>
                         }
+
+                        {/* RECENTS DAYS SINCE */}
                         { this.state.type == 'recents' &&
                         <Grid item xs={12}>
                             <TextField type="number" 
@@ -426,7 +502,11 @@ export class Edit extends Component{
                                 onChange={this.handleInputChange} />
                         </Grid>
                         }
+
+                        {/* THIS/LAST MONTH */}
                         <Grid item xs={12}>
+
+                            {/* THIS MONTH */}
                             <FormControlLabel
                                 control={
                                 <Switch color="primary" checked={this.state.add_this_month} name="add_this_month" onChange={this.handleCheckChange} />
@@ -434,6 +514,8 @@ export class Edit extends Component{
                                 label="This Month"
                                 labelPlacement="bottom"
                             />
+
+                            {/* LAST MONTH */}
                             <FormControlLabel
                                 control={
                                 <Switch color="primary" checked={this.state.add_last_month} name="add_last_month" onChange={this.handleCheckChange} />
@@ -442,6 +524,8 @@ export class Edit extends Component{
                                 labelPlacement="bottom"
                             />
                         </Grid>
+
+                        {/* PLAYLIST TYPE */}
                         <Grid item xs={12}>
                             <FormControl variant="filled">
                                 <InputLabel htmlFor="type-select">Type</InputLabel>
@@ -461,6 +545,8 @@ export class Edit extends Component{
                         </Grid>
                     </Grid>
                 </CardContent>
+
+                {/* RUN PLAYLIST */}
                 <CardActions>
                     <Button onClick={this.handleRun} variant="contained" color="primary" className="full-width" >Run</Button>
                 </CardActions>
@@ -473,11 +559,21 @@ export class Edit extends Component{
 
 }
 
+/**
+ * Smart playlist entry in dropbox
+ * @param {*} props Properties containing name
+ * @returns Dropbox option component
+ */
 function ReferenceEntry(props) {
     return <option value={props.name}>{props.name}</option>;
     // return <MenuItem value={props.name}>{props.name}</MenuItem>;
 }
 
+/**
+ * Grid of cards for smart/Spotify playlist names with delete button
+ * @param {*} props Properties
+ * @returns Grid component
+ */
 function ListBlock(props) {
     return <Grid container 
                 spacing={3} 
@@ -489,6 +585,11 @@ function ListBlock(props) {
             </Grid>
 }
 
+/**
+ * Smart/Spotify playlist card including name and delete button
+ * @param {*} props Properties
+ * @returns Card component wrapped in grid cell
+ */
 function BlockGridItem (props) {
     const classes = useStyles();
     return (

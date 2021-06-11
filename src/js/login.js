@@ -1,4 +1,6 @@
 
+// login function for validating login data
+
 function handleLogin(){
     var username = document.forms['login']['username'].value;
     var password = document.forms['login']['password'].value;

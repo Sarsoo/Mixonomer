@@ -34,6 +34,9 @@ const LazyAdmin = React.lazy(() => import("./Admin/AdminRouter"))
 const LazyTags = React.lazy(() => import("./Tag/TagRouter"))
 const LazyTag = React.lazy(() => import("./Tag/View"))
 
+/**
+ * Root component for app
+ */
 class MusicTools extends Component {
 
     constructor(props){
@@ -46,14 +49,23 @@ class MusicTools extends Component {
         this.setOpen = this.setOpen.bind(this);
     }
 
+    /**
+     * Get user info from API on load
+     */
     componentDidMount() {
         this.getUserInfo();
     }
 
+    /**
+     * Cancel get user info request
+     */
     componentWillUnmount() {
         this.userInfoCancelToken.cancel();
     }
 
+    /**
+     * Get user info from API
+     */
     getUserInfo(){
         this.userInfoCancelToken = axios.CancelToken.source();
 
@@ -72,6 +84,10 @@ class MusicTools extends Component {
         });
     }
 
+    /**
+     * Set whether side app drawer is open
+     * @param {*} bool Open state of side drawer 
+     */
     setOpen(bool){
         this.setState({
             drawerOpen: bool
@@ -82,16 +98,22 @@ class MusicTools extends Component {
         return (
             <Router>
                 <ThemeProvider theme={GlobalTheme}>
+
+                    {/* TOP APP BAR */}
+
                     <AppBar position="static">
-                    <Toolbar>
-                        <IconButton edge="start" color="inherit" aria-label="menu" onClick={(e) => this.setOpen(true)}>
-                        <MenuIcon />
-                        </IconButton>
-                        <Typography variant="h6">
-                            <Link to='/app/playlists' style={{textDecoration: 'none'}}>Music Tools</Link>
-                        </Typography>
-                    </Toolbar>
+                        <Toolbar>
+                            <IconButton edge="start" color="inherit" aria-label="menu" onClick={(e) => this.setOpen(true)}>
+                            <MenuIcon />
+                            </IconButton>
+                            <Typography variant="h6">
+                                <Link to='/app/playlists' style={{textDecoration: 'none'}}>Music Tools</Link>
+                            </Typography>
+                        </Toolbar>
                     </AppBar>
+
+                    {/* MENU DRAWER */}
+                    
                     <Drawer
                         variant="persistent"
                         anchor="left"
@@ -99,9 +121,9 @@ class MusicTools extends Component {
                         onClose={(e) => this.setOpen(false)}
                     >
                         <div>
-                        <IconButton onClick={(e) => this.setOpen(false)}>
-                            <ChevronLeftIcon />
-                        </IconButton>
+                            <IconButton onClick={(e) => this.setOpen(false)}>
+                                <ChevronLeftIcon />
+                            </IconButton>
                         </div>
                         <Divider />
                         <div
@@ -110,32 +132,45 @@ class MusicTools extends Component {
                         onKeyDown={(e) => this.setOpen(false)}
                         >
                         <List>
+                            {/* HOME */}
                             <ListItem button key="home" component={Link} to='/app'>
                                 <ListItemIcon><HomeIcon /></ListItemIcon>
                                 <ListItemText primary="Home" />
                             </ListItem>
+
+                            {/* PLAYLISTS */}
                             <ListItem button key="playlists" component={Link} to='/app/playlists'>
                                 <ListItemIcon><QueueMusic /></ListItemIcon>
                                 <ListItemText primary="Playlists" />
                             </ListItem>
+
+                            {/* TAGS */}
                             <ListItem button key="tags" component={Link} to='/app/tags'>
                                 <ListItemIcon><GroupWork /></ListItemIcon>
                                 <ListItemText primary="Tags" />
                             </ListItem>
+
+                            {/* SETTINGS */}
                             <ListItem button key="settings" component={Link} to='/app/settings/password'>
                                 <ListItemIcon><Build /></ListItemIcon>
                                 <ListItemText primary="Settings" />
                             </ListItem>
+
+                            {/* ADMIN */}
                             { this.state.type == 'admin' &&
                                 <ListItem button key="admin" component={Link} to='/app/admin/lock'>
                                     <ListItemIcon><AccountCircle /></ListItemIcon>
                                     <ListItemText primary="Admin" />
                                 </ListItem>
                             }
+
+                            {/* LOGOUT */}
                             <ListItem button key="logout" onClick={(e) => { window.location.href = '/auth/logout' }}>
                                 <ListItemIcon><KeyboardBackspace /></ListItemIcon>
                                 <ListItemText primary="Logout" />
                             </ListItem>
+
+                            {/* SARSOO.XYZ */}
                             <ListItem button key="sarsoo.xyz" onClick={(e) => { window.location.href = 'https://sarsoo.xyz' }}>
                                 <ListItemIcon><ExitToApp /></ListItemIcon>
                                 <ListItemText primary="sarsoo.xyz" />
@@ -143,6 +178,9 @@ class MusicTools extends Component {
                         </List>
                         </div>
                     </Drawer>
+                    
+                    {/* ROUTER SWITCH */}
+
                     <div className="full-width">
                         <Switch>
                             <React.Suspense fallback={<LoadingMessage/>}>

@@ -5,6 +5,9 @@ import { Card, CardContent, Typography, Grid } from '@material-ui/core';
 
 import showMessage from "../Toast.js"
 
+/**
+ * Running tasks card component
+ */
 class Tasks extends Component {
 
     constructor(props){
@@ -17,6 +20,9 @@ class Tasks extends Component {
         this.getTasks();
     }
 
+    /**
+     * Get tasks from API
+     */
     getTasks(){
         var self = this;
         axios.get('/api/admin/tasks')
@@ -34,6 +40,8 @@ class Tasks extends Component {
     render () {
         return (
             <div style={{maxWidth: '1000px', margin: 'auto', marginTop: '20px'}}>
+
+                {/* GRID OF TASK CARDS */}
                 <Grid container spacing={4}>
                     { this.state.tasks.map((entry) => <TaskType url={entry.url} count={entry.count} times={entry.scheduled_times} key={entry.url}/>)}
                 </Grid>
@@ -42,6 +50,11 @@ class Tasks extends Component {
     }
 }
 
+/**
+ * Grid of task cards
+ * @param {*} props 
+ * @returns 
+ */
 function TaskType(props) {
     return (
         <Grid item xs={12} sm={6} md={4}>

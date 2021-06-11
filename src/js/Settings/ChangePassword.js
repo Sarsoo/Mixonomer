@@ -5,6 +5,9 @@ import { Card, Grid, Button, TextField, CardContent, CardActions, Typography } f
 
 import showMessage from "../Toast.js"
 
+/**
+ * Change password card
+ */
 class ChangePassword extends Component {
     
     constructor(props){
@@ -20,22 +23,40 @@ class ChangePassword extends Component {
         this.handleSubmit = this.handleSubmit.bind(this);
     }
 
+    /**
+     * Handle current pw state change
+     * @param {*} event Event data
+     */
     handleCurrentChange(event){
         this.setState({
             'current': event.target.value
         });
     }
+
+    /**
+     * Handle new pw state change
+     * @param {*} event Event data
+     */
     handleNewChange(event){
         this.setState({
             'new1': event.target.value
         });
     }
+
+    /**
+     * Handle new again pw state change
+     * @param {*} event Event data
+     */
     handleNew2Change(event){
         this.setState({
             'new2': event.target.value
         });
     }
 
+    /**
+     * Handle submit button click, validate input, make network request
+     * @param {*} event Event data
+     */
     handleSubmit(event){
 
         if(this.state.current.length == 0){
@@ -70,9 +91,13 @@ class ChangePassword extends Component {
                     <form onSubmit={this.handleSubmit}>
                         <CardContent>
                             <Grid container spacing={2}>
+
+                                {/* TITLE */}
                                 <Grid item className="full-width">
                                     <Typography variant="h4" color="textPrimary">Change Password</Typography>
                                 </Grid>
+
+                                {/* CURRENT PASSWORD */}
                                 <Grid item className="full-width">
                                     <TextField
                                         label="Current Password" 
@@ -83,6 +108,8 @@ class ChangePassword extends Component {
                                         value={this.state.current}
                                         className="full-width" />
                                 </Grid>
+
+                                {/* NEW PASSWORD */}
                                 <Grid item className="full-width">
                                     <TextField
                                         label="New Password" 
@@ -93,6 +120,8 @@ class ChangePassword extends Component {
                                         value={this.state.new1} 
                                         className="full-width" />
                                 </Grid>
+
+                                {/* NEW PASSWORD 2 */}
                                 <Grid item className="full-width">
                                     <TextField
                                         label="New Password Again" 
@@ -103,9 +132,13 @@ class ChangePassword extends Component {
                                         value={this.state.new2}
                                         className="full-width" />
                                 </Grid>
+
+                                {/* ERROR MESSAGE */}
                                 { this.state.error && <Grid item><Typography variant="textSeondary">{this.state.errorValue}</Typography></Grid>}
                             </Grid>
                         </CardContent>
+                        
+                        {/* SUBMIT BUTTON */}
                         <CardActions>
                             <Button type="submit" variant="contained" className="full-width" onClick={this.runStats}>Change</Button>
                         </CardActions>

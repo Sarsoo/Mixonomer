@@ -5,6 +5,9 @@ import { Card, Button, TextField, CardActions, CardContent, Typography, Grid } f
 
 import showMessage from "../Toast.js"
 
+/**
+ * New tag card component
+ */
 class NewTag extends Component {
 
     constructor(props) {
@@ -16,12 +19,20 @@ class NewTag extends Component {
         this.handleSubmit = this.handleSubmit.bind(this);
     }
 
+    /**
+     * Handle tag id input box state changes
+     * @param {*} event 
+     */
     handleInputChange(event){
         this.setState({
             tag_id: event.target.value
         });
     }
 
+    /**
+     * Validate input, make new tag API request 
+     * @param {*} event 
+     */
     handleSubmit(event){
         var tag_id = this.state.tag_id;
         this.setState({
@@ -58,9 +69,13 @@ class NewTag extends Component {
             <Card align="center">
                 <CardContent>
                     <Grid container spacing={5}>
+
+                        {/* TITLE */}
                         <Grid item xs={12}>
                             <Typography variant="h3">New Tag</Typography>
                         </Grid>
+
+                        {/* NAME TEXTBOX */}
                         <Grid item xs={12}>
                             <TextField
                                 label="Name" 
@@ -72,6 +87,8 @@ class NewTag extends Component {
                         </Grid>
                     </Grid>
                 </CardContent>
+
+                {/* SUBMIT BUTTON */}
                 <CardActions>
                     <Button variant="contained" color="primary" className="full-width" onClick={this.handleSubmit}>Create</Button>
                 </CardActions>

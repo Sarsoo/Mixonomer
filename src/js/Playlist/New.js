@@ -5,6 +5,9 @@ import { Card, Button, FormControl, TextField, InputLabel, Select, CardActions, 
 
 import showMessage from "../Toast.js"
 
+/**
+ * New playlist card
+ */
 class NewPlaylist extends Component {
 
     constructor(props) {
@@ -18,10 +21,15 @@ class NewPlaylist extends Component {
         this.handleSubmit = this.handleSubmit.bind(this);
     }
 
+    /** Set initial state of playlist type description */
     componentDidMount(){
         this.setDescription('default');
     }
 
+    /**
+     * Set playlist type description
+     * @param {*} value Playlist type string to match
+     */
     setDescription(value){
         switch(value){
             case 'default':
@@ -42,6 +50,10 @@ class NewPlaylist extends Component {
         }
     }
 
+    /**
+     * Handle input changes by setting state
+     * @param {*} event 
+     */
     handleInputChange(event){
         this.setState({
             [event.target.name]: event.target.value
@@ -49,6 +61,10 @@ class NewPlaylist extends Component {
         this.setDescription(event.target.value);
     }
 
+    /**
+     * Validate input and make new playlist API request
+     * @param {*} event 
+     */
     handleSubmit(event){
         var name = this.state.name;
         this.setState({
@@ -92,9 +108,13 @@ class NewPlaylist extends Component {
             <Card align="center">
                 <CardContent>
                     <Grid container spacing={5}>
+
+                        {/* TITLE */}
                         <Grid item xs={12}>
                             <Typography variant="h3">New</Typography>
                         </Grid>
+
+                        {/* PLAYLIST TYPE DROPDOWN */}
                         <Grid item xs={12} sm={4}>
                             <FormControl variant="filled">
                                 <InputLabel htmlFor="type-select">Type</InputLabel>
@@ -114,6 +134,8 @@ class NewPlaylist extends Component {
                                 </Select>
                             </FormControl>
                         </Grid>
+
+                        {/* PLAYLIST NAME TEXTBOX */}
                         <Grid item xs={12} sm={8}>
                             <TextField
                                 label="Name" 
@@ -123,11 +145,15 @@ class NewPlaylist extends Component {
                                 value={this.state.name} 
                                 className="full-width" />
                         </Grid>
+
+                        {/* PLAYLIST DESCRIPTION TEXT */}
                         <Grid item xs={12}>
                             <Typography variant="body2" color="textSecondary">{ this.state.description }</Typography>
                         </Grid>
                     </Grid>
                 </CardContent>
+
+                {/* SUBMIT BUTTON */}
                 <CardActions>
                     <Button variant="contained" color="primary" className="full-width" onClick={this.handleSubmit}>Create</Button>
                 </CardActions>

@@ -7,6 +7,9 @@ const axios = require('axios');
 
 import showMessage from "../Toast.js"
 
+/**
+ * Tag card list component
+ */
 class TagList extends Component {
 
     constructor(props){
@@ -18,6 +21,9 @@ class TagList extends Component {
         this.handleDeleteTag = this.handleDeleteTag.bind(this);
     }
 
+    /**
+     * Get tags info from API 
+     */
     getTags(){
         var self = this;
         axios.get('/api/tag')
@@ -41,6 +47,11 @@ class TagList extends Component {
         });
     }
 
+    /**
+     * Make delete tag request of API
+     * @param {*} tag_id Tag ID
+     * @param {*} event Event Data
+     */
     handleDeleteTag(tag_id, event){
         axios.delete(`/api/tag/${tag_id}`)
         .then((response) => {
@@ -60,6 +71,11 @@ class TagList extends Component {
     }
 }
 
+/**
+ * Tag card grid component
+ * @param {*} props Properties 
+ * @returns Grid component
+ */
 function TagGrid(props){
     return (
         <Grid container
@@ -69,6 +85,8 @@ function TagGrid(props){
                 alignItems="flex-start"
                 style={{padding: '24px'}}>
             <Grid item xs={12} sm={6} md={2}>
+
+                {/* NEW BUTTON */}
                 <ButtonGroup
                     color="primary"
                     orientation="vertical"
@@ -76,6 +94,8 @@ function TagGrid(props){
                     <Button component={Link} to='tags/new' >New</Button>
                 </ButtonGroup>
             </Grid>
+
+            {/* TAG CARDS */}
             { props.tags.length == 0 ? (
                 <Grid item xs={12} sm={6} md={3}>
                     <Typography variant="h5" component="h2">No Tags</Typography>
@@ -90,14 +110,23 @@ function TagGrid(props){
     );
 }
 
+/**
+ * Tag card component
+ * @param {*} props Properties
+ * @returns Card component
+ */
 function TagCard(props){
     return (
         <Grid item xs>
             <Card>
                 <CardContent>
+
+                    {/* TAG NAME */}
                     <Typography variant="h4" component="h2">
                     { props.tag.name }
                     </Typography>
+
+                    {/* COUNT */}
                     {'count' in props.tag && 
                         <Typography variant="h6" style={{color: "#b3b3b3"}}>
                             { props.tag.count }
@@ -108,7 +137,11 @@ function TagCard(props){
                     <ButtonGroup
                     color="primary"
                     variant="contained">
+
+                        {/* VIEW BUTTON */}
                         <Button component={Link} to={getTagLink(props.tag.tag_id)}>View</Button>
+
+                        {/* DELETE BUTTON */}
                         <Button onClick={(e) => props.handleDeleteTag(props.tag.tag_id, e)}>Delete</Button>
                     </ButtonGroup>
                 </CardActions>
@@ -117,6 +150,11 @@ function TagCard(props){
     );
 }
 
+/**
+ * Map tag name to URL
+ * @param {*} tagName Subject tag name
+ * @returns Tag URL
+ */
 function getTagLink(tagName){
     return `/app/tag/${tagName}`;
 }

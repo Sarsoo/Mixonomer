@@ -1,4 +1,6 @@
 
+// login function for validating register data
+
 function handleRegister(){
     var username = document.forms['register']['username'].value;
     var password = document.forms['register']['password'].value;

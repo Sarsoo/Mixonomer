@@ -1,5 +1,7 @@
 import React, { Component } from "react";
-var Chart = require('chart.js');
+import { Chart, BarElement, BarController, LinearScale, CategoryScale, Legend, Title, Tooltip } from 'chart.js';
+
+Chart.register(BarElement, BarController, LinearScale, CategoryScale, Legend, Title, Tooltip);
 
 class BarChart extends Component {
 
@@ -20,30 +22,39 @@ class BarChart extends Component {
             }]
           },
           options: {
-              legend : {
-                  display : false
+              indexAxis: this.props.indexAxis, // vertical or horizontal bars
+              plugins: {
+                legend : {
+                    display : true,
+                    labels: {
+                      color: 'white'
+                    }
+                }
               },
               elements: {
-                  rectangle : {
-                    backgroundColor: 'rgb(255, 255, 255)'
+                  bar : {
+                    backgroundColor: 'rgb(255, 255, 255)',
+                    borderWidth: 2,
+                    borderColor: 'rgb(0, 0, 0)'
                   }
               },
               scales: {
-                yAxes: [{
+                y: {
                   ticks: {
-                      fontColor: "#d8d8d8",
-                      fontSize: 16,
-                      stepSize: 1,
-                      beginAtZero: true
+                      color: "#d8d8d8",
+                      font: {
+                        size: 20
+                      }
                   }
-              }],
-              xAxes: [{
+                },
+                x: {
                   ticks: {
-                      fontColor: "#d8d8d8",
-                      fontSize: 16,
-                      stepSize: 1
+                      color: "#d8d8d8",
+                      font: {
+                        size: 16
+                      }
                   }
-              }]
+              }
               }
           }
         });

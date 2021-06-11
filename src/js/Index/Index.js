@@ -2,6 +2,9 @@ import React, { Component } from "react";
 
 import { Card, CardContent, Typography, Grid } from '@material-ui/core';
 
+/**
+ * Into card for the home page
+ */
 class Index extends Component{
 
     constructor(props){
