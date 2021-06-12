@@ -53,7 +53,7 @@ class Tasks extends Component {
 /**
  * Grid of task cards
  * @param {*} props 
- * @returns 
+ * @returns Card compnent wrapped in grid cell
  */
 function TaskType(props) {
     return (

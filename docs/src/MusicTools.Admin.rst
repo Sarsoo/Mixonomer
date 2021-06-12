@@ -1,37 +1,34 @@
-Tag
+Admin
 =================
 
 Router
 --------
 
-.. js:autoclass:: TagRouter
+.. js:autoclass:: Admin
    :members:
    :private-members:
 
-Cards List
+Lock
 ------------------
 
-.. js:autoclass:: TagList
+.. js:autoclass:: Lock
    :members:
    :private-members:
 
-.. js:autofunction:: TagGrid
+.. js:autofunction:: Row
 
-.. js:autofunction:: TagCard
-
-.. js:autofunction:: getTagLink
-
-New Tag Card
+Functions
 --------------------
 
-.. js:autoclass:: NewTag
+.. js:autoclass:: Functions
    :members:
    :private-members:
 
-View/Edit Tag
+Tasks
 --------------------
 
-.. js:autoclass:: TagView
+.. js:autoclass:: Tasks
    :members:
    :private-members:
 
+.. js:autofunction:: TaskType

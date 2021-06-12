@@ -1,13 +1,15 @@
-Music Tools React
+React Frontend
 ===================
-
-Subpackages
------------
 
 .. toctree::
    :maxdepth: 4
 
-   MusicTools.MusicTools
    MusicTools.Playlist
    MusicTools.Tag
+   MusicTools.Maths
+   MusicTools.Admin
+   MusicTools.Settings
 
+.. js:autoclass:: MusicTools
+   :members:
+   :private-members:

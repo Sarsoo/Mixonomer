@@ -91,7 +91,7 @@ class Lock extends Component {
 /**
  * Grid of account cards with lock buttons
  * @param {*} props 
- * @returns 
+ * @returns Card component wrapped in grid cell
  */
 function Row(props){
     const classes = useStyles();

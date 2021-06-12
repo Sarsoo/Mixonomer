@@ -3,6 +3,9 @@ import { Chart, BarElement, BarController, LinearScale, CategoryScale, Legend, T
 
 Chart.register(BarElement, BarController, LinearScale, CategoryScale, Legend, Title, Tooltip);
 
+/**
+ * Bar chart component using Chart.js
+ */
 class BarChart extends Component {
 
     constructor(props) {
@@ -10,6 +13,9 @@ class BarChart extends Component {
         this.chartRef = React.createRef();
     }
 
+    /**
+     * Load data from react properties
+     */
     componentDidMount() {
         this.chart = new Chart(this.chartRef.current, {
           type: 'bar',
@@ -43,7 +49,7 @@ class BarChart extends Component {
                   ticks: {
                       color: "#d8d8d8",
                       font: {
-                        size: 20
+                        size: 16
                       }
                   }
                 },
@@ -59,7 +65,10 @@ class BarChart extends Component {
           }
         });
     }
-
+    
+    /**
+     * Re-apply data to chart on update
+     */
     componentDidUpdate() {
       this.chart.data.labels = this.props.data.map(d => d.label);
       this.chart.data.datasets[0].data = this.props.data.map(d => d.value);

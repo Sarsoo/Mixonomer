@@ -20,7 +20,7 @@ const useStyles = makeStyles({
 /**
  * Tag View card
  */
-class View extends Component{
+class TagView extends Component{
 
     constructor(props){
         super(props);
@@ -221,7 +221,7 @@ class View extends Component{
 
     /**
      * Validate input, make tag part add request of API
-     * @returns 
+     * @returns Nothing
      */
     handleAdd(){
 
@@ -298,10 +298,21 @@ class View extends Component{
         
         var all = [...this.state.tag.artists, ...this.state.tag.albums, ...this.state.tag.tracks];
 
-        var data = all.map((entry) => {
+        var scrobbleData = all.map((entry) => {
             return {
                 "label": entry.name,
                 "value": entry.count
+            };
+        }).sort((a, b) => {
+            if(a.value < b.value) { return 1; }
+            if(a.value > b.value) { return -1; }
+            return 0;
+        });
+
+        var timeData = all.map((entry) => {
+            return {
+                "label": entry.name,
+                "value": entry.time_ms / (1000 * 60 * 60)
             };
         }).sort((a, b) => {
             if(a.value < b.value) { return 1; }
@@ -394,13 +405,21 @@ class View extends Component{
 
                         {/* PIE CHART */}
                         <Grid item xs={12}>
-                            <PieChart data={data} padding={100}/>
+                            <PieChart data={scrobbleData} padding={50}/>
                         </Grid>
 
-                        {/* BAR CHART */}
+                        {/* SCROBBLE BAR CHART */}
                         <Grid item xs={12}>
-                            <BarChart data={data} title='scrobbles' indexAxis='y'/>
+                            <BarChart data={scrobbleData} title='plays (scrobbles)' indexAxis='y'/>
                         </Grid>
+
+                        {/* TIME BAR CHART */}
+                        { this.state.tag.time_objects &&
+                        <Grid item xs={12}>
+                            <BarChart data={timeData} title='time listened (hours)' indexAxis='y'/>
+                        </Grid>
+                        }
+                        
                     </Grid>
                 </CardContent>
                 {/* UPDATE BUTTON */}
@@ -415,7 +434,7 @@ class View extends Component{
     }    
 }
 
-export default View;
+export default TagView;
 
 /**
  * Grid component for holding artist/album/track cards
@@ -462,7 +481,7 @@ function BlockGridItem (props) {
                         {/* SCROBBLE COUNT */}
                         { 'count' in props.music_obj &&
                             <Grid item xs={8}>
-                                <Typography variant="h4" color="textPrimary" className={classes.root}>📈 { props.music_obj.count }</Typography>
+                                <Typography variant="h4" color="textPrimary" className={classes.root}>📈 { props.music_obj.count.toLocaleString("en-GB") }</Typography>
                             </Grid>
                         }
                         {/* TIME */}
@@ -500,7 +519,7 @@ function StatsCard (props) {
                         
                         {/* SCROBBLE COUNT */}
                         <Grid item xs={12}>
-                            <Typography variant="h1" color="textPrimary" className={classes.root}>📈 { props.count }</Typography>
+                            <Typography variant="h1" color="textPrimary" className={classes.root}>📈 { props.count.toLocaleString("en-GB") }</Typography>
                         </Grid>
 
                         {/* PERCENT */}

@@ -1,8 +1,5 @@
-music
-=============
-
-Subpackages
------------
+Flask Backend
+====================
 
 .. toctree::
    :maxdepth: 4
@@ -14,16 +11,13 @@ Subpackages
    music.model
    music.tasks
 
-Module contents
----------------
+music Root Module
+------------------
 
 .. automodule:: music
    :members:
    :undoc-members:
    :show-inheritance:
-
-music.music module
-------------------
 
 .. automodule:: music.music
    :members:

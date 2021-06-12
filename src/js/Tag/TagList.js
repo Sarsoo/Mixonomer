@@ -129,7 +129,7 @@ function TagCard(props){
                     {/* COUNT */}
                     {'count' in props.tag && 
                         <Typography variant="h6" style={{color: "#b3b3b3"}}>
-                            { props.tag.count }
+                            { props.tag.count.toLocaleString("en-GB") }
                         </Typography>
                     }
                 </CardContent>

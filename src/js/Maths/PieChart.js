@@ -11,6 +11,9 @@ var pieColours = ['rgb(55, 61, 255)', //blue
 'rgb(242, 31, 235)', //pink
 'rgb(242, 164, 31)'];
 
+/**
+ * Pie chart component using Chart.js
+ */
 class PieChart extends Component {
 
     constructor(props) {
@@ -18,6 +21,9 @@ class PieChart extends Component {
         this.chartRef = React.createRef();
     }
 
+    /**
+     * Load data from react properties
+     */
     componentDidMount() {
         this.chart = new Chart(this.chartRef.current, {
           type: 'doughnut',
@@ -52,6 +58,9 @@ class PieChart extends Component {
         });
     }
 
+    /**
+     * Re-apply data to chart on update
+     */
     componentDidUpdate() {
       this.chart.data.labels = this.props.data.map(d => d.label);
       this.chart.data.datasets[0].data = this.props.data.map(d => d.value);
