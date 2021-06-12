@@ -16,7 +16,7 @@
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="Tag" href="MusicTools.Tag.html" />
-    <link rel="prev" title="MusicTools" href="MusicTools.MusicTools.html" />
+    <link rel="prev" title="React Frontend" href="MusicTools.html" />
    
   <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
   
@@ -43,9 +43,30 @@
 <dd><p>Router for playlist lists page, includes new playlist page</p>
 </dd></dl>
 
+<p>For managing playlists list pages for diverting to new playlist page</p>
+<dl class="js class">
+<dt id="PlaylistRouter.View">
+<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">PlaylistRouter.</span></code><code class="sig-name descname"><span class="pre">View</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="pre">props</span></em><span class="sig-paren">)</span><a class="headerlink" href="#PlaylistRouter.View" title="Permalink to this definition">¶</a></dt>
+<dd><p>Playlist view structure with tabs for view/editing and statistics</p>
+<dl class="js function">
+<dt id="PlaylistRouter.View.handleChange">
+<code class="sig-prename descclassname"><span class="pre">PlaylistRouter.View.</span></code><code class="sig-name descname"><span class="pre">handleChange</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="pre">e</span></em>, <em class="sig-param"><span class="pre">newValue</span></em><span class="sig-paren">)</span><a class="headerlink" href="#PlaylistRouter.View.handleChange" title="Permalink to this definition">¶</a></dt>
+<dd><p>Handle tab change event</p>
+<dl class="field-list simple">
+<dt class="field-odd">Arguments</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>e</strong> (<em>*</em>) – Event args</p></li>
+<li><p><strong>newValue</strong> (<em>*</em>) – New tab object</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
 </section>
-<section id="playlists-list">
-<h2>Playlists List<a class="headerlink" href="#playlists-list" title="Permalink to this headline">¶</a></h2>
+<section id="cards-list">
+<h2>Cards List<a class="headerlink" href="#cards-list" title="Permalink to this headline">¶</a></h2>
 <dl class="js class">
 <dt id="PlaylistsView">
 <em class="property"><span class="pre">class</span> </em><code class="sig-name descname"><span class="pre">PlaylistsView</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="pre">props</span></em><span class="sig-paren">)</span><a class="headerlink" href="#PlaylistsView" title="Permalink to this definition">¶</a></dt>
@@ -210,31 +231,8 @@
 </dd></dl>
 
 </section>
-<section id="playlist-router">
-<h2>Playlist Router<a class="headerlink" href="#playlist-router" title="Permalink to this headline">¶</a></h2>
-<dl class="js class">
-<dt id="PlaylistRouter.View">
-<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">PlaylistRouter.</span></code><code class="sig-name descname"><span class="pre">View</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="pre">props</span></em><span class="sig-paren">)</span><a class="headerlink" href="#PlaylistRouter.View" title="Permalink to this definition">¶</a></dt>
-<dd><p>Playlist view structure with tabs for view/editing and statistics</p>
-<dl class="js function">
-<dt id="PlaylistRouter.View.handleChange">
-<code class="sig-prename descclassname"><span class="pre">PlaylistRouter.View.</span></code><code class="sig-name descname"><span class="pre">handleChange</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="pre">e</span></em>, <em class="sig-param"><span class="pre">newValue</span></em><span class="sig-paren">)</span><a class="headerlink" href="#PlaylistRouter.View.handleChange" title="Permalink to this definition">¶</a></dt>
-<dd><p>Handle tab change event</p>
-<dl class="field-list simple">
-<dt class="field-odd">Arguments</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>e</strong> (<em>*</em>) – Event args</p></li>
-<li><p><strong>newValue</strong> (<em>*</em>) – New tab object</p></li>
-</ul>
-</dd>
-</dl>
-</dd></dl>
-
-</dd></dl>
-
-</section>
-<section id="playlist-view">
-<h2>Playlist View<a class="headerlink" href="#playlist-view" title="Permalink to this headline">¶</a></h2>
+<section id="view-edit-card">
+<h2>View/Edit Card<a class="headerlink" href="#view-edit-card" title="Permalink to this headline">¶</a></h2>
 <dl class="js class">
 <dt id="Edit">
 <em class="property"><span class="pre">class</span> </em><code class="sig-name descname"><span class="pre">Edit</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#Edit" title="Permalink to this definition">¶</a></dt>
@@ -429,8 +427,8 @@
 </dd></dl>
 
 </section>
-<section id="playlist-stats-view">
-<h2>Playlist Stats View<a class="headerlink" href="#playlist-stats-view" title="Permalink to this headline">¶</a></h2>
+<section id="stats-card">
+<h2>Stats Card<a class="headerlink" href="#stats-card" title="Permalink to this headline">¶</a></h2>
 <dl class="js class">
 <dt id="Count">
 <em class="property"><span class="pre">class</span> </em><code class="sig-name descname"><span class="pre">Count</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#Count" title="Permalink to this definition">¶</a></dt>
@@ -476,26 +474,29 @@
 <h3>Navigation</h3>
 <p><span class="caption-text">Contents:</span></p>
 <ul class="current">
-<li class="toctree-l1 current"><a class="reference internal" href="modules.html">Modules</a></li>
-<li class="toctree-l1"><a class="reference internal" href="music.html">music</a></li>
-<li class="toctree-l1"><a class="reference internal" href="music.api.html">music.api</a></li>
-<li class="toctree-l1"><a class="reference internal" href="music.auth.html">music.auth</a></li>
-<li class="toctree-l1"><a class="reference internal" href="music.cloud.html">music.cloud</a></li>
-<li class="toctree-l1"><a class="reference internal" href="music.db.html">music.db</a></li>
-<li class="toctree-l1"><a class="reference internal" href="music.model.html">music.model</a></li>
-<li class="toctree-l1"><a class="reference internal" href="music.tasks.html">music.tasks</a></li>
-<li class="toctree-l1 current"><a class="reference internal" href="MusicTools.html">Music Tools React</a></li>
+<li class="toctree-l1"><a class="reference internal" href="music.html">Py</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="MusicTools.html">Js</a><ul class="current">
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Playlist</a></li>
+<li class="toctree-l2"><a class="reference internal" href="MusicTools.Tag.html">Tag</a></li>
+<li class="toctree-l2"><a class="reference internal" href="MusicTools.Maths.html">Maths</a></li>
+<li class="toctree-l2"><a class="reference internal" href="MusicTools.Admin.html">Admin</a></li>
+<li class="toctree-l2"><a class="reference internal" href="MusicTools.Settings.html">Settings</a></li>
+</ul>
+</li>
+<li class="toctree-l1 current"><a class="reference internal" href="modules.html">All Modules</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="music.html">Flask Backend</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="MusicTools.html">React Frontend</a></li>
+</ul>
+</li>
 </ul>
 
 <div class="relations">
 <h3>Related Topics</h3>
 <ul>
   <li><a href="../index.html">Documentation overview</a><ul>
-  <li><a href="modules.html">music</a><ul>
-  <li><a href="MusicTools.html">Music Tools React</a><ul>
-      <li>Previous: <a href="MusicTools.MusicTools.html" title="previous chapter">MusicTools</a></li>
+  <li><a href="MusicTools.html">React Frontend</a><ul>
+      <li>Previous: <a href="MusicTools.html" title="previous chapter">React Frontend</a></li>
       <li>Next: <a href="MusicTools.Tag.html" title="next chapter">Tag</a></li>
-  </ul></li>
   </ul></li>
   </ul></li>
 </ul>

@@ -1,5 +1,5 @@
-music
-=====
+Music Tools Modules
+======================
 
 .. toctree::
    :maxdepth: 4

@@ -15,6 +15,7 @@
     <script src="../_static/doctools.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Maths" href="MusicTools.Maths.html" />
     <link rel="prev" title="Playlist" href="MusicTools.Playlist.html" />
    
   <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
@@ -43,8 +44,8 @@
 </dd></dl>
 
 </section>
-<section id="tags-list">
-<h2>Tags List<a class="headerlink" href="#tags-list" title="Permalink to this headline">¶</a></h2>
+<section id="cards-list">
+<h2>Cards List<a class="headerlink" href="#cards-list" title="Permalink to this headline">¶</a></h2>
 <dl class="js class">
 <dt id="TagList">
 <em class="property"><span class="pre">class</span> </em><code class="sig-name descname"><span class="pre">TagList</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="pre">props</span></em><span class="sig-paren">)</span><a class="headerlink" href="#TagList" title="Permalink to this definition">¶</a></dt>
@@ -155,6 +156,125 @@
 </dd></dl>
 
 </section>
+<section id="view-edit-tag">
+<h2>View/Edit Tag<a class="headerlink" href="#view-edit-tag" title="Permalink to this headline">¶</a></h2>
+<dl class="js class">
+<dt id="TagView">
+<em class="property"><span class="pre">class</span> </em><code class="sig-name descname"><span class="pre">TagView</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="pre">props</span></em><span class="sig-paren">)</span><a class="headerlink" href="#TagView" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tag View card</p>
+<dl class="js function">
+<dt id="TagView.componentDidMount">
+<code class="sig-prename descclassname"><span class="pre">TagView.</span></code><code class="sig-name descname"><span class="pre">componentDidMount</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#TagView.componentDidMount" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get tag info from API on load</p>
+</dd></dl>
+
+<dl class="js function">
+<dt id="TagView.getTag">
+<code class="sig-prename descclassname"><span class="pre">TagView.</span></code><code class="sig-name descname"><span class="pre">getTag</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="pre">error_toast=true</span></em><span class="sig-paren">)</span><a class="headerlink" href="#TagView.getTag" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get tag info from API</p>
+<dl class="field-list simple">
+<dt class="field-odd">Arguments</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>error_toast</strong> (<em>*</em>) – Whether to show toast on network error</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="js function">
+<dt id="TagView.handleAdd">
+<code class="sig-prename descclassname"><span class="pre">TagView.</span></code><code class="sig-name descname"><span class="pre">handleAdd</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#TagView.handleAdd" title="Permalink to this definition">¶</a></dt>
+<dd><p>Validate input, make tag part add request of API</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>Nothing</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="js function">
+<dt id="TagView.handleChangeAddType">
+<code class="sig-prename descclassname"><span class="pre">TagView.</span></code><code class="sig-name descname"><span class="pre">handleChangeAddType</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="pre">type</span></em><span class="sig-paren">)</span><a class="headerlink" href="#TagView.handleChangeAddType" title="Permalink to this definition">¶</a></dt>
+<dd><p>Handle adding type drop down change</p>
+<dl class="field-list simple">
+<dt class="field-odd">Arguments</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>type</strong> (<em>*</em>) – </p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="js function">
+<dt id="TagView.handleCheckChange">
+<code class="sig-prename descclassname"><span class="pre">TagView.</span></code><code class="sig-name descname"><span class="pre">handleCheckChange</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="pre">event</span></em><span class="sig-paren">)</span><a class="headerlink" href="#TagView.handleCheckChange" title="Permalink to this definition">¶</a></dt>
+<dd><p>Handle checkbox state changes, make network updates</p>
+<dl class="field-list simple">
+<dt class="field-odd">Arguments</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>event</strong> (<em>*</em>) – Event data</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="js function">
+<dt id="TagView.handleInputChange">
+<code class="sig-prename descclassname"><span class="pre">TagView.</span></code><code class="sig-name descname"><span class="pre">handleInputChange</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="pre">event</span></em><span class="sig-paren">)</span><a class="headerlink" href="#TagView.handleInputChange" title="Permalink to this definition">¶</a></dt>
+<dd><p>Handle input box state changes</p>
+<dl class="field-list simple">
+<dt class="field-odd">Arguments</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>event</strong> (<em>*</em>) – Event data</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="js function">
+<dt id="TagView.handleRemoveObj">
+<code class="sig-prename descclassname"><span class="pre">TagView.</span></code><code class="sig-name descname"><span class="pre">handleRemoveObj</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="pre">music_obj</span></em>, <em class="sig-param"><span class="pre">addType</span></em>, <em class="sig-param"><span class="pre">event</span></em><span class="sig-paren">)</span><a class="headerlink" href="#TagView.handleRemoveObj" title="Permalink to this definition">¶</a></dt>
+<dd><p>Handle remove watched part</p>
+<dl class="field-list simple">
+<dt class="field-odd">Arguments</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>music_obj</strong> (<em>*</em>) – Subject object to remove</p></li>
+<li><p><strong>addType</strong> (<em>*</em>) – Object type (tracks/albums/artists)</p></li>
+<li><p><strong>event</strong> (<em>*</em>) – Event data</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="js function">
+<dt id="TagView.handleRun">
+<code class="sig-prename descclassname"><span class="pre">TagView.</span></code><code class="sig-name descname"><span class="pre">handleRun</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="pre">event</span></em><span class="sig-paren">)</span><a class="headerlink" href="#TagView.handleRun" title="Permalink to this definition">¶</a></dt>
+<dd><p>Validate input and make tag refresh update of API</p>
+<dl class="field-list simple">
+<dt class="field-odd">Arguments</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>event</strong> (<em>*</em>) – </p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="js function">
+<dt id="TagView.makeNetworkUpdate">
+<code class="sig-prename descclassname"><span class="pre">TagView.</span></code><code class="sig-name descname"><span class="pre">makeNetworkUpdate</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="pre">changes</span></em><span class="sig-paren">)</span><a class="headerlink" href="#TagView.makeNetworkUpdate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Put tag info changes to API</p>
+<dl class="field-list simple">
+<dt class="field-odd">Arguments</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>changes</strong> (<em>*</em>) – Dictionary of changes to submit</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
 </section>
 
 
@@ -176,25 +296,29 @@
 <h3>Navigation</h3>
 <p><span class="caption-text">Contents:</span></p>
 <ul class="current">
-<li class="toctree-l1 current"><a class="reference internal" href="modules.html">Modules</a></li>
-<li class="toctree-l1"><a class="reference internal" href="music.html">music</a></li>
-<li class="toctree-l1"><a class="reference internal" href="music.api.html">music.api</a></li>
-<li class="toctree-l1"><a class="reference internal" href="music.auth.html">music.auth</a></li>
-<li class="toctree-l1"><a class="reference internal" href="music.cloud.html">music.cloud</a></li>
-<li class="toctree-l1"><a class="reference internal" href="music.db.html">music.db</a></li>
-<li class="toctree-l1"><a class="reference internal" href="music.model.html">music.model</a></li>
-<li class="toctree-l1"><a class="reference internal" href="music.tasks.html">music.tasks</a></li>
-<li class="toctree-l1 current"><a class="reference internal" href="MusicTools.html">Music Tools React</a></li>
+<li class="toctree-l1"><a class="reference internal" href="music.html">Py</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="MusicTools.html">Js</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="MusicTools.Playlist.html">Playlist</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Tag</a></li>
+<li class="toctree-l2"><a class="reference internal" href="MusicTools.Maths.html">Maths</a></li>
+<li class="toctree-l2"><a class="reference internal" href="MusicTools.Admin.html">Admin</a></li>
+<li class="toctree-l2"><a class="reference internal" href="MusicTools.Settings.html">Settings</a></li>
+</ul>
+</li>
+<li class="toctree-l1 current"><a class="reference internal" href="modules.html">All Modules</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="music.html">Flask Backend</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="MusicTools.html">React Frontend</a></li>
+</ul>
+</li>
 </ul>
 
 <div class="relations">
 <h3>Related Topics</h3>
 <ul>
   <li><a href="../index.html">Documentation overview</a><ul>
-  <li><a href="modules.html">music</a><ul>
-  <li><a href="MusicTools.html">Music Tools React</a><ul>
+  <li><a href="MusicTools.html">React Frontend</a><ul>
       <li>Previous: <a href="MusicTools.Playlist.html" title="previous chapter">Playlist</a></li>
-  </ul></li>
+      <li>Next: <a href="MusicTools.Maths.html" title="next chapter">Maths</a></li>
   </ul></li>
   </ul></li>
 </ul>

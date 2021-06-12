@@ -1,0 +1,259 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17: http://docutils.sourceforge.net/" />
+
+    <title>Admin &#8212; Music Tools  documentation</title>
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/alabaster.css" type="text/css" />
+    <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Settings" href="MusicTools.Settings.html" />
+    <link rel="prev" title="Maths" href="MusicTools.Maths.html" />
+   
+  <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <section id="admin">
+<h1>Admin<a class="headerlink" href="#admin" title="Permalink to this headline">¶</a></h1>
+<section id="router">
+<h2>Router<a class="headerlink" href="#router" title="Permalink to this headline">¶</a></h2>
+<dl class="js class">
+<dt id="Admin">
+<em class="property"><span class="pre">class</span> </em><code class="sig-name descname"><span class="pre">Admin</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="pre">props</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Admin" title="Permalink to this definition">¶</a></dt>
+<dd><p>Admin router component for hosting cards</p>
+<dl class="js function">
+<dt id="Admin.handleChange">
+<code class="sig-prename descclassname"><span class="pre">Admin.</span></code><code class="sig-name descname"><span class="pre">handleChange</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="pre">e</span></em>, <em class="sig-param"><span class="pre">newValue</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Admin.handleChange" title="Permalink to this definition">¶</a></dt>
+<dd><p>Handle tab change event</p>
+<dl class="field-list simple">
+<dt class="field-odd">Arguments</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>e</strong> (<em>*</em>) – Event data</p></li>
+<li><p><strong>newValue</strong> (<em>*</em>) – New tab data</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="lock">
+<h2>Lock<a class="headerlink" href="#lock" title="Permalink to this headline">¶</a></h2>
+<dl class="js class">
+<dt id="Lock">
+<em class="property"><span class="pre">class</span> </em><code class="sig-name descname"><span class="pre">Lock</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="pre">props</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Lock" title="Permalink to this definition">¶</a></dt>
+<dd><p>Account lock card component</p>
+<dl class="js function">
+<dt id="Lock.getUserInfo">
+<code class="sig-prename descclassname"><span class="pre">Lock.</span></code><code class="sig-name descname"><span class="pre">getUserInfo</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#Lock.getUserInfo" title="Permalink to this definition">¶</a></dt>
+<dd><p>Make user infor request of API</p>
+</dd></dl>
+
+<dl class="js function">
+<dt id="Lock.handleLock">
+<code class="sig-prename descclassname"><span class="pre">Lock.</span></code><code class="sig-name descname"><span class="pre">handleLock</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="pre">event</span></em>, <em class="sig-param"><span class="pre">username</span></em>, <em class="sig-param"><span class="pre">to_state</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Lock.handleLock" title="Permalink to this definition">¶</a></dt>
+<dd><p>Make lock request of API</p>
+<dl class="field-list simple">
+<dt class="field-odd">Arguments</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>event</strong> (<em>*</em>) – Event data</p></li>
+<li><p><strong>username</strong> (<em>*</em>) – Subject username</p></li>
+<li><p><strong>to_state</strong> (<em>*</em>) – Target lock state</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="js function">
+<dt id="Row">
+<code class="sig-name descname"><span class="pre">Row</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="pre">props</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Row" title="Permalink to this definition">¶</a></dt>
+<dd><p>Grid of account cards with lock buttons</p>
+<dl class="field-list simple">
+<dt class="field-odd">Arguments</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>props</strong> (<em>*</em>) – </p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Card component wrapped in grid cell</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="functions">
+<h2>Functions<a class="headerlink" href="#functions" title="Permalink to this headline">¶</a></h2>
+<dl class="js class">
+<dt id="Functions">
+<em class="property"><span class="pre">class</span> </em><code class="sig-name descname"><span class="pre">Functions</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="pre">props</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Functions" title="Permalink to this definition">¶</a></dt>
+<dd><p>Admin functions card component</p>
+<dl class="js function">
+<dt id="Functions.runAllUsers">
+<code class="sig-prename descclassname"><span class="pre">Functions.</span></code><code class="sig-name descname"><span class="pre">runAllUsers</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="pre">event</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Functions.runAllUsers" title="Permalink to this definition">¶</a></dt>
+<dd><p>Make run all playlists request of API</p>
+<dl class="field-list simple">
+<dt class="field-odd">Arguments</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>event</strong> (<em>*</em>) – Event data</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="js function">
+<dt id="Functions.runStats">
+<code class="sig-prename descclassname"><span class="pre">Functions.</span></code><code class="sig-name descname"><span class="pre">runStats</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="pre">event</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Functions.runStats" title="Permalink to this definition">¶</a></dt>
+<dd><p>Make run stats request of API</p>
+<dl class="field-list simple">
+<dt class="field-odd">Arguments</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>event</strong> (<em>*</em>) – Event data</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="tasks">
+<h2>Tasks<a class="headerlink" href="#tasks" title="Permalink to this headline">¶</a></h2>
+<dl class="js class">
+<dt id="Tasks">
+<em class="property"><span class="pre">class</span> </em><code class="sig-name descname"><span class="pre">Tasks</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="pre">props</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Tasks" title="Permalink to this definition">¶</a></dt>
+<dd><p>Running tasks card component</p>
+<dl class="js function">
+<dt id="Tasks.getTasks">
+<code class="sig-prename descclassname"><span class="pre">Tasks.</span></code><code class="sig-name descname"><span class="pre">getTasks</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#Tasks.getTasks" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get tasks from API</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="js function">
+<dt id="TaskType">
+<code class="sig-name descname"><span class="pre">TaskType</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="pre">props</span></em><span class="sig-paren">)</span><a class="headerlink" href="#TaskType" title="Permalink to this definition">¶</a></dt>
+<dd><p>Grid of task cards</p>
+<dl class="field-list simple">
+<dt class="field-odd">Arguments</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>props</strong> (<em>*</em>) – </p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Card compnent wrapped in grid cell</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+</section>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../index.html">Music Tools</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<p><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="music.html">Py</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="MusicTools.html">Js</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="MusicTools.Playlist.html">Playlist</a></li>
+<li class="toctree-l2"><a class="reference internal" href="MusicTools.Tag.html">Tag</a></li>
+<li class="toctree-l2"><a class="reference internal" href="MusicTools.Maths.html">Maths</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Admin</a></li>
+<li class="toctree-l2"><a class="reference internal" href="MusicTools.Settings.html">Settings</a></li>
+</ul>
+</li>
+<li class="toctree-l1 current"><a class="reference internal" href="modules.html">All Modules</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="music.html">Flask Backend</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="MusicTools.html">React Frontend</a></li>
+</ul>
+</li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../index.html">Documentation overview</a><ul>
+  <li><a href="MusicTools.html">React Frontend</a><ul>
+      <li>Previous: <a href="MusicTools.Maths.html" title="previous chapter">Maths</a></li>
+      <li>Next: <a href="MusicTools.Settings.html" title="next chapter">Settings</a></li>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2021, Sarsoo.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 3.5.3</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+      |
+      <a href="../_sources/src/MusicTools.Admin.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

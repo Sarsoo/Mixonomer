@@ -2,18 +2,12 @@ Music Tools
 =======================================
 
 .. toctree::
-   :maxdepth: 1
+   :maxdepth: 2
    :caption: Contents:
 
-   Modules <src/modules>
-   src/music
-   src/music.api
-   src/music.auth
-   src/music.cloud
-   src/music.db
-   src/music.model
-   src/music.tasks
-   src/MusicTools
+   Py <src/music>
+   Js <src/MusicTools>
+   All Modules <src/modules>
 
 `Music Tools <https://music.sarsoo.xyz>`_
 ----------------------------------------------
@@ -22,7 +16,7 @@ Music Tools
 
 Music Tools is a web app for creating smart Spotify playlists. The app is based on `spotframework <https://github.com/Sarsoo/spotframework>`_ and `fmframework <https://github.com/Sarsoo/pyfmframework>`_ for interfacing with Spotify and Last.fm. The app is currently hosted on Google's Cloud Platform.
 
-The system is composed of a Flask web server with a Fireo ORM layer and longer tasks dispatched to Cloud Tasks or Functions.
+The backend is composed of a Flask web server with a Fireo ORM layer and longer tasks dispatched to Cloud Tasks or Functions. The frontend is a React app with material UI components and Axios for HTTP requests.
 
 .. image:: Playlists.png
 

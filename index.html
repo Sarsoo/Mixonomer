@@ -15,7 +15,7 @@
     <script src="_static/doctools.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="music" href="src/modules.html" />
+    <link rel="next" title="Flask Backend" href="src/music.html" />
    
   <link rel="stylesheet" href="_static/custom.css" type="text/css" />
   
@@ -37,21 +37,35 @@
 <div class="toctree-wrapper compound">
 <p><span class="caption-text">Contents:</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="src/modules.html">Modules</a></li>
-<li class="toctree-l1"><a class="reference internal" href="src/music.html">music</a></li>
-<li class="toctree-l1"><a class="reference internal" href="src/music.api.html">music.api</a></li>
-<li class="toctree-l1"><a class="reference internal" href="src/music.auth.html">music.auth</a></li>
-<li class="toctree-l1"><a class="reference internal" href="src/music.cloud.html">music.cloud</a></li>
-<li class="toctree-l1"><a class="reference internal" href="src/music.db.html">music.db</a></li>
-<li class="toctree-l1"><a class="reference internal" href="src/music.model.html">music.model</a></li>
-<li class="toctree-l1"><a class="reference internal" href="src/music.tasks.html">music.tasks</a></li>
-<li class="toctree-l1"><a class="reference internal" href="src/MusicTools.html">Music Tools React</a></li>
+<li class="toctree-l1"><a class="reference internal" href="src/music.html">Py</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="src/music.api.html">music.api</a></li>
+<li class="toctree-l2"><a class="reference internal" href="src/music.auth.html">music.auth</a></li>
+<li class="toctree-l2"><a class="reference internal" href="src/music.cloud.html">music.cloud</a></li>
+<li class="toctree-l2"><a class="reference internal" href="src/music.db.html">music.db</a></li>
+<li class="toctree-l2"><a class="reference internal" href="src/music.model.html">music.model</a></li>
+<li class="toctree-l2"><a class="reference internal" href="src/music.tasks.html">music.tasks</a></li>
+<li class="toctree-l2"><a class="reference internal" href="src/music.html#module-music">music Root Module</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="src/MusicTools.html">Js</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="src/MusicTools.Playlist.html">Playlist</a></li>
+<li class="toctree-l2"><a class="reference internal" href="src/MusicTools.Tag.html">Tag</a></li>
+<li class="toctree-l2"><a class="reference internal" href="src/MusicTools.Maths.html">Maths</a></li>
+<li class="toctree-l2"><a class="reference internal" href="src/MusicTools.Admin.html">Admin</a></li>
+<li class="toctree-l2"><a class="reference internal" href="src/MusicTools.Settings.html">Settings</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="src/modules.html">All Modules</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="src/music.html">Flask Backend</a></li>
+<li class="toctree-l2"><a class="reference internal" href="src/MusicTools.html">React Frontend</a></li>
+</ul>
+</li>
 </ul>
 </div>
 <section id="id2">
 <h2><a class="reference external" href="https://music.sarsoo.xyz">Music Tools</a><a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h2>
 <img alt="https://github.com/sarsoo/music-tools/workflows/test%20and%20deploy/badge.svg" src="https://github.com/sarsoo/music-tools/workflows/test%20and%20deploy/badge.svg" /><p>Music Tools is a web app for creating smart Spotify playlists. The app is based on <a class="reference external" href="https://github.com/Sarsoo/spotframework">spotframework</a> and <a class="reference external" href="https://github.com/Sarsoo/pyfmframework">fmframework</a> for interfacing with Spotify and Last.fm. The app is currently hosted on Google’s Cloud Platform.</p>
-<p>The system is composed of a Flask web server with a Fireo ORM layer and longer tasks dispatched to Cloud Tasks or Functions.</p>
+<p>The backend is composed of a Flask web server with a Fireo ORM layer and longer tasks dispatched to Cloud Tasks or Functions. The frontend is a React app with material UI components and Axios for HTTP requests.</p>
 <img alt="_images/Playlists.png" src="_images/Playlists.png" />
 </section>
 </section>
@@ -83,22 +97,16 @@
 <h3>Navigation</h3>
 <p><span class="caption-text">Contents:</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="src/modules.html">Modules</a></li>
-<li class="toctree-l1"><a class="reference internal" href="src/music.html">music</a></li>
-<li class="toctree-l1"><a class="reference internal" href="src/music.api.html">music.api</a></li>
-<li class="toctree-l1"><a class="reference internal" href="src/music.auth.html">music.auth</a></li>
-<li class="toctree-l1"><a class="reference internal" href="src/music.cloud.html">music.cloud</a></li>
-<li class="toctree-l1"><a class="reference internal" href="src/music.db.html">music.db</a></li>
-<li class="toctree-l1"><a class="reference internal" href="src/music.model.html">music.model</a></li>
-<li class="toctree-l1"><a class="reference internal" href="src/music.tasks.html">music.tasks</a></li>
-<li class="toctree-l1"><a class="reference internal" href="src/MusicTools.html">Music Tools React</a></li>
+<li class="toctree-l1"><a class="reference internal" href="src/music.html">Py</a></li>
+<li class="toctree-l1"><a class="reference internal" href="src/MusicTools.html">Js</a></li>
+<li class="toctree-l1"><a class="reference internal" href="src/modules.html">All Modules</a></li>
 </ul>
 
 <div class="relations">
 <h3>Related Topics</h3>
 <ul>
   <li><a href="#">Documentation overview</a><ul>
-      <li>Next: <a href="src/modules.html" title="next chapter">music</a></li>
+      <li>Next: <a href="src/music.html" title="next chapter">Flask Backend</a></li>
   </ul></li>
 </ul>
 </div>

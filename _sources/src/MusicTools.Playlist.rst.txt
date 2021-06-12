@@ -8,7 +8,13 @@ Router
    :members:
    :private-members:
 
-Playlists List
+For managing playlists list pages for diverting to new playlist page
+
+.. js:autoclass:: PlaylistRouter.View
+   :members:
+   :private-members:
+
+Cards List
 ------------------
 
 .. js:autoclass:: PlaylistsView
@@ -32,14 +38,7 @@ New Playlist Card
    :members:
    :private-members:
 
-Playlist Router
-------------------
-
-.. js:autoclass:: PlaylistRouter.View
-   :members:
-   :private-members:
-
-Playlist View
+View/Edit Card
 ------------------
 
 .. js:autoclass:: Edit
@@ -52,7 +51,7 @@ Playlist View
 
 .. js:autofunction:: Edit.BlockGridItem
 
-Playlist Stats View
+Stats Card
 -----------------------
 
 .. js:autoclass:: Count
