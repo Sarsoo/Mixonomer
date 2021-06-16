@@ -440,6 +440,31 @@
 <code class="sig-name descname"><span class="pre">email</span></code><em class="property"> <span class="pre">=</span> <span class="pre">None</span></em><a class="headerlink" href="#music.model.user.User.email" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
+<dl class="py method">
+<dt id="music.model.user.User.get_playlist">
+<code class="sig-name descname"><span class="pre">get_playlist</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">playlist_name</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">single_return</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">raise_error</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#music.model.user.User.get_playlist" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get a user’s playlist by name with smart case sensitivity</p>
+<p>Will return an exact match if possible, otherwise will return the first case-insensitive match</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>playlist_name</strong> (<em>str</em>) – Subject playlist name</p></li>
+<li><p><strong>single_return</strong> (<em>bool</em><em>, </em><em>optional</em>) – Return the best match, otherwise return (&lt;exact&gt;, &lt;all matches&gt;). &lt;exact&gt; will be None if not found. Defaults to True.</p></li>
+<li><p><strong>raise_error</strong> (<em>bool</em><em>, </em><em>optional</em>) – Raise a NameError if nothing found. Defaults to True.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><p><strong>NameError</strong> – If no matching playlists found</p>
+</dd>
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>Found user’s playlists</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>Optional[<a class="reference internal" href="#music.model.playlist.Playlist" title="music.model.playlist.Playlist">Playlist</a>] or (&lt;exact&gt;, &lt;all matches&gt;)</p>
+</dd>
+</dl>
+</dd></dl>
+
 <dl class="py attribute">
 <dt id="music.model.user.User.last_login">
 <code class="sig-name descname"><span class="pre">last_login</span></code><em class="property"> <span class="pre">=</span> <span class="pre">None</span></em><a class="headerlink" href="#music.model.user.User.last_login" title="Permalink to this definition">¶</a></dt>
@@ -536,11 +561,7 @@
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="MusicTools.html">Js</a></li>
-<li class="toctree-l1 current"><a class="reference internal" href="modules.html">All Modules</a><ul class="current">
-<li class="toctree-l2 current"><a class="reference internal" href="music.html">Flask Backend</a></li>
-<li class="toctree-l2"><a class="reference internal" href="MusicTools.html">React Frontend</a></li>
-</ul>
-</li>
+<li class="toctree-l1"><a class="reference internal" href="modules.html">All Modules</a></li>
 </ul>
 
 <div class="relations">
