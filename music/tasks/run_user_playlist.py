@@ -56,13 +56,10 @@ def run_user_playlist(user: User, playlist: Playlist, spotnet: SpotNetwork = Non
 
     if isinstance(playlist, str):
         playlist_name = playlist
-        playlist = Playlist.collection.parent(user.key).filter('name', '==', playlist_name).get()
+        playlist = user.get_playlist(playlist_name)
+
     else:
-        playlist_name = playlist.name
-    
-    if playlist is None:
-        logger.critical(f'playlist not found {username} / {playlist_name}')
-        raise NameError(f'Playlist {playlist_name} not found for {username}')
+        playlist_name = playlist.name 
 
     if playlist.uri is None:
         logger.critical(f'no playlist id to populate {username} / {playlist_name}')

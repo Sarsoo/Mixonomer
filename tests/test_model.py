@@ -19,3 +19,41 @@ class TestUser(unittest.TestCase):
         for user in users:
             for key in ['password', 'access_token', 'refresh_token', 'token_expiry', 'id', 'key']:
                 self.assertNotIn(key, user.to_dict())
+
+    def test_get_playlist(self):
+        test_user = User.collection.filter('username', '==', "test").get()
+
+        test_playlist = test_user.get_playlist("test_playlist")
+        self.assertIsNotNone(test_playlist)
+
+    def test_get_playlist_all_returned(self):
+        test_user = User.collection.filter('username', '==', "test").get()
+
+        exact, matches = test_user.get_playlist("test_playlist", single_return=False)
+        self.assertIsNotNone(exact)
+        self.assertEqual(len(matches), 1)
+
+    def test_get_playlist_wrong_case(self):
+        test_user = User.collection.filter('username', '==', "test").get()
+
+        test_playlist = test_user.get_playlist("TEST_PLAYLIST")
+        self.assertIsNotNone(test_playlist)
+
+    def test_get_playlist_wrong_case_not_exact(self):
+        test_user = User.collection.filter('username', '==', "test").get()
+
+        exact, matches = test_user.get_playlist("TEST_PLAYLIST", single_return=False)
+        self.assertIsNone(exact)
+        self.assertEqual(len(matches), 1)
+
+    def test_get_playlist_missing_key(self):
+        test_user = User.collection.filter('username', '==', "test").get()
+
+        with self.assertRaises(NameError):
+            test_playlist = test_user.get_playlist("test_playlist_missing")
+
+    def test_get_playlist_missing_key_without_error(self):
+        test_user = User.collection.filter('username', '==', "test").get()
+
+        test_playlist = test_user.get_playlist("test_playlist_missing", raise_error=False)
+        self.assertIsNone(test_playlist)

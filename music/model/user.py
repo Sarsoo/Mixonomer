@@ -1,7 +1,13 @@
+import logging
+
 from fireo.models import Model
 from fireo.fields import TextField, BooleanField, DateTime, NumberField
 
+from music.model.playlist import Playlist
+
 from werkzeug.security import check_password_hash
+
+logger = logging.getLogger(__name__)
 
 
 class User(Model):
@@ -40,3 +46,46 @@ class User(Model):
         to_return.pop('key', None)
 
         return to_return
+
+    def get_playlist(self, playlist_name: str, single_return=True, raise_error=True):
+        """Get a user's playlist by name with smart case sensitivity
+
+        Will return an exact match if possible, otherwise will return the first case-insensitive match
+
+        Args:
+            playlist_name (str): Subject playlist name
+            single_return (bool, optional): Return the best match, otherwise return (<exact>, <all matches>). <exact> will be None if not found. Defaults to True.
+            raise_error (bool, optional): Raise a NameError if nothing found. Defaults to True.
+
+        Raises:
+            NameError: If no matching playlists found
+
+        Returns:
+            Optional[Playlist] or (<exact>, <all matches>): Found user's playlists
+        """
+
+        smart_playlists = Playlist.collection.parent(self.key).fetch()
+
+        exact_match = None
+        matches = list()
+        for playlist in smart_playlists:
+            if playlist.name == playlist_name:
+                exact_match = playlist
+            if playlist.name.lower() == playlist_name.lower():
+                matches.append(playlist)
+
+        if len(matches) == 0:
+            # NO PLAYLIST FOUND
+            logger.critical(f'playlist not found {self.username} / {playlist_name}')
+            if raise_error:
+                raise NameError(f'Playlist {playlist_name} not found for {self.username}')
+            else:
+                return None
+
+        if single_return:
+            if exact_match:
+                return exact_match
+            else:
+                return matches[0]
+        else:
+            return exact_match, matches

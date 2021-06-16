@@ -97,7 +97,7 @@ class Admin(Cmd):
             print('>> user not found')
 
         name = input('enter playlist name: ')
-        playlist = Playlist.collection.parent(user.key).filter('name', '==', name).get()
+        playlist = user.get_playlist(name)
 
         if playlist is None:
             print('>> playlist not found')

@@ -25,7 +25,7 @@ def refresh_lastfm_track_stats(username, playlist_name):
     spotnet = database.get_authed_spotify_network(user)
     counter = Counter(fmnet=fmnet, spotnet=spotnet)
 
-    playlist = Playlist.collection.parent(user.key).filter('name', '==', playlist_name).get()
+    playlist = user.get_playlist(playlist_name)
 
     if playlist is None:
         logger.critical(f'playlist {playlist_name} for {username} not found')
@@ -71,7 +71,7 @@ def refresh_lastfm_album_stats(username, playlist_name):
     spotnet = database.get_authed_spotify_network(user)
     counter = Counter(fmnet=fmnet, spotnet=spotnet)
 
-    playlist = Playlist.collection.parent(user.key).filter('name', '==', playlist_name).get()
+    playlist = user.get_playlist(playlist_name)
 
     if playlist is None:
         logger.critical(f'playlist {playlist_name} for {username} not found')
@@ -117,7 +117,7 @@ def refresh_lastfm_artist_stats(username, playlist_name):
     spotnet = database.get_authed_spotify_network(user)
     counter = Counter(fmnet=fmnet, spotnet=spotnet)
 
-    playlist = Playlist.collection.parent(user.key).filter('name', '==', playlist_name).get()
+    playlist = user.get_playlist(playlist_name)
 
     if playlist is None:
         logger.critical(f'playlist {playlist_name} for {username} not found')

@@ -50,7 +50,7 @@ def all_playlists_route(user=None):
 @validate_args(('name', str))
 def playlist_get_delete_route(user=None):
 
-    playlist = Playlist.collection.parent(user.key).filter('name', '==', request.args['name']).get()
+    playlist = user.get_playlist(request.args['name'], raise_error=False)
 
     if playlist is None:
         return jsonify({'error': f'playlist {request.args["name"]} not found'}), 404
@@ -77,7 +77,7 @@ def playlist_post_put_route(user=None):
         if request_json['playlist_references'] != -1:
             for i in request_json['playlist_references']:
 
-                playlist = Playlist.collection.parent(user.key).filter('name', '==', i).get()
+                playlist = user.get_playlist(i, raise_error=False)
                 if playlist is not None:
                     playlist_references.append(db.document(playlist.key))
                 else:
@@ -86,7 +86,7 @@ def playlist_post_put_route(user=None):
     if len(playlist_references) == 0 and request_json.get('playlist_references', None) != -1:
         playlist_references = None
 
-    searched_playlist = Playlist.collection.parent(user.key).filter('name', '==', playlist_name).get()
+    searched_playlist = user.get_playlist(playlist_name, raise_error=False)
 
     # CREATE
     if request.method == 'PUT':
@@ -129,34 +129,32 @@ def playlist_post_put_route(user=None):
         if searched_playlist is None:
             return jsonify({'error': "playlist doesn't exist"}), 400
 
-        playlist = Playlist.collection.parent(user.key).filter('name', '==', playlist_name).get()
-
         # ATTRIBUTES
         for rec_key, rec_item in request_json.items():
             # type and parts require extra validation
             if rec_key in [k for k in Playlist.mutable_keys if k not in ['type', 'parts', 'playlist_references']]:
-                setattr(playlist, rec_key, request_json[rec_key])
+                setattr(searched_playlist, rec_key, request_json[rec_key])
 
         # COMPONENTS
         if request_json.get('parts'):
             if request_json['parts'] == -1:
-                playlist.parts = []
+                searched_playlist.parts = []
             else:
-                playlist.parts = request_json['parts']
+                searched_playlist.parts = request_json['parts']
 
         if playlist_references is not None:
             if playlist_references == -1:
-                playlist.playlist_references = []
+                searched_playlist.playlist_references = []
             else:
-                playlist.playlist_references = playlist_references
+                searched_playlist.playlist_references = playlist_references
 
         # ATTRIBUTE WITH CHECKS
         if request_json.get('type'):
             playlist_type = request_json['type'].strip().lower()
             if playlist_type in ['default', 'recents', 'fmchart']:
-                playlist.type = playlist_type
+                searched_playlist.type = playlist_type
 
-        playlist.update()
+        searched_playlist.update()
         logger.info(f'updated {user.username} / {playlist_name}')
 
         return jsonify({"message": 'playlist updated', "status": "success"}), 200
@@ -304,7 +302,7 @@ def run_users(user=None):
 @validate_args(('name', str))
 def image(user=None):
 
-    _playlist = Playlist.collection.parent(user.key).filter('name', '==', request.args['name']).get()
+    _playlist = user.get_playlist(request.args['name'], raise_error=False)
     if _playlist is None:
         return jsonify({'error': "playlist not found"}), 404
 
