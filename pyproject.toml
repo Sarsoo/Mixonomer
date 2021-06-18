@@ -24,6 +24,7 @@ requests = "^2.24.0"
 spotframework = { git = "https://github.com/Sarsoo/spotframework.git" }
 fmframework = { git = "https://github.com/Sarsoo/pyfmframework.git" }
 spotfm = { git = "https://github.com/Sarsoo/spotfm.git" }
+google-python-cloud-debugger = "^2.17"
 
 [tool.poetry.dev-dependencies]
 pylint = "^2.5.3"

@@ -11,12 +11,25 @@ from music.model.config import Config
 logger = logging.getLogger(__name__)
 
 
+def init_cloud_debug():
+    try:
+        import googleclouddebugger
+        googleclouddebugger.enable(
+            breakpoint_enable_canary=False
+        )
+    except ImportError:
+        logger.warning('Failed to import Cloud Debugger')
+
+
 def create_app():
     """Generate and retrieve a ready-to-run flask app
 
     Returns:
         Flask App: Music Tools app
     """
+
+    if os.environ.get('DEPLOY_DESTINATION', None) == 'PROD':
+        init_cloud_debug()
 
     app = Flask(__name__, static_folder=os.path.join(os.path.dirname(__file__), '..', 'build'), template_folder="templates")
 
