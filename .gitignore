@@ -14,7 +14,6 @@ node_modules/
 *$py.class
 
 .idea
-launch.json
 
 # C extensions
 *.so

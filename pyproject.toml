@@ -10,6 +10,7 @@ repository = "https://github.com/Sarsoo/Music-Tools"
 [tool.poetry.scripts]
 test = 'admin:test'
 start = 'admin:run'
+docs = 'admin:docs'
 
 [tool.poetry.dependencies]
 python = "^3.8"
@@ -24,12 +25,12 @@ requests = "^2.24.0"
 spotframework = { git = "https://github.com/Sarsoo/spotframework.git" }
 fmframework = { git = "https://github.com/Sarsoo/pyfmframework.git" }
 spotfm = { git = "https://github.com/Sarsoo/spotfm.git" }
-google-python-cloud-debugger = "^2.17"
 
 [tool.poetry.dev-dependencies]
 pylint = "^2.5.3"
 Sphinx = "^3.5.3"
 sphinx-js = "^3.1.2"
+python-dotenv = "^0.17.1"
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]

@@ -6,6 +6,12 @@ import sys
 import subprocess
 from cmd import Cmd
 
+try:
+    from dotenv import load_dotenv
+    load_dotenv()
+except ImportError:
+    pass
+
 stage_dir = '.music-tools'
 scss_rel_path = Path('src', 'scss', 'style.scss')
 css_rel_path = Path('build', 'style.css')
@@ -139,6 +145,12 @@ class Admin(Cmd):
         subprocess.check_call('gcloud app deploy', shell=True)
 
     def function_deploy(self, main, function_id):
+        """Deploy Cloud Function, copy main file and initiate gcloud command
+
+        Args:
+            main (str): main path
+            function_id (str): function id to deploy to
+        """
         self.copy_main_file(main)
 
         print(f'>> deploying {function_id}')
@@ -233,21 +245,38 @@ class Admin(Cmd):
         """
         subprocess.check_call(f'sass --style=compressed --watch {str(scss_rel_path)} {str(css_rel_path)}', shell=True)
 
+    def do_run(self, args):
+        """
+        Run Flask app
+        """
+        subprocess.check_call(f'python main.api.py', shell=True)
+
+    def do_test(self, args):
+        """
+        Run Python unit tests
+        """
+        subprocess.check_call(f'python -u -m unittest discover -s tests', shell=True)
+
+    def do_docs(self, args):
+        """
+        Compile documentation using sphinx
+        """
+        subprocess.check_call(f'sphinx-build docs docs/build -b html', shell=True)
+    
     def do_exit(self, args):
         """
         Exit script
         """
         exit(0)
 
-
-
 def test():
-    os.environ['GOOGLE_APPLICATION_CREDENTIALS'] = 'service.json'
-    subprocess.check_call("python -u -m unittest discover -s tests", shell=True)
+    Admin().onecmd('test')
 
 def run():
-    os.environ['GOOGLE_APPLICATION_CREDENTIALS'] = 'service.json'
-    subprocess.check_call("python main.api.py", shell=True)
+    Admin().onecmd('run')
+
+def docs():
+    Admin().onecmd('docs')
 
 if __name__ == '__main__':
     console = Admin()
