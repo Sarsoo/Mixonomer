@@ -7,6 +7,7 @@ Music Tools
 
    Py <src/music>
    Js <src/MusicTools>
+   Admin Script <src/admin>
    All Modules <src/modules>
 
 `Music Tools <https://music.sarsoo.xyz>`_

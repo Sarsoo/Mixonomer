@@ -1,0 +1,311 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17: http://docutils.sourceforge.net/" />
+
+    <title>admin script &#8212; Music Tools  documentation</title>
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/alabaster.css" type="text/css" />
+    <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Music Tools Modules" href="modules.html" />
+    <link rel="prev" title="Settings" href="MusicTools.Settings.html" />
+   
+  <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <section id="module-admin">
+<span id="admin-script"></span><h1>admin script<a class="headerlink" href="#module-admin" title="Permalink to this headline">¶</a></h1>
+<dl class="py class">
+<dt id="admin.Admin">
+<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">admin.</span></code><code class="sig-name descname"><span class="pre">Admin</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">completekey</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'tab'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stdin</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stdout</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#admin.Admin" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">cmd.Cmd</span></code></p>
+<dl class="py method">
+<dt id="admin.Admin.compile_frontend">
+<code class="sig-name descname"><span class="pre">compile_frontend</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#admin.Admin.compile_frontend" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compile sass to css and run npm build task</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="admin.Admin.copy_main_file">
+<code class="sig-name descname"><span class="pre">copy_main_file</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#admin.Admin.copy_main_file" title="Permalink to this definition">¶</a></dt>
+<dd><p>Copy main.{path}.py file corresponding to Python build stage</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="admin.Admin.deploy_function">
+<code class="sig-name descname"><span class="pre">deploy_function</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">timeout</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">int</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">60</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">region</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'europe-west2'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#admin.Admin.deploy_function" title="Permalink to this definition">¶</a></dt>
+<dd><p>Deploy function with required environment variables</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="admin.Admin.do_app">
+<code class="sig-name descname"><span class="pre">do_app</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">args</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#admin.Admin.do_app" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compile front-end and deploy to App Engine</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="admin.Admin.do_cron_functions">
+<code class="sig-name descname"><span class="pre">do_cron_functions</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">args</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#admin.Admin.do_cron_functions" title="Permalink to this definition">¶</a></dt>
+<dd><p>Deploy background functions including cron job scheduling for update actions (run_all_playlists, run_all_playlist_stats, run_all_tags)</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="admin.Admin.do_docs">
+<code class="sig-name descname"><span class="pre">do_docs</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">args</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#admin.Admin.do_docs" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compile documentation using sphinx</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="admin.Admin.do_exit">
+<code class="sig-name descname"><span class="pre">do_exit</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">args</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#admin.Admin.do_exit" title="Permalink to this definition">¶</a></dt>
+<dd><p>Exit script</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="admin.Admin.do_main_group">
+<code class="sig-name descname"><span class="pre">do_main_group</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">args</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#admin.Admin.do_main_group" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compile front-end and deploy to App Engine. Deploy primary functions (run_user_playlist, update_tag)</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="admin.Admin.do_playlist">
+<code class="sig-name descname"><span class="pre">do_playlist</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">args</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#admin.Admin.do_playlist" title="Permalink to this definition">¶</a></dt>
+<dd><p>Deploy run_user_playlist function</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="admin.Admin.do_playlist_cron">
+<code class="sig-name descname"><span class="pre">do_playlist_cron</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">args</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#admin.Admin.do_playlist_cron" title="Permalink to this definition">¶</a></dt>
+<dd><p>Deploy run_all_playlists function</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="admin.Admin.do_playlist_stats_cron">
+<code class="sig-name descname"><span class="pre">do_playlist_stats_cron</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">args</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#admin.Admin.do_playlist_stats_cron" title="Permalink to this definition">¶</a></dt>
+<dd><p>Deploy run_all_playlist_stats function</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="admin.Admin.do_prepare_local_stage">
+<code class="sig-name descname"><span class="pre">do_prepare_local_stage</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">args</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#admin.Admin.do_prepare_local_stage" title="Permalink to this definition">¶</a></dt>
+<dd><p>Prepare local working directory for deployment using static sarsoolib injections</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="admin.Admin.do_pydepend">
+<code class="sig-name descname"><span class="pre">do_pydepend</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">args</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#admin.Admin.do_pydepend" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generate and export requirements.txt from Poetry manifest</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="admin.Admin.do_rename">
+<code class="sig-name descname"><span class="pre">do_rename</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">args</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#admin.Admin.do_rename" title="Permalink to this definition">¶</a></dt>
+<dd><p>Rename playlist in firestore</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="admin.Admin.do_run">
+<code class="sig-name descname"><span class="pre">do_run</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">args</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#admin.Admin.do_run" title="Permalink to this definition">¶</a></dt>
+<dd><p>Run Flask app</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="admin.Admin.do_sass">
+<code class="sig-name descname"><span class="pre">do_sass</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">args</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#admin.Admin.do_sass" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compile sass to css</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="admin.Admin.do_set_project">
+<code class="sig-name descname"><span class="pre">do_set_project</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">args</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#admin.Admin.do_set_project" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set project setting in gcloud console</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="admin.Admin.do_tag">
+<code class="sig-name descname"><span class="pre">do_tag</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">args</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#admin.Admin.do_tag" title="Permalink to this definition">¶</a></dt>
+<dd><p>Deploy update_tag function</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="admin.Admin.do_tags_cron">
+<code class="sig-name descname"><span class="pre">do_tags_cron</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">args</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#admin.Admin.do_tags_cron" title="Permalink to this definition">¶</a></dt>
+<dd><p>Deploy run_all_tags function</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="admin.Admin.do_test">
+<code class="sig-name descname"><span class="pre">do_test</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">args</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#admin.Admin.do_test" title="Permalink to this definition">¶</a></dt>
+<dd><p>Run Python unit tests</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="admin.Admin.do_watchsass">
+<code class="sig-name descname"><span class="pre">do_watchsass</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">args</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#admin.Admin.do_watchsass" title="Permalink to this definition">¶</a></dt>
+<dd><p>Run sass compiler with watch argument to begin watching source folder for changes</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="admin.Admin.export_filtered_dependencies">
+<code class="sig-name descname"><span class="pre">export_filtered_dependencies</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#admin.Admin.export_filtered_dependencies" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="admin.Admin.function_deploy">
+<code class="sig-name descname"><span class="pre">function_deploy</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">main</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">function_id</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#admin.Admin.function_deploy" title="Permalink to this definition">¶</a></dt>
+<dd><p>Deploy Cloud Function, copy main file and initiate gcloud command</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>main</strong> (<em>str</em>) – main path</p></li>
+<li><p><strong>function_id</strong> (<em>str</em>) – function id to deploy to</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="admin.Admin.intro">
+<code class="sig-name descname"><span class="pre">intro</span></code><em class="property"> <span class="pre">=</span> <span class="pre">'Music</span> <span class="pre">Tools</span> <span class="pre">Admin...</span> <span class="pre">?</span> <span class="pre">for</span> <span class="pre">help'</span></em><a class="headerlink" href="#admin.Admin.intro" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="admin.Admin.locals">
+<code class="sig-name descname"><span class="pre">locals</span></code><em class="property"> <span class="pre">=</span> <span class="pre">['spotframework',</span> <span class="pre">'fmframework',</span> <span class="pre">'spotfm']</span></em><a class="headerlink" href="#admin.Admin.locals" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="admin.Admin.prompt">
+<code class="sig-name descname"><span class="pre">prompt</span></code><em class="property"> <span class="pre">=</span> <span class="pre">'&gt;</span> <span class="pre">'</span></em><a class="headerlink" href="#admin.Admin.prompt" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py function">
+<dt id="admin.docs">
+<code class="sig-prename descclassname"><span class="pre">admin.</span></code><code class="sig-name descname"><span class="pre">docs</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#admin.docs" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py data">
+<dt id="admin.folders_to_ignore">
+<code class="sig-prename descclassname"><span class="pre">admin.</span></code><code class="sig-name descname"><span class="pre">folders_to_ignore</span></code><em class="property"> <span class="pre">=</span> <span class="pre">['venv',</span> <span class="pre">'docs',</span> <span class="pre">'.git',</span> <span class="pre">'.idea',</span> <span class="pre">'node_modules']</span></em><a class="headerlink" href="#admin.folders_to_ignore" title="Permalink to this definition">¶</a></dt>
+<dd><p>COMPONENTS:</p>
+<ul>
+<li><p>App Engine</p></li>
+<li><dl>
+<dt>Cloud Functions:</dt><dd><p>run_user_playlist
+update_tag</p>
+<p>run_all_playlists
+run_all_playlist_stats
+run_all_tags</p>
+</dd>
+</dl>
+</li>
+</ul>
+</dd></dl>
+
+<dl class="py function">
+<dt id="admin.run">
+<code class="sig-prename descclassname"><span class="pre">admin.</span></code><code class="sig-name descname"><span class="pre">run</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#admin.run" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt id="admin.test">
+<code class="sig-prename descclassname"><span class="pre">admin.</span></code><code class="sig-name descname"><span class="pre">test</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#admin.test" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</section>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../index.html">Music Tools</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<p><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="music.html">Py</a></li>
+<li class="toctree-l1"><a class="reference internal" href="MusicTools.html">Js</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Admin Script</a></li>
+<li class="toctree-l1"><a class="reference internal" href="modules.html">All Modules</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="MusicTools.Settings.html" title="previous chapter">Settings</a></li>
+      <li>Next: <a href="modules.html" title="next chapter">Music Tools Modules</a></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2021, Sarsoo.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 3.5.3</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+      |
+      <a href="../_sources/src/admin.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>
