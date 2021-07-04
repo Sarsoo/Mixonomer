@@ -6,8 +6,9 @@ import { Delete } from '@material-ui/icons';
 import { makeStyles } from '@material-ui/core/styles';
 
 import showMessage from "../Toast.js";
-import BarChart from "../Maths/BarChart.js";
-import PieChart from "../Maths/PieChart.js";
+
+const BarChart = React.lazy(() => import("../Maths/BarChart"))
+const PieChart = React.lazy(() => import("../Maths/PieChart"))
 
 const useStyles = makeStyles({
     root: {
@@ -419,6 +420,13 @@ class TagView extends Component{
                             <BarChart data={timeData} title='time listened (hours)' indexAxis='y'/>
                         </Grid>
                         }
+
+                        {/* LAST UPDATED */}
+                        <Grid item xs={12}>
+                            <Typography variant="overline" color="textSecondary">
+                                Last Updated: {this.state.tag.last_updated}
+                            </Typography>
+                        </Grid>
                         
                     </Grid>
                 </CardContent>

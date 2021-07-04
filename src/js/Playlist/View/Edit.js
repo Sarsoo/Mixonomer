@@ -64,6 +64,9 @@ export class Edit extends Component{
             chart_limit: '',
             chart_range: '',
 
+            description_overwrite: '',
+            description_suffix: '',
+
             day_boundary: '',
             recommendation_sample: '',
             newPlaylistName: '',
@@ -113,6 +116,13 @@ export class Edit extends Component{
             });
 
             var filteredPlaylists = playlists.data.playlists.filter((entry) => entry.name != this.state.name);
+
+            if(info.data.description_overwrite == null) {
+                info.data.description_overwrite = '';
+            }
+            if(info.data.description_suffix == null) {
+                info.data.description_suffix = '';
+            }
 
             this.setState(info.data);
             this.setState({
@@ -373,13 +383,17 @@ export class Edit extends Component{
                         {/* SPOTIFY PLAYLIST REFERENCES */}
                         { this.state.parts.length > 0 && <ListBlock handler={this.handleRemovePart} list={this.state.parts}/> }
                         {/* SPOTIFY DESCRIPTION */}
-                        <Grid item xs={12} ><Typography variant="body2" color="textSecondary">Spotify playlist can be the name of either your own created playlist or one you follow, names are case sensitive</Typography></Grid>
+                        <Grid item xs={12} >
+                            <Typography variant="subtitle2" color="textSecondary">
+                                Spotify playlist can be the name of either your own created playlist or one you follow, names are case sensitive
+                            </Typography>
+                        </Grid>
 
                         {/* SPOTIFY PLAYLIST TEXTBOX */}
                         <Grid item xs={8} sm={8} md={3}>
                             <TextField
                                 name="newPlaylistName"
-                                variant="filled"
+                                variant="outlined"
                                 label="Spotify Playlist"
                                 value={this.state.newPlaylistName}
                                 onChange={this.handleInputChange}
@@ -413,6 +427,38 @@ export class Edit extends Component{
                         {/* SMART ADD BUTTON */}
                         <Grid item xs={4} sm={4} md={3}>
                             <Button variant="contained" className="full-width" onClick={this.handleAddReference} style={{verticalAlign: 'middle'}}>Add</Button>
+                        </Grid>
+
+
+                        {/* DESCRIPTION OVERRIDE */}
+                        <Grid item xs={12} sm={12} md={6}>
+                            <TextField
+                                name="description_overwrite"
+                                variant="outlined"
+                                label="Description"
+                                className="full-width"
+                                value={this.state.description_overwrite}
+                                onChange={this.handleInputChange}
+                               
+                            />
+                        </Grid>
+                        {/* DESCRIPTION SUFFIX */}
+                        <Grid item xs={12} sm={12} md={6}>
+                            <TextField
+                                name="description_suffix"
+                                variant="outlined"
+                                label="Description Suffix"
+                                className="full-width"
+                                value={this.state.description_suffix}
+                                onChange={this.handleInputChange}
+                               
+                            />
+                        </Grid>
+
+                        <Grid item xs={12} >
+                            <Typography variant="subtitle2" color="textSecondary">
+                                <i>Description</i> will override the standard concatenation of component playlists. <i>Description Suffix</i> will be appended to the end, whether to a default or overwritten string
+                            </Typography>
                         </Grid>
 
                         {/* CHECKBOXES */}
@@ -449,7 +495,7 @@ export class Edit extends Component{
                             <TextField type="number" 
                                     name="recommendation_sample"
                                     label="Recommendation Size"
-                                    variant="filled"
+                                    variant="outlined"
                                     value={this.state.recommendation_sample}
                                     onChange={this.handleInputChange}></TextField>
                         </Grid>
@@ -461,7 +507,7 @@ export class Edit extends Component{
                             <TextField type="number" 
                                 name="chart_limit"
                                 label="Chart Size"
-                                variant="filled"
+                                variant="outlined"
                                 value={this.state.chart_limit}
                                 onChange={this.handleInputChange}></TextField>
                         </Grid>
@@ -486,7 +532,7 @@ export class Edit extends Component{
                                     <MenuItem value="HALFYEAR">180 Day</MenuItem>
                                     <MenuItem value="YEAR">365 Day</MenuItem>
                                     <MenuItem value="OVERALL">Overall</MenuItem>
-                                    </Select>
+                                </Select>
                             </FormControl>
                         </Grid>
                         }
@@ -496,6 +542,7 @@ export class Edit extends Component{
                         <Grid item xs={12}>
                             <TextField type="number" 
                                 name="day_boundary"
+                                variant="outlined"
                                 // className="full-width"
                                 label="Added Since (days)"
                                 value={this.state.day_boundary}
@@ -542,6 +589,13 @@ export class Edit extends Component{
                                     <MenuItem value="fmchart">Last.fm Chart</MenuItem>
                                 </Select>
                             </FormControl>
+                        </Grid>
+
+                        {/* PLAYLIST TYPE */}
+                        <Grid item xs={12}>
+                            <Typography variant="overline" color="textSecondary">
+                                Last Updated: {this.state.last_updated}
+                            </Typography>
                         </Grid>
                     </Grid>
                 </CardContent>

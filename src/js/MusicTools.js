@@ -9,30 +9,24 @@ import GlobalTheme from './Theme.js';
 
 import { Typography, CircularProgress } from '@material-ui/core';
 import { ThemeProvider } from '@material-ui/core/styles';
-import AppBar from '@material-ui/core/AppBar';
-import Toolbar from '@material-ui/core/Toolbar';
-import IconButton from '@material-ui/core/IconButton';
+
+import {AppBar, Toolbar, IconButton, Drawer, List, Divider, ListItem, ListItemIcon, ListItemText} from '@material-ui/core';
+
 import MenuIcon from '@material-ui/icons/Menu';
 
-import Drawer from '@material-ui/core/Drawer';
-import List from '@material-ui/core/List';
-import Divider from '@material-ui/core/Divider';
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
-import ListItem from '@material-ui/core/ListItem';
-import ListItemIcon from '@material-ui/core/ListItemIcon';
-import ListItemText from '@material-ui/core/ListItemText';
 import HomeIcon from '@material-ui/icons/Home';
 import { Build, PieChart, QueueMusic, ExitToApp, AccountCircle, KeyboardBackspace, GroupWork } from '@material-ui/icons'
 
 const axios = require('axios');
 
-const LazyIndex = React.lazy(() => import("./Index/Index"))
-const LazyPlaylists = React.lazy(() => import("./Playlist/AllPlaylistsRouter"))
-const LazyPlaylistView = React.lazy(() => import("./Playlist/View/PlaylistRouter"))
-const LazySettings = React.lazy(() => import("./Settings/SettingsRouter"))
-const LazyAdmin = React.lazy(() => import("./Admin/AdminRouter"))
-const LazyTags = React.lazy(() => import("./Tag/TagRouter"))
-const LazyTag = React.lazy(() => import("./Tag/View"))
+const LazyIndex = React.lazy(() => import(/* webpackChunkName: "index" */ "./Index/Index"))
+const LazyPlaylists = React.lazy(() => import(/* webpackChunkName: "allPlaylists" */ "./Playlist/AllPlaylistsRouter"))
+const LazyPlaylistView = React.lazy(() => import(/* webpackChunkName: "playlist" */ "./Playlist/View/PlaylistRouter"))
+const LazySettings = React.lazy(() => import(/* webpackChunkName: "settings" */ "./Settings/SettingsRouter"))
+const LazyAdmin = React.lazy(() => import(/* webpackChunkName: "admin" */ "./Admin/AdminRouter"))
+const LazyTags = React.lazy(() => import(/* webpackChunkName: "allTags" */ "./Tag/TagRouter"))
+const LazyTag = React.lazy(() => import(/* webpackChunkName: "tag" */ "./Tag/View"))
 
 /**
  * Root component for app

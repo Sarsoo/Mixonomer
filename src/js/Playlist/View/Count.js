@@ -83,23 +83,19 @@ export class Count extends Component {
 
                         {/* SCROBBLE COUNT */}
                         <Grid item xs={12}>
-                            <Typography variant="body2">Scrobble Count: <b>{this.state.playlist.lastfm_stat_count.toLocaleString()} / {this.state.playlist.lastfm_stat_percent}%</b></Typography>
+                            <Typography variant="h4">Tracks: <b>{this.state.playlist.lastfm_stat_count.toLocaleString()} / {this.state.playlist.lastfm_stat_percent}%</b></Typography>
                         </Grid>
 
                         {/* ALBUM COUNT */}
                         <Grid item xs={12}>
-                            <Typography variant="body2">Album Count: <b>{this.state.playlist.lastfm_stat_album_count.toLocaleString()} / {this.state.playlist.lastfm_stat_album_percent}%</b></Typography>
+                            <Typography variant="h4">Albums: <b>{this.state.playlist.lastfm_stat_album_count.toLocaleString()} / {this.state.playlist.lastfm_stat_album_percent}%</b></Typography>
                         </Grid>
 
                         {/* ARTIST COUNT */}
                         <Grid item xs={12}>
-                            <Typography variant="body2">Artist Count: <b>{this.state.playlist.lastfm_stat_artist_count.toLocaleString()} / {this.state.playlist.lastfm_stat_artist_percent}%</b></Typography>
+                            <Typography variant="h4">Artists: <b>{this.state.playlist.lastfm_stat_artist_count.toLocaleString()} / {this.state.playlist.lastfm_stat_artist_percent}%</b></Typography>
                         </Grid>
 
-                        {/* LAST UPDATED */}
-                        <Grid item xs={12}>
-                            <Typography variant="body2">Last Updated <b>{this.state.playlist.lastfm_stat_last_refresh.toLocaleString()}</b></Typography>
-                        </Grid>
                         <React.Suspense fallback={<LoadingMessage/>}>
 
                             {/* TRACK PIE */}
@@ -141,6 +137,13 @@ export class Count extends Component {
                                 padding={50}/>
                             </Grid>
                         </React.Suspense>
+
+                        {/* LAST UPDATED */}
+                        <Grid item xs={12}>
+                            <Typography variant="overline" color="textSecondary">
+                                Last Updated: {this.state.playlist.lastfm_stat_last_refresh}
+                            </Typography>
+                        </Grid>
                     </Grid>
                 </CardContent>
 
