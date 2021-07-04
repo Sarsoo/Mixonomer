@@ -74,20 +74,20 @@ jobs:
           python-version: 3.8
 
       # PYTHON for dependency export only, not installing
-      - name: Install Poetry 1.1.4
+      - name: Install Poetry 1.1.7
         uses: abatilo/actions-poetry@v2.1.0
         with:
-          poetry-version: 1.1.4
+          poetry-version: 1.1.7
 
       # PYTHON install dependencies
       - name: Install Python Dependencies
         run: poetry install
 
       # JS setup for jsdoc
-      - name: Install Node ${{ matrix.node }}
+      - name: Install Node 16
         uses: actions/setup-node@v2
         with:
-          node-version: ${{ matrix.node }}
+          node-version: 16
 
       # JS setup for jsdoc
       - name: Install jsdoc
@@ -128,20 +128,20 @@ jobs:
           python-version: 3.8
 
       # PYTHON for dependency export only, not installing
-      - name: Install Poetry 1.1.4
+      - name: Install Poetry 1.1.7
         uses: abatilo/actions-poetry@v2.1.0
         with:
-          poetry-version: 1.1.4
+          poetry-version: 1.1.7
 
       # PYTHON Export Poetry dependencies as requirements.txt
       - name: Export Poetry Dependencies
         run: python admin.py pydepend
       
       # JS setup
-      - name: Install Node 14
+      - name: Install Node 16
         uses: actions/setup-node@v2
         with:
-          node-version: 14
+          node-version: 16
 
       # JS install from lock.json 
       - name: Install Node Packages
