@@ -140,7 +140,7 @@ class ChangePassword extends Component {
                         
                         {/* SUBMIT BUTTON */}
                         <CardActions>
-                            <Button type="submit" variant="contained" className="full-width" onClick={this.runStats}>Change</Button>
+                            <Button color="secondary" type="submit" variant="contained" className="full-width" onClick={this.runStats}>Change</Button>
                         </CardActions>
                     </form>
                 </Card>

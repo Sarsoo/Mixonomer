@@ -107,7 +107,7 @@ class LastFM extends Component {
 
                         {/* SUBMIT BUTTON */}
                         <CardActions>
-                            <Button type="submit" variant="contained" className="full-width">Save</Button>
+                            <Button color="secondary" type="submit" variant="contained" className="full-width">Save</Button>
                         </CardActions>
                     </form>
                 </Card>

@@ -2,21 +2,20 @@ import React, { Component } from "react";
 import { BrowserRouter as Router, Route, Link, Switch } from "react-router-dom";
 
 import NotFound from "./Error/NotFound.js";
-
-import showMessage from "./Toast.js"
+import Progress from "./Util/circularProgress.js";
+import showMessage from "./Toast.js";
 
 import GlobalTheme from './Theme.js';
 
-import { Typography, CircularProgress } from '@material-ui/core';
 import { ThemeProvider } from '@material-ui/core/styles';
 
-import {AppBar, Toolbar, IconButton, Drawer, List, Divider, ListItem, ListItemIcon, ListItemText} from '@material-ui/core';
+import {AppBar, Toolbar, IconButton, Drawer, List, Divider, ListItem, ListItemIcon, ListItemText, Typography} from '@material-ui/core';
 
 import MenuIcon from '@material-ui/icons/Menu';
-
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 import HomeIcon from '@material-ui/icons/Home';
-import { Build, PieChart, QueueMusic, ExitToApp, AccountCircle, KeyboardBackspace, GroupWork } from '@material-ui/icons'
+
+import { Build, QueueMusic, ExitToApp, AccountCircle, KeyboardBackspace, GroupWork } from '@material-ui/icons'
 
 const axios = require('axios');
 
@@ -177,7 +176,7 @@ class MusicTools extends Component {
 
                     <div className="full-width">
                         <Switch>
-                            <React.Suspense fallback={<LoadingMessage/>}>
+                            <React.Suspense fallback={<Progress/>}>
                                 <Route path="/app" exact component={LazyIndex} />
                                 <Route path="/app/playlists" component={LazyPlaylists} />
                                 <Route path="/app/tags" component={LazyTags} />
@@ -194,10 +193,6 @@ class MusicTools extends Component {
         );
     }
 
-}
-
-function LoadingMessage(props) {
-    return <CircularProgress/>;
 }
 
 export default MusicTools;

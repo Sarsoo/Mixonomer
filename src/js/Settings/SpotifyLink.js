@@ -65,7 +65,7 @@ class SpotifyLink extends Component {
  * @returns Button component
  */
 function AuthButton(props) {
-    return <Button component='a' variant="contained" className="full-width" href="/auth/spotify">Auth</Button>;
+    return <Button color="secondary" component='a' variant="contained" className="full-width" href="/auth/spotify">Auth</Button>;
 }
 
 /**
@@ -74,7 +74,7 @@ function AuthButton(props) {
  * @returns Button component
  */
 function DeAuthButton(props) {
-    return <Button component='a' variant="contained" className="full-width" href="/auth/spotify/deauth">De-Auth</Button>;
+    return <Button color="secondary" component='a' variant="contained" className="full-width" href="/auth/spotify/deauth">De-Auth</Button>;
 }
 
 export default SpotifyLink;

@@ -1,11 +1,10 @@
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
-import { Button, ButtonGroup, Typography, Card, Grid, CircularProgress } from '@material-ui/core';
-import CardActions from '@material-ui/core/CardActions';
-import CardContent from '@material-ui/core/CardContent';
+import { Button, ButtonGroup, Typography, Card, CardActions, CardContent, Grid } from '@material-ui/core';
 const axios = require('axios');
 
 import showMessage from "../Toast.js"
+import Progress from "../Util/circularProgress.js";
 
 /**
  * Top-level object for hosting playlist card grid with new/run all buttons
@@ -124,7 +123,7 @@ class PlaylistsView extends Component {
                             handleDeletePlaylist={this.handleDeletePlaylist}
                             handleRunAll={this.handleRunAll}/>;
 
-        return this.state.isLoading ? <CircularProgress /> : grid;
+        return this.state.isLoading ? <Progress /> : grid;
     }
 }
 
@@ -140,7 +139,7 @@ function PlaylistGrid(props){
                 direction="row"
                 justify="flex-start"
                 alignItems="flex-start"
-                style={{padding: '24px'}}>
+                style={{padding: 24}}>
 
             {/* BUTTON BLOCK (NEW/RUN ALL) */}
             <Grid item xs={12} sm={6} md={2}>
@@ -183,12 +182,19 @@ function PlaylistCard(props){
                     <Typography variant="h4" component="h2">
                     { props.playlist.name }
                     </Typography>
+
+                    {"lastfm_stat_percent" in props.playlist && 
+                    props.playlist.lastfm_stat_percent != null && 
+                        <Typography component="h6" style={{color: "#b3b3b3"}}>
+                            { Math.round(props.playlist.lastfm_stat_percent) }%
+                        </Typography>
+                    }
                 </CardContent>
 
                 {/* BUTTONS */}
                 <CardActions>
                     <ButtonGroup 
-                    color="primary" 
+                    color="secondary" 
                     variant="contained">
 
                         {/* VIEW */}

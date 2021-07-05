@@ -3,13 +3,21 @@ import { Chart, ArcElement, DoughnutController, Legend, Title, Tooltip } from 'c
 
 Chart.register(ArcElement, DoughnutController, Legend, Title, Tooltip);
 
-var pieColours = ['rgb(55, 61, 255)', //blue
-'rgb(255, 55, 61)', //red
-'rgb(7, 211, 4)', //green
-'rgb(228, 242, 31)', //yellow
-'rgb(31, 242, 221)', //light blue
-'rgb(242, 31, 235)', //pink
-'rgb(242, 164, 31)'];
+// var pieColours = ['rgb(55, 61, 255)', //blue
+// 'rgb(255, 55, 61)', //red
+// 'rgb(7, 211, 4)', //green
+// 'rgb(228, 242, 31)', //yellow
+// 'rgb(31, 242, 221)', //light blue
+// 'rgb(242, 31, 235)', //pink
+// 'rgb(242, 164, 31)'];
+
+var pieColours = ['rgb(144, 127, 164)',
+  'rgb(166, 214, 214)',
+  'rgb(237, 237, 208)',
+  'rgb(252, 209, 209)',
+  'rgb(222, 137, 113)',
+  'rgb(59, 83, 96)'
+];
 
 /**
  * Pie chart component using Chart.js

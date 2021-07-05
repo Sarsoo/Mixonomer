@@ -54,7 +54,7 @@ class Functions extends Component {
                         <Typography variant="h4" color="textPrimary">Admin Functions</Typography>
                     </CardContent>
                     <CardActions>
-                        <ButtonGroup variant="contained" color="primary" className="full-width">
+                        <ButtonGroup variant="contained" color="secondary" className="full-width">
 
                             {/* RUN ALL PLAYLISTS BUTTON */}
                             <Button className="full-width button" onClick={this.runAllUsers}>Run All Users</Button>

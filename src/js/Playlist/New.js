@@ -155,7 +155,7 @@ class NewPlaylist extends Component {
 
                 {/* SUBMIT BUTTON */}
                 <CardActions>
-                    <Button variant="contained" color="primary" className="full-width" onClick={this.handleSubmit}>Create</Button>
+                    <Button variant="contained" color="secondary" className="full-width" onClick={this.handleSubmit}>Create</Button>
                 </CardActions>
             </Card>
             </div>

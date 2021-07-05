@@ -1,12 +1,13 @@
 import React, { Component } from "react";
 const axios = require('axios');
 
-import { Card, Button, CircularProgress, FormControl, TextField, InputLabel, Select, FormControlLabel, 
+import { Card, Button, FormControl, TextField, InputLabel, Select, FormControlLabel, 
     CardActions, CardContent, Typography, Grid, MenuItem, Switch } from '@material-ui/core';
 import { Delete } from '@material-ui/icons';
 import { makeStyles } from '@material-ui/core/styles';
 
 import showMessage from "../../Toast.js";
+import Progress from "../../Util/circularProgress.js";
 
 var thisMonth = [
     'january',
@@ -467,7 +468,7 @@ export class Edit extends Component{
                             {/* SHUFFLE */}
                             <FormControlLabel
                                 control={
-                                <Switch color="primary" name="shuffle" checked={this.state.shuffle} onChange={this.handleCheckChange} />
+                                <Switch color="secondary" name="shuffle" checked={this.state.shuffle} onChange={this.handleCheckChange} />
                                 }
                                 labelPlacement="bottom"
                                 label="Shuffle"/>
@@ -475,7 +476,7 @@ export class Edit extends Component{
                             {/* RECOMMENDATIONS */}
                             <FormControlLabel
                                 control={
-                                <Switch color="primary" checked={this.state.include_recommendations} name="include_recommendations" onChange={this.handleCheckChange} />
+                                <Switch color="secondary" checked={this.state.include_recommendations} name="include_recommendations" onChange={this.handleCheckChange} />
                                 }
                                 labelPlacement="bottom"
                                 label="Recommendations"/>
@@ -483,7 +484,7 @@ export class Edit extends Component{
                             {/* LIBRARY TRACKS */}
                             <FormControlLabel
                                 control={
-                                <Switch color="primary" checked={this.state.include_library_tracks} name="include_library_tracks" onChange={this.handleCheckChange} />
+                                <Switch color="secondary" checked={this.state.include_library_tracks} name="include_library_tracks" onChange={this.handleCheckChange} />
                                 }
                                 labelPlacement="bottom"
                                 label="Library Tracks"/>
@@ -556,7 +557,7 @@ export class Edit extends Component{
                             {/* THIS MONTH */}
                             <FormControlLabel
                                 control={
-                                <Switch color="primary" checked={this.state.add_this_month} name="add_this_month" onChange={this.handleCheckChange} />
+                                <Switch color="secondary" checked={this.state.add_this_month} name="add_this_month" onChange={this.handleCheckChange} />
                                 }
                                 label="This Month"
                                 labelPlacement="bottom"
@@ -565,7 +566,7 @@ export class Edit extends Component{
                             {/* LAST MONTH */}
                             <FormControlLabel
                                 control={
-                                <Switch color="primary" checked={this.state.add_last_month} name="add_last_month" onChange={this.handleCheckChange} />
+                                <Switch color="secondary" checked={this.state.add_last_month} name="add_last_month" onChange={this.handleCheckChange} />
                                 }
                                 label="Last Month"
                                 labelPlacement="bottom"
@@ -608,7 +609,7 @@ export class Edit extends Component{
         </div>
         );
 
-        return this.state.isLoading ? <CircularProgress /> : table;
+        return this.state.isLoading ? <Progress /> : table;
     }
 
 }

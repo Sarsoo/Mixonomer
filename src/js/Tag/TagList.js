@@ -1,11 +1,11 @@
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
-import { Button, ButtonGroup, Typography, Card, Grid, CircularProgress } from '@material-ui/core';
-import CardActions from '@material-ui/core/CardActions';
-import CardContent from '@material-ui/core/CardContent';
+import { Button, ButtonGroup, Typography, Card, CardActions, CardContent, Grid } from '@material-ui/core';
+
 const axios = require('axios');
 
 import showMessage from "../Toast.js"
+import Progress from "../Util/circularProgress.js"
 
 /**
  * Tag card list component
@@ -67,7 +67,7 @@ class TagList extends Component {
         const grid =   <TagGrid tags={this.state.tags}
                             handleDeleteTag={this.handleDeleteTag}/>;
 
-        return this.state.isLoading ? <CircularProgress /> : grid;
+        return this.state.isLoading ? <Progress /> : grid;
     }
 }
 
@@ -135,7 +135,7 @@ function TagCard(props){
                 </CardContent>
                 <CardActions>
                     <ButtonGroup
-                    color="primary"
+                    color="secondary"
                     variant="contained">
 
                         {/* VIEW BUTTON */}

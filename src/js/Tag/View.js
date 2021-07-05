@@ -1,11 +1,12 @@
 import React, { Component } from "react";
 const axios = require('axios');
 
-import { Card, Button, CircularProgress, CardActions, CardContent, FormControl, InputLabel, Select, Typography, Grid, TextField, MenuItem, FormControlLabel, Switch } from '@material-ui/core';
+import { Card, Button, CardActions, CardContent, FormControl, InputLabel, Select, Typography, Grid, TextField, MenuItem, FormControlLabel, Switch } from '@material-ui/core';
 import { Delete } from '@material-ui/icons';
 import { makeStyles } from '@material-ui/core/styles';
 
 import showMessage from "../Toast.js";
+import Progress from "../Util/circularProgress.js"
 
 const BarChart = React.lazy(() => import("../Maths/BarChart"))
 const PieChart = React.lazy(() => import("../Maths/PieChart"))
@@ -438,7 +439,7 @@ class TagView extends Component{
         </div>
         );
 
-        return this.state.isLoading ? <CircularProgress /> : table;
+        return this.state.isLoading ? <Progress /> : table;
     }    
 }
 

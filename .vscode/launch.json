@@ -19,6 +19,18 @@
                 "--no-debugger"
             ],
             "jinja": true
+        },
+        {
+            "command": "npm run devbuild",
+            "name": "Js: Build Dev",
+            "request": "launch",
+            "type": "node-terminal"
+        },
+        {
+            "command": "npm run build",
+            "name": "Js: Build Release",
+            "request": "launch",
+            "type": "node-terminal"
         }
     ]
 }
