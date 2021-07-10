@@ -77,6 +77,8 @@ class Playlist(Model):
         'add_last_month',
         'add_this_month',
         'day_boundary',
+        
+        'include_spotify_owned',
 
         'chart_range',
         'chart_limit'

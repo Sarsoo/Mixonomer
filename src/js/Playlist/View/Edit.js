@@ -488,6 +488,14 @@ export class Edit extends Component{
                                 }
                                 labelPlacement="bottom"
                                 label="Library Tracks"/>
+
+                            {/* SPOTIFY OWNED */}
+                            <FormControlLabel
+                                control={
+                                <Switch color="secondary" checked={this.state.include_spotify_owned} name="include_spotify_owned" onChange={this.handleCheckChange} />
+                                }
+                                labelPlacement="bottom"
+                                label="Spotify Owned"/>
                         </Grid>
 
                         {/* NUMBER OF RECOMMENDATIONS */}
