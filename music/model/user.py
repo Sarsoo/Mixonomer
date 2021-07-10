@@ -89,3 +89,11 @@ class User(Model):
                 return matches[0]
         else:
             return exact_match, matches
+
+    def get_playlists(self):
+        """Get all playlists for a user
+
+        Returns:
+            List[Playlist]: List of users playlists 
+        """
+        return Playlist.collection.parent(self.key).fetch()

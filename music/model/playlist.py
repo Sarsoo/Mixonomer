@@ -54,6 +54,8 @@ class Playlist(Model):
     add_this_month = BooleanField(default=False)
     day_boundary = NumberField(default=21)
 
+    include_spotify_owned = BooleanField(default=True)
+
     chart_range = TextField(default='MONTH')
     chart_limit = NumberField(default=50)
 

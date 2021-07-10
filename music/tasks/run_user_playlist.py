@@ -77,7 +77,10 @@ def run_user_playlist(user: User, playlist: Playlist, spotnet: SpotNetwork = Non
         raise NameError(f'No Spotify network returned ({username} / {playlist_name})')
 
     try:
-        user_playlists = [(i.name, i.uri) for i in spotnet.playlists()]
+        if not playlist.include_spotify_owned:
+            user_playlists = [(i.name, i.uri) for i in spotnet.playlists() if 'spotify' not in i.owner.display_name.lower()]
+        else:
+            user_playlists = [(i.name, i.uri) for i in spotnet.playlists()]
     except SpotifyNetworkException as e:
         logger.exception(f'error occured while retrieving playlists {username} / {playlist_name}')
         raise e

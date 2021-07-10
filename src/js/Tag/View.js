@@ -1,8 +1,8 @@
 import React, { Component } from "react";
 const axios = require('axios');
 
-import { Card, Button, CardActions, CardContent, FormControl, InputLabel, Select, Typography, Grid, TextField, MenuItem, FormControlLabel, Switch } from '@material-ui/core';
-import { Delete } from '@material-ui/icons';
+import { Card, Button, ButtonGroup, CardActions, CardContent, FormControl, InputLabel, Select, Typography, Grid, TextField, MenuItem, FormControlLabel, Switch } from '@material-ui/core';
+import { Delete, ExitToApp } from '@material-ui/icons';
 import { makeStyles } from '@material-ui/core/styles';
 
 import showMessage from "../Toast.js";
@@ -28,6 +28,7 @@ class TagView extends Component{
         super(props);
         this.state = {
             tag_id: props.match.params.tag_id,
+            username: null,
             tag: {
                 name: "",
                 tracks: [],
@@ -44,6 +45,7 @@ class TagView extends Component{
         }
         this.handleInputChange = this.handleInputChange.bind(this);
         this.handleRun = this.handleRun.bind(this);
+        this.handleView = this.handleView.bind(this);
         this.handleRemoveObj = this.handleRemoveObj.bind(this);
 
         this.handleCheckChange = this.handleCheckChange.bind(this);
@@ -58,6 +60,7 @@ class TagView extends Component{
      */
     componentDidMount(){
         this.getTag();
+        this.getUserInfo();
         // var intervalId = setInterval(() => {this.getTag(false)}, 5000);
         // var timeoutId = setTimeout(() => {clearInterval(this.state.intervalId)}, 300000);
 
@@ -71,6 +74,26 @@ class TagView extends Component{
     //     clearInterval(this.state.intervalId);
     //     clearTimeout(this.state.timeoutId);
     // }
+
+    /**
+     * Get user info from API
+     */
+     getUserInfo(){
+        this.userInfoCancelToken = axios.CancelToken.source();
+
+        var self = this;
+        axios.get('/api/user', {
+            cancelToken: this.userInfoCancelToken.token
+        })
+        .then((response) => {
+            self.setState({
+                username: response.data.lastfm_username
+            })
+        })
+        .catch((error) => {
+            showMessage(`error getting user info (${error.response.status})`);
+        });
+    }
 
     /**
      * Get tag info from API
@@ -171,6 +194,30 @@ class TagView extends Component{
         }).catch((error) => {
             showMessage(`Error Updating ${this.state.tag_id} (${error.response.status})`);
         });
+    }
+
+    /**
+     * Open a tag element in Last.fm
+     * @param {*} music_obj Tag element to be viewed
+     * @param {*} addType Tag type, artist, album etc
+     * @param {*} event 
+     */
+    handleView(music_obj, addType, event){
+        let url = `https://last.fm/user/${this.state.username}/library/music/`;
+
+        switch(addType) {
+            case "artists":
+                url = url + encodeURI(music_obj.name);
+                break;
+            case "albums":
+                url = `${url}${encodeURI(music_obj.artist)}/${encodeURI(music_obj.name)}`;
+                break;
+            case "tracks":
+                url = `${url}${encodeURI(music_obj.artist)}/_/${encodeURI(music_obj.name)}`;
+                break;
+        }
+
+        window.open(url);
     }
 
     /**
@@ -334,17 +381,17 @@ class TagView extends Component{
                         {/* ARTISTS TITLE */}
                         { this.state.tag.artists.length > 0 && <Grid item xs={12} ><Typography color="textSecondary" variant="h4">Artists</Typography></Grid> }
                         {/* ARTIST CARDS */}
-                        { this.state.tag.artists.length > 0 && <ListBlock handler={this.handleRemoveObj} list={this.state.tag.artists} addType="artists" showTime={this.state.tag.time_objects}/> }
+                        { this.state.tag.artists.length > 0 && <ListBlock viewHandler={this.handleView} deleteHandler={this.handleRemoveObj} list={this.state.tag.artists} addType="artists" showTime={this.state.tag.time_objects}/> }
 
                         {/* ALBUMS TITLE */}
                         { this.state.tag.albums.length > 0 && <Grid item xs={12} ><Typography color="textSecondary" variant="h4">Albums</Typography></Grid> }
                         {/* ALBUM CARDS */}
-                        { this.state.tag.albums.length > 0 && <ListBlock handler={this.handleRemoveObj} list={this.state.tag.albums} addType="albums" showTime={this.state.tag.time_objects}/> }
+                        { this.state.tag.albums.length > 0 && <ListBlock viewHandler={this.handleView} deleteHandler={this.handleRemoveObj} list={this.state.tag.albums} addType="albums" showTime={this.state.tag.time_objects}/> }
 
                         {/* TRACKS TITLE */}
                         { this.state.tag.tracks.length > 0 && <Grid item xs={12} ><Typography color="textSecondary" variant="h4">Tracks</Typography></Grid> }
                         {/* TRACK CARDS */}
-                        { this.state.tag.tracks.length > 0 && <ListBlock handler={this.handleRemoveObj} list={this.state.tag.tracks} addType="tracks" showTime={this.state.tag.time_objects}/> }
+                        { this.state.tag.tracks.length > 0 && <ListBlock viewHandler={this.handleView} deleteHandler={this.handleRemoveObj} list={this.state.tag.tracks} addType="tracks" showTime={this.state.tag.time_objects}/> }
 
                         {/* NAME TEXTBOX */}
                         <Grid item xs={12} sm={this.state.addType != 'artists' ? 3 : 4} md={this.state.addType != 'artists' ? 3 : 4}>
@@ -458,7 +505,7 @@ function ListBlock(props) {
                 alignItems="flex-start"
                 style={{padding: '24px'}}>
                     {props.list.map((music_obj) => <BlockGridItem music_obj={ music_obj } key={ music_obj.name } 
-                                                        handler={ props.handler } addType={ props.addType } showTime={ props.showTime }/>)}
+                                                        deleteHandler={ props.deleteHandler } viewHandler={ props.viewHandler } addType={ props.addType } showTime={ props.showTime }/>)}
             </Grid>
 }
 
@@ -504,9 +551,14 @@ function BlockGridItem (props) {
 
                 {/* DELETE BUTTON */}
                 <CardActions>
-                    <Button className="full-width" color="secondary" variant="contained" aria-label="delete" onClick={(e) => props.handler(props.music_obj, props.addType, e)} startIcon={<Delete />}>
-                        Delete
-                    </Button>
+                    <ButtonGroup className="full-width" orientation="vertical" color="secondary" variant="contained">
+                        <Button className="full-width" aria-label="goto" onClick={(e) => props.viewHandler(props.music_obj, props.addType, e)} startIcon={<ExitToApp />}>
+                            View
+                        </Button>
+                        <Button className="full-width" aria-label="delete" onClick={(e) => props.deleteHandler(props.music_obj, props.addType, e)} startIcon={<Delete />}>
+                            Delete
+                        </Button>
+                    </ButtonGroup>
                 </CardActions>
             </Card>
         </Grid>
