@@ -101,7 +101,7 @@ input[type=text], input[type=password], input[type=number], select {
 	img {
 		height: auto;
 		border: 10px solid #313439;
-		margin: $pad-px / 2;
+		margin: calc($pad-px / 2);
 		box-shadow: 4px 4px 7px #070707;
 	}
 }
@@ -158,7 +158,7 @@ h1.title {
 	background-color: $ui-colour;
 	box-shadow: 4px 4px 8px black;
 	padding: 10px;
-	margin: $pad-px / 2;
+	margin: calc($pad-px / 2);
 	/*border-radius: 3px;*/
 
 	h1 {
