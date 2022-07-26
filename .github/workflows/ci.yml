@@ -6,13 +6,13 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        python-version: [3.8, 3.9]
-        poetry-version: [1.1.7]
-        node: [16]
-        os: [ubuntu-20.04, windows-latest]
+        python-version: [3.10]
+        poetry-version: [1.1.14]
+        node: [18]
+        os: [ubuntu-latest]
     runs-on: ${{ matrix.os }}
     steps:
-      - uses: actions/checkout@v2 # get source
+      - uses: actions/checkout@v3 # get source
 
       # PYTHON
       - name: Install Python ${{ matrix.python-version }}
@@ -32,11 +32,11 @@ jobs:
 
       # PYTHON for authentication when testing
       - name: Set up Cloud SDK 
-        uses: google-github-actions/setup-gcloud@v0
+        uses: google-github-actions/auth@v0.7.3
         with:
-          project_id: ${{ secrets.GCP_PROJECT_ID }}
-          service_account_key: ${{ secrets.GCP_SA_KEY }}
-          export_default_credentials: true # <===
+          credentials_json: '${{ secrets.GCP_SA_KEY }}'
+          export_environment_variables: true
+          create_credentials_file: true
 
       # PYTHON run unit tests
       - name: Run Python Tests
@@ -61,33 +61,33 @@ jobs:
       #   run: npm test
 
   documentation:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-latest
     needs: build # for ignoring bad builds
     if: github.event_name == 'push' && github.ref == 'refs/heads/master'
     steps:
-      - uses: actions/checkout@v2 # get source
+      - uses: actions/checkout@v3 # get source
 
       # PYTHON
-      - name: Install Python 3.8
+      - name: Install Python 3.10
         uses: actions/setup-python@v2
         with:
-          python-version: 3.8
+          python-version: 3.10
 
       # PYTHON for dependency export only, not installing
-      - name: Install Poetry 1.1.7
+      - name: Install Poetry 1.1.14
         uses: abatilo/actions-poetry@v2.1.0
         with:
-          poetry-version: 1.1.7
+          poetry-version: 1.1.14
 
       # PYTHON install dependencies
       - name: Install Python Dependencies
         run: poetry install
 
       # JS setup for jsdoc
-      - name: Install Node 16
+      - name: Install Node 18
         uses: actions/setup-node@v2
         with:
-          node-version: 16
+          node-version: 18
 
       # JS setup for jsdoc
       - name: Install jsdoc
@@ -98,12 +98,12 @@ jobs:
         run: echo "${GITHUB_WORKSPACE}/node_modules/.bin" >> $GITHUB_PATH
 
       # DEPLOY for setting up cloud API
-      - name: Set up Cloud SDK
-        uses: google-github-actions/setup-gcloud@v0
+      - name: Set up Cloud SDK 
+        uses: google-github-actions/auth@v0.7.3
         with:
-          project_id: ${{ secrets.GCP_PROJECT_ID }}
-          service_account_key: ${{ secrets.GCP_SA_KEY }}
-          export_default_credentials: true # <=== need to run through modules later generating docs
+          credentials_json: '${{ secrets.GCP_SA_KEY }}'
+          export_environment_variables: true
+          create_credentials_file: true
 
       - name: Generate Documentation
         run: poetry run sphinx-build docs public -b html
@@ -115,33 +115,33 @@ jobs:
           publish_dir: ./public
 
   deploy:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-latest
     needs: build # for ignoring bad builds
     if: github.event_name == 'push' && github.ref == 'refs/heads/master'
     steps:
-      - uses: actions/checkout@v2 # get source
+      - uses: actions/checkout@v3 # get source
 
       # PYTHON
-      - name: Install Python 3.8
+      - name: Install Python 3.10
         uses: actions/setup-python@v2
         with:
-          python-version: 3.8
+          python-version: 3.10
 
       # PYTHON for dependency export only, not installing
-      - name: Install Poetry 1.1.7
+      - name: Install Poetry 1.1.14
         uses: abatilo/actions-poetry@v2.1.0
         with:
-          poetry-version: 1.1.7
+          poetry-version: 1.1.14
 
       # PYTHON Export Poetry dependencies as requirements.txt
       - name: Export Poetry Dependencies
         run: python admin.py pydepend
       
       # JS setup
-      - name: Install Node 16
+      - name: Install Node 18
         uses: actions/setup-node@v2
         with:
-          node-version: 16
+          node-version: 18
 
       # JS install from lock.json 
       - name: Install Node Packages
@@ -159,12 +159,12 @@ jobs:
           destination: build/style.css
 
       # DEPLOY for setting up cloud API
-      - name: Set up Cloud SDK
-        uses: google-github-actions/setup-gcloud@v0
+      - name: Set up Cloud SDK 
+        uses: google-github-actions/auth@v0.7.3
         with:
-          project_id: ${{ secrets.GCP_PROJECT_ID }}
-          service_account_key: ${{ secrets.GCP_SA_KEY }}
-          export_default_credentials: true
+          credentials_json: '${{ secrets.GCP_SA_KEY }}'
+          export_environment_variables: true
+          create_credentials_file: true
 
       # DEPLOY set project
       - name: Set GCP Project
