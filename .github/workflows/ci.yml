@@ -71,7 +71,7 @@ jobs:
       - name: Install Python 3.10
         uses: actions/setup-python@v2
         with:
-          python-version: 3.10
+          python-version: '3.10'
 
       # PYTHON for dependency export only, not installing
       - name: Install Poetry 1.1.14
@@ -125,7 +125,7 @@ jobs:
       - name: Install Python 3.10
         uses: actions/setup-python@v2
         with:
-          python-version: 3.10
+          python-version: '3.10'
 
       # PYTHON for dependency export only, not installing
       - name: Install Poetry 1.1.14
