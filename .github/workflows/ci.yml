@@ -6,7 +6,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        python-version: ['3.8']
+        python-version: ['3.10']
         poetry-version: [1.1.14]
         node: [18]
         os: [ubuntu-latest]
@@ -60,59 +60,59 @@ jobs:
       # - name: Run JavaScript Tests
       #   run: npm test
 
-  documentation:
-    runs-on: ubuntu-latest
-    needs: build # for ignoring bad builds
-    if: github.event_name == 'push' && github.ref == 'refs/heads/master'
-    steps:
-      - uses: actions/checkout@v3 # get source
+  # documentation:
+  #   runs-on: ubuntu-latest
+  #   needs: build # for ignoring bad builds
+  #   if: github.event_name == 'push' && github.ref == 'refs/heads/master'
+  #   steps:
+  #     - uses: actions/checkout@v3 # get source
 
-      # PYTHON
-      - name: Install Python 3.8
-        uses: actions/setup-python@v2
-        with:
-          python-version: '3.8'
+  #     # PYTHON
+  #     - name: Install Python 3.10
+  #       uses: actions/setup-python@v2
+  #       with:
+  #         python-version: '3.10'
 
-      # PYTHON for dependency export only, not installing
-      - name: Install Poetry 1.1.14
-        uses: abatilo/actions-poetry@v2.1.0
-        with:
-          poetry-version: 1.1.14
+  #     # PYTHON for dependency export only, not installing
+  #     - name: Install Poetry 1.1.14
+  #       uses: abatilo/actions-poetry@v2.1.0
+  #       with:
+  #         poetry-version: 1.1.14
 
-      # PYTHON install dependencies
-      - name: Install Python Dependencies
-        run: poetry install
+  #     # PYTHON install dependencies
+  #     - name: Install Python Dependencies
+  #       run: poetry install
 
-      # JS setup for jsdoc
-      - name: Install Node 18
-        uses: actions/setup-node@v2
-        with:
-          node-version: 18
+  #     # JS setup for jsdoc
+  #     - name: Install Node 18
+  #       uses: actions/setup-node@v2
+  #       with:
+  #         node-version: 18
 
-      # JS setup for jsdoc
-      - name: Install jsdoc
-        run: npm install jsdoc
+  #     # JS setup for jsdoc
+  #     - name: Install jsdoc
+  #       run: npm install jsdoc
 
-      # JS setup for jsdoc
-      - name: Add node_modules/.bin to PATH
-        run: echo "${GITHUB_WORKSPACE}/node_modules/.bin" >> $GITHUB_PATH
+  #     # JS setup for jsdoc
+  #     - name: Add node_modules/.bin to PATH
+  #       run: echo "${GITHUB_WORKSPACE}/node_modules/.bin" >> $GITHUB_PATH
 
-      # DEPLOY for setting up cloud API
-      - name: Set up Cloud SDK 
-        uses: google-github-actions/auth@v0.7.3
-        with:
-          credentials_json: '${{ secrets.GCP_SA_KEY }}'
-          export_environment_variables: true
-          create_credentials_file: true
+  #     # DEPLOY for setting up cloud API
+  #     - name: Set up Cloud SDK 
+  #       uses: google-github-actions/auth@v0.7.3
+  #       with:
+  #         credentials_json: '${{ secrets.GCP_SA_KEY }}'
+  #         export_environment_variables: true
+  #         create_credentials_file: true
 
-      - name: Generate Documentation
-        run: poetry run sphinx-build docs public -b html
+  #     - name: Generate Documentation
+  #       run: poetry run sphinx-build docs public -b html
 
-      - name: Deploy To Pages
-        uses: peaceiris/actions-gh-pages@v3
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./public
+  #     - name: Deploy To Pages
+  #       uses: peaceiris/actions-gh-pages@v3
+  #       with:
+  #         github_token: ${{ secrets.GITHUB_TOKEN }}
+  #         publish_dir: ./public
 
   deploy:
     runs-on: ubuntu-latest
@@ -122,10 +122,10 @@ jobs:
       - uses: actions/checkout@v3 # get source
 
       # PYTHON
-      - name: Install Python 3.8
+      - name: Install Python 3.10
         uses: actions/setup-python@v2
         with:
-          python-version: '3.8'
+          python-version: '3.10'
 
       # PYTHON for dependency export only, not installing
       - name: Install Poetry 1.1.14

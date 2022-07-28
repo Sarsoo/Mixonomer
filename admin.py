@@ -83,7 +83,7 @@ class Admin(Cmd):
         subprocess.check_call(
             f'gcloud functions deploy {name} '
             f'--region {region} '
-            '--runtime=python38 '
+            '--runtime=python310 '
             f'--trigger-topic {name} '
             '--set-env-vars DEPLOY_DESTINATION=PROD '
             f'--timeout={timeout}s', shell=True
