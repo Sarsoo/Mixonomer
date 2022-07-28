@@ -121,11 +121,11 @@ jobs:
     steps:
       - uses: actions/checkout@v3 # get source
 
-      # PYTHON
-      - name: Install Python 3.10
+      # PYTHON (pinned to 3.9 for gcloud attribute mapping error)
+      - name: Install Python 3.9
         uses: actions/setup-python@v2
         with:
-          python-version: '3.10'
+          python-version: '3.9'
 
       # PYTHON for dependency export only, not installing
       - name: Install Poetry 1.1.14
