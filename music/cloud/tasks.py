@@ -47,7 +47,7 @@ def update_all_user_playlists():
 
             task['schedule_time'] = timestamp
 
-            tasker.create_task(task_path, task)
+            tasker.create_task(parent=task_path, task=task)
             seconds_delay += 30
 
 
@@ -111,7 +111,7 @@ def run_user_playlist_task(username: str, playlist_name: str, delay: int = 0):
         # Add the timestamp to the tasks.
         task['schedule_time'] = timestamp
 
-    tasker.create_task(task_path, task)
+    tasker.create_task(parent=task_path, task=task)
 
 
 def refresh_all_user_playlist_stats():
@@ -191,7 +191,7 @@ def refresh_user_stats_task(username: str, delay: int = 0):
 
         task['schedule_time'] = timestamp
 
-    tasker.create_task(task_path, task)
+    tasker.create_task(parent=task_path, task=task)
 
 
 def refresh_playlist_task(username: str, playlist_name: str, delay: int = 0):
@@ -252,9 +252,9 @@ def refresh_playlist_task(username: str, playlist_name: str, delay: int = 0):
 
     artist_task['schedule_time'] = timestamp
 
-    tasker.create_task(task_path, track_task)
-    tasker.create_task(task_path, album_task)
-    tasker.create_task(task_path, artist_task)
+    tasker.create_task(parent=task_path, task=track_task)
+    tasker.create_task(parent=task_path, task=album_task)
+    tasker.create_task(parent=task_path, task=artist_task)
 
 
 def update_all_user_tags():
@@ -287,5 +287,5 @@ def update_all_user_tags():
 
                 task['schedule_time'] = timestamp
 
-                tasker.create_task(task_path, task)
+                tasker.create_task(parent=task_path, task=task)
                 seconds_delay += 10
