@@ -18,7 +18,7 @@
 
 # -- Project information -----------------------------------------------------
 
-project = 'Music Tools'
+project = 'Mixonomer'
 copyright = '2021, Sarsoo'
 author = 'Sarsoo'
 

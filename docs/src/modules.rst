@@ -1,4 +1,4 @@
-Music Tools Modules
+Mixonomer Modules
 ======================
 
 .. toctree::

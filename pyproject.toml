@@ -5,7 +5,7 @@ description = "Spotify smart playlist generator. Last.fm integration for listeni
 authors = ["andy <andy@sarsoo.xyz>"]
 readme = "README.md"
 homepage = "https://music.sarsoo.xyz/"
-repository = "https://github.com/Sarsoo/Music-Tools"
+repository = "https://github.com/Sarsoo/Mixonomer"
 
 [tool.poetry.scripts]
 test = 'admin:test'

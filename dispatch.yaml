@@ -6,3 +6,9 @@ dispatch:
   - url: "music.sarsoo.xyz/*"
     service: spotify
 
+  - url: "mixonomer.sarsoo.xyz/*"
+    service: spotify
+
+  - url: "mix.sarsoo.xyz/*"
+    service: spotify
+

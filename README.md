@@ -1,12 +1,12 @@
-[Music Tools](https://music.sarsoo.xyz)
+[Mixonomer](https://music.sarsoo.xyz)
 ==================
 
-![Python Tests](https://github.com/sarsoo/music-tools/workflows/test%20and%20deploy/badge.svg)
+![Python Tests](https://github.com/sarsoo/Mixonomer/workflows/test%20and%20deploy/badge.svg)
 
 Set of utility tools for Spotify and Last.fm. 
-Built on my other libraries for Spotify ([spotframework](https://github.com/Sarsoo/spotframework)), Last.fm ([fmframework](https://github.com/Sarsoo/pyfmframework)) and interfacing utility tools for the two ([spotfm](https://github.com/Sarsoo/pyfmframework)). Currently running on a suite of Google Cloud Platform services. An iOS client is currently under development [here](https://github.com/Sarsoo/Music-Tools-iOS).
+Built on my other libraries for Spotify ([spotframework](https://github.com/Sarsoo/spotframework)), Last.fm ([fmframework](https://github.com/Sarsoo/pyfmframework)) and interfacing utility tools for the two ([spotfm](https://github.com/Sarsoo/pyfmframework)). Currently running on a suite of Google Cloud Platform services. An iOS client is currently under development [here](https://github.com/Sarsoo/Mixonomer-iOS).
 
-Read the full documentation [here](https://sarsoo.github.io/Music-Tools/).
+Read the full documentation [here](https://sarsoo.github.io/Mixonomer/).
 
 # Smart Playlists
 
@@ -20,7 +20,7 @@ Playlists can pull tracks from multiple sources with some extra ones based on th
 * Spotify playlists 
     - Currently referenced by case-sensitive names of those followed by the user
     - Plan to include reference by Spotify URI
-* Other Music Tools playlists
+* Other Mixonomer playlists
     - Dynamically include the Spotify playlists of other managed playlists
     - Used to allow hierarchy playlists such as for genre (as seen above for multiple rap playlists)
 * Spotify Library Tracks

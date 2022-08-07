@@ -263,7 +263,7 @@ export class Edit extends Component{
     }
 
     /**
-     * Handle adding new watched music tools playlist reference 
+     * Handle adding new watched Mixonomer playlist reference 
      * @param {*} event Event data
      */
     handleAddReference(event){
@@ -320,7 +320,7 @@ export class Edit extends Component{
     }
 
     /**
-     * Handle removing watched music tools playlist reference
+     * Handle removing watched Mixonomer playlist reference
      * @param {*} id Subject playlist name
      * @param {*} event Event data
      */
