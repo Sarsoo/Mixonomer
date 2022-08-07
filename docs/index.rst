@@ -10,7 +10,7 @@ Mixonomer
    Admin Script <src/admin>
    All Modules <src/modules>
 
-`Mixonomer <https://music.sarsoo.xyz>`_
+`Mixonomer <https://mixonomer.sarsoo.xyz>`_
 ----------------------------------------------
 
 .. image:: https://github.com/sarsoo/Mixonomer/workflows/test%20and%20deploy/badge.svg

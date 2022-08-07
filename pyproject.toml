@@ -4,7 +4,7 @@ version = "1.0.1"
 description = "Spotify smart playlist generator. Last.fm integration for listening statistics"
 authors = ["andy <andy@sarsoo.xyz>"]
 readme = "README.md"
-homepage = "https://music.sarsoo.xyz/"
+homepage = "https://mixonomer.sarsoo.xyz/"
 repository = "https://github.com/Sarsoo/Mixonomer"
 
 [tool.poetry.scripts]

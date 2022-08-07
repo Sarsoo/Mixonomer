@@ -1,4 +1,4 @@
-[Mixonomer](https://music.sarsoo.xyz)
+[Mixonomer](https://mixonomer.sarsoo.xyz)
 ==================
 
 ![Python Tests](https://github.com/sarsoo/Mixonomer/workflows/test%20and%20deploy/badge.svg)
