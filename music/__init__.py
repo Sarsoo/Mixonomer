@@ -1,4 +1,4 @@
-"""Root module containing Music Tools backend
+"""Root module containing Mixonomer backend
 
 Top level module with functions for creating app with loaded blueprints and initialising the logging stack
 

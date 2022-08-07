@@ -35,7 +35,7 @@ COMPONENTS:
 
 
 class Admin(Cmd):
-    intro = 'Music Tools Admin... ? for help'
+    intro = 'Mixonomer Admin... ? for help'
     prompt = '> '
 
     locals = ['spotframework', 'fmframework', 'spotfm']

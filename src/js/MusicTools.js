@@ -100,7 +100,7 @@ class MusicTools extends Component {
                             <MenuIcon />
                             </IconButton>
                             <Typography variant="h6">
-                                <Link to='/app/playlists' style={{textDecoration: 'none'}}>Music Tools</Link>
+                                <Link to='/app/playlists' style={{textDecoration: 'none'}}>Mixes</Link>
                             </Typography>
                         </Toolbar>
                     </AppBar>

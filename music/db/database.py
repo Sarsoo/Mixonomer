@@ -102,5 +102,5 @@ def get_authed_lastfm_network(user: User) -> Optional[FmNetwork]:
 
 @dataclass
 class DatabaseUser(NetworkUser):
-    """Adding Music Tools username to spotframework network user"""
+    """Adding Mixonomer username to spotframework network user"""
     user_id: str = None

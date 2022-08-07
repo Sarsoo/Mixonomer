@@ -1,5 +1,5 @@
 {
-  "name": "music-tools",
+  "name": "mixonomer",
   "version": "1.0.0",
   "description": "web app for spotify playlist management with last.fm integration",
   "private": true,
@@ -10,14 +10,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/Sarsoo/Music-Tools.git"
+    "url": "git+https://github.com/Sarsoo/Mixonomer.git"
   },
   "author": "sarsoo",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/Sarsoo/Music-Tools/issues"
+    "url": "https://github.com/Sarsoo/Mixonomer/issues"
   },
-  "homepage": "https://github.com/Sarsoo/Music-Tools#readme",
+  "homepage": "https://github.com/Sarsoo/Mixonomer#readme",
   "dependencies": {
     "@material-ui/core": "^4.11.3",
     "@material-ui/icons": "^4.11.2",
