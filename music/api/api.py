@@ -7,7 +7,7 @@ import json
 import logging
 from datetime import datetime
 
-from music.api.decorators import login_required, login_or_basic_auth, \
+from music.api.decorators import login_or_jwt, login_required, login_or_basic_auth, \
     admin_required, cloud_task, validate_json, validate_args, spotify_link_required
 from music.cloud import queue_run_user_playlist, offload_or_run_user_playlist
 from music.cloud.tasks import update_all_user_playlists, update_playlists
@@ -46,9 +46,9 @@ def all_playlists_route(user=None):
 
 
 @blueprint.route('/playlist', methods=['GET', 'DELETE'])
-@login_or_basic_auth
+@login_or_jwt
 @validate_args(('name', str))
-def playlist_get_delete_route(user=None):
+def playlist_get_delete_route(auth=None,user=None):
 
     playlist = user.get_playlist(request.args['name'], raise_error=False)
 

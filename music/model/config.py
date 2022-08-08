@@ -19,3 +19,4 @@ class Config(Model):
     """Determines whether playlist and tag update operations are done by Cloud Tasks or Functions
     """
     secret_key = TextField()
+    jwt_secret_key = TextField()
