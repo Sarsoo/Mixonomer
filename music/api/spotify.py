@@ -1,7 +1,7 @@
 from flask import Blueprint, request, jsonify
 import logging
 
-from music.api.decorators import login_or_basic_auth, spotify_link_required
+from music.api.decorators import login_or_jwt, spotify_link_required
 import music.db.database as database
 
 from spotframework.engine.playlistengine import PlaylistEngine
@@ -12,9 +12,9 @@ logger = logging.getLogger(__name__)
 
 
 @blueprint.route('/sort', methods=['POST'])
-@login_or_basic_auth
+@login_or_jwt
 @spotify_link_required
-def sort(user=None):
+def sort(auth=None, user=None):
     request_json = request.get_json()
 
     net = database.get_authed_spotify_network(user)

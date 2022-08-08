@@ -6,6 +6,8 @@ from music.auth.jwt_keys import generate_key
 
 from urllib.parse import urlencode, urlunparse
 import datetime
+from datetime import timedelta
+from numbers import Number
 import logging
 from base64 import b64encode
 import requests
@@ -95,12 +97,19 @@ def jwt_token():
             logger.warning(f'locked account token attempt {username}')
             return jsonify({"message": 'user locked', "status": "error"}), 403
 
-        user.last_login = datetime.datetime.utcnow()
+        user.last_keygen = datetime.datetime.utcnow()
         user.update()
 
         logger.info(f'generating token for {username}')
 
-        token = generate_key(user)
+        config = Config.collection.get("config/music-tools")
+
+        if isinstance(expiry := request_json.get('expiry', None), Number):
+            expiry = min(expiry, config.jwt_max_length)
+        else:
+            expiry = config.jwt_default_length
+
+        token = generate_key(user, timeout=timedelta(seconds=expiry))
 
         return jsonify({"token": token, "status": "success"}), 200
     else:

@@ -20,6 +20,7 @@ class User(Model):
     type = TextField(default="user")
 
     last_login = DateTime()
+    last_keygen = DateTime()
     last_refreshed = DateTime()
     locked = BooleanField(default=False, required=True)
     validated = BooleanField(default=True, required=True)

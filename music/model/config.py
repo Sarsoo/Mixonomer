@@ -20,3 +20,5 @@ class Config(Model):
     """
     secret_key = TextField()
     jwt_secret_key = TextField()
+    jwt_max_length = NumberField()
+    jwt_default_length = NumberField()

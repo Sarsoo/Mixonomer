@@ -4,7 +4,7 @@ import logging
 import os
 import json
 
-from music.api.decorators import login_or_basic_auth, cloud_task
+from music.api.decorators import login_or_jwt, cloud_task
 from music.cloud.function import update_tag as serverless_update_tag
 from music.tasks.update_tag import update_tag
 
@@ -15,8 +15,8 @@ logger = logging.getLogger(__name__)
 
 
 @blueprint.route('/tag', methods=['GET'])
-@login_or_basic_auth
-def tags(user=None):
+@login_or_jwt
+def tags(auth=None, user=None):
     logger.info(f'retrieving tags for {user.username}')
     return jsonify({
         'tags': [i.to_dict() for i in Tag.collection.parent(user.key).fetch()]
@@ -24,8 +24,8 @@ def tags(user=None):
 
 
 @blueprint.route('/tag/<tag_id>', methods=['GET', 'PUT', 'POST', "DELETE"])
-@login_or_basic_auth
-def tag_route(tag_id, user=None):
+@login_or_jwt
+def tag_route(tag_id, auth=None, user=None):
     if request.method == 'GET':
         return get_tag(tag_id, user)
     elif request.method == 'PUT':
@@ -126,8 +126,8 @@ def delete_tag(tag_id, user):
 
 
 @blueprint.route('/tag/<tag_id>/update', methods=['GET'])
-@login_or_basic_auth
-def tag_refresh(tag_id, user=None):
+@login_or_jwt
+def tag_refresh(tag_id, auth=None, user=None):
     logger.info(f'updating {tag_id} tag for {user.username}')
 
     if os.environ.get('DEPLOY_DESTINATION', None) == 'PROD':

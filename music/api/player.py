@@ -2,7 +2,7 @@ from flask import Blueprint, request, jsonify
 
 import logging
 
-from music.api.decorators import login_or_basic_auth, spotify_link_required, validate_json
+from music.api.decorators import login_or_jwt, spotify_link_required, validate_json
 import music.db.database as database
 
 from spotframework.net.network import SpotifyNetworkException
@@ -16,9 +16,9 @@ logger = logging.getLogger(__name__)
 
 
 @blueprint.route('/play', methods=['POST'])
-@login_or_basic_auth
+@login_or_jwt
 @spotify_link_required
-def play(user=None):
+def play(auth=None, user=None):
     request_json = request.get_json()
 
     if 'uri' in request_json:
@@ -78,9 +78,9 @@ def play(user=None):
 
 
 @blueprint.route('/next', methods=['POST'])
-@login_or_basic_auth
+@login_or_jwt
 @spotify_link_required
-def next_track(user=None):
+def next_track(auth=None, user=None):
     net = database.get_authed_spotify_network(user)
     player = Player(net)
 
@@ -89,10 +89,10 @@ def next_track(user=None):
 
 
 @blueprint.route('/shuffle', methods=['POST'])
-@login_or_basic_auth
+@login_or_jwt
 @spotify_link_required
 @validate_json(('state', bool))
-def shuffle(user=None):
+def shuffle(auth=None, user=None):
     request_json = request.get_json()
 
     net = database.get_authed_spotify_network(user)
@@ -103,10 +103,10 @@ def shuffle(user=None):
 
 
 @blueprint.route('/volume', methods=['POST'])
-@login_or_basic_auth
+@login_or_jwt
 @spotify_link_required
 @validate_json(('volume', int))
-def volume(user=None):
+def volume(auth=None, user=None):
     request_json = request.get_json()
 
     if 0 <= request_json['volume'] <= 100:
