@@ -27,7 +27,7 @@ class TestAuth(unittest.TestCase):
         decoded = validate_key(key)
         self.assertIsNotNone(decoded)
 
-        sleep(2.5)
+        sleep(4)
 
         decoded = validate_key(key)
         self.assertIsNone(decoded)
