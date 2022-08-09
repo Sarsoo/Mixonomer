@@ -170,6 +170,10 @@ jobs:
       - name: Set GCP Project
         run: python admin.py set_project
 
+      # DEPLOY domain routes
+      - name: Deploy dispatch.yaml
+        run: gcloud app deploy dispatch.yaml --quiet
+
       # DEPLOY app engine service, -nb for skipping compile
       - name: Deploy App Engine Service
         run: python admin.py app -nb
