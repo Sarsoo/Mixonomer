@@ -5,7 +5,7 @@ from datetime import datetime
 
 from google.cloud import tasks_v2
 
-from music.api.decorators import login_or_basic_auth, admin_required
+from music.api.decorators import login_or_jwt, admin_required
 
 blueprint = Blueprint('admin-api', __name__)
 
@@ -16,9 +16,9 @@ logger = logging.getLogger(__name__)
 
 
 @blueprint.route('/tasks', methods=['GET'])
-@login_or_basic_auth
+@login_or_jwt
 @admin_required
-def get_tasks(user=None):
+def get_tasks(auth=None, user=None):
 
     tasks = list(tasker.list_tasks(task_path))
 

@@ -21,6 +21,7 @@ google-cloud-logging = "^3.2.1"
 google-cloud-pubsub = "^2.13.4"
 google-cloud-tasks = "^2.10.0"
 requests = "^2.28.1"
+PyJWT = "^2.4.0"
 
 spotframework = { git = "https://github.com/Sarsoo/spotframework.git" }
 fmframework = { git = "https://github.com/Sarsoo/pyfmframework.git" }

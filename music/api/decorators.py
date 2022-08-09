@@ -4,6 +4,7 @@ import logging
 from flask import session, request, jsonify
 
 from music.model.user import User
+from music.auth.jwt_keys import validate_key
 
 logger = logging.getLogger(__name__)
 
@@ -30,6 +31,19 @@ def is_basic_authed():
     return False, None
 
 
+def is_jwt_authed():
+    if request.headers.get('Authorization', None):
+
+        unparsed = request.headers.get('Authorization')
+
+        if unparsed.startswith('Bearer '):
+
+            token = validate_key(unparsed.removeprefix('Bearer ').strip())
+
+            if token is not None:
+                return token
+
+
 def login_required(func):
     @functools.wraps(func)
     def login_required_wrapper(*args, **kwargs):
@@ -40,6 +54,48 @@ def login_required(func):
             logger.warning('user not logged in')
             return jsonify({'error': 'not logged in'}), 401
     return login_required_wrapper
+
+
+def login_or_jwt(func):
+    @functools.wraps(func)
+    def login_or_jwt_wrapper(*args, **kwargs):
+        if is_logged_in():
+            user = User.collection.filter('username', '==', session['username'].strip().lower()).get()
+            return func(*args, user=user, **kwargs)
+        else:
+            token = is_jwt_authed()
+            if token is not None:
+                user = User.collection.filter('username', '==', token['sub'].strip().lower()).get()
+                
+                if user is not None:
+                    return func(*args, auth=token, user=user, **kwargs)
+                else:
+                    logger.warning(f'user {token["sub"]} not found')
+                    return jsonify({'error': f'user {token["sub"]} not found'}), 404
+            else:
+                logger.warning('user not authorised')
+                return jsonify({'error': 'not authorised'}), 401
+
+    return login_or_jwt_wrapper
+
+def jwt_required(func):
+    @functools.wraps(func)
+    def jwt_required_wrapper(*args, **kwargs):
+        
+        token = is_jwt_authed()
+        if token is not None:
+            user = User.collection.filter('username', '==', token['sub'].strip().lower()).get()
+
+            if user is not None:
+                return func(*args, auth=token, user=user, **kwargs)
+            else:
+                logger.warning(f'user {token["sub"]} not found')
+                return jsonify({'error': f'user {token["sub"]} not found'}), 404
+        else:
+            logger.warning('user not authorised')
+            return jsonify({'error': 'not authorised'}), 401
+
+    return jwt_required_wrapper
 
 
 def login_or_basic_auth(func):

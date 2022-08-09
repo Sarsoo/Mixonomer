@@ -1,10 +1,13 @@
-from flask import Blueprint, session, flash, request, redirect, url_for, render_template
+from flask import Blueprint, session, flash, request, redirect, url_for, render_template, jsonify
 from werkzeug.security import generate_password_hash
 from music.model.user import User
 from music.model.config import Config
+from music.auth.jwt_keys import generate_key
 
 from urllib.parse import urlencode, urlunparse
 import datetime
+from datetime import timedelta
+from numbers import Number
 import logging
 from base64 import b64encode
 import requests
@@ -67,6 +70,51 @@ def logout():
     session.pop('username', None)
     flash('logged out')
     return redirect(url_for('index'))
+
+@blueprint.route('/token', methods=['POST'])
+def jwt_token():
+    """Generate JWT
+
+    Returns:
+        HTTP Response: token request on POST
+    """
+
+    request_json = request.get_json()
+
+    username = request_json.get('username', None)
+    password = request_json.get('password', None)
+
+    if username is None or password is None:
+        return jsonify({"message": 'username and password fields required', "status": "error"}), 400
+
+    user = User.collection.filter('username', '==', username.strip().lower()).get()
+
+    if user is None:
+        return jsonify({"message": 'user not found', "status": "error"}), 404
+
+    if user.check_password(password):
+        if user.locked:
+            logger.warning(f'locked account token attempt {username}')
+            return jsonify({"message": 'user locked', "status": "error"}), 403
+
+        user.last_keygen = datetime.datetime.utcnow()
+        user.update()
+
+        logger.info(f'generating token for {username}')
+
+        config = Config.collection.get("config/music-tools")
+
+        if isinstance(expiry := request_json.get('expiry', None), Number):
+            expiry = min(expiry, config.jwt_max_length)
+        else:
+            expiry = config.jwt_default_length
+
+        token = generate_key(user, timeout=timedelta(seconds=expiry))
+
+        return jsonify({"token": token, "status": "success"}), 200
+    else:
+        logger.warning(f'failed token attempt {username}')
+        return jsonify({"message": 'authentication failed', "status": "error"}), 401
 
 
 @blueprint.route('/register', methods=['GET', 'POST'])
