@@ -3,6 +3,7 @@ from werkzeug.security import generate_password_hash
 from music.model.user import User
 from music.model.config import Config
 from music.auth.jwt_keys import generate_key
+from music.api.decorators import no_cache
 
 from urllib.parse import urlencode, urlunparse
 import datetime
@@ -18,6 +19,7 @@ logger = logging.getLogger(__name__)
 
 
 @blueprint.route('/login', methods=['GET', 'POST'])
+@no_cache
 def login():
     """Login route allowing retrieval of HTML page and submission of results
 
@@ -64,6 +66,7 @@ def login():
 
 
 @blueprint.route('/logout', methods=['GET', 'POST'])
+@no_cache
 def logout():
     if 'username' in session:
         logger.info(f'logged out {session["username"]}')
@@ -72,6 +75,7 @@ def logout():
     return redirect(url_for('index'))
 
 @blueprint.route('/token', methods=['POST'])
+@no_cache
 def jwt_token():
     """Generate JWT
 
@@ -118,6 +122,7 @@ def jwt_token():
 
 
 @blueprint.route('/register', methods=['GET', 'POST'])
+@no_cache
 def register():
 
     if 'username' in session:
@@ -127,24 +132,45 @@ def register():
         return render_template('register.html')
     else:
 
+        api_user = False
+
         username = request.form.get('username', None)
         password = request.form.get('password', None)
         password_again = request.form.get('password_again', None)
 
         if username is None or password is None or password_again is None:
-            flash('malformed request')
-            return redirect('authapi.register')
+
+            if (request_json := request.get_json()) != None:
+                username = request_json.get('username', None)
+                password = request_json.get('password', None)
+                password_again = request_json.get('password_again', None)
+
+                api_user = True
+
+                if username is None or password is None or password_again is None:
+                    logger.info(f'malformed register api request, {username}')
+                    return jsonify({'status': 'error', 'message': 'malformed request'}), 400
+
+            else:
+                flash('malformed request')
+                return redirect('authapi.register')
 
         username = username.lower()
 
         if password != password_again:
-            flash('password mismatch')
-            return redirect('authapi.register')
+            if api_user:
+                return jsonify({'message': 'passwords didnt match', 'status': 'error'}), 400
+            else:
+                flash('password mismatch')
+                return redirect('authapi.register')
 
         if username in [i.username for i in
                         User.collection.fetch()]:
-            flash('username already registered')
-            return redirect('authapi.register')
+            if api_user:
+                return jsonify({'message': 'user already exists', 'status': 'error'}), 409
+            else:
+                flash('username already registered')
+                return redirect('authapi.register')
 
         user = User()
         user.username = username
@@ -154,11 +180,16 @@ def register():
         user.save()
 
         logger.info(f'new user {username}')
-        session['username'] = username
-        return redirect(url_for('authapi.auth'))
+
+        if api_user:
+            return jsonify({'message': 'account created', 'status': 'succeeded'}), 201
+        else:
+            session['username'] = username
+            return redirect(url_for('authapi.auth'))
 
 
 @blueprint.route('/spotify')
+@no_cache
 def auth():
 
     if 'username' in session:
@@ -180,6 +211,7 @@ def auth():
 
 
 @blueprint.route('/spotify/token')
+@no_cache
 def token():
 
     if 'username' in session:
@@ -228,6 +260,7 @@ def token():
 
 
 @blueprint.route('/spotify/deauth')
+@no_cache
 def deauth():
 
     if 'username' in session:

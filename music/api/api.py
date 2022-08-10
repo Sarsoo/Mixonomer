@@ -200,6 +200,19 @@ def user_route(auth=None, user=None):
 
         return jsonify({'message': 'account updated', 'status': 'succeeded'}), 200
 
+@blueprint.route('/user', methods=['DELETE'])
+@login_or_jwt
+def user_delete_route(auth=None, user=None):
+    assert user is not None
+
+    if user.type == 'admin' and (username_override := request.args.get('username')) is not None:
+        user = User.collection.filter('username', '==', username_override.strip().lower()).get()
+
+    User.collection.delete(user.key, child=True)
+
+    logger.info(f'user {user.username} deleted')
+
+    return jsonify({'message': 'account deleted', 'status': 'succeeded'}), 200
 
 @blueprint.route('/users', methods=['GET'])
 @login_or_jwt

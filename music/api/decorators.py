@@ -234,3 +234,23 @@ def check_dict(request_params, expected_args, func, args, kwargs):
                 return jsonify({'status': 'error', 'message': f'{arg_key} not of type {expected_arg[1]}'}), 400
 
     return func(*args, **kwargs)
+
+def no_cache(func):
+    @functools.wraps(func)
+    def no_cache_wrapper(*args, **kwargs):
+        resp = func(*args, **kwargs)
+
+        if isinstance(resp, tuple):
+            response = resp[0]
+        else:
+            response = resp
+
+        if response is not None:
+            response.headers["Cache-Control"] = "no-cache, no-store, must-revalidate"
+            response.headers["Pragma"] = "no-cache"
+            response.headers["Expires"] = "0"
+            response.headers['Cache-Control'] = 'public, max-age=0'
+
+        return resp
+
+    return no_cache_wrapper
