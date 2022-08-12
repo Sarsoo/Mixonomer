@@ -46,6 +46,10 @@ def create_app():
 
         return render_template('login.html', logged_in=logged_in)
 
+    @app.route('/privacy')
+    def privacy():
+        return render_template('privacy.html')
+
     @app.route('/app', defaults={'path': ''})
     @app.route('/app/<path:path>')
     def app_route(path):

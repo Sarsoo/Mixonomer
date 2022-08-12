@@ -15,7 +15,7 @@ import MenuIcon from '@material-ui/icons/Menu';
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 import HomeIcon from '@material-ui/icons/Home';
 
-import { Build, QueueMusic, ExitToApp, AccountCircle, KeyboardBackspace, GroupWork } from '@material-ui/icons'
+import { Build, QueueMusic, ExitToApp, AccountCircle, KeyboardBackspace, GroupWork, Policy } from '@material-ui/icons'
 
 const axios = require('axios');
 
@@ -156,6 +156,11 @@ class MusicTools extends Component {
                                     <ListItemText primary="Admin" />
                                 </ListItem>
                             }
+
+                            <ListItem button key="privacy" onClick={(e) => { window.location.href = '/privacy' }}>
+                                <ListItemIcon><Policy /></ListItemIcon>
+                                <ListItemText primary="Privacy" />
+                            </ListItem>
 
                             {/* LOGOUT */}
                             <ListItem button key="logout" onClick={(e) => { window.location.href = '/auth/logout' }}>
