@@ -1,7 +1,7 @@
 import functools
 import logging
 
-from flask import session, request, jsonify
+from flask import session, request, jsonify, make_response
 
 from music.model.user import User
 from music.auth.jwt_keys import validate_key
@@ -239,6 +239,9 @@ def no_cache(func):
     @functools.wraps(func)
     def no_cache_wrapper(*args, **kwargs):
         resp = func(*args, **kwargs)
+
+        if isinstance(resp, str):
+            resp = make_response(resp)
 
         if isinstance(resp, tuple):
             response = resp[0]
