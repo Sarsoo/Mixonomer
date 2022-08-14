@@ -137,7 +137,7 @@ function PlaylistGrid(props){
         <Grid container 
                 spacing={3} 
                 direction="row"
-                justify="flex-start"
+                justifyContent="flex-start"
                 alignItems="flex-start"
                 style={{padding: 24}}>
 

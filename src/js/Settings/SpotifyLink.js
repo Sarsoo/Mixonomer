@@ -42,7 +42,7 @@ class SpotifyLink extends Component {
 
                     {/* STATUS */}
                     <CardContent>
-                        <Typography variant="h4" color="textPrimary">Admin Functions</Typography>
+                        <Typography variant="h4" color="textPrimary">Spotify Link</Typography>
                         <Typography variant="body2" color="textSecondary">Status: { this.state.spotify_linked ? "Linked" : "Unlinked" }</Typography>
                     </CardContent>
 

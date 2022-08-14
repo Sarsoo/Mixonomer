@@ -641,7 +641,7 @@ function ListBlock(props) {
     return <Grid container 
                 spacing={3} 
                 direction="row"
-                justify="flex-start"
+                justifyContent="flex-start"
                 alignItems="flex-start"
                 style={{padding: '24px'}}>
                     {props.list.map((part) => <BlockGridItem part={ part } key={ part } handler={props.handler}/>)}

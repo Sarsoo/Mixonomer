@@ -3,7 +3,7 @@ import { Grid, CircularProgress } from '@material-ui/core';
 
 function Progress (props) {
     return (
-        <Grid container justify="flex-start" alignItems="flex-start" align="center" style={{ padding: props.padding }}>
+        <Grid container justifyContent="flex-start" alignItems="flex-start" align="center" style={{ padding: props.padding }}>
             <Grid item xs={ props.colWidth }>
                 <CircularProgress color="secondary" />
             </Grid>

@@ -81,7 +81,7 @@ function TagGrid(props){
         <Grid container
                 spacing={3}
                 direction="row"
-                justify="flex-start"
+                justifyContent="flex-start"
                 alignItems="flex-start"
                 style={{padding: '24px'}}>
             <Grid item xs={12} sm={6} md={2}>

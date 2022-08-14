@@ -1,6 +1,6 @@
-import { createMuiTheme, responsiveFontSizes } from '@material-ui/core/styles';
+import { createTheme, responsiveFontSizes } from '@material-ui/core/styles';
 
-let GlobalTheme = createMuiTheme({
+let GlobalTheme = createTheme({
     root: {
         display: 'flex',
         flexDirection: 'column',

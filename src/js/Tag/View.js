@@ -501,7 +501,7 @@ function ListBlock(props) {
     return <Grid container 
                 spacing={3} 
                 direction="row"
-                justify="flex-start"
+                justifyContent="flex-start"
                 alignItems="flex-start"
                 style={{padding: '24px'}}>
                     {props.list.map((music_obj) => <BlockGridItem music_obj={ music_obj } key={ music_obj.name } 
