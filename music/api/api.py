@@ -194,6 +194,9 @@ def user_route(auth=None, user=None):
             logger.info(f'updating lastfm username {user.username} -> {request_json["lastfm_username"]}')
             user.lastfm_username = request_json['lastfm_username']
 
+            if user.lastfm_username is None:
+                user.lastfm_username = ""
+
         user.update()
 
         logger.info(f'updated {user.username}')
