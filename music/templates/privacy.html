@@ -18,7 +18,7 @@
 		<h1>Privacy Policy</h1>
 
 		<div class="pad-12 card">
-			<p>Mixonomer is a side project that I don't/won't/can't monetise. No extra personal information is stored and all information can be deleted whenever you like. Your credentials are a username and password only, I don’t want your name/email/phone number. No analytics/ad libraries are used, although you may see Google domains in the connections as the app is hosted on Google’s cloud and the title is a Google font.</p>
+			<p>Mixonomer is a side project that I don't/won't/can't monetise. No extra personal information is stored and all information can be deleted whenever you like. Your credentials are a username and password only, I don’t want your name/email/phone number. No analytics/ad libraries are used, although you may see Google domains in the connections as the app is hosted on Google’s cloud and the title is a Google font. One cookie is used to manage whether you are signed in to the web app and is not used for anything else.</p>
 
 			<p>You can see all the information stored about you using the API, while logged in, go to </p>
 
@@ -30,13 +30,15 @@
 				<a href="/api/tags">/api/tags</a>
 			</p>
 			
-			<p>This includes all data except for some sensitive user data including the password hash and Spotify credentials.</p>
+			<p>This includes all data except for some sensitive user data including your password hash and Spotify credentials.</p>
 			
-			<p>Mixonomer relies on a link to your Spotify account in order to manage smart playlists on your behalf. When you link your Spotify account, Mixonomer is provided with a key that it can use to make requests of Spotify. You can unlink Spotify from the Mixonomer settings, doing so clears all stored Spotify credentials, completely removing Mixonomer's ability to manage your Spotify account. If and when you would like to prevent Mixonomer's access to your Spotify account, you can also revoke Mixonomer's access from your Spotify account settings.</p>
+			<p>Mixonomer relies on a link to your Spotify account in order to manage smart playlists on your behalf. When you link your Spotify account, Mixonomer is provided with a key that it can use to make requests of Spotify. You can unlink Spotify from the Mixonomer settings, doing so clears all stored Spotify credentials, completely removing Mixonomer's ability to manage your Spotify account. If and when you would like to prevent Mixonomer's access to your Spotify account, you can also revoke Mixonomer's access from your <a href="https://www.spotify.com/uk/account/apps/">Spotify account settings</a>.</p>
 
 			<p>Mixonomer also has Last.fm integrations, enabled by providing your username in the Mixonomer settings page. Mixonomer only uses publicly available Last.fm data, no authentication with Last.fm is required and removing the username from Mixonomer’s settings disables the integration.</p>
 
-			<p>Delete account functionality does not yet have a UI implementation, but there is API support, send a HTTP <span style="font-family: 'Courier New', Courier, monospace">DELETE</span> to <span style="font-family: 'Courier New', Courier, monospace"><a href="/api/user">/api/user</a></span> to delete all user data.</p>
+			<p>Delete account functionality does not yet have a web UI implementation, but there is API support, send a HTTP <span style="font-family: 'Courier New', Courier, monospace">DELETE</span> to <span style="font-family: 'Courier New', Courier, monospace"><a href="/api/user">/api/user</a></span> to delete all user data. If you're using the iOS client, go to settings and click <b>Delete Account</b> to delete all user data.</p>
+
+			<p>If you have any questions or concerns about your data, you can contact me using the form on <a href="https://sarsoo.xyz/about">sarsoo.xyz</a>.</p>
 		</div>
 	</div>
 {% endblock %}
