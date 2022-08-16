@@ -76,9 +76,9 @@ def playlist_post_put_route(auth=None, user=None):
     playlist_name = request_json['name']
     playlist_references = []
 
-    if request_json.get('playlist_references', None):
-        if request_json['playlist_references'] != -1:
-            for i in request_json['playlist_references']:
+    if request_refs := request_json.get('playlist_references', None):
+        if request_refs != -1:
+            for i in request_refs:
 
                 playlist = user.get_playlist(i, raise_error=False)
                 if playlist is not None:
@@ -86,7 +86,7 @@ def playlist_post_put_route(auth=None, user=None):
                 else:
                     return jsonify({"message": f'managed playlist {i} not found', "status": "error"}), 400
 
-    if len(playlist_references) == 0 and request_json.get('playlist_references', None) != -1:
+    if len(playlist_references) == 0 and request_refs != -1:
         playlist_references = None
 
     searched_playlist = user.get_playlist(playlist_name, raise_error=False)
@@ -139,11 +139,19 @@ def playlist_post_put_route(auth=None, user=None):
                 setattr(searched_playlist, rec_key, request_json[rec_key])
 
         # COMPONENTS
-        if request_json.get('parts'):
-            if request_json['parts'] == -1:
+        if request_parts := request_json.get('parts'):
+            if request_parts == -1:
                 searched_playlist.parts = []
             else:
-                searched_playlist.parts = request_json['parts']
+                searched_playlist.parts = request_parts
+
+        if request_part_addition := request_json.get('add_part'):
+            if request_part_addition not in searched_playlist.parts:
+                searched_playlist.parts = searched_playlist.parts + [request_part_addition]
+
+        if request_part_deletion := request_json.get('remove_part'):
+            if request_part_deletion in searched_playlist.parts:
+                searched_playlist.parts.remove(request_part_deletion)
 
         if playlist_references is not None:
             if playlist_references == -1:
@@ -151,9 +159,23 @@ def playlist_post_put_route(auth=None, user=None):
             else:
                 searched_playlist.playlist_references = playlist_references
 
+        if request_ref_addition := request_json.get('add_ref'):
+            playlist = user.get_playlist(request_ref_addition, raise_error=False)
+            if playlist is not None and playlist.id not in [x.id for x in searched_playlist.playlist_references]:
+                searched_playlist.playlist_references = searched_playlist.playlist_references + [db.document(playlist.key)]
+            else:
+                return jsonify({"message": f'managed playlist {request_ref_addition} not found', "status": "error"}), 400
+
+        if request_ref_deletion := request_json.get('remove_ref'):
+            playlist = user.get_playlist(request_ref_deletion, raise_error=False)
+            if playlist is not None and playlist.id in [x.id for x in searched_playlist.playlist_references]:
+                searched_playlist.playlist_references = [i for i in searched_playlist.playlist_references if i.id != playlist.id]
+            else:
+                return jsonify({"message": f'managed playlist {request_ref_deletion} not found', "status": "error"}), 400
+
         # ATTRIBUTE WITH CHECKS
-        if request_json.get('type'):
-            playlist_type = request_json['type'].strip().lower()
+        if request_type := request_json.get('type'):
+            playlist_type = request_type.strip().lower()
             if playlist_type in ['default', 'recents', 'fmchart']:
                 searched_playlist.type = playlist_type
 
@@ -161,7 +183,6 @@ def playlist_post_put_route(auth=None, user=None):
         logger.info(f'updated {user.username} / {playlist_name}')
 
         return jsonify({"message": 'playlist updated', "status": "success"}), 200
-
 
 @blueprint.route('/user', methods=['GET', 'POST'])
 @login_or_jwt
