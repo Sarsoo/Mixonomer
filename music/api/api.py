@@ -8,7 +8,7 @@ import logging
 from datetime import datetime
 
 from music.api.decorators import login_or_jwt, login_required, login_or_jwt, \
-    admin_required, cloud_task, validate_json, validate_args, spotify_link_required
+    admin_required, cloud_task, validate_json, validate_args, spotify_link_required, no_locked_users
 from music.cloud import queue_run_user_playlist, offload_or_run_user_playlist
 from music.cloud.tasks import update_all_user_playlists, update_playlists
 
@@ -29,6 +29,7 @@ logger = logging.getLogger(__name__)
 
 @blueprint.route('/playlists', methods=['GET'])
 @login_or_jwt
+@no_locked_users
 def all_playlists_route(auth=None, user=None):
     """Retrieve all playlists for a given user
 
@@ -47,6 +48,7 @@ def all_playlists_route(auth=None, user=None):
 
 @blueprint.route('/playlist', methods=['GET', 'DELETE'])
 @login_or_jwt
+@no_locked_users
 @validate_args(('name', str))
 def playlist_get_delete_route(auth=None,user=None):
 
@@ -65,6 +67,7 @@ def playlist_get_delete_route(auth=None,user=None):
 
 @blueprint.route('/playlist', methods=['POST', 'PUT'])
 @login_or_jwt
+@no_locked_users
 @validate_json(('name', str))
 def playlist_post_put_route(auth=None, user=None):
 
@@ -162,6 +165,7 @@ def playlist_post_put_route(auth=None, user=None):
 
 @blueprint.route('/user', methods=['GET', 'POST'])
 @login_or_jwt
+@no_locked_users
 def user_route(auth=None, user=None):
     assert user is not None
 
@@ -220,6 +224,7 @@ def user_delete_route(auth=None, user=None):
 @blueprint.route('/users', methods=['GET'])
 @login_or_jwt
 @admin_required
+@no_locked_users
 def all_users_route(auth=None, user=None):
     return jsonify({
         'accounts': [i.to_dict() for i in User.collection.fetch()]
@@ -228,6 +233,7 @@ def all_users_route(auth=None, user=None):
 
 @blueprint.route('/user/password', methods=['POST'])
 @login_required
+@no_locked_users
 @validate_json(('new_password', str), ('current_password', str))
 def change_password(user=None):
     request_json = request.get_json()
@@ -251,6 +257,7 @@ def change_password(user=None):
 
 @blueprint.route('/playlist/run', methods=['GET'])
 @login_or_jwt
+@no_locked_users
 @validate_args(('name', str))
 def run_playlist(auth=None, user=None):
 
@@ -281,6 +288,7 @@ def run_playlist_task():  # receives cloud tasks request for update
 
 @blueprint.route('/playlist/run/user', methods=['GET'])
 @login_or_jwt
+@no_locked_users
 def run_user(auth=None, user=None):
 
     if user.type == 'admin':
@@ -306,6 +314,7 @@ def run_user_task():
 @blueprint.route('/playlist/run/users', methods=['GET'])
 @login_or_jwt
 @admin_required
+@no_locked_users
 def run_users(auth=None, user=None):
 
     update_all_user_playlists()
@@ -315,6 +324,7 @@ def run_users(auth=None, user=None):
 @blueprint.route('/playlist/image', methods=['GET'])
 @login_or_jwt
 @spotify_link_required
+@no_locked_users
 @validate_args(('name', str))
 def image(auth=None, user=None):
 

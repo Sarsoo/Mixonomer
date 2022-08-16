@@ -132,6 +132,22 @@ def admin_required(func):
 
     return admin_required_wrapper
 
+def no_locked_users(func):
+    @functools.wraps(func)
+    def no_locked_users_wrapper(*args, **kwargs):
+        db_user = kwargs.get('user')
+
+        if db_user is not None:
+            if not db_user.locked:
+                return func(*args, **kwargs)
+            else:
+                logger.warning('user locked')
+                return jsonify({'status': 'error', 'message': 'user locked'}), 401
+        else:
+            logger.warning('user not logged in')
+            return jsonify({'error': 'not logged in'}), 401
+
+    return no_locked_users_wrapper
 
 def spotify_link_required(func):
     @functools.wraps(func)

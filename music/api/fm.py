@@ -2,7 +2,7 @@ from flask import Blueprint, jsonify
 from datetime import date
 import logging
 
-from music.api.decorators import login_or_jwt, lastfm_username_required
+from music.api.decorators import login_or_jwt, lastfm_username_required, no_locked_users
 
 import music.db.database as database
 
@@ -12,6 +12,7 @@ logger = logging.getLogger(__name__)
 
 @blueprint.route('/today', methods=['GET'])
 @login_or_jwt
+@no_locked_users
 @lastfm_username_required
 def daily_scrobbles(auth=None, user=None):
 

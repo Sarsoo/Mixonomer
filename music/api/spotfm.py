@@ -4,7 +4,7 @@ import json
 import os
 
 from music.api.decorators import admin_required, login_or_jwt, lastfm_username_required, \
-    spotify_link_required, cloud_task, validate_args
+    spotify_link_required, cloud_task, validate_args, no_locked_users
 import music.db.database as database
 from music.cloud.tasks import refresh_all_user_playlist_stats, refresh_user_playlist_stats, refresh_playlist_task
 from music.tasks.refresh_lastfm_stats import refresh_lastfm_track_stats, \
@@ -23,6 +23,7 @@ logger = logging.getLogger(__name__)
 @login_or_jwt
 @spotify_link_required
 @lastfm_username_required
+@no_locked_users
 def count(auth=None, user=None):
 
     uri = request.args.get('uri', None)
@@ -72,6 +73,7 @@ def count(auth=None, user=None):
 @login_or_jwt
 @spotify_link_required
 @lastfm_username_required
+@no_locked_users
 @validate_args(('name', str))
 def playlist_refresh(auth=None, user=None):
 
@@ -135,6 +137,7 @@ def run_playlist_artist_task():
 @blueprint.route('/playlist/refresh/users', methods=['GET'])
 @login_or_jwt
 @admin_required
+@no_locked_users
 def run_users(auth=None, user=None):
     refresh_all_user_playlist_stats()
     return jsonify({'message': 'executed all users', 'status': 'success'}), 200
@@ -142,6 +145,7 @@ def run_users(auth=None, user=None):
 
 @blueprint.route('/playlist/refresh/user', methods=['GET'])
 @login_or_jwt
+@no_locked_users
 def run_user(auth=None, user=None):
 
     if user.type == 'admin':

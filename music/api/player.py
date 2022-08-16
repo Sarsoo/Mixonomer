@@ -2,7 +2,7 @@ from flask import Blueprint, request, jsonify
 
 import logging
 
-from music.api.decorators import login_or_jwt, spotify_link_required, validate_json
+from music.api.decorators import login_or_jwt, spotify_link_required, validate_json, no_locked_users
 import music.db.database as database
 
 from spotframework.net.network import SpotifyNetworkException
@@ -18,6 +18,7 @@ logger = logging.getLogger(__name__)
 @blueprint.route('/play', methods=['POST'])
 @login_or_jwt
 @spotify_link_required
+@no_locked_users
 def play(auth=None, user=None):
     request_json = request.get_json()
 
@@ -80,6 +81,7 @@ def play(auth=None, user=None):
 @blueprint.route('/next', methods=['POST'])
 @login_or_jwt
 @spotify_link_required
+@no_locked_users
 def next_track(auth=None, user=None):
     net = database.get_authed_spotify_network(user)
     player = Player(net)
@@ -91,6 +93,7 @@ def next_track(auth=None, user=None):
 @blueprint.route('/shuffle', methods=['POST'])
 @login_or_jwt
 @spotify_link_required
+@no_locked_users
 @validate_json(('state', bool))
 def shuffle(auth=None, user=None):
     request_json = request.get_json()
@@ -105,6 +108,7 @@ def shuffle(auth=None, user=None):
 @blueprint.route('/volume', methods=['POST'])
 @login_or_jwt
 @spotify_link_required
+@no_locked_users
 @validate_json(('volume', int))
 def volume(auth=None, user=None):
     request_json = request.get_json()

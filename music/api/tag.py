@@ -4,7 +4,7 @@ import logging
 import os
 import json
 
-from music.api.decorators import login_or_jwt, cloud_task
+from music.api.decorators import login_or_jwt, cloud_task, no_locked_users
 from music.cloud.function import update_tag as serverless_update_tag
 from music.tasks.update_tag import update_tag
 
@@ -16,6 +16,7 @@ logger = logging.getLogger(__name__)
 
 @blueprint.route('/tag', methods=['GET'])
 @login_or_jwt
+@no_locked_users
 def tags(auth=None, user=None):
     logger.info(f'retrieving tags for {user.username}')
     return jsonify({
@@ -25,6 +26,7 @@ def tags(auth=None, user=None):
 
 @blueprint.route('/tag/<tag_id>', methods=['GET', 'PUT', 'POST', "DELETE"])
 @login_or_jwt
+@no_locked_users
 def tag_route(tag_id, auth=None, user=None):
     if request.method == 'GET':
         return get_tag(tag_id, user)
@@ -127,6 +129,7 @@ def delete_tag(tag_id, user):
 
 @blueprint.route('/tag/<tag_id>/update', methods=['GET'])
 @login_or_jwt
+@no_locked_users
 def tag_refresh(tag_id, auth=None, user=None):
     logger.info(f'updating {tag_id} tag for {user.username}')
 
