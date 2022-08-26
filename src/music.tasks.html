@@ -1,20 +1,22 @@
 
 <!DOCTYPE html>
 
-<html>
+<html lang="en">
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>music.tasks &#8212; Music Tools  documentation</title>
-    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
-    <link rel="stylesheet" href="../_static/alabaster.css" type="text/css" />
-    <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+
+    <title>music.tasks &#8212; Mixonomer  documentation</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/alabaster.css" />
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
     <script src="../_static/jquery.js"></script>
     <script src="../_static/underscore.js"></script>
+    <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
     <script src="../_static/doctools.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="React Frontend" href="MusicTools.html" />
+    <link rel="next" title="admin script" href="admin.html" />
     <link rel="prev" title="music.model" href="music.model.html" />
    
   <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
@@ -32,62 +34,62 @@
 
           <div class="body" role="main">
             
-  <div class="section" id="music-tasks">
-<h1>music.tasks<a class="headerlink" href="#music-tasks" title="Permalink to this headline">¶</a></h1>
-<div class="section" id="module-music.tasks">
-<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-music.tasks" title="Permalink to this headline">¶</a></h2>
+  <section id="music-tasks">
+<h1>music.tasks<a class="headerlink" href="#music-tasks" title="Permalink to this heading">¶</a></h1>
+<section id="module-music.tasks">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-music.tasks" title="Permalink to this heading">¶</a></h2>
 <p>Long running operations of the app including playlist generation and tag update functions</p>
-</div>
-<div class="section" id="module-music.tasks.create_playlist">
-<span id="tasks-create-playlist"></span><h2>tasks.create_playlist<a class="headerlink" href="#module-music.tasks.create_playlist" title="Permalink to this headline">¶</a></h2>
+</section>
+<section id="module-music.tasks.create_playlist">
+<span id="tasks-create-playlist"></span><h2>tasks.create_playlist<a class="headerlink" href="#module-music.tasks.create_playlist" title="Permalink to this heading">¶</a></h2>
 <dl class="py function">
-<dt id="music.tasks.create_playlist.create_playlist">
-<code class="sig-prename descclassname"><span class="pre">music.tasks.create_playlist.</span></code><code class="sig-name descname"><span class="pre">create_playlist</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">user</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><a class="reference internal" href="music.model.html#music.model.user.User" title="music.model.user.User"><span class="pre">music.model.user.User</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">spotframework.model.playlist.FullPlaylist</span><span class="p"><span class="pre">]</span></span><a class="headerlink" href="#music.tasks.create_playlist.create_playlist" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="music.tasks.create_playlist.create_playlist">
+<span class="sig-prename descclassname"><span class="pre">music.tasks.create_playlist.</span></span><span class="sig-name descname"><span class="pre">create_playlist</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">user</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="music.model.html#music.model.user.User" title="music.model.user.User"><span class="pre">User</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">FullPlaylist</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#music.tasks.create_playlist.create_playlist" title="Permalink to this definition">¶</a></dt>
 <dd><p>Create a new playlist on the user’s Spotify account</p>
 <p>For creating new playlists, create and return a new playlist object</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>user</strong> (<a class="reference internal" href="music.model.html#music.model.user.User" title="music.model.user.User"><em>User</em></a>) – Subject user</p></li>
 <li><p><strong>name</strong> (<em>str</em>) – Name of new playlist</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>New playlist object if created</p>
 </dd>
-<dt class="field-odd">Return type</dt>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>Optional[FullPlaylist]</p>
 </dd>
 </dl>
 </dd></dl>
 
-</div>
-<div class="section" id="module-music.tasks.refresh_lastfm_stats">
-<span id="tasks-refresh-lastfm-stats"></span><h2>tasks.refresh_lastfm_stats<a class="headerlink" href="#module-music.tasks.refresh_lastfm_stats" title="Permalink to this headline">¶</a></h2>
+</section>
+<section id="module-music.tasks.refresh_lastfm_stats">
+<span id="tasks-refresh-lastfm-stats"></span><h2>tasks.refresh_lastfm_stats<a class="headerlink" href="#module-music.tasks.refresh_lastfm_stats" title="Permalink to this heading">¶</a></h2>
 <dl class="py function">
-<dt id="music.tasks.refresh_lastfm_stats.refresh_lastfm_album_stats">
-<code class="sig-prename descclassname"><span class="pre">music.tasks.refresh_lastfm_stats.</span></code><code class="sig-name descname"><span class="pre">refresh_lastfm_album_stats</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">username</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">playlist_name</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#music.tasks.refresh_lastfm_stats.refresh_lastfm_album_stats" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="music.tasks.refresh_lastfm_stats.refresh_lastfm_album_stats">
+<span class="sig-prename descclassname"><span class="pre">music.tasks.refresh_lastfm_stats.</span></span><span class="sig-name descname"><span class="pre">refresh_lastfm_album_stats</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">username</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">playlist_name</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#music.tasks.refresh_lastfm_stats.refresh_lastfm_album_stats" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py function">
-<dt id="music.tasks.refresh_lastfm_stats.refresh_lastfm_artist_stats">
-<code class="sig-prename descclassname"><span class="pre">music.tasks.refresh_lastfm_stats.</span></code><code class="sig-name descname"><span class="pre">refresh_lastfm_artist_stats</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">username</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">playlist_name</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#music.tasks.refresh_lastfm_stats.refresh_lastfm_artist_stats" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="music.tasks.refresh_lastfm_stats.refresh_lastfm_artist_stats">
+<span class="sig-prename descclassname"><span class="pre">music.tasks.refresh_lastfm_stats.</span></span><span class="sig-name descname"><span class="pre">refresh_lastfm_artist_stats</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">username</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">playlist_name</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#music.tasks.refresh_lastfm_stats.refresh_lastfm_artist_stats" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py function">
-<dt id="music.tasks.refresh_lastfm_stats.refresh_lastfm_track_stats">
-<code class="sig-prename descclassname"><span class="pre">music.tasks.refresh_lastfm_stats.</span></code><code class="sig-name descname"><span class="pre">refresh_lastfm_track_stats</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">username</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">playlist_name</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#music.tasks.refresh_lastfm_stats.refresh_lastfm_track_stats" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="music.tasks.refresh_lastfm_stats.refresh_lastfm_track_stats">
+<span class="sig-prename descclassname"><span class="pre">music.tasks.refresh_lastfm_stats.</span></span><span class="sig-name descname"><span class="pre">refresh_lastfm_track_stats</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">username</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">playlist_name</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#music.tasks.refresh_lastfm_stats.refresh_lastfm_track_stats" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
-</div>
-<div class="section" id="module-music.tasks.run_user_playlist">
-<span id="tasks-run-user-playlist"></span><h2>tasks.run_user_playlist<a class="headerlink" href="#module-music.tasks.run_user_playlist" title="Permalink to this headline">¶</a></h2>
+</section>
+<section id="module-music.tasks.run_user_playlist">
+<span id="tasks-run-user-playlist"></span><h2>tasks.run_user_playlist<a class="headerlink" href="#module-music.tasks.run_user_playlist" title="Permalink to this heading">¶</a></h2>
 <dl class="py function">
-<dt id="music.tasks.run_user_playlist.run_user_playlist">
-<code class="sig-prename descclassname"><span class="pre">music.tasks.run_user_playlist.</span></code><code class="sig-name descname"><span class="pre">run_user_playlist</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">user</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><a class="reference internal" href="music.model.html#music.model.user.User" title="music.model.user.User"><span class="pre">music.model.user.User</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">playlist</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><a class="reference internal" href="music.model.html#music.model.playlist.Playlist" title="music.model.playlist.Playlist"><span class="pre">music.model.playlist.Playlist</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">spotnet</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">spotframework.net.network.Network</span><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fmnet</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">fmframework.net.network.Network</span><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">None</span><a class="headerlink" href="#music.tasks.run_user_playlist.run_user_playlist" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="music.tasks.run_user_playlist.run_user_playlist">
+<span class="sig-prename descclassname"><span class="pre">music.tasks.run_user_playlist.</span></span><span class="sig-name descname"><span class="pre">run_user_playlist</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">user</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="music.model.html#music.model.user.User" title="music.model.user.User"><span class="pre">User</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">playlist</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="music.model.html#music.model.playlist.Playlist" title="music.model.playlist.Playlist"><span class="pre">Playlist</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">spotnet</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">Network</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fmnet</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">Network</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#music.tasks.run_user_playlist.run_user_playlist" title="Permalink to this definition">¶</a></dt>
 <dd><p>Generate and upadate a user’s smart playlist</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>user</strong> (<a class="reference internal" href="music.model.html#music.model.user.User" title="music.model.user.User"><em>User</em></a>) – Subject user</p></li>
 <li><p><strong>playlist</strong> (<a class="reference internal" href="music.model.html#music.model.playlist.Playlist" title="music.model.playlist.Playlist"><em>Playlist</em></a>) – User’s subject playlist</p></li>
@@ -95,7 +97,7 @@
 <li><p><strong>fmnet</strong> (<em>Network</em><em>, </em><em>optional</em>) – Fmframework network for Last.fm operations. Defaults to None.</p></li>
 </ul>
 </dd>
-<dt class="field-even">Raises</dt>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
 <dd class="field-even"><ul class="simple">
 <li><p><strong>NameError</strong> – No user provided</p></li>
 <li><p><strong>NameError</strong> – No playlist provided</p></li>
@@ -104,25 +106,25 @@
 <li><p><strong>e</strong> – spotframework error when retrieving user playlists</p></li>
 </ul>
 </dd>
-<dt class="field-odd">Returns</dt>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
 <dd class="field-odd"><p>[description]</p>
 </dd>
-<dt class="field-even">Return type</dt>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p>[type]</p>
 </dd>
 </dl>
 </dd></dl>
 
-</div>
-<div class="section" id="module-music.tasks.update_tag">
-<span id="tasks-update-tag"></span><h2>tasks.update_tag<a class="headerlink" href="#module-music.tasks.update_tag" title="Permalink to this headline">¶</a></h2>
+</section>
+<section id="module-music.tasks.update_tag">
+<span id="tasks-update-tag"></span><h2>tasks.update_tag<a class="headerlink" href="#module-music.tasks.update_tag" title="Permalink to this heading">¶</a></h2>
 <dl class="py function">
-<dt id="music.tasks.update_tag.update_tag">
-<code class="sig-prename descclassname"><span class="pre">music.tasks.update_tag.</span></code><code class="sig-name descname"><span class="pre">update_tag</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">user</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tag</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">spotnet</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fmnet</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#music.tasks.update_tag.update_tag" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="music.tasks.update_tag.update_tag">
+<span class="sig-prename descclassname"><span class="pre">music.tasks.update_tag.</span></span><span class="sig-name descname"><span class="pre">update_tag</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">user</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tag</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">spotnet</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fmnet</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#music.tasks.update_tag.update_tag" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
-</div>
-</div>
+</section>
+</section>
 
 
           </div>
@@ -131,7 +133,7 @@
       </div>
       <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
         <div class="sphinxsidebarwrapper">
-<h1 class="logo"><a href="../index.html">Music Tools</a></h1>
+<h1 class="logo"><a href="../index.html">Mixonomer</a></h1>
 
 
 
@@ -141,7 +143,7 @@
 
 
 <h3>Navigation</h3>
-<p class="caption"><span class="caption-text">Contents:</span></p>
+<p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
 <ul class="current">
 <li class="toctree-l1 current"><a class="reference internal" href="music.html">Py</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="music.api.html">music.api</a></li>
@@ -153,9 +155,11 @@
 <li class="toctree-l2"><a class="reference internal" href="music.html#module-music">music Root Module</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="MusicTools.html">Js</a></li>
 <li class="toctree-l1"><a class="reference internal" href="admin.html">Admin Script</a></li>
-<li class="toctree-l1"><a class="reference internal" href="modules.html">All Modules</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="modules.html">All Modules</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="music.html">Flask Backend</a></li>
+</ul>
+</li>
 </ul>
 
 <div class="relations">
@@ -164,7 +168,7 @@
   <li><a href="../index.html">Documentation overview</a><ul>
   <li><a href="music.html">Flask Backend</a><ul>
       <li>Previous: <a href="music.model.html" title="previous chapter">music.model</a></li>
-      <li>Next: <a href="MusicTools.html" title="next chapter">React Frontend</a></li>
+      <li>Next: <a href="admin.html" title="next chapter">admin script</a></li>
   </ul></li>
   </ul></li>
 </ul>
@@ -173,12 +177,12 @@
   <h3 id="searchlabel">Quick search</h3>
     <div class="searchformwrapper">
     <form class="search" action="../search.html" method="get">
-      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
       <input type="submit" value="Go" />
     </form>
     </div>
 </div>
-<script>$('#searchbox').show(0);</script>
+<script>document.getElementById('searchbox').style.display = "block"</script>
 
 
 
@@ -195,7 +199,7 @@
       &copy;2021, Sarsoo.
       
       |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 3.5.4</a>
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 5.1.1</a>
       &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
       
       |

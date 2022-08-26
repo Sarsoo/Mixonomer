@@ -1,8 +1,7 @@
-Music Tools Modules
+Mixonomer Modules
 ======================
 
 .. toctree::
    :maxdepth: 4
 
    music
-   MusicTools

@@ -1,16 +1,18 @@
 
 <!DOCTYPE html>
 
-<html>
+<html lang="en">
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>music.cloud &#8212; Music Tools  documentation</title>
-    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
-    <link rel="stylesheet" href="../_static/alabaster.css" type="text/css" />
-    <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+
+    <title>music.cloud &#8212; Mixonomer  documentation</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/alabaster.css" />
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
     <script src="../_static/jquery.js"></script>
     <script src="../_static/underscore.js"></script>
+    <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
     <script src="../_static/doctools.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
@@ -32,30 +34,30 @@
 
           <div class="body" role="main">
             
-  <div class="section" id="music-cloud">
-<h1>music.cloud<a class="headerlink" href="#music-cloud" title="Permalink to this headline">¶</a></h1>
-<div class="section" id="module-music.cloud">
-<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-music.cloud" title="Permalink to this headline">¶</a></h2>
+  <section id="music-cloud">
+<h1>music.cloud<a class="headerlink" href="#music-cloud" title="Permalink to this heading">¶</a></h1>
+<section id="module-music.cloud">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-music.cloud" title="Permalink to this heading">¶</a></h2>
 <p>Infrastucture code include handing off tasks to Cloud Tasks or Cloud Functions</p>
 <dl class="py function">
-<dt id="music.cloud.offload_or_run_user_playlist">
-<code class="sig-prename descclassname"><span class="pre">music.cloud.</span></code><code class="sig-name descname"><span class="pre">offload_or_run_user_playlist</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">username</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">playlist_name</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#music.cloud.offload_or_run_user_playlist" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="music.cloud.offload_or_run_user_playlist">
+<span class="sig-prename descclassname"><span class="pre">music.cloud.</span></span><span class="sig-name descname"><span class="pre">offload_or_run_user_playlist</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">username</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">playlist_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#music.cloud.offload_or_run_user_playlist" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py function">
-<dt id="music.cloud.queue_run_user_playlist">
-<code class="sig-prename descclassname"><span class="pre">music.cloud.</span></code><code class="sig-name descname"><span class="pre">queue_run_user_playlist</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">username</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">playlist_name</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#music.cloud.queue_run_user_playlist" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="music.cloud.queue_run_user_playlist">
+<span class="sig-prename descclassname"><span class="pre">music.cloud.</span></span><span class="sig-name descname"><span class="pre">queue_run_user_playlist</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">username</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">playlist_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#music.cloud.queue_run_user_playlist" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
-</div>
-<div class="section" id="module-music.cloud.function">
-<span id="cloud-function"></span><h2>cloud.function<a class="headerlink" href="#module-music.cloud.function" title="Permalink to this headline">¶</a></h2>
+</section>
+<section id="module-music.cloud.function">
+<span id="cloud-function"></span><h2>cloud.function<a class="headerlink" href="#module-music.cloud.function" title="Permalink to this heading">¶</a></h2>
 <dl class="py function">
-<dt id="music.cloud.function.run_user_playlist_function">
-<code class="sig-prename descclassname"><span class="pre">music.cloud.function.</span></code><code class="sig-name descname"><span class="pre">run_user_playlist_function</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">username</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">playlist_name</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">None</span><a class="headerlink" href="#music.cloud.function.run_user_playlist_function" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="music.cloud.function.run_user_playlist_function">
+<span class="sig-prename descclassname"><span class="pre">music.cloud.function.</span></span><span class="sig-name descname"><span class="pre">run_user_playlist_function</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">username</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">playlist_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#music.cloud.function.run_user_playlist_function" title="Permalink to this definition">¶</a></dt>
 <dd><p>Queue serverless playlist update for user</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>username</strong> (<em>str</em>) – Subject username</p></li>
 <li><p><strong>playlist_name</strong> (<em>str</em>) – Subject tag ID</p></li>
@@ -65,11 +67,11 @@
 </dd></dl>
 
 <dl class="py function">
-<dt id="music.cloud.function.update_tag">
-<code class="sig-prename descclassname"><span class="pre">music.cloud.function.</span></code><code class="sig-name descname"><span class="pre">update_tag</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">username</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tag_id</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">None</span><a class="headerlink" href="#music.cloud.function.update_tag" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="music.cloud.function.update_tag">
+<span class="sig-prename descclassname"><span class="pre">music.cloud.function.</span></span><span class="sig-name descname"><span class="pre">update_tag</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">username</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tag_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#music.cloud.function.update_tag" title="Permalink to this definition">¶</a></dt>
 <dd><p>Queue serverless tag update for user</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>username</strong> (<em>str</em>) – Subject username</p></li>
 <li><p><strong>tag_id</strong> (<em>str</em>) – Subject tag ID</p></li>
@@ -78,22 +80,22 @@
 </dl>
 </dd></dl>
 
-</div>
-<div class="section" id="module-music.cloud.tasks">
-<span id="cloud-tasks"></span><h2>cloud.tasks<a class="headerlink" href="#module-music.cloud.tasks" title="Permalink to this headline">¶</a></h2>
+</section>
+<section id="module-music.cloud.tasks">
+<span id="cloud-tasks"></span><h2>cloud.tasks<a class="headerlink" href="#module-music.cloud.tasks" title="Permalink to this heading">¶</a></h2>
 <p>Functions for creating GCP Cloud Tasks for long running operatings</p>
 <dl class="py function">
-<dt id="music.cloud.tasks.refresh_all_user_playlist_stats">
-<code class="sig-prename descclassname"><span class="pre">music.cloud.tasks.</span></code><code class="sig-name descname"><span class="pre">refresh_all_user_playlist_stats</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#music.cloud.tasks.refresh_all_user_playlist_stats" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="music.cloud.tasks.refresh_all_user_playlist_stats">
+<span class="sig-prename descclassname"><span class="pre">music.cloud.tasks.</span></span><span class="sig-name descname"><span class="pre">refresh_all_user_playlist_stats</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#music.cloud.tasks.refresh_all_user_playlist_stats" title="Permalink to this definition">¶</a></dt>
 <dd><p>“Create user playlist stats refresh task for all users</p>
 </dd></dl>
 
 <dl class="py function">
-<dt id="music.cloud.tasks.refresh_playlist_task">
-<code class="sig-prename descclassname"><span class="pre">music.cloud.tasks.</span></code><code class="sig-name descname"><span class="pre">refresh_playlist_task</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">username</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">playlist_name</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">delay</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">int</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#music.cloud.tasks.refresh_playlist_task" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="music.cloud.tasks.refresh_playlist_task">
+<span class="sig-prename descclassname"><span class="pre">music.cloud.tasks.</span></span><span class="sig-name descname"><span class="pre">refresh_playlist_task</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">username</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">playlist_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">delay</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#music.cloud.tasks.refresh_playlist_task" title="Permalink to this definition">¶</a></dt>
 <dd><p>Create user playlist stats refresh tasks</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>username</strong> (<em>str</em>) – Subject user’s username</p></li>
 <li><p><strong>playlist_name</strong> (<em>str</em>) – Subject playlist name</p></li>
@@ -104,22 +106,22 @@
 </dd></dl>
 
 <dl class="py function">
-<dt id="music.cloud.tasks.refresh_user_playlist_stats">
-<code class="sig-prename descclassname"><span class="pre">music.cloud.tasks.</span></code><code class="sig-name descname"><span class="pre">refresh_user_playlist_stats</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">username</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#music.cloud.tasks.refresh_user_playlist_stats" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="music.cloud.tasks.refresh_user_playlist_stats">
+<span class="sig-prename descclassname"><span class="pre">music.cloud.tasks.</span></span><span class="sig-name descname"><span class="pre">refresh_user_playlist_stats</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">username</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#music.cloud.tasks.refresh_user_playlist_stats" title="Permalink to this definition">¶</a></dt>
 <dd><p>Refresh all playlist stats for given user, environment dependent</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>username</strong> (<em>str</em>) – Subject user’s username</p>
 </dd>
 </dl>
 </dd></dl>
 
 <dl class="py function">
-<dt id="music.cloud.tasks.refresh_user_stats_task">
-<code class="sig-prename descclassname"><span class="pre">music.cloud.tasks.</span></code><code class="sig-name descname"><span class="pre">refresh_user_stats_task</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">username</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">delay</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">int</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#music.cloud.tasks.refresh_user_stats_task" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="music.cloud.tasks.refresh_user_stats_task">
+<span class="sig-prename descclassname"><span class="pre">music.cloud.tasks.</span></span><span class="sig-name descname"><span class="pre">refresh_user_stats_task</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">username</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">delay</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#music.cloud.tasks.refresh_user_stats_task" title="Permalink to this definition">¶</a></dt>
 <dd><p>Create user playlist stats refresh task</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>username</strong> (<em>str</em>) – Subject user’s username</p></li>
 <li><p><strong>delay</strong> (<em>int</em><em>, </em><em>optional</em>) – Seconds to delay execution by. Defaults to 0.</p></li>
@@ -129,11 +131,11 @@
 </dd></dl>
 
 <dl class="py function">
-<dt id="music.cloud.tasks.run_user_playlist_task">
-<code class="sig-prename descclassname"><span class="pre">music.cloud.tasks.</span></code><code class="sig-name descname"><span class="pre">run_user_playlist_task</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">username</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">playlist_name</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">delay</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">int</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#music.cloud.tasks.run_user_playlist_task" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="music.cloud.tasks.run_user_playlist_task">
+<span class="sig-prename descclassname"><span class="pre">music.cloud.tasks.</span></span><span class="sig-name descname"><span class="pre">run_user_playlist_task</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">username</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">playlist_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">delay</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#music.cloud.tasks.run_user_playlist_task" title="Permalink to this definition">¶</a></dt>
 <dd><p>Create tasks for a users given playlist</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>username</strong> (<em>str</em>) – Subject user’s username</p></li>
 <li><p><strong>playlist_name</strong> (<em>str</em>) – Subject playlist name</p></li>
@@ -144,30 +146,30 @@
 </dd></dl>
 
 <dl class="py function">
-<dt id="music.cloud.tasks.update_all_user_playlists">
-<code class="sig-prename descclassname"><span class="pre">music.cloud.tasks.</span></code><code class="sig-name descname"><span class="pre">update_all_user_playlists</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#music.cloud.tasks.update_all_user_playlists" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="music.cloud.tasks.update_all_user_playlists">
+<span class="sig-prename descclassname"><span class="pre">music.cloud.tasks.</span></span><span class="sig-name descname"><span class="pre">update_all_user_playlists</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#music.cloud.tasks.update_all_user_playlists" title="Permalink to this definition">¶</a></dt>
 <dd><p>Create user playlist refresh task for all users</p>
 </dd></dl>
 
 <dl class="py function">
-<dt id="music.cloud.tasks.update_all_user_tags">
-<code class="sig-prename descclassname"><span class="pre">music.cloud.tasks.</span></code><code class="sig-name descname"><span class="pre">update_all_user_tags</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#music.cloud.tasks.update_all_user_tags" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="music.cloud.tasks.update_all_user_tags">
+<span class="sig-prename descclassname"><span class="pre">music.cloud.tasks.</span></span><span class="sig-name descname"><span class="pre">update_all_user_tags</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#music.cloud.tasks.update_all_user_tags" title="Permalink to this definition">¶</a></dt>
 <dd><p>Create user tag refresh task for all users</p>
 </dd></dl>
 
 <dl class="py function">
-<dt id="music.cloud.tasks.update_playlists">
-<code class="sig-prename descclassname"><span class="pre">music.cloud.tasks.</span></code><code class="sig-name descname"><span class="pre">update_playlists</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">username</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#music.cloud.tasks.update_playlists" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="music.cloud.tasks.update_playlists">
+<span class="sig-prename descclassname"><span class="pre">music.cloud.tasks.</span></span><span class="sig-name descname"><span class="pre">update_playlists</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">username</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#music.cloud.tasks.update_playlists" title="Permalink to this definition">¶</a></dt>
 <dd><p>Refresh all playlists for given user, environment dependent</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>username</strong> (<em>str</em>) – Subject user’s username</p>
 </dd>
 </dl>
 </dd></dl>
 
-</div>
-</div>
+</section>
+</section>
 
 
           </div>
@@ -176,7 +178,7 @@
       </div>
       <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
         <div class="sphinxsidebarwrapper">
-<h1 class="logo"><a href="../index.html">Music Tools</a></h1>
+<h1 class="logo"><a href="../index.html">Mixonomer</a></h1>
 
 
 
@@ -186,7 +188,7 @@
 
 
 <h3>Navigation</h3>
-<p class="caption"><span class="caption-text">Contents:</span></p>
+<p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
 <ul class="current">
 <li class="toctree-l1 current"><a class="reference internal" href="music.html">Py</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="music.api.html">music.api</a></li>
@@ -198,9 +200,11 @@
 <li class="toctree-l2"><a class="reference internal" href="music.html#module-music">music Root Module</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="MusicTools.html">Js</a></li>
 <li class="toctree-l1"><a class="reference internal" href="admin.html">Admin Script</a></li>
-<li class="toctree-l1"><a class="reference internal" href="modules.html">All Modules</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="modules.html">All Modules</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="music.html">Flask Backend</a></li>
+</ul>
+</li>
 </ul>
 
 <div class="relations">
@@ -218,12 +222,12 @@
   <h3 id="searchlabel">Quick search</h3>
     <div class="searchformwrapper">
     <form class="search" action="../search.html" method="get">
-      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
       <input type="submit" value="Go" />
     </form>
     </div>
 </div>
-<script>$('#searchbox').show(0);</script>
+<script>document.getElementById('searchbox').style.display = "block"</script>
 
 
 
@@ -240,7 +244,7 @@
       &copy;2021, Sarsoo.
       
       |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 3.5.4</a>
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 5.1.1</a>
       &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
       
       |
