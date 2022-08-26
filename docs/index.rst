@@ -6,7 +6,6 @@ Mixonomer
    :caption: Contents:
 
    Py <src/music>
-   Js <src/MusicTools>
    Admin Script <src/admin>
    All Modules <src/modules>
 

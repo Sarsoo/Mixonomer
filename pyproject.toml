@@ -30,6 +30,7 @@ spotfm = { git = "https://github.com/Sarsoo/spotfm.git" }
 [tool.poetry.dev-dependencies]
 pylint = "^2.5.3"
 python-dotenv = "^0.17.1"
+Sphinx = "^5.1.1"
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]
