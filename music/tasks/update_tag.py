@@ -61,12 +61,6 @@ def update_tag(user, tag, spotnet=None, fmnet=None):
     tag.count = 0
     tag.total_time_ms = 0
 
-    try:
-        user_scrobbles = fmnet.user_scrobble_count()
-    except LastFMNetworkException:
-        logger.exception(f'error retrieving scrobble count {username} / {tag_id}')
-        user_scrobbles = 1
-
     artists = []
     for artist in tag.artists:
         try:
@@ -160,8 +154,21 @@ def update_tag(user, tag, spotnet=None, fmnet=None):
     tag.artists = artists
 
     tag.total_time = seconds_to_time_str(milliseconds=tag.total_time_ms)
-    tag.total_user_scrobbles = user_scrobbles
-    tag.proportion = (tag.count / user_scrobbles) * 100
+
+    try:
+        user_scrobbles = fmnet.user_scrobble_count()
+    except LastFMNetworkException:
+        logger.exception(f'error retrieving scrobble count {username} / {tag_id}')
+        user_scrobbles = 0
+
+    if user_scrobbles > 0:
+        tag.total_user_scrobbles = user_scrobbles
+        tag.proportion = (tag.count / user_scrobbles) * 100
+    else:
+        logger.warning(f'user scrobble count for {username} returned 0')
+        tag.total_user_scrobbles = 0
+        tag.proportion = 0
+
     tag.last_updated = datetime.utcnow()
 
     tag.update()

@@ -78,9 +78,9 @@ def run_user_playlist(user: User, playlist: Playlist, spotnet: SpotNetwork = Non
 
     try:
         if not playlist.include_spotify_owned:
-            user_playlists = [(i.name, i.uri) for i in spotnet.playlists() if 'spotify' not in i.owner.display_name.lower()]
+            user_playlists = {i.name: i.uri for i in spotnet.playlists() if 'spotify' not in i.owner.display_name.lower()}
         else:
-            user_playlists = [(i.name, i.uri) for i in spotnet.playlists()]
+            user_playlists = {i.name: i.uri for i in spotnet.playlists()}
     except SpotifyNetworkException as e:
         logger.exception(f'error occured while retrieving playlists {username} / {playlist_name}')
         raise e
@@ -102,7 +102,7 @@ def run_user_playlist(user: User, playlist: Playlist, spotnet: SpotNetwork = Non
             log_name = uri
 
         except ValueError:  # is a playlist name
-            part_playlist = next((i for i in user_playlists if i[0] == part_name), None)
+            part_playlist = user_playlists.get(part_name)
             if part_playlist is None:
                 logger.warning(f'playlist {part_name} not found {username} / {playlist_name}')
                 continue
