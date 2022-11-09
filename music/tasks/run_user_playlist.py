@@ -102,13 +102,12 @@ def run_user_playlist(user: User, playlist: Playlist, spotnet: SpotNetwork = Non
             log_name = uri
 
         except ValueError:  # is a playlist name
-            part_playlist = user_playlists.get(part_name)
-            if part_playlist is None:
+            uri = user_playlists.get(part_name)
+            if uri is None:
                 logger.warning(f'playlist {part_name} not found {username} / {playlist_name}')
                 continue
-
-            uri = part_playlist[1]
-            log_name = part_playlist[0]
+            
+            log_name = part_name
 
         try:
             _tracks = spotnet.playlist_tracks(uri=uri, reduced_mem=True)
