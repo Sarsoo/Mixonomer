@@ -14,6 +14,7 @@
     <script src="../_static/underscore.js"></script>
     <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
     <script src="../_static/doctools.js"></script>
+    <script src="../_static/sphinx_highlight.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="prev" title="admin script" href="admin.html" />
@@ -40,50 +41,186 @@
 <li class="toctree-l1"><a class="reference internal" href="music.html">Flask Backend</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="music.api.html">music.api</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="music.api.html#module-music.api">Module contents</a></li>
-<li class="toctree-l3"><a class="reference internal" href="music.api.html#module-music.api.admin">api.admin</a></li>
-<li class="toctree-l3"><a class="reference internal" href="music.api.html#module-music.api.api">api.api</a></li>
-<li class="toctree-l3"><a class="reference internal" href="music.api.html#module-music.api.decorators">api.decorators</a></li>
-<li class="toctree-l3"><a class="reference internal" href="music.api.html#module-music.api.fm">api.fm</a></li>
-<li class="toctree-l3"><a class="reference internal" href="music.api.html#module-music.api.player">api.player</a></li>
-<li class="toctree-l3"><a class="reference internal" href="music.api.html#module-music.api.spotfm">api.spotfm</a></li>
-<li class="toctree-l3"><a class="reference internal" href="music.api.html#module-music.api.spotify">api.spotify</a></li>
-<li class="toctree-l3"><a class="reference internal" href="music.api.html#module-music.api.tag">api.tag</a></li>
+<li class="toctree-l3"><a class="reference internal" href="music.api.html#module-music.api.admin">api.admin</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="music.api.html#music.api.admin.get_tasks"><code class="docutils literal notranslate"><span class="pre">get_tasks()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="music.api.html#module-music.api.api">api.api</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="music.api.html#music.api.api.all_playlists_route"><code class="docutils literal notranslate"><span class="pre">all_playlists_route()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="music.api.html#music.api.api.all_users_route"><code class="docutils literal notranslate"><span class="pre">all_users_route()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="music.api.html#music.api.api.change_password"><code class="docutils literal notranslate"><span class="pre">change_password()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="music.api.html#music.api.api.image"><code class="docutils literal notranslate"><span class="pre">image()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="music.api.html#music.api.api.playlist_get_delete_route"><code class="docutils literal notranslate"><span class="pre">playlist_get_delete_route()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="music.api.html#music.api.api.playlist_post_put_route"><code class="docutils literal notranslate"><span class="pre">playlist_post_put_route()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="music.api.html#music.api.api.run_playlist"><code class="docutils literal notranslate"><span class="pre">run_playlist()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="music.api.html#music.api.api.run_playlist_task"><code class="docutils literal notranslate"><span class="pre">run_playlist_task()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="music.api.html#music.api.api.run_user"><code class="docutils literal notranslate"><span class="pre">run_user()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="music.api.html#music.api.api.run_user_task"><code class="docutils literal notranslate"><span class="pre">run_user_task()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="music.api.html#music.api.api.run_users"><code class="docutils literal notranslate"><span class="pre">run_users()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="music.api.html#music.api.api.user_delete_route"><code class="docutils literal notranslate"><span class="pre">user_delete_route()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="music.api.html#music.api.api.user_route"><code class="docutils literal notranslate"><span class="pre">user_route()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="music.api.html#module-music.api.decorators">api.decorators</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="music.api.html#music.api.decorators.admin_required"><code class="docutils literal notranslate"><span class="pre">admin_required()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="music.api.html#music.api.decorators.check_dict"><code class="docutils literal notranslate"><span class="pre">check_dict()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="music.api.html#music.api.decorators.cloud_task"><code class="docutils literal notranslate"><span class="pre">cloud_task()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="music.api.html#music.api.decorators.gae_cron"><code class="docutils literal notranslate"><span class="pre">gae_cron()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="music.api.html#music.api.decorators.is_basic_authed"><code class="docutils literal notranslate"><span class="pre">is_basic_authed()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="music.api.html#music.api.decorators.is_jwt_authed"><code class="docutils literal notranslate"><span class="pre">is_jwt_authed()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="music.api.html#music.api.decorators.is_logged_in"><code class="docutils literal notranslate"><span class="pre">is_logged_in()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="music.api.html#music.api.decorators.jwt_required"><code class="docutils literal notranslate"><span class="pre">jwt_required()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="music.api.html#music.api.decorators.lastfm_username_required"><code class="docutils literal notranslate"><span class="pre">lastfm_username_required()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="music.api.html#music.api.decorators.login_or_basic_auth"><code class="docutils literal notranslate"><span class="pre">login_or_basic_auth()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="music.api.html#music.api.decorators.login_or_jwt"><code class="docutils literal notranslate"><span class="pre">login_or_jwt()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="music.api.html#music.api.decorators.login_required"><code class="docutils literal notranslate"><span class="pre">login_required()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="music.api.html#music.api.decorators.no_cache"><code class="docutils literal notranslate"><span class="pre">no_cache()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="music.api.html#music.api.decorators.no_locked_users"><code class="docutils literal notranslate"><span class="pre">no_locked_users()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="music.api.html#music.api.decorators.spotify_link_required"><code class="docutils literal notranslate"><span class="pre">spotify_link_required()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="music.api.html#music.api.decorators.validate_args"><code class="docutils literal notranslate"><span class="pre">validate_args()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="music.api.html#music.api.decorators.validate_json"><code class="docutils literal notranslate"><span class="pre">validate_json()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="music.api.html#module-music.api.fm">api.fm</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="music.api.html#music.api.fm.daily_scrobbles"><code class="docutils literal notranslate"><span class="pre">daily_scrobbles()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="music.api.html#module-music.api.player">api.player</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="music.api.html#music.api.player.next_track"><code class="docutils literal notranslate"><span class="pre">next_track()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="music.api.html#music.api.player.play"><code class="docutils literal notranslate"><span class="pre">play()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="music.api.html#music.api.player.shuffle"><code class="docutils literal notranslate"><span class="pre">shuffle()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="music.api.html#music.api.player.volume"><code class="docutils literal notranslate"><span class="pre">volume()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="music.api.html#module-music.api.spotfm">api.spotfm</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="music.api.html#music.api.spotfm.count"><code class="docutils literal notranslate"><span class="pre">count()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="music.api.html#music.api.spotfm.playlist_refresh"><code class="docutils literal notranslate"><span class="pre">playlist_refresh()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="music.api.html#music.api.spotfm.run_playlist_album_task"><code class="docutils literal notranslate"><span class="pre">run_playlist_album_task()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="music.api.html#music.api.spotfm.run_playlist_artist_task"><code class="docutils literal notranslate"><span class="pre">run_playlist_artist_task()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="music.api.html#music.api.spotfm.run_playlist_track_task"><code class="docutils literal notranslate"><span class="pre">run_playlist_track_task()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="music.api.html#music.api.spotfm.run_user"><code class="docutils literal notranslate"><span class="pre">run_user()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="music.api.html#music.api.spotfm.run_user_task"><code class="docutils literal notranslate"><span class="pre">run_user_task()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="music.api.html#music.api.spotfm.run_users"><code class="docutils literal notranslate"><span class="pre">run_users()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="music.api.html#module-music.api.spotify">api.spotify</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="music.api.html#music.api.spotify.sort"><code class="docutils literal notranslate"><span class="pre">sort()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="music.api.html#module-music.api.tag">api.tag</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="music.api.html#music.api.tag.delete_tag"><code class="docutils literal notranslate"><span class="pre">delete_tag()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="music.api.html#music.api.tag.get_tag"><code class="docutils literal notranslate"><span class="pre">get_tag()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="music.api.html#music.api.tag.post_tag"><code class="docutils literal notranslate"><span class="pre">post_tag()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="music.api.html#music.api.tag.put_tag"><code class="docutils literal notranslate"><span class="pre">put_tag()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="music.api.html#music.api.tag.run_tag_task"><code class="docutils literal notranslate"><span class="pre">run_tag_task()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="music.api.html#music.api.tag.tag_refresh"><code class="docutils literal notranslate"><span class="pre">tag_refresh()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="music.api.html#music.api.tag.tag_route"><code class="docutils literal notranslate"><span class="pre">tag_route()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="music.api.html#music.api.tag.tags"><code class="docutils literal notranslate"><span class="pre">tags()</span></code></a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="music.auth.html">music.auth</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="music.auth.html#module-music.auth">Module contents</a></li>
-<li class="toctree-l3"><a class="reference internal" href="music.auth.html#module-music.auth.auth">auth.auth</a></li>
+<li class="toctree-l3"><a class="reference internal" href="music.auth.html#module-music.auth.auth">auth.auth</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="music.auth.html#music.auth.auth.auth"><code class="docutils literal notranslate"><span class="pre">auth()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="music.auth.html#music.auth.auth.deauth"><code class="docutils literal notranslate"><span class="pre">deauth()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="music.auth.html#music.auth.auth.jwt_token"><code class="docutils literal notranslate"><span class="pre">jwt_token()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="music.auth.html#music.auth.auth.login"><code class="docutils literal notranslate"><span class="pre">login()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="music.auth.html#music.auth.auth.logout"><code class="docutils literal notranslate"><span class="pre">logout()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="music.auth.html#music.auth.auth.register"><code class="docutils literal notranslate"><span class="pre">register()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="music.auth.html#music.auth.auth.token"><code class="docutils literal notranslate"><span class="pre">token()</span></code></a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="music.cloud.html">music.cloud</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="music.cloud.html#module-music.cloud">Module contents</a></li>
-<li class="toctree-l3"><a class="reference internal" href="music.cloud.html#module-music.cloud.function">cloud.function</a></li>
-<li class="toctree-l3"><a class="reference internal" href="music.cloud.html#module-music.cloud.tasks">cloud.tasks</a></li>
+<li class="toctree-l3"><a class="reference internal" href="music.cloud.html#module-music.cloud">Module contents</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="music.cloud.html#music.cloud.offload_or_run_user_playlist"><code class="docutils literal notranslate"><span class="pre">offload_or_run_user_playlist()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="music.cloud.html#music.cloud.queue_run_user_playlist"><code class="docutils literal notranslate"><span class="pre">queue_run_user_playlist()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="music.cloud.html#module-music.cloud.function">cloud.function</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="music.cloud.html#music.cloud.function.run_user_playlist_function"><code class="docutils literal notranslate"><span class="pre">run_user_playlist_function()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="music.cloud.html#music.cloud.function.update_tag"><code class="docutils literal notranslate"><span class="pre">update_tag()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="music.cloud.html#module-music.cloud.tasks">cloud.tasks</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="music.cloud.html#music.cloud.tasks.refresh_all_user_playlist_stats"><code class="docutils literal notranslate"><span class="pre">refresh_all_user_playlist_stats()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="music.cloud.html#music.cloud.tasks.refresh_playlist_task"><code class="docutils literal notranslate"><span class="pre">refresh_playlist_task()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="music.cloud.html#music.cloud.tasks.refresh_user_playlist_stats"><code class="docutils literal notranslate"><span class="pre">refresh_user_playlist_stats()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="music.cloud.html#music.cloud.tasks.refresh_user_stats_task"><code class="docutils literal notranslate"><span class="pre">refresh_user_stats_task()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="music.cloud.html#music.cloud.tasks.run_user_playlist_task"><code class="docutils literal notranslate"><span class="pre">run_user_playlist_task()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="music.cloud.html#music.cloud.tasks.update_all_user_playlists"><code class="docutils literal notranslate"><span class="pre">update_all_user_playlists()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="music.cloud.html#music.cloud.tasks.update_all_user_tags"><code class="docutils literal notranslate"><span class="pre">update_all_user_tags()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="music.cloud.html#music.cloud.tasks.update_playlists"><code class="docutils literal notranslate"><span class="pre">update_playlists()</span></code></a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="music.db.html">music.db</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="music.db.html#module-music.db">Module contents</a></li>
-<li class="toctree-l3"><a class="reference internal" href="music.db.html#module-music.db.database">db.database</a></li>
-<li class="toctree-l3"><a class="reference internal" href="music.db.html#module-music.db.part_generator">db.part_generator</a></li>
+<li class="toctree-l3"><a class="reference internal" href="music.db.html#module-music.db.database">db.database</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="music.db.html#music.db.database.DatabaseUser"><code class="docutils literal notranslate"><span class="pre">DatabaseUser</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="music.db.html#music.db.database.get_authed_lastfm_network"><code class="docutils literal notranslate"><span class="pre">get_authed_lastfm_network()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="music.db.html#music.db.database.get_authed_spotify_network"><code class="docutils literal notranslate"><span class="pre">get_authed_spotify_network()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="music.db.html#music.db.database.refresh_token_database_callback"><code class="docutils literal notranslate"><span class="pre">refresh_token_database_callback()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="music.db.html#module-music.db.part_generator">db.part_generator</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="music.db.html#music.db.part_generator.PartGenerator"><code class="docutils literal notranslate"><span class="pre">PartGenerator</span></code></a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="music.model.html">music.model</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="music.model.html#module-music.model">Module contents</a></li>
-<li class="toctree-l3"><a class="reference internal" href="music.model.html#module-music.model.config">model.config</a></li>
-<li class="toctree-l3"><a class="reference internal" href="music.model.html#module-music.model.playlist">model.playlist</a></li>
-<li class="toctree-l3"><a class="reference internal" href="music.model.html#module-music.model.tag">model.tag</a></li>
-<li class="toctree-l3"><a class="reference internal" href="music.model.html#module-music.model.user">model.user</a></li>
+<li class="toctree-l3"><a class="reference internal" href="music.model.html#module-music.model.config">model.config</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="music.model.html#music.model.config.Config"><code class="docutils literal notranslate"><span class="pre">Config</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="music.model.html#module-music.model.playlist">model.playlist</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="music.model.html#music.model.playlist.Playlist"><code class="docutils literal notranslate"><span class="pre">Playlist</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="music.model.html#music.model.playlist.Sort"><code class="docutils literal notranslate"><span class="pre">Sort</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="music.model.html#module-music.model.tag">model.tag</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="music.model.html#music.model.tag.Tag"><code class="docutils literal notranslate"><span class="pre">Tag</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="music.model.html#module-music.model.user">model.user</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="music.model.html#music.model.user.User"><code class="docutils literal notranslate"><span class="pre">User</span></code></a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="music.tasks.html">music.tasks</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="music.tasks.html#module-music.tasks">Module contents</a></li>
-<li class="toctree-l3"><a class="reference internal" href="music.tasks.html#module-music.tasks.create_playlist">tasks.create_playlist</a></li>
-<li class="toctree-l3"><a class="reference internal" href="music.tasks.html#module-music.tasks.refresh_lastfm_stats">tasks.refresh_lastfm_stats</a></li>
-<li class="toctree-l3"><a class="reference internal" href="music.tasks.html#module-music.tasks.run_user_playlist">tasks.run_user_playlist</a></li>
-<li class="toctree-l3"><a class="reference internal" href="music.tasks.html#module-music.tasks.update_tag">tasks.update_tag</a></li>
+<li class="toctree-l3"><a class="reference internal" href="music.tasks.html#module-music.tasks.create_playlist">tasks.create_playlist</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="music.tasks.html#music.tasks.create_playlist.create_playlist"><code class="docutils literal notranslate"><span class="pre">create_playlist()</span></code></a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="music.html#module-music">music Root Module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="music.tasks.html#module-music.tasks.refresh_lastfm_stats">tasks.refresh_lastfm_stats</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="music.tasks.html#music.tasks.refresh_lastfm_stats.refresh_lastfm_album_stats"><code class="docutils literal notranslate"><span class="pre">refresh_lastfm_album_stats()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="music.tasks.html#music.tasks.refresh_lastfm_stats.refresh_lastfm_artist_stats"><code class="docutils literal notranslate"><span class="pre">refresh_lastfm_artist_stats()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="music.tasks.html#music.tasks.refresh_lastfm_stats.refresh_lastfm_track_stats"><code class="docutils literal notranslate"><span class="pre">refresh_lastfm_track_stats()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="music.tasks.html#module-music.tasks.run_user_playlist">tasks.run_user_playlist</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="music.tasks.html#music.tasks.run_user_playlist.run_user_playlist"><code class="docutils literal notranslate"><span class="pre">run_user_playlist()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="music.tasks.html#module-music.tasks.update_tag">tasks.update_tag</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="music.tasks.html#music.tasks.update_tag.update_tag"><code class="docutils literal notranslate"><span class="pre">update_tag()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="music.html#module-music">music Root Module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="music.html#music.init_log"><code class="docutils literal notranslate"><span class="pre">init_log()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="music.html#music.music.create_app"><code class="docutils literal notranslate"><span class="pre">create_app()</span></code></a></li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
@@ -151,7 +288,7 @@
       &copy;2021, Sarsoo.
       
       |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 5.1.1</a>
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 5.3.0</a>
       &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
       
       |
