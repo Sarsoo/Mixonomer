@@ -163,7 +163,7 @@ jobs:
 
       # DEPLOY for setting up cloud API
       - name: Set up Cloud SDK 
-        uses: google-github-actions/auth@v0.7.3
+        uses: google-github-actions/auth@v1.0.0
         with:
           credentials_json: '${{ secrets.GCP_SA_KEY }}'
           export_environment_variables: true
@@ -178,29 +178,81 @@ jobs:
         run: gcloud app deploy dispatch.yaml --quiet
 
       # DEPLOY app engine service, -nb for skipping compile
-      - name: Deploy App Engine Service
+      - name: Copy Engine Main
         run: python admin.py app -nb
+      - name: Deploy App Engine
+        uses: google-github-actions/deploy-appengine@v0.8.0
 
       ### MAIN FUNCTIONS
 
       # DEPLOY update_tag function
-      - name: Deploy update_tag Function
+      - name: Prepare update_tag Function
         run: python admin.py tag
+      - name: Deploy update_tag Function
+        uses: google-github-actions/deploy-cloud-functions@v0.10.1
+        with:
+          name: update_tag
+          event_trigger_resource: projects/sarsooxyz/topics/update_tag
+          event_trigger_type: providers/cloud.pubsub/eventTypes/topic.publish
+          region: europe-west2
+          runtime: python310
+          timeout: 60
+          env_vars: DEPLOY_DESTINATION=PROD
 
       # DEPLOY run_user_playlist function
       - name: Deploy run_user_playlist Function
         run: python admin.py playlist
+      - name: Deploy run_user_playlist Function
+        uses: google-github-actions/deploy-cloud-functions@v0.10.1
+        with:
+          name: run_user_playlist
+          event_trigger_resource: projects/sarsooxyz/topics/run_user_playlist
+          event_trigger_type: providers/cloud.pubsub/eventTypes/topic.publish
+          region: europe-west2
+          runtime: python310
+          timeout: 60
+          env_vars: DEPLOY_DESTINATION=PROD
 
       ### CRON FUNCTIONS
 
       # DEPLOY run_all_playlists function
       - name: Deploy run_all_playlists Function
         run: python admin.py playlist_cron
+      - name: Deploy run_all_playlists Function
+        uses: google-github-actions/deploy-cloud-functions@v0.10.1
+        with:
+          name: run_all_playlists
+          event_trigger_resource: projects/sarsooxyz/topics/run_all_playlists
+          event_trigger_type: providers/cloud.pubsub/eventTypes/topic.publish
+          region: europe-west2
+          runtime: python310
+          timeout: 60
+          env_vars: DEPLOY_DESTINATION=PROD
 
       # DEPLOY run_all_playlist_stats function
       - name: Deploy run_all_playlist_stats Function
         run: python admin.py playlist_stats_cron
+      - name: Deploy run_all_playlist_stats Function
+        uses: google-github-actions/deploy-cloud-functions@v0.10.1
+        with:
+          name: run_all_playlist_stats
+          event_trigger_resource: projects/sarsooxyz/topics/run_all_playlist_stats
+          event_trigger_type: providers/cloud.pubsub/eventTypes/topic.publish
+          region: europe-west2
+          runtime: python310
+          timeout: 60
+          env_vars: DEPLOY_DESTINATION=PROD
 
       # DEPLOY run_all_tags function
       - name: Deploy run_all_tags Function
         run: python admin.py tags_cron
+      - name: Deploy run_all_tags Function
+        uses: google-github-actions/deploy-cloud-functions@v0.10.1
+        with:
+          name: run_all_tags
+          event_trigger_resource: projects/sarsooxyz/topics/run_all_tags
+          event_trigger_type: providers/cloud.pubsub/eventTypes/topic.publish
+          region: europe-west2
+          runtime: python310
+          timeout: 60
+          env_vars: DEPLOY_DESTINATION=PROD

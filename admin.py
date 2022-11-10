@@ -141,8 +141,8 @@ class Admin(Cmd):
             self.compile_frontend()
         self.copy_main_file('api')
 
-        print('>> deploying app engine service')
-        subprocess.check_call('gcloud app deploy', shell=True)
+        # print('>> deploying app engine service')
+        # subprocess.check_call('gcloud app deploy', shell=True)
 
     def function_deploy(self, main, function_id):
         """Deploy Cloud Function, copy main file and initiate gcloud command
@@ -153,8 +153,8 @@ class Admin(Cmd):
         """
         self.copy_main_file(main)
 
-        print(f'>> deploying {function_id}')
-        self.deploy_function(function_id)
+        # print(f'>> deploying {function_id}')
+        # self.deploy_function(function_id)
 
     def do_tag(self, args):
         """
