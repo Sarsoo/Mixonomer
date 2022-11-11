@@ -157,7 +157,7 @@ image = []
 [package.source]
 type = "git"
 url = "https://github.com/Sarsoo/pyfmframework.git"
-reference = "HEAD"
+reference = "master"
 resolved_reference = "24dfc77d635c18fe66ad741f3451aa2540a2d228"
 
 [[package]]
@@ -741,14 +741,14 @@ python-versions = "^3.8"
 develop = false
 
 [package.dependencies]
-fmframework = {git = "https://github.com/Sarsoo/pyfmframework.git"}
-spotframework = {git = "https://github.com/Sarsoo/spotframework.git"}
+fmframework = {git = "https://github.com/Sarsoo/pyfmframework.git", branch = "master"}
+spotframework = {git = "https://github.com/Sarsoo/spotframework.git", branch = "master"}
 
 [package.source]
 type = "git"
 url = "https://github.com/Sarsoo/spotfm.git"
-reference = "HEAD"
-resolved_reference = "062347347b81f41c9f473686d5770b68c582fb86"
+reference = "master"
+resolved_reference = "aee594892bb3d5495ac481c546bf61a0b376e47f"
 
 [[package]]
 name = "spotframework"
@@ -767,7 +767,7 @@ tabulate = "^0.8.7"
 [package.source]
 type = "git"
 url = "https://github.com/Sarsoo/spotframework.git"
-reference = "HEAD"
+reference = "master"
 resolved_reference = "9212a0a4ce4dccd9e2f7bdefad39f383ccf42189"
 
 [[package]]
@@ -835,7 +835,7 @@ python-versions = "!=3.0.*,!=3.1.*,!=3.2.*,!=3.3.*,!=3.4.*,>=2.7"
 [metadata]
 lock-version = "1.1"
 python-versions = "~3.10"
-content-hash = "5440493cbe122b271767f270d20304d2546f0d26ce77b93723ff26ce0fe3bf2f"
+content-hash = "fef135789689e4ab5a67d8e37ce0da3ca5b772a500a3ce9ac69ac5b2876b5175"
 
 [metadata.files]
 alabaster = [
