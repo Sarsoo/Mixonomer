@@ -14,6 +14,7 @@ spotframework_logger = logging.getLogger('spotframework')
 fmframework_logger = logging.getLogger('fmframework')
 spotfm_logger = logging.getLogger('spotfm')
 
+
 def init_log(cloud=False, console=False):
     if cloud:
         import google.cloud.logging
@@ -43,6 +44,7 @@ def init_log(cloud=False, console=False):
         spotframework_logger.addHandler(stream_handler)
         fmframework_logger.addHandler(stream_handler)
         spotfm_logger.addHandler(stream_handler)
+
 
 if os.environ.get('DEPLOY_DESTINATION', None) == 'PROD':
     init_log(cloud=True)

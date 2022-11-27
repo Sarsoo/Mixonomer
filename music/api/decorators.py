@@ -78,6 +78,7 @@ def login_or_jwt(func):
 
     return login_or_jwt_wrapper
 
+
 def jwt_required(func):
     @functools.wraps(func)
     def jwt_required_wrapper(*args, **kwargs):

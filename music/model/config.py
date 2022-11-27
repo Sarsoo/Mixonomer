@@ -1,5 +1,5 @@
 from fireo.models import Model
-from fireo.fields import TextField, BooleanField, DateTime, NumberField, ListField
+from fireo.fields import TextField, NumberField
 
 
 class Config(Model):

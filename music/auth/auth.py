@@ -113,9 +113,9 @@ def jwt_token():
         else:
             expiry = config.jwt_default_length
 
-        token = generate_key(user, timeout=timedelta(seconds=expiry))
+        generated_token = generate_key(user, timeout=timedelta(seconds=expiry))
 
-        return jsonify({"token": token, "status": "success"}), 200
+        return jsonify({"token": generated_token, "status": "success"}), 200
     else:
         logger.warning(f'failed token attempt {username}')
         return jsonify({"message": 'authentication failed', "status": "error"}), 401
@@ -140,7 +140,7 @@ def register():
 
         if username is None or password is None or password_again is None:
 
-            if (request_json := request.get_json()) != None:
+            if (request_json := request.get_json()) is not None:
                 username = request_json.get('username', None)
                 password = request_json.get('password', None)
                 password_again = request_json.get('password_again', None)

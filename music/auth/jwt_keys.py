@@ -1,8 +1,8 @@
-from ctypes import Union
 from datetime import timedelta, datetime, timezone
 import jwt
 from music.model.user import User
 from music.model.config import Config
+
 
 def get_jwt_secret_key() -> str:
 
@@ -12,6 +12,7 @@ def get_jwt_secret_key() -> str:
         raise KeyError("no jwt secret key found")
 
     return config.jwt_secret_key
+
 
 def generate_key(user: User, timeout: datetime | timedelta = timedelta(minutes=60)) -> str:
 
@@ -28,6 +29,7 @@ def generate_key(user: User, timeout: datetime | timedelta = timedelta(minutes=6
 
     return jwt.encode(payload, get_jwt_secret_key(), algorithm="HS512")
 
+
 def validate_key(key: str) -> dict:
 
     try:
@@ -37,5 +39,5 @@ def validate_key(key: str) -> dict:
 
         return decoded
 
-    except Exception as e:
+    except jwt.exceptions.PyJWTError as e:
         pass
