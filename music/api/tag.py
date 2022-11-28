@@ -60,38 +60,38 @@ def put_tag(tag_id, user):
 
     request_json = request.get_json()
 
-    if request_json.get('name'):
-        db_tag.name = request_json['name'].strip()
+    if name := request_json.get('name'):
+        db_tag.name = name.strip()
 
-    if request_json.get('time_objects') is not None:
-        db_tag.time_objects = request_json['time_objects']
+    if time_objects := request_json.get('time_objects') is not None:
+        db_tag.time_objects = time_objects
 
-    if request_json.get('tracks') is not None:
+    if tracks := request_json.get('tracks') is not None:
         db_tag.tracks = [
             {
                 'name': track['name'].strip(),
                 'artist': track['artist'].strip()
             }
-            for track in request_json['tracks']
+            for track in tracks
             if track.get('name') and track.get('artist')
         ]
 
-    if request_json.get('albums') is not None:
+    if albums := request_json.get('albums') is not None:
         db_tag.albums = [
             {
                 'name': album['name'].strip(),
                 'artist': album['artist'].strip()
             }
-            for album in request_json['albums']
+            for album in albums
             if album.get('name') and album.get('artist')
         ]
 
-    if request_json.get('artists') is not None:
+    if artists := request_json.get('artists') is not None:
         db_tag.artists = [
             {
                 'name': artist['name'].strip()
             }
-            for artist in request_json['artists']
+            for artist in artists
             if artist.get('name')
         ]
 

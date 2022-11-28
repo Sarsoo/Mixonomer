@@ -26,10 +26,9 @@ logger = logging.getLogger(__name__)
 @no_locked_users
 def count(auth=None, user=None):
 
-    uri = request.args.get('uri', None)
     playlist_name = request.args.get('playlist_name', None)
 
-    if uri is None and playlist_name is None:
+    if uri := request.args.get('uri') is None and playlist_name is None:
         return jsonify({'error': 'no input provided'}), 401
 
     if uri:
