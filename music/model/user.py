@@ -1,7 +1,7 @@
 import logging
 
 from fireo.models import Model
-from fireo.fields import TextField, BooleanField, DateTime, NumberField
+from fireo.fields import TextField, BooleanField, DateTime, NumberField, ListField
 
 from music.model.playlist import Playlist
 
@@ -31,6 +31,8 @@ class User(Model):
     token_expiry = NumberField()
 
     lastfm_username = TextField()
+
+    apns_tokens = ListField(default=[])
 
     def check_password(self, password):
         return check_password_hash(self.password, password)

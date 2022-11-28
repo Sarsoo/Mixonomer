@@ -7,7 +7,7 @@ import json
 import logging
 from datetime import datetime
 
-from music.api.decorators import login_or_jwt, login_required, login_or_jwt, \
+from music.api.decorators import login_or_jwt, login_required, \
     admin_required, cloud_task, validate_json, validate_args, spotify_link_required, no_locked_users
 from music.cloud import queue_run_user_playlist, offload_or_run_user_playlist
 from music.cloud.tasks import update_all_user_playlists, update_playlists
@@ -184,10 +184,11 @@ def playlist_post_put_route(auth=None, user=None):
 
         return jsonify({"message": 'playlist updated', "status": "success"}), 200
 
+
 @blueprint.route('/user', methods=['GET', 'POST'])
 @login_or_jwt
 @no_locked_users
-def user_route(auth=None, user=None):
+def user_route(auth=None, user: User=None):
     assert user is not None
 
     if request.method == 'GET':
@@ -221,6 +222,18 @@ def user_route(auth=None, user=None):
 
             if user.lastfm_username is None:
                 user.lastfm_username = ""
+
+        if 'apns_token' in request_json:
+            token = request_json['apns_token']
+
+            if user.apns_tokens is None:
+                user.apns_tokens = []
+
+            if token not in user.apns_tokens:
+                logger.info(f'adding apns token {user.username} -> {token}')
+                user.apns_tokens = user.apns_tokens + [token]
+            else:
+                logger.info(f'skipping duplicate apns token {user.username} -> {token}')
 
         user.update()
 
