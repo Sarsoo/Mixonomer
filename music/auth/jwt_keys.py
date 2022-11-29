@@ -1,6 +1,6 @@
 from datetime import timedelta, datetime, timezone
 import jwt
-from music.cloud import JWT_SECRET_URI
+from music.magic_strings import JWT_SECRET_URI
 from music.model.user import User
 
 from google.cloud import secretmanager

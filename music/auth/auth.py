@@ -4,7 +4,7 @@ from music.model.user import User
 from music.model.config import Config
 from music.auth.jwt_keys import generate_key
 from music.api.decorators import no_cache
-from music.cloud import SPOT_CLIENT_URI, SPOT_SECRET_URI
+from music.magic_strings import SPOT_CLIENT_URI, SPOT_SECRET_URI
 
 from urllib.parse import urlencode, urlunparse
 import datetime
@@ -77,6 +77,7 @@ def logout():
     session.pop('username', None)
     flash('logged out')
     return redirect(url_for('index'))
+
 
 @blueprint.route('/token', methods=['POST'])
 @no_cache

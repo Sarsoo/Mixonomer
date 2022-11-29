@@ -7,7 +7,7 @@ import os
 from music.auth import auth_blueprint
 from music.api import api_blueprint, player_blueprint, fm_blueprint, \
     spotfm_blueprint, spotify_blueprint, admin_blueprint, tag_blueprint
-from music.cloud import COOKIE_SECRET_URI
+from music.magic_strings import COOKIE_SECRET_URI
 
 logger = logging.getLogger(__name__)
 secret_client = secretmanager.SecretManagerServiceClient()

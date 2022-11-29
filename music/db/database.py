@@ -8,7 +8,7 @@ from spotframework.net.user import NetworkUser
 from fmframework.net.network import Network as FmNetwork
 from music.model.user import User
 
-from music.cloud import SPOT_CLIENT_URI, SPOT_SECRET_URI, LASTFM_CLIENT_URI
+from music.magic_strings import SPOT_CLIENT_URI, SPOT_SECRET_URI, LASTFM_CLIENT_URI
 
 from google.cloud import secretmanager
 
