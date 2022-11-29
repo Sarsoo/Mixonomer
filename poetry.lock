@@ -292,6 +292,23 @@ protobuf = ">=3.19.5,<3.20.0 || >3.20.0,<3.20.1 || >3.20.1,<4.21.0 || >4.21.0,<4
 libcst = ["libcst (>=0.3.10)"]
 
 [[package]]
+name = "google-cloud-secret-manager"
+version = "2.12.6"
+description = "Secret Manager API API client library"
+category = "main"
+optional = false
+python-versions = ">=3.7"
+
+[package.dependencies]
+google-api-core = {version = ">=1.32.0,<2.0.0 || >=2.8.0,<3.0.0dev", extras = ["grpc"]}
+grpc-google-iam-v1 = ">=0.12.4,<1.0.0dev"
+proto-plus = ">=1.22.0,<2.0.0dev"
+protobuf = ">=3.19.5,<3.20.0 || >3.20.0,<3.20.1 || >3.20.1,<4.21.0 || >4.21.0,<4.21.1 || >4.21.1,<4.21.2 || >4.21.2,<4.21.3 || >4.21.3,<4.21.4 || >4.21.4,<4.21.5 || >4.21.5,<5.0.0dev"
+
+[package.extras]
+libcst = ["libcst (>=0.2.5)"]
+
+[[package]]
 name = "google-cloud-tasks"
 version = "2.10.4"
 description = "Cloud Tasks API API client library"
@@ -835,7 +852,7 @@ python-versions = "!=3.0.*,!=3.1.*,!=3.2.*,!=3.3.*,!=3.4.*,>=2.7"
 [metadata]
 lock-version = "1.1"
 python-versions = "~3.10"
-content-hash = "fef135789689e4ab5a67d8e37ce0da3ca5b772a500a3ce9ac69ac5b2876b5175"
+content-hash = "ab592da5f6b73bd51841928689b332bdd994e188398b85a1d5e48cc402c89dac"
 
 [metadata.files]
 alabaster = [
@@ -922,6 +939,10 @@ google-cloud-logging = [
 google-cloud-pubsub = [
     {file = "google-cloud-pubsub-2.13.10.tar.gz", hash = "sha256:3e746a1a97c96bdc63fc5499529ed7262f1464f6de8c8bae6238c12200919ac0"},
     {file = "google_cloud_pubsub-2.13.10-py2.py3-none-any.whl", hash = "sha256:1a29795265ddb2eff23b4e4c2c4594a56f5a861827fe1cc72c53de42a3a13def"},
+]
+google-cloud-secret-manager = [
+    {file = "google-cloud-secret-manager-2.12.6.tar.gz", hash = "sha256:7aaba2997f43f8c3b35903efc54c389a802f39853ba81e81e1190f093420ecf6"},
+    {file = "google_cloud_secret_manager-2.12.6-py2.py3-none-any.whl", hash = "sha256:585e2ccd05038526b39eeabfe6932a7398341a76770ee0dd797c8581313e5212"},
 ]
 google-cloud-tasks = [
     {file = "google-cloud-tasks-2.10.4.tar.gz", hash = "sha256:650f4f43be725841103727ea3bc13227ae9ebaa2f99dadaad53888831cfc1d70"},

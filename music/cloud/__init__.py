@@ -10,6 +10,12 @@ from .tasks import run_user_playlist_task
 
 logger = logging.getLogger(__name__)
 
+SPOT_CLIENT_URI = "projects/sarsooxyz/secrets/spotify-client/versions/latest"
+SPOT_SECRET_URI = "projects/sarsooxyz/secrets/spotify-secret/versions/latest"
+LASTFM_CLIENT_URI = "projects/sarsooxyz/secrets/lastfm-client/versions/latest"
+JWT_SECRET_URI = "projects/sarsooxyz/secrets/jwt-secret/versions/latest"
+COOKIE_SECRET_URI = "projects/sarsooxyz/secrets/cookie-secret/versions/latest"
+
 
 def queue_run_user_playlist(username: str, playlist_name: str):
     config = Config.collection.get("config/music-tools")

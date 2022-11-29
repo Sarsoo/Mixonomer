@@ -1,4 +1,5 @@
 from flask import Flask, render_template, redirect, session, flash, url_for
+from google.cloud import secretmanager
 
 import logging
 import os
@@ -6,9 +7,10 @@ import os
 from music.auth import auth_blueprint
 from music.api import api_blueprint, player_blueprint, fm_blueprint, \
     spotfm_blueprint, spotify_blueprint, admin_blueprint, tag_blueprint
-from music.model.config import Config
+from music.cloud import COOKIE_SECRET_URI
 
 logger = logging.getLogger(__name__)
+secret_client = secretmanager.SecretManagerServiceClient()
 
 
 def create_app():
@@ -20,11 +22,7 @@ def create_app():
 
     app = Flask(__name__, static_folder=os.path.join(os.path.dirname(__file__), '..', 'build'), template_folder="templates")
 
-    config = Config.collection.get("config/music-tools")
-    if config is not None:
-        app.secret_key = config.secret_key
-    else:
-        logger.error('no config returned, skipping secret key')
+    app.secret_key = secret_client.access_secret_version(request={"name": COOKIE_SECRET_URI}).payload.data.decode("UTF-8")
 
     app.register_blueprint(auth_blueprint, url_prefix='/auth')
     app.register_blueprint(api_blueprint, url_prefix='/api')

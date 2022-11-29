@@ -4,6 +4,7 @@ from music.model.user import User
 from music.model.config import Config
 from music.auth.jwt_keys import generate_key
 from music.api.decorators import no_cache
+from music.cloud import SPOT_CLIENT_URI, SPOT_SECRET_URI
 
 from urllib.parse import urlencode, urlunparse
 import datetime
@@ -11,11 +12,14 @@ from datetime import timedelta
 from numbers import Number
 import logging
 from base64 import b64encode
+
+from google.cloud import secretmanager
 import requests
 
 blueprint = Blueprint('authapi', __name__)
 
 logger = logging.getLogger(__name__)
+secret_client = secretmanager.SecretManagerServiceClient()
 
 
 @blueprint.route('/login', methods=['GET', 'POST'])
@@ -194,10 +198,10 @@ def auth():
 
     if 'username' in session:
 
-        config = Config.collection.get("config/music-tools")
+        spot_client = secret_client.access_secret_version(request={"name": SPOT_CLIENT_URI})
         params = urlencode(
             {
-                'client_id': config.spotify_client_id,
+                'client_id': spot_client.payload.data.decode("UTF-8"),
                 'response_type': 'code',
                 'scope': 'playlist-modify-public playlist-modify-private playlist-read-private '
                          'user-read-playback-state user-modify-playback-state user-library-read',
@@ -221,10 +225,11 @@ def token():
             flash('authorization failed')
             return redirect('app_route')
         else:
-            config = Config.collection.get("config/music-tools")
+            spot_client = secret_client.access_secret_version(request={"name": SPOT_CLIENT_URI})
+            spot_secret = secret_client.access_secret_version(request={"name": SPOT_SECRET_URI})
 
             idsecret = b64encode(
-                bytes(config.spotify_client_id + ':' + config.spotify_client_secret, "utf-8")
+                bytes(spot_client.payload.data.decode("UTF-8") + ':' + spot_secret.payload.data.decode("UTF-8"), "utf-8")
             ).decode("ascii")
             headers = {'Authorization': 'Basic %s' % idsecret}
 

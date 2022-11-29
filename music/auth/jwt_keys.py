@@ -1,17 +1,15 @@
 from datetime import timedelta, datetime, timezone
 import jwt
+from music.cloud import JWT_SECRET_URI
 from music.model.user import User
-from music.model.config import Config
+
+from google.cloud import secretmanager
+
+secret_client = secretmanager.SecretManagerServiceClient()
 
 
 def get_jwt_secret_key() -> str:
-
-    config = Config.collection.get("config/music-tools")
-    
-    if config.jwt_secret_key is None or len(config.jwt_secret_key) == 0:
-        raise KeyError("no jwt secret key found")
-
-    return config.jwt_secret_key
+    return secret_client.access_secret_version(request={"name": JWT_SECRET_URI}).payload.data.decode("UTF-8")
 
 
 def generate_key(user: User, timeout: datetime | timedelta = timedelta(minutes=60)) -> str:

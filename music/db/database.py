@@ -7,9 +7,13 @@ from spotframework.net.network import Network as SpotifyNetwork, SpotifyNetworkE
 from spotframework.net.user import NetworkUser
 from fmframework.net.network import Network as FmNetwork
 from music.model.user import User
-from music.model.config import Config
+
+from music.cloud import SPOT_CLIENT_URI, SPOT_SECRET_URI, LASTFM_CLIENT_URI
+
+from google.cloud import secretmanager
 
 logger = logging.getLogger(__name__)
+secret_client = secretmanager.SecretManagerServiceClient()
 
 
 def refresh_token_database_callback(user: User) -> None:
@@ -50,10 +54,11 @@ def get_authed_spotify_network(user: User) -> Optional[SpotifyNetwork]:
 
     if user is not None:
         if user.spotify_linked:
-            config = Config.collection.get("config/music-tools")
+            spot_client = secret_client.access_secret_version(request={"name": SPOT_CLIENT_URI})
+            spot_secret = secret_client.access_secret_version(request={"name": SPOT_SECRET_URI})
 
-            user_obj = DatabaseUser(client_id=config.spotify_client_id,
-                                    client_secret=config.spotify_client_secret,
+            user_obj = DatabaseUser(client_id=spot_client.payload.data.decode("UTF-8"),
+                                    client_secret=spot_secret.payload.data.decode("UTF-8"),
                                     refresh_token=user.refresh_token,
                                     user_id=user.username,
                                     access_token=user.access_token)
@@ -92,8 +97,9 @@ def get_authed_lastfm_network(user: User) -> Optional[FmNetwork]:
 
     if user is not None:
         if user.lastfm_username:
-            config = Config.collection.get("config/music-tools")
-            return FmNetwork(username=user.lastfm_username, api_key=config.last_fm_client_id)
+            lastfm_client = secret_client.access_secret_version(request={"name": LASTFM_CLIENT_URI})
+
+            return FmNetwork(username=user.lastfm_username, api_key=lastfm_client.payload.data.decode("UTF-8"))
         else:
             logger.error(f'{user.username} has no last.fm username')
     else:
