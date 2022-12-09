@@ -11,6 +11,8 @@ class Config(Model):
         """Set correct path in Firestore
         """
 
+    apns_team_id = TextField()
+    apns_key_id = TextField()
     playlist_cloud_operating_mode = TextField()  # task, function
     """Determines whether playlist and tag update operations are done by Cloud Tasks or Functions
     """

@@ -19,6 +19,8 @@ from music.db.part_generator import PartGenerator
 from music.model.user import User
 from music.model.playlist import Playlist
 
+from music.notif.notifier import notify_user_playlist_update
+
 logger = logging.getLogger(__name__)
 
 
@@ -216,3 +218,5 @@ def run_user_playlist(user: User, playlist: Playlist, spotnet: SpotNetwork = Non
 
     playlist.last_updated = datetime.datetime.utcnow()
     playlist.update()
+
+    notify_user_playlist_update(user=user, playlist=playlist)

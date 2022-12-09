@@ -33,6 +33,10 @@ class User(Model):
     lastfm_username = TextField()
 
     apns_tokens = ListField(default=[])
+    notify = BooleanField(default=False)
+    notify_playlist_updates = BooleanField(default=False)
+    notify_tag_updates = BooleanField(default=False)
+    notify_admins = BooleanField(default=False)
 
     def check_password(self, password):
         return check_password_hash(self.password, password)
@@ -100,3 +104,7 @@ class User(Model):
             List[Playlist]: List of users playlists 
         """
         return Playlist.collection.parent(self.key).fetch()
+
+
+def get_admins():
+    return User.collection.filter('type', '==', 'admin').fetch()

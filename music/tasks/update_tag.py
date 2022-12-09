@@ -4,6 +4,7 @@ from datetime import datetime
 import music.db.database as database
 from music.model.user import User
 from music.model.tag import Tag
+from music.notif.notifier import notify_user_tag_update
 
 from fmframework.net.network import LastFMNetworkException
 
@@ -12,7 +13,7 @@ from spotfm.timer import time, seconds_to_time_str
 logger = logging.getLogger(__name__)
 
 
-def update_tag(user, tag, spotnet=None, fmnet=None):
+def update_tag(user: User, tag: Tag, spotnet=None, fmnet=None):
 
     # PRE-RUN CHECKS
 
@@ -172,3 +173,5 @@ def update_tag(user, tag, spotnet=None, fmnet=None):
     tag.last_updated = datetime.utcnow()
 
     tag.update()
+
+    notify_user_tag_update(user=user, tag=tag)

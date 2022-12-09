@@ -43,6 +43,10 @@ class TestRunTag(unittest.TestCase):
 
         user_mock = Mock()
         user_mock.lastfm_username = 'test_username'
+        user_mock.notify = False
+        user_mock.notify_playlist_updates = False
+        user_mock.notify_tag_updates = False
+        user_mock.notify_admins = False
 
         tag_mock = Mock()
         tag_mock.time_objects = True
@@ -65,6 +69,10 @@ class TestRunTag(unittest.TestCase):
 
         user_mock = Mock()
         user_mock.lastfm_username = 'test_username'
+        user_mock.notify = False
+        user_mock.notify_playlist_updates = False
+        user_mock.notify_tag_updates = False
+        user_mock.notify_admins = False
 
         dict_mock = {'name': 'test_name'}
 
@@ -93,6 +101,10 @@ class TestRunTag(unittest.TestCase):
 
         user_mock = Mock()
         user_mock.lastfm_username = 'test_username'
+        user_mock.notify = False
+        user_mock.notify_playlist_updates = False
+        user_mock.notify_tag_updates = False
+        user_mock.notify_admins = False
 
         dict_mock = {'name': 'test_name', 'artist': 'test_artist'}
 
@@ -121,6 +133,10 @@ class TestRunTag(unittest.TestCase):
 
         user_mock = Mock()
         user_mock.lastfm_username = 'test_username'
+        user_mock.notify = False
+        user_mock.notify_playlist_updates = False
+        user_mock.notify_tag_updates = False
+        user_mock.notify_admins = False
 
         dict_mock = {'name': 'test_name', 'artist': 'test_artist'}
 
