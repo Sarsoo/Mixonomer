@@ -1,7 +1,7 @@
 import logging
 
 from fireo.models import Model
-from fireo.fields import TextField, BooleanField, DateTime, NumberField, ListField
+from fireo.fields import TextField, BooleanField, DateTime, NumberField, ListField, IDField
 
 from music.model.playlist import Playlist
 
@@ -13,6 +13,8 @@ logger = logging.getLogger(__name__)
 class User(Model):
     class Meta:
         collection_name = 'spotify_users'
+
+    id = IDField()
 
     username = TextField(required=True)
     password = TextField(required=True)

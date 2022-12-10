@@ -1,10 +1,12 @@
 from fireo.models import Model
-from fireo.fields import TextField, DateTime, NumberField, ListField, BooleanField
+from fireo.fields import TextField, DateTime, NumberField, ListField, BooleanField, IDField
 
 
 class Tag(Model):
     class Meta:
         collection_name = 'tags'
+
+    id = IDField()
 
     tag_id = TextField(required=True)
     name = TextField(required=True)

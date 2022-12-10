@@ -1,5 +1,5 @@
 from fireo.models import Model
-from fireo.fields import TextField, NumberField
+from fireo.fields import TextField, NumberField, IDField
 
 
 class Config(Model):
@@ -10,6 +10,8 @@ class Config(Model):
         collection_name = 'config'
         """Set correct path in Firestore
         """
+
+    id = IDField()
 
     apns_team_id = TextField()
     apns_key_id = TextField()

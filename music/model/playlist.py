@@ -1,7 +1,7 @@
 from enum import Enum
 
 from fireo.models import Model
-from fireo.fields import TextField, BooleanField, DateTime, NumberField, ListField
+from fireo.fields import TextField, BooleanField, DateTime, NumberField, ListField, IDField
 
 
 class Sort(Enum):
@@ -21,6 +21,8 @@ class Playlist(Model):
     """
     class Meta:
         collection_name = 'playlists'
+
+    id = IDField()
 
     uri = TextField()
     name = TextField(required=True)
