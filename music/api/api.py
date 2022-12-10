@@ -231,19 +231,27 @@ def user_route(auth: dict = None, user: User = None):
             else:
                 logger.info(f'skipping duplicate apns token {user.username} -> {apns_token}')
 
-        if notify := request_json.get('notify'):
+        if 'notify' in request_json:
+            notify = request_json['notify']
+
             logger.info(f'updating notification settings for {user.username} -> {notify}')
             user.notify = notify
 
-        if notify_playlist_updates := request_json.get('notify_playlist_updates'):
+        if 'notify_playlist_updates' in request_json:
+            notify_playlist_updates = request_json['notify_playlist_updates']
+
             logger.info(f'updating playlist update notification settings for {user.username} -> {notify_playlist_updates}')
             user.notify_playlist_updates = notify_playlist_updates
 
-        if notify_tag_updates := request_json.get('notify_tag_updates'):
+        if 'notify_tag_updates' in request_json:
+            notify_tag_updates = request_json['notify_tag_updates']
+
             logger.info(f'updating playlist update notification settings for {user.username} -> {notify_tag_updates}')
             user.notify_tag_updates = notify_tag_updates
 
-        if notify_admins := request_json.get('notify_admins'):
+        if 'notify_admins' in request_json:
+            notify_admins = request_json['notify_admins']
+
             logger.info(f'updating admin notification settings for {user.username} -> {notify_admins}')
             user.notify_admins = notify_admins
 
