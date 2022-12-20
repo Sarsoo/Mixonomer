@@ -7,7 +7,7 @@ jobs:
       fail-fast: false
       matrix:
         python-version: ['3.10']
-        poetry-version: [1.1.14]
+        poetry-version: [1.3.1]
         node: [18]
         os: [ubuntu-latest]
     runs-on: ${{ matrix.os }}
@@ -16,13 +16,13 @@ jobs:
 
       # PYTHON
       - name: Install Python ${{ matrix.python-version }}
-        uses: actions/setup-python@v2
+        uses: actions/setup-python@v4
         with:
           python-version: ${{ matrix.python-version }}
 
       # PYTHON dependency management
       - name: Install Poetry ${{ matrix.poetry-version }}
-        uses: abatilo/actions-poetry@v2.1.0
+        uses: abatilo/actions-poetry@v2.1.6
         with:
           poetry-version: ${{ matrix.poetry-version }}
 
@@ -69,15 +69,15 @@ jobs:
 
       # PYTHON
       - name: Install Python 3.10
-        uses: actions/setup-python@v2
+        uses: actions/setup-python@v4
         with:
           python-version: '3.10'
 
       # PYTHON for dependency export only, not installing
-      - name: Install Poetry 1.1.14
-        uses: abatilo/actions-poetry@v2.1.0
+      - name: Install Poetry 1.3.1
+        uses: abatilo/actions-poetry@v2.1.6
         with:
-          poetry-version: 1.1.14
+          poetry-version: 1.3.1
 
       # PYTHON install dependencies
       - name: Install Python Dependencies
@@ -126,15 +126,15 @@ jobs:
 
       # PYTHON (pinned to 3.9 for gcloud attribute mapping error)
       - name: Install Python 3.9
-        uses: actions/setup-python@v2
+        uses: actions/setup-python@v4
         with:
           python-version: '3.9'
 
       # PYTHON for dependency export only, not installing
-      - name: Install Poetry 1.1.14
-        uses: abatilo/actions-poetry@v2.1.0
+      - name: Install Poetry 1.3.1
+        uses: abatilo/actions-poetry@v2.1.6
         with:
-          poetry-version: 1.1.14
+          poetry-version: 1.3.1
 
       # PYTHON Export Poetry dependencies as requirements.txt
       - name: Export Poetry Dependencies
