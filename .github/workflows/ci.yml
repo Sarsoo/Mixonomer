@@ -8,7 +8,7 @@ jobs:
       matrix:
         python-version: ['3.10']
         poetry-version: [1.3.1]
-        node: [18]
+        node: [19]
         os: [ubuntu-latest]
     runs-on: ${{ matrix.os }}
     steps:
@@ -141,10 +141,10 @@ jobs:
         run: python admin.py pydepend
       
       # JS setup
-      - name: Install Node 18
+      - name: Install Node 19
         uses: actions/setup-node@v2
         with:
-          node-version: 18
+          node-version: 19
 
       # JS install from lock.json 
       - name: Install Node Packages
