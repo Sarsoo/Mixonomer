@@ -1,0 +1,9 @@
+.idea
+.git
+__pycache__
+service.json
+build
+docs
+node_modules
+public
+tests
