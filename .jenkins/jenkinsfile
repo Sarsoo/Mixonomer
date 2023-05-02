@@ -2,11 +2,11 @@ pipeline {
     agent any
 
     stages {
-        stage('Build Python Env') {
-            steps {
-                sh 'poetry install'
-            }
-        }
+        // stage('Build Python Env') {
+        //     steps {
+        //         sh 'poetry install'
+        //     }
+        // }
 
         stage('Build Javascript') {
             steps {
