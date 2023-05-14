@@ -23,7 +23,7 @@ pipeline {
             when { branch 'master' }
             steps {
                 script {
-                    docker.withRegistry('https://git.sarsoo.xyz', 'git-registry-creds') {
+                    docker.withRegistry('https://registry.sarsoo.xyz', 'git-registry-creds') {
 
                         docker.build("sarsoo/mixonomer:latest").push()
                     }
