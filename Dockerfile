@@ -1,4 +1,4 @@
-FROM node:19 AS js-build
+FROM node:19-alpine AS js-build
 
 RUN npm install -g sass
 
@@ -14,7 +14,7 @@ RUN npm ci
 RUN npm run build --if-present
 RUN sass src/scss/style.scss build/style.css
 
-FROM python:3.10 as py
+FROM python:3.10-slim as py
 
 RUN pip install poetry
 RUN poetry config virtualenvs.create false
@@ -27,7 +27,8 @@ COPY poetry.lock .
 RUN poetry install
 RUN poetry add gunicorn
 
-COPY . ./
+COPY ./music ./music
+COPY gunicorn.conf.py gunicorn.conf.py
 COPY main.api.py main.py
 COPY --from=js-build /mixonomer/build ./build/
 

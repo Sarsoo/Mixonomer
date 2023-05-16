@@ -1,6 +1,10 @@
+.github
 .idea
+.jenkins
 .git
-__pycache__
+.venv
+.vscode
+**/__pycache__
 service.json
 build
 docs
