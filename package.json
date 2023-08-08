@@ -1,6 +1,6 @@
 {
   "name": "mixonomer",
-  "version": "1.0.0",
+  "version": "1.0.2",
   "description": "web app for spotify playlist management with last.fm integration",
   "private": true,
   "scripts": {
@@ -21,24 +21,24 @@
   "dependencies": {
     "@material-ui/core": "^4.11.3",
     "@material-ui/icons": "^4.11.2",
-    "axios": "^0.21.1",
-    "chart.js": "^3.3.2",
+    "axios": "^1.4.0",
+    "chart.js": "^4.3.3",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
     "react-router-dom": "^5.2.0"
   },
   "devDependencies": {
-    "@babel/cli": "^7.12.16",
-    "@babel/core": "^7.12.16",
-    "@babel/preset-env": "^7.12.16",
-    "@babel/preset-react": "^7.12.13",
-    "babel-loader": "^8.2.2",
-    "clean-webpack-plugin": "^3.0.0",
-    "css-loader": "^5.2.4",
+    "@babel/cli": "^7.22.10",
+    "@babel/core": "^7.22.10",
+    "@babel/preset-env": "^7.22.10",
+    "@babel/preset-react": "^7.22.5",
+    "babel-loader": "^9.1.3",
+    "clean-webpack-plugin": "^4.0.0",
+    "css-loader": "^6.8.1",
     "jsdoc": "^4.0.2",
-    "style-loader": "^0.23.1",
-    "webpack": "^5.38.1",
-    "webpack-cli": "^4.7.2",
-    "webpack-merge": "^4.2.2"
+    "style-loader": "^3.3.3",
+    "webpack": "^5.88.2",
+    "webpack-cli": "^5.1.4",
+    "webpack-merge": "^5.9.0"
   }
 }

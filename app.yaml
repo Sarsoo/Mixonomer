@@ -1,4 +1,4 @@
-runtime: python310
+runtime: python311
 service: spotify
 
 #instance_class: F1
