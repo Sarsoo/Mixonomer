@@ -1,4 +1,4 @@
-FROM node:19-alpine AS js-build
+FROM node:20-alpine AS js-build
 
 RUN npm install -g sass
 
@@ -14,7 +14,7 @@ RUN npm ci
 RUN npm run build --if-present
 RUN sass src/scss/style.scss build/style.css
 
-FROM python:3.10-slim as py
+FROM python:3.11-slim as py
 
 RUN pip install poetry
 RUN poetry config virtualenvs.create false
