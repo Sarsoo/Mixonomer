@@ -8,12 +8,13 @@ pipeline {
         //     }
         // }
 
-        stage('Build Javascript') {
-            steps {
-                sh 'npm ci'
-                sh 'npm run build --if-present'
-            }
-        }
+        // stage('Build Javascript') {
+        //     steps {
+        //         sh 'npm ci'
+        //         sh 'npm run build --if-present'
+        //     }
+        // }
+        
         // stage('Test') {
         //     steps {
         //         dotnetTest project: "Selector.Core.sln"
