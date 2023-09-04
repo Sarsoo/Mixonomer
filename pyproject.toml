@@ -24,6 +24,7 @@ google-cloud-tasks = "^2.10.0"
 requests = "^2.28.1"
 httpx = {extras = ["http2"], version = "^0.24.1"}
 PyJWT = "^2.4.0"
+functions-framework = "^3.4.0"
 
 spotframework = { git = "https://github.com/Sarsoo/spotframework.git", branch = "master" }
 fmframework = { git = "https://github.com/Sarsoo/pyfmframework.git", branch = "master" }

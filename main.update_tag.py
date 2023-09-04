@@ -1,15 +1,19 @@
-def update_tag(event, context):
+from cloudevents.http import CloudEvent
+import functions_framework
+
+# Register a CloudEvent function with the Functions Framework
+@functions_framework.cloud_event
+def update_tag(event: CloudEvent):
     import logging
 
     logger = logging.getLogger('music')
 
-    if event.get('attributes'):
-        if 'username' in event['attributes'] and 'tag_id' in event['attributes']:
+    attr = event.get_data()['message']['attributes']
 
-            from music.tasks.update_tag import update_tag as do_update_tag
-            do_update_tag(user=event['attributes']['username'], tag=event['attributes']["tag_id"])
+    if 'username' in attr and 'tag_id' in attr:
 
-        else:
-            logger.error('no parameters in event attributes')
+        from music.tasks.update_tag import update_tag as do_update_tag
+        do_update_tag(user=attr['username'], tag=attr["tag_id"])
+
     else:
-        logger.error('no attributes in event')
+        logger.error('no parameters in event attributes')

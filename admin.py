@@ -76,6 +76,13 @@ class Admin(Cmd):
         print('>> setting project')
         subprocess.check_call('gcloud config set project sarsooxyz', shell=True)
 
+    @property
+    def gcloud_project(self):
+        return subprocess.run(["gcloud", "config", "get-value", "project"], stdout=subprocess.PIPE).stdout.decode("utf-8").strip()
+    
+    def do_project(self, args):
+        print(f"\"{self.gcloud_project}\"")
+
     def deploy_function(self, name, timeout: int = 60, region='europe-west2'):
         """
         Deploy function with required environment variables
@@ -83,9 +90,11 @@ class Admin(Cmd):
         subprocess.check_call(
             f'gcloud functions deploy {name} '
             f'--region {region} '
+            f'--gen2 '
             '--runtime=python311 '
             f'--trigger-topic {name} '
             '--set-env-vars DEPLOY_DESTINATION=PROD '
+            f'--service-account {name.replace("_", "-")}-func@{self.gcloud_project}.iam.gserviceaccount.com '
             f'--timeout={timeout}s', shell=True
         )
 
