@@ -1,5 +1,5 @@
 runtime: python311
-service: spotify
+service: web_api
 
 #instance_class: F1
 
