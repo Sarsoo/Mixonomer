@@ -25,7 +25,7 @@ COPY pyproject.toml .
 COPY poetry.lock .
 
 RUN poetry install
-RUN poetry add gunicorn
+RUN poetry add gunicorn@^20
 
 COPY ./music ./music
 COPY gunicorn.conf.py gunicorn.conf.py
