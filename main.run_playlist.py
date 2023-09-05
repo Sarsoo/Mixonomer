@@ -3,7 +3,7 @@ import functions_framework
 
 # Register a CloudEvent function with the Functions Framework
 @functions_framework.cloud_event
-def run_user_playlist_new(event: CloudEvent):
+def run_user_playlist(event: CloudEvent):
     import logging
 
     logger = logging.getLogger('music')
