@@ -17,7 +17,7 @@ from music.model.playlist import Playlist
 from music.model.tag import Tag
 
 tasker = tasks_v2.CloudTasksClient()
-task_path = tasker.queue_path('sarsooxyz', 'europe-west2', 'spotify-executions')
+task_path = tasker.queue_path(os.environ['GOOGLE_CLOUD_PROJECT'], 'europe-west2', 'spotify-executions')
 
 logger = logging.getLogger(__name__)
 

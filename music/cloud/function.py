@@ -1,4 +1,5 @@
 import logging
+import os
 from google.cloud import pubsub_v1
 
 publisher = pubsub_v1.PublisherClient()
@@ -23,7 +24,7 @@ def update_tag(username: str, tag_id: str) -> None:
         logger.error(f'less than two strings provided, {type(username)} / {type(tag_id)}')
         return
 
-    publisher.publish('projects/sarsooxyz/topics/update_tag', b'', tag_id=tag_id, username=username)
+    publisher.publish(f'projects/{os.environ["GOOGLE_CLOUD_PROJECT"]}/topics/update_tag', b'', tag_id=tag_id, username=username)
 
 
 def run_user_playlist_function(username: str, playlist_name: str) -> None:
@@ -44,4 +45,4 @@ def run_user_playlist_function(username: str, playlist_name: str) -> None:
         logger.error(f'less than two strings provided, {type(username)} / {type(playlist_name)}')
         return
 
-    publisher.publish('projects/sarsooxyz/topics/run_user_playlist', b'', name=playlist_name, username=username)
+    publisher.publish(f'projects/{os.environ["GOOGLE_CLOUD_PROJECT"]}/topics/run_user_playlist', b'', name=playlist_name, username=username)

@@ -1,5 +1,6 @@
 from flask import Blueprint, jsonify
 
+import os
 import logging
 from datetime import datetime
 
@@ -10,7 +11,7 @@ from music.api.decorators import login_or_jwt, admin_required, no_locked_users
 blueprint = Blueprint('admin-api', __name__)
 
 tasker = tasks_v2.CloudTasksClient()
-task_path = tasker.queue_path('sarsooxyz', 'europe-west2', 'spotify-executions')
+task_path = tasker.queue_path(os.environ['GOOGLE_CLOUD_PROJECT'], 'europe-west2', 'spotify-executions')
 
 logger = logging.getLogger(__name__)
 
