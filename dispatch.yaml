@@ -4,8 +4,8 @@ dispatch:
   #  service: default
 
   - url: "music.sarsoo.xyz/*"
-    service: web_api
+    service: webapi
 
   - url: "mixonomer.sarsoo.xyz/*"
-    service: web_api
+    service: webapi
 

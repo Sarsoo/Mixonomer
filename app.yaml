@@ -1,5 +1,5 @@
 runtime: python311
-service: web_api
+service: webapi
 
 #instance_class: F1
 
