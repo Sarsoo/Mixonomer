@@ -74,7 +74,7 @@ class Admin(Cmd):
         Set project setting in gcloud console
         """
         print('>> setting project')
-        subprocess.check_call('gcloud config set project sarsooxyz', shell=True)
+        subprocess.check_call(f'gcloud config set project {args.strip()}', shell=True)
 
     @property
     def gcloud_project(self):

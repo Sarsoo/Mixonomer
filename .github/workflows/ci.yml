@@ -1,30 +1,28 @@
 name: test and deploy
 on: [push]
 
+env:
+  python-version: '3.11'
+  poetry-version: 1.5.1
+  node-version: 20
+
 jobs:
   build:
-    strategy:
-      fail-fast: false
-      matrix:
-        python-version: ['3.11']
-        poetry-version: [1.5.1]
-        node: [20]
-        os: [ubuntu-latest]
-    runs-on: ${{ matrix.os }}
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3 # get source
 
       # PYTHON
-      - name: Install Python ${{ matrix.python-version }}
+      - name: Install Python ${{ env.python-version }}
         uses: actions/setup-python@v4
         with:
-          python-version: ${{ matrix.python-version }}
+          python-version: ${{ env.python-version }}
 
       # PYTHON dependency management
-      - name: Install Poetry ${{ matrix.poetry-version }}
+      - name: Install Poetry ${{ env.poetry-version }}
         uses: abatilo/actions-poetry@v2.1.6
         with:
-          poetry-version: ${{ matrix.poetry-version }}
+          poetry-version: ${{ env.poetry-version }}
 
       # PYTHON install dependencies
       - name: Install Python Dependencies
@@ -43,10 +41,10 @@ jobs:
         run: poetry run python -m unittest discover -s tests
 
       # JS setup for testing
-      - name: Install Node ${{ matrix.node }}
+      - name: Install Node ${{ env.node-version }}
         uses: actions/setup-node@v2
         with:
-          node-version: ${{ matrix.node }}
+          node-version: ${{ env.node-version }}
 
       # JS install from lock.json
       - name: Install Node Packages
@@ -62,32 +60,33 @@ jobs:
 
   documentation:
     runs-on: ubuntu-latest
+    environment: prod
     needs: build # for ignoring bad builds
     if: github.event_name == 'push' && github.ref == 'refs/heads/master'
     steps:
       - uses: actions/checkout@v3 # get source
 
       # PYTHON
-      - name: Install Python 3.11
+      - name: Install Python ${{ env.python-version }}
         uses: actions/setup-python@v4
         with:
-          python-version: '3.11'
+          python-version: ${{ env.python-version }}
 
       # PYTHON for dependency export only, not installing
-      - name: Install Poetry 1.5.1
+      - name: Install Poetry ${{ env.poetry-version }}
         uses: abatilo/actions-poetry@v2.1.6
         with:
-          poetry-version: 1.5.1
+          poetry-version: ${{ env.poetry-version }}
 
       # PYTHON install dependencies
       - name: Install Python Dependencies
         run: poetry install
 
   #     # JS setup for jsdoc
-  #     - name: Install Node 20
+  #     - name: Install Node ${{ env.node-version }}
   #       uses: actions/setup-node@v2
   #       with:
-  #         node-version: 20
+  #         node-version: ${{ env.node-version }}
 
   #     # JS setup for jsdoc
   #     - name: Install jsdoc
@@ -118,8 +117,8 @@ jobs:
           publish_dir: ./public
 
   package:
-
     runs-on: ubuntu-latest
+    environment: prod
     needs: [build] # for ignoring bad builds
     if: github.event_name == 'push' && github.ref == 'refs/heads/master'
 
@@ -147,32 +146,33 @@ jobs:
 
   deploy:
     runs-on: ubuntu-latest
+    environment: prod
     needs: build # for ignoring bad builds
     if: github.event_name == 'push' && github.ref == 'refs/heads/master'
     steps:
       - uses: actions/checkout@v3 # get source
 
       # PYTHON (pinned to 3.9 for gcloud attribute mapping error)
-      - name: Install Python 3.11
+      - name: Install Python ${{ env.python-version }}
         uses: actions/setup-python@v4
         with:
-          python-version: '3.11'
+          python-version: ${{ env.python-version }}
 
       # PYTHON for dependency export only, not installing
-      - name: Install Poetry 1.5.1
+      - name: Install Poetry ${{ env.poetry-version }}
         uses: abatilo/actions-poetry@v2.1.6
         with:
-          poetry-version: 1.5.1
+          poetry-version: ${{ env.poetry-version }}
 
       # PYTHON Export Poetry dependencies as requirements.txt
       - name: Export Poetry Dependencies
         run: python admin.py pydepend
       
       # JS setup
-      - name: Install Node 20
+      - name: Install Node ${{ env.node-version }}
         uses: actions/setup-node@v2
         with:
-          node-version: 20
+          node-version: ${{ env.node-version }}
 
       # JS install from lock.json 
       - name: Install Node Packages
@@ -199,7 +199,7 @@ jobs:
 
       # DEPLOY set project
       - name: Set GCP Project
-        run: python admin.py set_project
+        run: python admin.py set_project ${{ vars.GCP_PROJECT }}
 
       # DEPLOY domain routes
       - name: Deploy dispatch.yaml
