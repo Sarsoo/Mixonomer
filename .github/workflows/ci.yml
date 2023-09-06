@@ -211,22 +211,22 @@ jobs:
 
       # DEPLOY update_tag function
       - name: Deploy update_tag Function
-        run: python admin.py tag
+        run: python admin.py tag ${{ vars.GCP_PROJECT }}
 
       # DEPLOY run_user_playlist function
       - name: Deploy run_user_playlist Function
-        run: python admin.py playlist
+        run: python admin.py playlist ${{ vars.GCP_PROJECT }}
 
       ### CRON FUNCTIONS
 
       # DEPLOY run_all_playlists function
       - name: Deploy run_all_playlists Function
-        run: python admin.py playlist_cron
+        run: python admin.py playlist_cron ${{ vars.GCP_PROJECT }}
 
       # DEPLOY run_all_playlist_stats function
       - name: Deploy run_all_playlist_stats Function
-        run: python admin.py playlist_stats_cron
+        run: python admin.py playlist_stats_cron ${{ vars.GCP_PROJECT }}
 
       # DEPLOY run_all_tags function
       - name: Deploy run_all_tags Function
-        run: python admin.py tags_cron
+        run: python admin.py tags_cron ${{ vars.GCP_PROJECT }}

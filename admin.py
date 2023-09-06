@@ -83,7 +83,7 @@ class Admin(Cmd):
     def do_project(self, args):
         print(f"\"{self.gcloud_project}\"")
 
-    def deploy_function(self, name, timeout: int = 60, region='europe-west2'):
+    def deploy_function(self, name, project_id, timeout: int = 60, region='europe-west2'):
         """
         Deploy function with required environment variables
         """
@@ -93,7 +93,7 @@ class Admin(Cmd):
             f'--gen2 '
             '--runtime=python311 '
             f'--trigger-topic {name} '
-            '--set-env-vars DEPLOY_DESTINATION=PROD '
+            f'--set-env-vars DEPLOY_DESTINATION=PROD,GOOGLE_CLOUD_PROJECT={project_id} '
             f'--service-account {name.replace("_", "-")}-func@{self.gcloud_project}.iam.gserviceaccount.com '
             f'--timeout={timeout}s', shell=True
         )
@@ -153,29 +153,34 @@ class Admin(Cmd):
         print('>> deploying app engine service')
         subprocess.check_call('gcloud app deploy', shell=True)
 
-    def function_deploy(self, main, function_id):
+    def function_deploy(self, main, function_id, project_id):
         """Deploy Cloud Function, copy main file and initiate gcloud command
 
         Args:
             main (str): main path
             function_id (str): function id to deploy to
         """
+
+        if len(project_id) == 0:
+            print("no project id provided")
+            exit()
+            
         self.copy_main_file(main)
 
         print(f'>> deploying {function_id}')
-        self.deploy_function(function_id)
+        self.deploy_function(function_id, project_id)
 
     def do_tag(self, args):
         """
         Deploy update_tag function
         """
-        self.function_deploy('update_tag', 'update_tag')
+        self.function_deploy('update_tag', 'update_tag', args.strip())
 
     def do_playlist(self, args):
         """
         Deploy run_user_playlist function
         """
-        self.function_deploy('run_playlist', 'run_user_playlist')
+        self.function_deploy('run_playlist', 'run_user_playlist', args.strip())
 
 
     # all playlists cron job
@@ -183,21 +188,21 @@ class Admin(Cmd):
         """
         Deploy run_all_playlists function
         """
-        self.function_deploy('cron', 'run_all_playlists')
+        self.function_deploy('cron', 'run_all_playlists', args.strip())
 
     # all stats refresh cron job
     def do_playlist_stats_cron(self, args):
         """
         Deploy run_all_playlist_stats function
         """
-        self.function_deploy('cron', 'run_all_playlist_stats')
+        self.function_deploy('cron', 'run_all_playlist_stats', args.strip())
 
     # all tags cron job
     def do_tags_cron(self, args):
         """
         Deploy run_all_tags function
         """
-        self.function_deploy('cron', 'run_all_tags')
+        self.function_deploy('cron', 'run_all_tags', args.strip())
 
     # redeploy all cron job functions
     def do_cron_functions(self, args):
