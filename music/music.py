@@ -7,7 +7,7 @@ import os
 from music.auth import auth_blueprint
 from music.api import api_blueprint, player_blueprint, fm_blueprint, \
     spotfm_blueprint, spotify_blueprint, admin_blueprint, tag_blueprint
-from music.magic_strings import COOKIE_SECRET_URI
+from music.magic_strings import COOKIE_SECRET_URI, STATIC_BUCKET
 
 logger = logging.getLogger(__name__)
 secret_client = secretmanager.SecretManagerServiceClient()
@@ -42,11 +42,11 @@ def create_app():
         else:
             logged_in = False
 
-        return render_template('login.html', logged_in=logged_in)
+        return render_template('login.html', logged_in=logged_in, bucket=STATIC_BUCKET)
 
     @app.route('/privacy')
     def privacy():
-        return render_template('privacy.html')
+        return render_template('privacy.html', bucket=STATIC_BUCKET)
 
     @app.route('/app', defaults={'path': ''})
     @app.route('/app/<path:path>')
@@ -56,7 +56,7 @@ def create_app():
             flash('please log in')
             return redirect(url_for('index'))
 
-        return render_template('app.html')
+        return render_template('app.html', bucket=STATIC_BUCKET)
 
     return app
 

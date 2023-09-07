@@ -7,3 +7,5 @@ LASTFM_CLIENT_URI = f"projects/{project_id}/secrets/lastfm-client/versions/lates
 JWT_SECRET_URI = f"projects/{project_id}/secrets/jwt-secret/versions/latest"
 COOKIE_SECRET_URI = f"projects/{project_id}/secrets/cookie-secret/versions/latest"
 APNS_SIGN_URI = f"projects/{project_id}/secrets/apns-auth-sign-key/versions/1"
+
+STATIC_BUCKET = f'{project_id}-static'

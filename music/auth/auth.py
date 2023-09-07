@@ -5,7 +5,7 @@ from music.model.config import Config
 from music.auth.jwt_keys import generate_key
 from music.api.decorators import no_cache
 from music.notif.notifier import notify_admin_new_user
-from music.magic_strings import SPOT_CLIENT_URI, SPOT_SECRET_URI
+from music.magic_strings import SPOT_CLIENT_URI, SPOT_SECRET_URI, STATIC_BUCKET
 
 from urllib.parse import urlencode, urlunparse
 import datetime
@@ -135,7 +135,7 @@ def register():
         return redirect(url_for('index'))
 
     if request.method == 'GET':
-        return render_template('register.html')
+        return render_template('register.html', bucket=STATIC_BUCKET)
     else:
 
         api_user = False
