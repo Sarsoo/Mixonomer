@@ -9,6 +9,7 @@ env:
 jobs:
   build:
     runs-on: ubuntu-latest
+    name: Build & Unit Test
     steps:
       - uses: actions/checkout@v3 # get source
 
@@ -58,9 +59,107 @@ jobs:
       # - name: Run JavaScript Tests
       #   run: npm test
 
+  deploytest:
+    runs-on: ubuntu-latest
+    name: Deploy Test
+    environment: 
+      name: test
+      url: https://test.mixonomer.sarsoo.xyz
+    needs: build # for ignoring bad builds
+    if: github.event_name == 'push'
+    steps:
+      - uses: actions/checkout@v3 # get source
+
+      # PYTHON (pinned to 3.9 for gcloud attribute mapping error)
+      - name: Install Python ${{ env.python-version }}
+        uses: actions/setup-python@v4
+        with:
+          python-version: ${{ env.python-version }}
+
+      # PYTHON for dependency export only, not installing
+      - name: Install Poetry ${{ env.poetry-version }}
+        uses: abatilo/actions-poetry@v2.1.6
+        with:
+          poetry-version: ${{ env.poetry-version }}
+
+      # PYTHON Export Poetry dependencies as requirements.txt
+      - name: Export Poetry Dependencies
+        run: python admin.py pydepend
+      
+      # JS setup
+      - name: Install Node ${{ env.node-version }}
+        uses: actions/setup-node@v2
+        with:
+          node-version: ${{ env.node-version }}
+
+      # JS install from lock.json 
+      - name: Install Node Packages
+        run: npm ci
+
+      # JS will be built again, for flagging errors
+      - name: Compile Front-end
+        run: npm run build --if-present
+
+      # JS for compiling scss
+      - name: Compile Sass
+        uses: gha-utilities/sass-build@v0.3.5
+        with:
+          source: src/scss/style.scss
+          destination: build/style.css
+
+      # DEPLOY for setting up cloud API
+      - name: Set up Cloud SDK 
+        uses: google-github-actions/auth@v0.7.3
+        with:
+          credentials_json: '${{ secrets.GCP_SA_KEY }}'
+          export_environment_variables: true
+          create_credentials_file: true
+
+      # DEPLOY set project
+      - name: Set GCP Project
+        run: python admin.py set_project ${{ vars.GCP_PROJECT }}
+
+      - name: Set Test Dispatch Rules
+        run: |
+           cp dispatch.test.yaml dispatch.yaml
+        shell: bash
+
+      # DEPLOY domain routes
+      - name: Deploy dispatch.yaml
+        run: gcloud app deploy dispatch.yaml --quiet
+
+      # DEPLOY app engine service, -nb for skipping compile
+      - name: Deploy App Engine Service
+        run: python admin.py app -nb
+
+      ### MAIN FUNCTIONS
+
+      # DEPLOY update_tag function
+      - name: Deploy update_tag Function
+        run: python admin.py tag ${{ vars.GCP_PROJECT }}
+
+      # DEPLOY run_user_playlist function
+      - name: Deploy run_user_playlist Function
+        run: python admin.py playlist ${{ vars.GCP_PROJECT }}
+
+      ### CRON FUNCTIONS
+
+      # DEPLOY run_all_playlists function
+      - name: Deploy run_all_playlists Function
+        run: python admin.py playlist_cron ${{ vars.GCP_PROJECT }}
+
+      # DEPLOY run_all_playlist_stats function
+      - name: Deploy run_all_playlist_stats Function
+        run: python admin.py playlist_stats_cron ${{ vars.GCP_PROJECT }}
+
+      # DEPLOY run_all_tags function
+      - name: Deploy run_all_tags Function
+        run: python admin.py tags_cron ${{ vars.GCP_PROJECT }}
+
   documentation:
     runs-on: ubuntu-latest
-    needs: [build, deploy] # for ignoring bad builds
+    name: Build & Deploy Documentation
+    needs: deployprod # for ignoring bad builds
     if: github.event_name == 'push' && github.ref == 'refs/heads/master'
     steps:
       - uses: actions/checkout@v3 # get source
@@ -117,6 +216,7 @@ jobs:
 
   package:
     runs-on: ubuntu-latest
+    name: Package & Push Container
     needs: [build] # for ignoring bad builds
     if: github.event_name == 'push' && github.ref == 'refs/heads/master'
 
@@ -142,10 +242,13 @@ jobs:
           platforms: linux/amd64,linux/arm64
           tags: sarsoo/mixonomer:latest
 
-  deploy:
+  deployprod:
     runs-on: ubuntu-latest
-    environment: prod
-    needs: build # for ignoring bad builds
+    name: Deploy Production
+    environment: 
+      name: prod
+      url: https://mixonomer.sarsoo.xyz
+    needs: deploytest # for ignoring bad builds
     if: github.event_name == 'push' && github.ref == 'refs/heads/master'
     steps:
       - uses: actions/checkout@v3 # get source
@@ -200,8 +303,8 @@ jobs:
         run: python admin.py set_project ${{ vars.GCP_PROJECT }}
 
       # DEPLOY domain routes
-      # - name: Deploy dispatch.yaml
-      #   run: gcloud app deploy dispatch.yaml --quiet
+      - name: Deploy dispatch.yaml
+        run: gcloud app deploy dispatch.yaml --quiet
 
       # DEPLOY app engine service, -nb for skipping compile
       - name: Deploy App Engine Service

@@ -1,0 +1,4 @@
+dispatch:
+  - url: "test.mixonomer.sarsoo.xyz/*"
+    service: default
+
