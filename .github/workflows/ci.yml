@@ -119,6 +119,10 @@ jobs:
       - name: Set GCP Project
         run: python admin.py set_project ${{ vars.GCP_PROJECT }}
 
+      # DEPLOY app engine service, -nb for skipping compile
+      - name: Deploy App Engine Service
+        run: python admin.py app -nb
+
       - name: Set Test Dispatch Rules
         run: |
            cp dispatch.test.yaml dispatch.yaml
@@ -127,10 +131,6 @@ jobs:
       # DEPLOY domain routes
       - name: Deploy dispatch.yaml
         run: gcloud app deploy dispatch.yaml --quiet
-
-      # DEPLOY app engine service, -nb for skipping compile
-      - name: Deploy App Engine Service
-        run: python admin.py app -nb
 
       ### MAIN FUNCTIONS
 
@@ -302,13 +302,13 @@ jobs:
       - name: Set GCP Project
         run: python admin.py set_project ${{ vars.GCP_PROJECT }}
 
-      # DEPLOY domain routes
-      - name: Deploy dispatch.yaml
-        run: gcloud app deploy dispatch.yaml --quiet
-
       # DEPLOY app engine service, -nb for skipping compile
       - name: Deploy App Engine Service
         run: python admin.py app -nb
+
+      # DEPLOY domain routes
+      - name: Deploy dispatch.yaml
+        run: gcloud app deploy dispatch.yaml --quiet
 
       ### MAIN FUNCTIONS
 
