@@ -13,6 +13,7 @@ class Config(Model):
 
     id = IDField()
 
+    spotify_callback = TextField()
     apns_team_id = TextField()
     apns_key_id = TextField()
     playlist_cloud_operating_mode = TextField()  # task, function

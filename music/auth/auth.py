@@ -203,6 +203,8 @@ def auth():
 
     if 'username' in session:
 
+        config = Config.collection.get("config/music-tools")
+
         spot_client = secret_client.access_secret_version(request={"name": SPOT_CLIENT_URI})
         params = urlencode(
             {
@@ -210,7 +212,7 @@ def auth():
                 'response_type': 'code',
                 'scope': 'playlist-modify-public playlist-modify-private playlist-read-private '
                          'user-read-playback-state user-modify-playback-state user-library-read',
-                'redirect_uri': 'https://mixonomer.sarsoo.xyz/auth/spotify/token'
+                'redirect_uri': f'https://{config.spotify_callback}/auth/spotify/token'
             }
         )
 
@@ -233,6 +235,8 @@ def token():
             spot_client = secret_client.access_secret_version(request={"name": SPOT_CLIENT_URI})
             spot_secret = secret_client.access_secret_version(request={"name": SPOT_SECRET_URI})
 
+            config = Config.collection.get("config/music-tools")
+
             idsecret = b64encode(
                 bytes(spot_client.payload.data.decode("UTF-8") + ':' + spot_secret.payload.data.decode("UTF-8"), "utf-8")
             ).decode("ascii")
@@ -241,7 +245,7 @@ def token():
             data = {
                 'grant_type': 'authorization_code',
                 'code': code,
-                'redirect_uri': 'https://mixonomer.sarsoo.xyz/auth/spotify/token'
+                'redirect_uri': f'https://{config.spotify_callback}/auth/spotify/token'
             }
 
             req = requests.post('https://accounts.spotify.com/api/token', data=data, headers=headers)
