@@ -1,5 +1,5 @@
 [tool.poetry]
-name = "music"
+name = "mixonomer"
 version = "1.0.2"
 description = "Spotify smart playlist generator. Last.fm integration for listening statistics"
 authors = ["andy <andy@sarsoo.xyz>"]
@@ -25,6 +25,7 @@ requests = "^2.28.1"
 httpx = {extras = ["http2"], version = "^0.24.1"}
 PyJWT = "^2.4.0"
 functions-framework = "^3"
+cryptography = "^41.0.4"
 
 spotframework = { git = "https://github.com/Sarsoo/spotframework.git", branch = "master" }
 fmframework = { git = "https://github.com/Sarsoo/pyfmframework.git", branch = "master" }

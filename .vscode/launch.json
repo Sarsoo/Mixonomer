@@ -11,7 +11,8 @@
             "module": "flask",
             "env": {
                 "FLASK_APP": "music.music",
-                "FLASK_ENV": "development"
+                "FLASK_ENV": "development",
+                "GOOGLE_CLOUD_PROJECT": "sarsooxyz"
             },
             "envFile": "${workspaceFolder}/.env",
             "args": [
