@@ -3,10 +3,11 @@
 
 ![Python Tests](https://github.com/sarsoo/Mixonomer/workflows/test%20and%20deploy/badge.svg)
 
-Set of utility tools for Spotify and Last.fm. 
+Smart playlists for Spotify with Last.fm insights. Mixonomer is a cloud native platform for combining Spotify playlists and enhancing them with recommendations and listening history data. I started the app in 2019, but Spotify have included similar features since then such as [enhanced playlists](https://www.theverge.com/2021/9/9/22664655/spotify-enhance-feature-recommended-songs-playlists) and [smart shuffle](https://newsroom.spotify.com/2023-03-08/smart-shuffle-new-life-spotify-playlists/). 
+
 Built on my other libraries for Spotify ([spotframework](https://github.com/Sarsoo/spotframework)), Last.fm ([fmframework](https://github.com/Sarsoo/pyfmframework)) and interfacing utility tools for the two ([spotfm](https://github.com/Sarsoo/pyfmframework)). Currently running on a suite of Google Cloud Platform services. An iOS client is currently under development [here](https://github.com/Sarsoo/Mixonomer-iOS).
 
-Read the full documentation [here](https://docs.mixonomer.sarsoo.xyz).
+Read the full documentation [here](https://docs.mixonomer.sarsoo.xyz). Read the blog post [here](https://sarsoo.xyz/mixonomer/).
 
 # Smart Playlists
 
@@ -47,8 +48,6 @@ Groups of Last.fm objects for summing of scrobble counts and listening statistic
 This repo consists of a front-end written in React.js and Material-UI being served by a back-end written in Flask.
 
 The application is hosted on Google Cloud Infrastructure.
-
-As this codebase stands it's not really re-useable as is, references to the cloud infrastructure are hard-coded.
 
 ## Acknowledgements
 
