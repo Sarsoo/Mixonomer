@@ -16,16 +16,16 @@ docs = 'admin:docs'
 python = "~3.11"
 fireo = "^2.1.0"
 Flask = "^2.1.3"
-google-cloud-firestore = "<=2.10.0"
+google-cloud-firestore = "^2.10.0"
 google-cloud-logging = "^3.2.1"
 google-cloud-pubsub = "^2.13.4"
 google-cloud-secret-manager = "^2.12.6"
 google-cloud-tasks = "^2.10.0"
 requests = "^2.28.1"
-httpx = {extras = ["http2"], version = "^0.24.1"}
+httpx = {extras = ["http2"], version = "^0.26.0"}
 PyJWT = "^2.4.0"
 functions-framework = "^3"
-cryptography = "^41.0.4"
+cryptography = "^42.0.3"
 
 spotframework = { git = "https://github.com/Sarsoo/spotframework.git", branch = "master" }
 fmframework = { git = "https://github.com/Sarsoo/pyfmframework.git", branch = "master" }
