@@ -1,0 +1,90 @@
+name: test and deploy
+on: [push]
+
+env:
+  python-version: '3.11'
+  poetry-version: 1.5.1
+  node-version: 20
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    name: Build & Unit Test
+    steps:
+      - uses: actions/checkout@v4 # get source
+        with: 
+          github-server-url: https://gitea.sheep-ghoul.ts.net
+
+      # PYTHON
+      - name: Install Python ${{ env.python-version }}
+        uses: actions/setup-python@v4
+        with:
+          python-version: ${{ env.python-version }}
+
+      # PYTHON dependency management
+      - name: Install Poetry ${{ env.poetry-version }}
+        uses: abatilo/actions-poetry@v2.1.6
+        with:
+          poetry-version: ${{ env.poetry-version }}
+
+      # PYTHON install dependencies
+      - name: Install Python Dependencies
+        run: poetry install
+
+      # PYTHON for authentication when testing
+      - name: Set up Cloud SDK 
+        uses: google-github-actions/auth@v0.7.3
+        with:
+          credentials_json: '${{ secrets.GCP_SA_KEY }}'
+          export_environment_variables: true
+          create_credentials_file: true
+
+      # PYTHON run unit tests
+      - name: Run Python Tests
+        run: poetry run python -m unittest discover -s tests
+
+      # JS setup for testing
+      - name: Install Node ${{ env.node-version }}
+        uses: actions/setup-node@v2
+        with:
+          node-version: ${{ env.node-version }}
+
+      # JS install from lock.json
+      - name: Install Node Packages
+        run: npm ci
+      
+      # JS build for checking errors
+      - name: Compile Front-end
+        run: npm run build --if-present
+
+      # JS tests
+      # - name: Run JavaScript Tests
+      #   run: npm test
+
+  package:
+    runs-on: ubuntu-latest
+    name: Package & Push Container
+    needs: [build] # for ignoring bad builds
+    if: github.event_name == 'push' && github.ref == 'refs/heads/master'
+
+    steps:
+      - uses: actions/checkout@v4
+        with: 
+          github-server-url: https://gitea.sheep-ghoul.ts.net
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
+
+      - name: Login to DockerHub
+        uses: docker/login-action@v2
+        with:
+          registry: gitea.sheep-ghoul.ts.net
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - name: Build & Push Container
+        uses: docker/build-push-action@v2
+        with:
+          push: true
+          tags: gitea.sheep-ghoul.ts.net/sarsoo/mixonomer:latest
+          context: .
