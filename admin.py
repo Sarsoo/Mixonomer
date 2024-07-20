@@ -232,8 +232,16 @@ class Admin(Cmd):
         # filtered = [i[:-2] for i in filtered] # get rid of space and slash at end of line
         filtered = [i.split(';')[0] for i in depend]
 
+        final_filtered = []
+        for f in filtered:
+            if f.count('@') == 2:
+                final_filtered.append(f[:f.rindex('@') + 1] + "master")
+            else:
+                final_filtered.append(f)
+
+
         with open('requirements.txt', 'w') as f:
-            f.write("\n".join(filtered))
+            f.write("\n".join(final_filtered))
 
 # FRONT-END
 
