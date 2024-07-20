@@ -1,4 +1,4 @@
-FROM node:20-alpine AS js-build
+FROM node:22-alpine AS js-build
 
 RUN npm install -g sass
 
@@ -16,7 +16,7 @@ RUN sass src/scss/style.scss build/style.css
 
 FROM python:3.11-slim as py
 
-RUN pip install poetry
+RUN pip install poetry==1.8.3
 RUN poetry config virtualenvs.create false
 
 WORKDIR /mixonomer

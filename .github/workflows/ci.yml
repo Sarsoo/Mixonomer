@@ -3,15 +3,15 @@ on: [push]
 
 env:
   python-version: '3.11'
-  poetry-version: 1.5.1
-  node-version: 20
+  poetry-version: 1.8.3
+  node-version: 22
 
 jobs:
   build:
     runs-on: ubuntu-latest
     name: Build & Unit Test
     steps:
-      - uses: actions/checkout@v3 # get source
+      - uses: actions/checkout@v4 # get source
 
       # PYTHON
       - name: Install Python ${{ env.python-version }}
@@ -68,7 +68,7 @@ jobs:
     needs: build # for ignoring bad builds
     if: github.event_name == 'push'
     steps:
-      - uses: actions/checkout@v3 # get source
+      - uses: actions/checkout@v4 # get source
 
       # PYTHON (pinned to 3.9 for gcloud attribute mapping error)
       - name: Install Python ${{ env.python-version }}
@@ -162,7 +162,7 @@ jobs:
     needs: deployprod # for ignoring bad builds
     if: github.event_name == 'push' && github.ref == 'refs/heads/master'
     steps:
-      - uses: actions/checkout@v3 # get source
+      - uses: actions/checkout@v4 # get source
 
       # PYTHON
       - name: Install Python ${{ env.python-version }}
@@ -221,8 +221,6 @@ jobs:
     if: github.event_name == 'push' && github.ref == 'refs/heads/master'
 
     steps:
-      - uses: actions/checkout@v3
-
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v2
 
@@ -251,7 +249,7 @@ jobs:
     needs: deploytest # for ignoring bad builds
     if: github.event_name == 'push' && github.ref == 'refs/heads/master'
     steps:
-      - uses: actions/checkout@v3 # get source
+      - uses: actions/checkout@v4 # get source
 
       # PYTHON (pinned to 3.9 for gcloud attribute mapping error)
       - name: Install Python ${{ env.python-version }}
