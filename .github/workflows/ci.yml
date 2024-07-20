@@ -53,7 +53,7 @@ jobs:
       
       # JS build for checking errors
       - name: Compile Front-end
-        run: npm run build --if-present
+        run: npm run build
 
       # JS tests
       # - name: Run JavaScript Tests

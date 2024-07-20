@@ -11,7 +11,7 @@ COPY ./src /mixonomer/src/
 WORKDIR /mixonomer
 
 RUN npm ci
-RUN npm run build --if-present
+RUN npm run build
 RUN sass src/scss/style.scss build/style.css
 
 FROM python:3.11-slim as py
