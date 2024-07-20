@@ -1,4 +1,4 @@
-FROM node:22-alpine AS js-build
+FROM node:22.5.1-alpine AS js-build
 
 RUN npm install -g sass
 

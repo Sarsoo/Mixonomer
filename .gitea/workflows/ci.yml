@@ -4,7 +4,7 @@ on: [push]
 env:
   python-version: '3.11'
   poetry-version: 1.8.3
-  node-version: 22
+  node-version: 22.5.1
 
 jobs:
   build:
