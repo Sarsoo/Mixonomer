@@ -94,13 +94,17 @@ class MusicTools extends Component {
 
                     {/* TOP APP BAR */}
 
-                    <AppBar position="static">
+                    <AppBar position="sticky">
                         <Toolbar>
                             <IconButton edge="start" color="inherit" aria-label="menu" onClick={(e) => this.setOpen(true)}>
                             <MenuIcon />
                             </IconButton>
                             <Typography variant="h6">
-                                <Link to='/app/playlists' style={{textDecoration: 'none'}}>Mixes</Link>
+                                <Link to='/app/playlists' style={{textDecoration: 'none'}}>
+                                    <div className="title-small">
+                                        <h1 >Mixonomer</h1>
+                                    </div>
+                                </Link>
                             </Typography>
                         </Toolbar>
                     </AppBar>
@@ -125,12 +129,6 @@ class MusicTools extends Component {
                         onKeyDown={(e) => this.setOpen(false)}
                         >
                         <List>
-                            {/* HOME */}
-                            <ListItem button key="home" component={Link} to='/app'>
-                                <ListItemIcon><HomeIcon /></ListItemIcon>
-                                <ListItemText primary="Home" />
-                            </ListItem>
-
                             {/* PLAYLISTS */}
                             <ListItem button key="playlists" component={Link} to='/app/playlists'>
                                 <ListItemIcon><QueueMusic /></ListItemIcon>

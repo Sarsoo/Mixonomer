@@ -60,7 +60,7 @@ def login():
 
             logger.info(f'success {username}')
             session['username'] = username
-            return redirect(url_for('app_route'))
+            return redirect(url_for('app_route_redirect'))
         else:
             logger.warning(f'failed attempt {username}')
             flash('incorrect password')

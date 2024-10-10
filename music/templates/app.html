@@ -15,9 +15,6 @@
 
 </head>
 <body>
-	<div>
-		<h1 class="title">Mixonomer</h1>
-	</div>
 
 	{% with messages = get_flashed_messages() %}
 		{% if messages %}
@@ -29,9 +26,8 @@
 		{% endif %}
 	{% endwith %}
 
-	<br><br>
-
 	<div id="react"></div>
+
 	<script src="{{ url_for('static', filename='js/app.bundle.js') }}"></script>
 	<div id="snackbar">toast</div>
 	

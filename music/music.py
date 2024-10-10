@@ -38,7 +38,7 @@ def create_app():
 
         if 'username' in session:
             logged_in = True
-            return redirect(url_for('app_route'))
+            return redirect('/app/playlists')
         else:
             logged_in = False
 
@@ -48,7 +48,15 @@ def create_app():
     def privacy():
         return render_template('privacy.html', bucket=STATIC_BUCKET)
 
-    @app.route('/app', defaults={'path': ''})
+    @app.route('/app')
+    def app_route_redirect():
+
+        if 'username' not in session:
+            flash('please log in')
+            return redirect(url_for('index'))
+
+        return redirect('/app/playlists')
+
     @app.route('/app/<path:path>')
     def app_route(path):
 
