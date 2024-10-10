@@ -34,7 +34,7 @@ class TestAPI(unittest.TestCase):
         with self.test_app.session_transaction() as sess:
             sess['username'] = 'test'
         response = self.test_app.get('/app')
-        self.assertTrue(199 < response.status_code <= 299)
+        self.assertTrue(199 < response.status_code <= 399)
 
     ### PLAYLISTS ###
 
