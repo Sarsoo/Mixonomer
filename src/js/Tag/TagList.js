@@ -118,7 +118,7 @@ function TagGrid(props){
 function TagCard(props){
     return (
         <Grid item xs>
-            <Card>
+            <Card className="card">
                 <CardContent>
 
                     {/* TAG NAME */}

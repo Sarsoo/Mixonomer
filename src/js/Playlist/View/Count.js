@@ -77,7 +77,7 @@ export class Count extends Component {
     render() {
         return (
             <div style={{margin: 'auto', marginTop: '20px'}}>
-            <Card align="center">
+            <Card align="center" className="card">
                 <CardContent>
                     <Grid container>
 

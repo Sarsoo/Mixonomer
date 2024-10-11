@@ -137,8 +137,8 @@ function PlaylistGrid(props){
         <Grid container 
                 spacing={3} 
                 direction="row"
-                justifyContent="flex-start"
-                alignItems="flex-start"
+                justifyContent="center"
+                alignItems="stretch"
                 style={{padding: 24}}>
 
             {/* BUTTON BLOCK (NEW/RUN ALL) */}
@@ -175,7 +175,7 @@ function PlaylistGrid(props){
 function PlaylistCard(props){
     return (
         <Grid item xs>
-            <Card>
+            <Card className="card">
 
                 {/* NAME TITLE */}
                 <CardContent>

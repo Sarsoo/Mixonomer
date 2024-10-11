@@ -1,6 +1,6 @@
 $font-stack: 'Roboto', arial; 
-$background-colour: #202124;
-$ui-colour: #131313;
+$background-colour: #2b2b2b;
+$ui-colour: #3c3c3c;
 $light-ui: #575757;
 $text-colour: white;
 $ui-element: #505050;
@@ -48,7 +48,7 @@ p {
 }
 
 .button {
-	background-color: $ui-element;
+	background-color: #907FA4;
 	color: $text-colour;
 
 	display: inline-block;
@@ -79,7 +79,7 @@ p {
 input[type=text], input[type=password], input[type=number], select {
 	padding: 15px;
 	background-color: $ui-element;
-	border: black;
+	border-color: #907FA4;
 	border-radius: 3px;
 	color: white;
 }
@@ -193,31 +193,19 @@ input[type=text], input[type=password], input[type=number], select {
 }
 
 .card {
-	/*background-color: grey;*/
-	background-color: $ui-colour;
-	box-shadow: 4px 4px 8px black;
-	padding: 20px;
-	//margin: calc($pad-px / 2);
-	/*border-radius: 3px;*/
+	background-color: $ui-colour !important;
+	box-shadow: 5px 5px 0 #0f0f0f !important;
+	padding: 15px !important;
+	margin: 5px !important;
+	transition: box-shadow 0.5s;
+	border-style: solid !important;
+	border-color: black !important;
+	border-width: 5px !important;
+}
 
-	h1 {
-		text-align: center;
-		color: $text-colour;
-		text-shadow: 1px 1px 2px #4f4f4f;
-	}
-
-	img {
-		width: 100%;
-		border-radius: 3px;
-		margin-bottom: 8px;	
-		box-shadow: 2px 2px 2px black;
-		margin-left: auto;
-    	margin-right: auto;
-	}
-
-	p {
-		margin-top: 20px;
-	}
+.card:hover {
+	box-shadow: none;
+	offset: 4px 4px;
 }
 
 ul.navbar {

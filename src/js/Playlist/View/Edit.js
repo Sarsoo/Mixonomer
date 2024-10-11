@@ -367,7 +367,7 @@ export class Edit extends Component{
 
         const table = (
             <div style={{maxWidth: '1000px', margin: 'auto', marginTop: '20px'}}>
-            <Card align="center">
+            <Card align="center" className="card">
                 <CardContent>
 
                     {/* PLAYLIST NAME TITLE */}

@@ -5,14 +5,13 @@
 <div class="card">
     <form name="login" action="/auth/login" method="POST" onsubmit="return handleLogin()" style="display: grid; gap: 30px;">
 
+        <h1 style="margin:0; text-align: center">Login</h1>
         <div>
-            <p>Username</p>
-            <input type="text" name="username" class="full-width" />
+            <input type="text" name="username" class="full-width" placeholder="Username" />
         </div>
 
         <div>
-            <p>Password</p>
-            <input type="password" name="password" class="full-width" />
+            <input type="password" name="password" class="full-width" placeholder="Password" />
         </div>
 
         <p id="status" style="display: none; color: red" class="center-text"></p>
