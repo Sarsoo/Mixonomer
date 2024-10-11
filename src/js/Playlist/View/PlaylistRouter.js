@@ -1,6 +1,6 @@
 import React, { Component } from "react";
-import { Route, Link, Switch } from "react-router-dom";
-import { Paper, Tabs, Tab} from '@material-ui/core';
+import { Route, Link, Routes } from "react-router-dom";
+import { Paper, Tabs, Tab} from '@mui/material';
 
 
 import {Edit} from "./Edit.js";
@@ -49,14 +49,14 @@ class View extends Component{
                     <Tab label="Count" component={Link} to={`${this.props.match.url}/count`} />
                 </Tabs>
             </Paper>
-            <Switch>
+            <Routes>
 
                 {/* VIEW/EDIT */}
                 <Route path={`${this.props.match.url}/edit`} render={(props) => <Edit {...props} name={this.props.match.params.name}/>} />
                 
                 {/* STATS */}
                 <Route path={`${this.props.match.url}/count`} render={(props) => <Count {...props} name={this.props.match.params.name}/>} />
-            </Switch>
+            </Routes>
             </div>
         );
     }

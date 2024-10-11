@@ -1,9 +1,9 @@
 import React, { Component } from "react";
 const axios = require('axios');
 
-import { Card, Button, ButtonGroup, CardActions, CardContent, FormControl, InputLabel, Select, Typography, Grid, TextField, MenuItem, FormControlLabel, Switch } from '@material-ui/core';
-import { Delete, ExitToApp } from '@material-ui/icons';
-import { makeStyles } from '@material-ui/core/styles';
+import { Card, Button, ButtonGroup, CardActions, CardContent, FormControl, InputLabel, Select, Typography, Grid, TextField, MenuItem, FormControlLabel, Switch } from '@mui/material';
+import { Delete, ExitToApp } from '@mui/icons-material';
+import { makeStyles } from '@mui/styles';
 
 import showMessage from "../Toast.js";
 import Progress from "../Util/circularProgress.js"

@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 const axios = require('axios');
 
-import { Card, Button, FormControl, TextField, InputLabel, Select, CardActions, CardContent, Typography, Grid } from '@material-ui/core';
+import { Card, Button, FormControl, TextField, InputLabel, Select, CardActions, CardContent, Typography, Grid } from '@mui/material';
 
 import showMessage from "../Toast.js"
 

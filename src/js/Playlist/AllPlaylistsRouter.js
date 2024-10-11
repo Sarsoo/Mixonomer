@@ -14,10 +14,10 @@ class Playlists extends Component {
                 <Switch>
 
                     {/* PLAYLIST LIST */}
-                    <Route exact path={`${this.props.match.url}/`} component={PlaylistsView} />
+                    <Route exact path={`${this.props.match.url}/`} element={PlaylistsView} />
 
                     {/* NEW PLAYLIST */}
-                    <Route path={`${this.props.match.url}/new`} component={NewPlaylist} />
+                    <Route path={`${this.props.match.url}/new`} element={NewPlaylist} />
                 </Switch>
             </div>
         );

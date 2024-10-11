@@ -1,6 +1,6 @@
-import { createTheme, responsiveFontSizes } from '@material-ui/core/styles';
+import { createTheme, adaptV4Theme, responsiveFontSizes } from '@mui/material/styles';
 
-let GlobalTheme = createTheme({
+let GlobalTheme = createTheme(adaptV4Theme({
     root: {
         display: 'flex',
         flexDirection: 'column',
@@ -22,7 +22,7 @@ let GlobalTheme = createTheme({
         spacing: 5
     },
     palette: {
-        type: 'dark',
+        mode: 'dark',
         // https://colorhunt.co/palette/907fa4a58faaa6d6d6ededd0
         primary: {
             main: '#907FA4',
@@ -41,7 +41,7 @@ let GlobalTheme = createTheme({
     status: {
         danger: 'orange',
     }
-});
+}));
 GlobalTheme = responsiveFontSizes(GlobalTheme);
 
 export default GlobalTheme;

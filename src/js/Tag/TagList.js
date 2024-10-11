@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
-import { Button, ButtonGroup, Typography, Card, CardActions, CardContent, Grid } from '@material-ui/core';
+import { Button, ButtonGroup, Typography, Card, CardActions, CardContent, Grid } from '@mui/material';
 
 const axios = require('axios');
 

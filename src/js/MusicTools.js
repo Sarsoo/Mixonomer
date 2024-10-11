@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { BrowserRouter as Router, Route, Link, Switch } from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route, Link, Switch } from "react-router-dom";
 
 import NotFound from "./Error/NotFound.js";
 import Progress from "./Util/circularProgress.js";
@@ -7,17 +7,19 @@ import showMessage from "./Toast.js";
 
 import GlobalTheme from './Theme.js';
 
-import { ThemeProvider } from '@material-ui/core/styles';
+import { ThemeProvider, StyledEngineProvider } from '@mui/styles';
 
-import {AppBar, Toolbar, IconButton, Drawer, List, Divider, ListItem, ListItemIcon, ListItemText, Typography} from '@material-ui/core';
+import {AppBar, Toolbar, IconButton, Drawer, List, Divider, ListItem, ListItemIcon, ListItemText, Typography} from '@mui/material';
 
-import MenuIcon from '@material-ui/icons/Menu';
-import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
-import HomeIcon from '@material-ui/icons/Home';
+import MenuIcon from '@mui/icons-material/Menu';
+import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
+import HomeIcon from '@mui/icons-material/Home';
 
-import { Build, QueueMusic, ExitToApp, AccountCircle, KeyboardBackspace, GroupWork, Policy } from '@material-ui/icons'
+import { Build, QueueMusic, ExitToApp, AccountCircle, KeyboardBackspace, GroupWork, Policy } from '@mui/icons-material'
 
 const axios = require('axios');
+
+import Playlists from './Playlist/AllPlaylistsRouter';
 
 const LazyIndex = React.lazy(() => import(/* webpackChunkName: "index" */ "./Index/Index"))
 const LazyPlaylists = React.lazy(() => import(/* webpackChunkName: "allPlaylists" */ "./Playlist/AllPlaylistsRouter"))
@@ -89,110 +91,117 @@ class MusicTools extends Component {
 
     render(){
         return (
-            <Router>
-                <ThemeProvider theme={GlobalTheme}>
+            (<Router>
+                {/*<StyledEngineProvider injectFirst>*/}
+                    <ThemeProvider theme={GlobalTheme}>
 
-                    {/* TOP APP BAR */}
+                        {/* TOP APP BAR */}
 
-                    <AppBar position="sticky">
-                        <Toolbar>
-                            <IconButton edge="start" color="inherit" aria-label="menu" onClick={(e) => this.setOpen(true)}>
-                            <MenuIcon />
-                            </IconButton>
-                            <Typography variant="h6">
-                                <Link to='/app/playlists' style={{textDecoration: 'none'}}>
-                                    <div className="title-small">
-                                        <h1 >Mixonomer</h1>
-                                    </div>
-                                </Link>
-                            </Typography>
-                        </Toolbar>
-                    </AppBar>
+                        <AppBar position="sticky">
+                            <Toolbar>
+                                <IconButton
+                                    edge="start"
+                                    color="inherit"
+                                    aria-label="menu"
+                                    onClick={(e) => this.setOpen(true)}
+                                    size="large">
+                                <MenuIcon />
+                                </IconButton>
+                                <Typography variant="h6">
+                                    <Link to='/app/playlists' style={{textDecoration: 'none'}}>
+                                        <div className="title-small">
+                                            <h1 >Mixonomer</h1>
+                                        </div>
+                                    </Link>
+                                </Typography>
+                            </Toolbar>
+                        </AppBar>
 
-                    {/* MENU DRAWER */}
-                    
-                    <Drawer
-                        variant="persistent"
-                        anchor="left"
-                        open={this.state.drawerOpen}
-                        onClose={(e) => this.setOpen(false)}
-                    >
-                        <div>
-                            <IconButton onClick={(e) => this.setOpen(false)}>
-                                <ChevronLeftIcon />
-                            </IconButton>
-                        </div>
-                        <Divider />
-                        <div
-                        role="presentation"
-                        onClick={(e) => this.setOpen(false)}
-                        onKeyDown={(e) => this.setOpen(false)}
+                        {/* MENU DRAWER */}
+                        
+                        <Drawer
+                            variant="persistent"
+                            anchor="left"
+                            open={this.state.drawerOpen}
+                            onClose={(e) => this.setOpen(false)}
                         >
-                        <List>
-                            {/* PLAYLISTS */}
-                            <ListItem button key="playlists" component={Link} to='/app/playlists'>
-                                <ListItemIcon><QueueMusic /></ListItemIcon>
-                                <ListItemText primary="Playlists" />
-                            </ListItem>
-
-                            {/* TAGS */}
-                            <ListItem button key="tags" component={Link} to='/app/tags'>
-                                <ListItemIcon><GroupWork /></ListItemIcon>
-                                <ListItemText primary="Tags" />
-                            </ListItem>
-
-                            {/* SETTINGS */}
-                            <ListItem button key="settings" component={Link} to='/app/settings/password'>
-                                <ListItemIcon><Build /></ListItemIcon>
-                                <ListItemText primary="Settings" />
-                            </ListItem>
-
-                            {/* ADMIN */}
-                            { this.state.type == 'admin' &&
-                                <ListItem button key="admin" component={Link} to='/app/admin/lock'>
-                                    <ListItemIcon><AccountCircle /></ListItemIcon>
-                                    <ListItemText primary="Admin" />
+                            <div>
+                                <IconButton onClick={(e) => this.setOpen(false)} size="large">
+                                    <ChevronLeftIcon />
+                                </IconButton>
+                            </div>
+                            <Divider />
+                            <div
+                            role="presentation"
+                            onClick={(e) => this.setOpen(false)}
+                            onKeyDown={(e) => this.setOpen(false)}
+                            >
+                            <List>
+                                {/* PLAYLISTS */}
+                                <ListItem button key="playlists" component={Link} to='/app/playlists'>
+                                    <ListItemIcon><QueueMusic /></ListItemIcon>
+                                    <ListItemText primary="Playlists" />
                                 </ListItem>
-                            }
 
-                            <ListItem button key="privacy" onClick={(e) => { window.location.href = '/privacy' }}>
-                                <ListItemIcon><Policy /></ListItemIcon>
-                                <ListItemText primary="Privacy" />
-                            </ListItem>
+                                {/* TAGS */}
+                                <ListItem button key="tags" component={Link} to='/app/tags'>
+                                    <ListItemIcon><GroupWork /></ListItemIcon>
+                                    <ListItemText primary="Tags" />
+                                </ListItem>
 
-                            {/* LOGOUT */}
-                            <ListItem button key="logout" onClick={(e) => { window.location.href = '/auth/logout' }}>
-                                <ListItemIcon><KeyboardBackspace /></ListItemIcon>
-                                <ListItemText primary="Logout" />
-                            </ListItem>
+                                {/* SETTINGS */}
+                                <ListItem button key="settings" component={Link} to='/app/settings/password'>
+                                    <ListItemIcon><Build /></ListItemIcon>
+                                    <ListItemText primary="Settings" />
+                                </ListItem>
 
-                            {/* SARSOO.XYZ */}
-                            <ListItem button key="sarsoo.xyz" onClick={(e) => { window.location.href = 'https://sarsoo.xyz' }}>
-                                <ListItemIcon><ExitToApp /></ListItemIcon>
-                                <ListItemText primary="sarsoo.xyz" />
-                            </ListItem>
-                        </List>
+                                {/* ADMIN */}
+                                { this.state.type == 'admin' &&
+                                    <ListItem button key="admin" component={Link} to='/app/admin/lock'>
+                                        <ListItemIcon><AccountCircle /></ListItemIcon>
+                                        <ListItemText primary="Admin" />
+                                    </ListItem>
+                                }
+
+                                <ListItem button key="privacy" onClick={(e) => { window.location.href = '/privacy' }}>
+                                    <ListItemIcon><Policy /></ListItemIcon>
+                                    <ListItemText primary="Privacy" />
+                                </ListItem>
+
+                                {/* LOGOUT */}
+                                <ListItem button key="logout" onClick={(e) => { window.location.href = '/auth/logout' }}>
+                                    <ListItemIcon><KeyboardBackspace /></ListItemIcon>
+                                    <ListItemText primary="Logout" />
+                                </ListItem>
+
+                                {/* SARSOO.XYZ */}
+                                <ListItem button key="sarsoo.xyz" onClick={(e) => { window.location.href = 'https://sarsoo.xyz' }}>
+                                    <ListItemIcon><ExitToApp /></ListItemIcon>
+                                    <ListItemText primary="sarsoo.xyz" />
+                                </ListItem>
+                            </List>
+                            </div>
+                        </Drawer>
+                        
+                        {/* ROUTER SWITCH */}
+
+                        <div className="full-width">
+                            <Routes>
+                                {/*<React.Suspense fallback={<Progress/>}>*/}
+                                {/*    <Route path="/app" exact component={LazyIndex} />*/}
+                                    <Route path="/app/playlists" element={<Playlists/>} />
+                                    {/*<Route path="/app/tags" component={LazyTags} />*/}
+                                    {/*<Route path="/app/tag/:tag_id" component={LazyTag} />*/}
+                                    {/*<Route path="/app/settings" component={LazySettings} />*/}
+                                    {/*{ this.state.type == 'admin' && <Route path="/app/admin" component={LazyAdmin} /> }*/}
+                                    {/*<Route path='/app/playlist/:name' component={LazyPlaylistView} />*/}
+                                {/*</React.Suspense>*/}
+                                {/*<Route component={NotFound} />*/}
+                            </Routes>
                         </div>
-                    </Drawer>
-                    
-                    {/* ROUTER SWITCH */}
-
-                    <div className="full-width">
-                        <Switch>
-                            <React.Suspense fallback={<Progress/>}>
-                                <Route path="/app" exact component={LazyIndex} />
-                                <Route path="/app/playlists" component={LazyPlaylists} />
-                                <Route path="/app/tags" component={LazyTags} />
-                                <Route path="/app/tag/:tag_id" component={LazyTag} />
-                                <Route path="/app/settings" component={LazySettings} />
-                                { this.state.type == 'admin' && <Route path="/app/admin" component={LazyAdmin} /> }
-                                <Route path='/app/playlist/:name' component={LazyPlaylistView} />
-                            </React.Suspense>
-                            <Route component={NotFound} />
-                        </Switch>
-                    </div>
-                </ThemeProvider>
-            </Router>
+                    </ThemeProvider>
+                {/*</StyledEngineProvider>*/}
+            </Router>)
         );
     }
 

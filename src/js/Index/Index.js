@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 
-import { Card, CardContent, Typography, Grid } from '@material-ui/core';
+import { Card, CardContent, Typography, Grid } from '@mui/material';
 
 /**
  * Into card for the home page

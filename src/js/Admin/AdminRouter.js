@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { Route, Link, Switch } from "react-router-dom";
-import { Paper, Tabs, Tab} from '@material-ui/core';
+import { Paper, Tabs, Tab} from '@mui/material';
 
 
 import Lock from "./Lock.js";

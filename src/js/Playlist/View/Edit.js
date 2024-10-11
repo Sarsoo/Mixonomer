@@ -2,9 +2,9 @@ import React, { Component } from "react";
 const axios = require('axios');
 
 import { Card, Button, FormControl, TextField, InputLabel, Select, FormControlLabel, 
-    CardActions, CardContent, Typography, Grid, MenuItem, Switch } from '@material-ui/core';
-import { Delete } from '@material-ui/icons';
-import { makeStyles } from '@material-ui/core/styles';
+    CardActions, CardContent, Typography, Grid, MenuItem, Switch } from '@mui/material';
+import { Delete } from '@mui/icons-material';
+import { makeStyles } from '@mui/styles';
 
 import showMessage from "../../Toast.js";
 import Progress from "../../Util/circularProgress.js";
